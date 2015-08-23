@@ -1,0 +1,59 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function fail = gp_getFailVector(method, experiment, ew)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Builds the cases where the method fails %%%
+%
+
+% DATA_SEGMENT : Store the ids of the offending problems:
+metisFail_sqsym_noew = [ ] ;
+metisFail_sqsym_ew = [43, 206, 460, 31, 33:34, 459, 427, 407, 408, 414, 1439, 455, 549, 759, 50, 415, 956, 1337, 1341] ;
+
+metisFail_bipart_noew = [ ] ;
+metisFail_bipart_ew = [37, 43, 150, 153:154, 460, 188:189, 191, 454, 427, 407:408, 415, 1214, 1335, 1337, 760, 1821, 1779, 956, 921] ;
+
+metisFail_aat_noew = [373, 1424, 2214, 2231, 1295, 1589, 1889, 2328, 2325, 1228, 2286, 2287, 1829] ;
+metisFail_aat_ew = [1112:1117, 1119:1168, 249, 207:208, 655, 726, 836, 153, 154, 1171, 456, 1866, 77, 1439, 1564, 1840, 283, 2147, 2356, 544] ;
+
+%lastK = 1
+
+gpFail_sqsym_noew = [ ] ;
+gpFail_sqsym_ew = [ ] ;
+
+gpFail_bipart_noew = [ ] ;
+gpFail_bipart_ew = [ ] ;
+
+gpFail_aat_noew = [1424, 1295, 1889, 2325, 2286, 2287] ;
+gpFail_aat_ew = [373] ;
+
+% Configure for METIS
+if method == 1
+    switch experiment
+        case 1
+            fail = metisFail_sqsym_noew ;
+            if ew == 1, fail = horzcat(fail, metisFail_sqsym_ew); end
+        case 2
+            fail = metisFail_bipart_noew ;
+            if ew == 1, fail = horzcat(fail, metisFail_bipart_ew) ; end
+        case 3
+            fail = metisFail_aat_noew ;
+            if ew == 1, fail = horzcat(fail, metisFail_aat_ew) ; end
+    end
+end
+
+% Configure for GP 
+if method >= 2
+    switch experiment
+        case 1
+            fail = gpFail_sqsym_noew ;
+            if ew == 1, fail = horzcat(fail, gpFail_sqsym_ew); end
+        case 2
+            fail = gpFail_bipart_noew ;
+            if ew == 1, fail = horzcat(fail, gpFail_bipart_ew) ; end
+        case 3
+            fail = gpFail_aat_noew ;
+            if ew == 1, fail = horzcat(fail, gpFail_aat_ew) ; end
+    end
+end
+
+

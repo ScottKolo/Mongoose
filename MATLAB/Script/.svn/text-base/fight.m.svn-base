@@ -1,0 +1,163 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [T,C,B] = fight(config, method, experiment, ew, fail)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% config must be a matlab structure at this point. Terminate if it isn't.
+if ~isstruct(config), return; end
+
+% Read values from the configuration structure.
+kstart = config.kstart ;
+kend = config.kend ;
+do_dmperm = config.dmperm ;
+ids = config.ids ;
+exportGraph = config.exportGraph ;
+exportPath = config.exportPath ;
+
+SQSYM  = 1 ;
+BIPART = 2 ;
+AAT    = 3 ;
+
+% Initialize the outputs as all empty.
+T = zeros(size(ids)) ;
+C = zeros(size(ids)) ;
+B = zeros(size(ids)) ;
+
+k = 1 ;
+for id = ids
+
+    % Find out if the k is a failure case.
+    isFailure = size(find(fail == id), 2) ;
+
+    % If we're within our run bounds and we aren't a failure case then:
+    if k >= kstart && isFailure == 0
+
+        % Log the k and id as well as a timestamp.
+        gp_printDetails(k, id) ;
+
+        try
+            memoryException = 0 ;
+            Prob = UFget(id) ;
+            A = Prob.A ;
+         
+            % Condition the edge weights based on whether we want to consider them.
+            if ew == 0
+                A = spones(A) ;
+            else
+                A = abs(A) ;
+            end
+
+        catch exception
+            memoryException = 1 ;
+            gp_log('Error: Out of Memory when preconditioning graph for experiment.\n') ;
+        end
+
+        % If we're square, form the symmetric graph.
+        dosq = 0 ;
+        if experiment == SQSYM && ~memoryException
+            try
+                if size(A,1) == size(A,2)
+                    sqA = 0.5 * (A + A') ;
+                    A = sqA ;
+                    dosq = 1 ;
+                end
+            catch exception
+                gp_log('Error: Out of Memory when forming square symmetric graph.\n') ;
+            end
+        end
+
+        % Form the bipartite graph.
+        dobi = 0 ;
+        if experiment == BIPART && ~memoryException
+            try
+                biA = spaugment(A, 0) ;
+                A = biA ;
+                dobi = 1 ;
+            catch
+                gp_log('Error: Out of Memory when forming bipartite graph.\n') ;
+            end
+        end
+
+        % Form AA' or A'A
+        doaat = 0 ;
+        if experiment == AAT && ~memoryException
+            try
+                if size(A,1) >= size(A,2)
+                    aatA = A'*A ;
+                else
+                    aatA = A*A' ;
+                end
+                A = aatA ;
+                doaat = 1 ;
+            catch
+                gp_log('Error: Out of Memory when forming AAt (or AtA).\n') ;
+            end
+        end
+
+        % Cut the largest component using the Davis method:
+        if do_dmperm
+            if dosq || dobi || doaat
+                try
+                    A = A + speye(size(A)) ;
+                    [p,q,r,s] = dmperm(A) ;
+                    A = A(p,q) ;
+                    [~, g] = max(diff(r)) ;
+                    st = r(g) ;
+                    en = r(g+1)-1 ;
+                    A = A(st:en, st:en) ;
+                catch
+                    dosq = 0 ; dobi = 0 ; doaat = 0 ;
+                    gp_log('Error: Out of Memory when selecting largest component for experiment.\n') ;
+                end
+            end
+        end
+
+        % If we want to export the graph then export it to the troll graph.
+        if exportGraph, exportToMM(exportPath, A, ew) ; end
+
+        % Default the time and cost for both experiments to Inf
+        time = Inf; cost = Inf; bal = Inf;
+
+        % Partition using METIS
+        if method == 1
+            if dosq,  [time,cost,bal] = run_metis(A, ew, config); end
+            if dobi,  [time,cost,bal] = run_metis(A, ew, config); end
+            if doaat, [time,cost,bal] = run_metis(A, ew, config); end
+        end
+
+        % Partition using GP
+        if method >= 2 && method <= 100
+
+            % Generate the UserParams based on the method.
+            UserParams = gp_generateUserParams(method, config) ;
+
+            % Run the appropriate experiment.
+            if dosq,  [time,cost,bal] = run_gp(A, ew, UserParams, config); end
+            if dobi,  [time,cost,bal] = run_gp(A, ew, UserParams, config); end
+            if doaat, [time,cost,bal] = run_gp(A, ew, UserParams, config); end
+        end
+
+        % Save results
+        T(k) = time ;
+        C(k) = cost ;
+        B(k) = bal ;
+
+        % Log results
+        if dosq || dobi || doaat
+            % Extra logging for debugging purposes.
+            % gp_log(sprintf('   Time = %f\n', time), false) ;
+            % gp_log(sprintf('   Cost = %f\n', cost), false) ;
+            % gp_log(sprintf('   Imba = %f\n', bal), false) ;
+        else
+            gp_log(sprintf('   Not suitable for experiment.\n'), false) ;
+        end
+    end
+
+    k = k + 1 ;
+    if k > kend, break; end
+end
+
+% Prepend the list of ids and transpose the results so that they're by column.
+T = vertcat(ids, T)';
+C = vertcat(ids, C)';
+B = vertcat(ids, B)';
+

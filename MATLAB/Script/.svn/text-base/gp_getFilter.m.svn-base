@@ -1,0 +1,60 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function filter = gp_getFilter(inclusion, exclusion)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% INCLUSION
+% 1) Everything
+% 2) Small Problems
+% 3) Medium Problems
+% 4) Large Problems
+%
+% EXCLUSION
+% 1) Not 2D/3D Mesh Problems               (set if you want only 2D/3D problems)
+% 2) 2D/3D Mesh Problems                   (set if you want no 2D/3D problems)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Get the IDs, transpose, and set second column to 0
+index = UFget() ;
+filter = find(index.nnz)' ;
+filter(:,2) = 0 ;
+
+% If we were given nothing to include then return filtering the whole set.
+if nargin == 0, return; end
+
+% Depending on what we want to include:
+switch inclusion
+
+    % Include everything
+    case 1
+        filter(:,2) = 1 ;
+
+    % Include Small Problems (nz < 1e4)
+    case 2
+        filter(find(index.nnz < 1e4), 2) = 1 ;
+
+    % Include Medium Problems (nz >= 1e4 && nz < 1e6)
+    case 3
+        filter(find(1e4 <= index.nnz < 1e6), 2) = 1 ;
+
+    % Include Large Problems (nz >= 1e6)
+    case 4
+        filter(find(index.nnz >= 1e6), 2) = 1 ;
+
+end
+
+% If we're only including things, we can return now.
+if nargin == 1, return; end
+
+% Depending on the exclusion parameter, exclude things from the return set.
+switch exclusion
+
+    % Exclude non-2D/3D mesh problems.
+    case 1
+        filter(find(~index.isND), 2) = 0 ;
+
+    % Exclude 2D/3D mesh problems.
+    case 2
+        filter(find(index.isND), 2) = 0 ;
+end
+

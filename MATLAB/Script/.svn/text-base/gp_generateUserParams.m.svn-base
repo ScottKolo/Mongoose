@@ -1,0 +1,159 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function UserParams = generateUserParams(method, config)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% If we're just generating a vanilla user params by calling this with no
+% arguments then return the default user params.
+if nargin == 0, method = 2 ; end
+
+% Configure the UserParams based on the method we want to use.
+UserParams = gp_getDefaultUserParams() ;
+switch method
+    case 2, UserParams.methodDesc = 'GP - Default' ;
+
+    case 3, UserParams.methodDesc = 'GP - Consider 4s' ;
+        UserParams.BalanceKernel.exploitQuad = 1 ;        
+    case 4, UserParams.methodDesc = 'GP - Ignore 3s,4s' ;
+        UserParams.BalanceKernel.exploitTrinary = 0 ;
+    case 5, UserParams.methodDesc = 'GP - Ignore 2s,3s,4s' ;
+        UserParams.BalanceKernel.exploitTrinary = 0 ;
+        UserParams.BalanceKernel.exploitGemini = 0 ;
+
+    case 6, UserParams.methodDesc = 'GP - 2 scale' ;
+        UserParams.BalanceKernel.scale =  2 ;
+    case 7, UserParams.methodDesc = 'GP - 3 scale' ;
+        UserParams.BalanceKernel.scale =  3 ;
+    case 8, UserParams.methodDesc = 'GP - 4 scale' ;
+        UserParams.BalanceKernel.scale =  4 ;
+
+    case 9, UserParams.methodDesc = 'GP - 0.010 tolerance' ;
+        UserParams.BalanceKernel.tolerance = 0.010 ;
+    case 10, UserParams.methodDesc = 'GP - 0.015 tolerance' ;
+        UserParams.BalanceKernel.tolerance = 0.015 ;
+
+    case 11, UserParams.methodDesc = 'GP - 900 coarsen limit' ;
+        UserParams.coarsenLimit = 900 ;
+    case 12, UserParams.methodDesc = 'GP - 800 coarsen limit' ;
+        UserParams.coarsenLimit = 800 ;
+    case 13, UserParams.methodDesc = 'GP - 700 coarsen limit' ;
+        UserParams.coarsenLimit = 700 ;
+    case 14, UserParams.methodDesc = 'GP - 600 coarsen limit' ;
+        UserParams.coarsenLimit = 600 ;
+    case 15, UserParams.methodDesc = 'GP - 500 coarsen limit' ;
+        UserParams.coarsenLimit = 500 ;
+    case 16, UserParams.methodDesc = 'GP - 400 coarsen limit' ;
+        UserParams.coarsenLimit = 400 ;
+    case 17, UserParams.methodDesc = 'GP - 300 coarsen limit' ;
+        UserParams.coarsenLimit = 300 ;
+    case 18, UserParams.methodDesc = 'GP - 200 coarsen limit' ;
+        UserParams.coarsenLimit = 200 ;
+    case 19, UserParams.methodDesc = 'GP - 100 coarsen limit' ;
+        UserParams.coarsenLimit = 100 ;
+    case 20, UserParams.methodDesc = 'GP - 50 coarsen limit' ;
+        UserParams.coarsenLimit =  50 ;
+
+    case 21, UserParams.methodDesc = 'GP - 0.95 coreThreshold' ;
+        UserParams.MatchingKernel.coreThreshold = 0.95;
+    case 22, UserParams.methodDesc = 'GP - 0.90 coreThreshold' ;
+        UserParams.MatchingKernel.coreThreshold = 0.90;
+    case 23, UserParams.methodDesc = 'GP - 0.85 coreThreshold' ;
+        UserParams.MatchingKernel.coreThreshold = 0.85;
+    case 24, UserParams.methodDesc = 'GP - 0.80 coreThreshold' ;
+        UserParams.MatchingKernel.coreThreshold = 0.80;
+
+    case 25, UserParams.methodDesc = 'GP - 1.00 qpThresh, 100 coarsen limit' ;
+        UserParams.useQP = 1;
+        UserParams.coarsenLimit = 100;
+        UserParams.qpThreshold = 1.00;
+    case 26, UserParams.methodDesc = 'GP - 0.75 qpThresh, 100 coarsen limit' ;
+        UserParams.useQP = 1;
+        UserParams.coarsenLimit = 100;
+        UserParams.qpThreshold = 0.75;
+    case 27, UserParams.methodDesc = 'GP - 0.50 qpThresh, 100 coarsen limit' ;
+        UserParams.useQP = 1;
+        UserParams.coarsenLimit = 100;
+        UserParams.qpThreshold = 0.50;
+    case 28, UserParams.methodDesc = 'GP - 0.25 qpThresh, 100 coarsen limit' ;
+        UserParams.useQP = 1;
+        UserParams.coarsenLimit = 100;
+        UserParams.qpThreshold = 0.25;
+
+    % "Fingers" w-cycle with one fork at the top
+    case 30, UserParams.methodDesc = 'GP - \"Fingers\" w-cycle' ;
+        UserParams.numThreads = -2;
+        UserParams.wLimit = -2;
+        UserParams.numForks = 1;
+        UserParams.wSeed1 = config.wSeed1;
+        UserParams.wSeed2 = config.wSeed2;
+
+    % Big w-cycle search tree
+    case 31, UserParams.methodDesc = 'GP - Big top w-cycle' ;
+        UserParams.numThreads = -2;
+        UserParams.wLimit = -2;
+        UserParams.wSeed1 = config.wSeed1;
+        UserParams.wSeed2 = config.wSeed2;
+
+    % Use just one alternate seed.
+    case 32, UserParams.methodDesc = 'GP - 1 seed' ;
+        UserParams.numThreads = -2;
+        UserParams.wSeed1 = config.wSeed1;
+
+    % Use just two alternate seeds.
+    case 33, UserParams.methodDesc = 'GP - 2 seeds' ;
+        UserParams.numThreads = -2;
+        UserParams.wSeed1 = config.wSeed1;
+        UserParams.wSeed2 = config.wSeed2;
+
+    case 34, UserParams.methodDesc = 'GP - 1 seed, 6 forks' ;
+        UserParams.numThreads = -2;
+        UserParams.numForks = 6;
+        UserParams.wSeed1 = config.wSeed1;
+
+    case 35, UserParams.methodDesc = 'GP - \"Mid-Fingers\" w-cycle' ;
+        UserParams.numThreads = -2;
+        UserParams.numForks = 1;
+        UserParams.wSeed1 = config.wSeed1;
+        UserParams.wSeed2 = config.wSeed2;
+
+    case 36, UserParams.methodDesc = 'GPQP - Default w QP' ;
+        UserParams.useQP = 1;
+        UserParams.wLimit = 0;
+
+    case 37, UserParams.methodDesc = 'GPQP - Default; QP boundary' ;
+        UserParams.useQP = 1;
+        UserParams.wLimit = 0;
+
+    case 38, UserParams.methodDesc = 'GPQP - Default; QP boundary, meth' ;
+        UserParams.useQP = 1;
+        UserParams.wLimit = 0;
+
+    case 39, UserParams.methodDesc = 'GPQP - Default; QP boundary, max' ;
+        UserParams.useQP = 1;
+        UserParams.wLimit = 0;
+
+    case 40, UserParams.methodDesc = 'GPQP - 1 seed, 6 forks' ;
+        UserParams.useQP = 1;
+        UserParams.numThreads = -2;
+        UserParams.numForks = 6;
+        UserParams.wSeed1 = config.wSeed1;
+
+    case 41, UserParams.methodDesc = 'GPQP - \"Mid-Fingers\" w-cycle' ;
+        UserParams.useQP = 1;
+        UserParams.numThreads = -2;
+        UserParams.numForks = 1;
+        UserParams.wSeed1 = config.wSeed1;
+        UserParams.wSeed2 = config.wSeed2;
+
+    case 42, UserParams.methodDesc = 'GPQP - interleaved FM-QP' ;
+        UserParams.useQP = 1;
+        UserParams.wLimit = 0;
+
+    case 43, UserParms.methodDesc = 'GP - buffered PA match' ;
+
+    case 44, UserParms.methodDesc = 'GP - buffered PA match' ;
+
+    case 45, UserParams.methodDesc = 'GP - new FM commit' ;
+
+    otherwise, UserParams.methodDesc = 'Unknown methodID' ;
+        % Use the default user params
+end
