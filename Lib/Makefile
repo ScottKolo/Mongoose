@@ -45,7 +45,9 @@ lib: libMongoose.a
 clean:
 	$(RM) -f *.o
 
-purge: clean
+purge: distclean
+
+distclean: clean
 	$(RM) -f libMongoose.a
 
 libMongoose.a: $(OBJS)
