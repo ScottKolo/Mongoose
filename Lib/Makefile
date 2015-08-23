@@ -4,6 +4,9 @@
 
 include ../../SuiteSparse_config/SuiteSparse_config.mk
 
+ARCHIVE = $(AR) $(ARFLAGS)
+RANLIB = ranlib
+
 OBJS = \
   cs.o \
   BoundaryHeap.o \
@@ -33,11 +36,11 @@ INC = -I../Include -I../../SuiteSparse_config
 
 #-------------------------------------------------------------------------------
 
-all: runtime
+all: libMongoose.a
 
-library: runtime
+library: libMongoose.a
 
-lib: runtime
+lib: libMongoose.a
 
 clean:
 	$(RM) -f *.o
@@ -45,8 +48,9 @@ clean:
 purge: clean
 	$(RM) -f libMongoose.a
 
-runtime: $(OBJS)
-	$(AR) -r "libMongoose.a" $(CLIB) $(OBJS)
+libMongoose.a: $(OBJS)
+	$(ARCHIVE) libMongoose.a $(OBJS)
+	- $(RANLIB) libMongoose.a
 
 #-------------------------------------------------------------------------------
 

@@ -8,8 +8,8 @@ include ../../SuiteSparse_config/SuiteSparse_config.mk
 
 LIBS = \
     ../Lib/libMongoose.a \
-    ../../SuiteSparse_config/libsuitesparseconfig.a \
-    -lrt
+    ../../SuiteSparse_config/libsuitesparseconfig.a
+#    -lrt
 
 INC = -I../Include -I../../SuiteSparse_config
 
