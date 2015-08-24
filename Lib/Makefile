@@ -8,27 +8,27 @@ ARCHIVE = $(AR) $(ARFLAGS)
 RANLIB = ranlib
 
 OBJS = \
-  cs.o \
-  BoundaryHeap.o \
-  Coarsening.o \
-  Conditioning.o \
-  EdgeSeparator.o \
-  FidduciaMattheyes.o \
-  GuessCut.o \
-  Interop.o \
-  Matching.o \
-  Nuri_qpGradProj.o \
-  QPboundary.o \
-  QPgradproj.o \
-  QPlinks.o \
-  QPmaxheap.o \
-  QPminheap.o \
-  QPnapdown.o \
-  QPnapsack.o \
-  QPnapsack2.o \
-  QPnapup.o \
-  Refinement.o \
-  Waterdance.o
+  mongoose_cs.o \
+  mongoose_boundaryheap.o \
+  mongoose_coarsening.o \
+  mongoose_conditioning.o \
+  mongoose_edgeseparator.o \
+  mongoose_fidduciamattheyes.o \
+  mongoose_guesscut.o \
+  mongoose_interop.o \
+  mongoose_matching.o \
+  mongoose_nuri_qpgradproj.o \
+  mongoose_qpboundary.o \
+  mongoose_qpgradproj.o \
+  mongoose_qplinks.o \
+  mongoose_qpmaxheap.o \
+  mongoose_qpminheap.o \
+  mongoose_qpnapdown.o \
+  mongoose_qpnapsack.o \
+  mongoose_qpnapsack2.o \
+  mongoose_qpnapup.o \
+  mongoose_refinement.o \
+  mongoose_waterdance.o
 
 CLIB = ../../SuiteSparse_config/libsuitesparseconfig.a
 
@@ -56,65 +56,65 @@ libMongoose.a: $(OBJS)
 
 #-------------------------------------------------------------------------------
 
-cs.o: ../Source/cs.cpp
+mongoose_cs.o: ../Source/mongoose_cs.cpp
 	$(CXX) -c $(INC) $<
 	
-BoundaryHeap.o: ../Source/BoundaryHeap.cpp
+mongoose_boundaryheap.o: ../Source/mongoose_boundaryheap.cpp
 	$(CXX) -c $(INC) $<
 
-Coarsening.o: ../Source/Coarsening.cpp
+mongoose_coarsening.o: ../Source/mongoose_coarsening.cpp
 	$(CXX) -c $(INC) $<
 
-Conditioning.o: ../Source/Conditioning.cpp
+mongoose_conditioning.o: ../Source/mongoose_conditioning.cpp
 	$(CXX) -c $(INC) $<
 
-EdgeSeparator.o: ../Source/EdgeSeparator.cpp
+mongoose_edgeseparator.o: ../Source/mongoose_edgeseparator.cpp
 	$(CXX) -c $(INC) $<
 
-FidduciaMattheyes.o: ../Source/FidduciaMattheyes.cpp
+mongoose_fidduciamattheyes.o: ../Source/mongoose_fidduciamattheyes.cpp
 	$(CXX) -c $(INC) $<
 
-GuessCut.o: ../Source/GuessCut.cpp
+mongoose_guesscut.o: ../Source/mongoose_guesscut.cpp
 	$(CXX) -c $(INC) $<
 
-Interop.o: ../Source/Interop.cpp
+mongoose_interop.o: ../Source/mongoose_interop.cpp
 	$(CXX) -c $(INC) $<
 
-Matching.o: ../Source/Matching.cpp
+mongoose_matching.o: ../Source/mongoose_matching.cpp
 	$(CXX) -c $(INC) $<
 
-Nuri_qpGradProj.o: ../Source/Nuri_qpGradProj.cpp
+mongoose_nuri_qpgradproj.o: ../Source/mongoose_nuri_qpgradproj.cpp
 	$(CXX) -c $(INC) $<
 
-QPboundary.o: ../Source/QPboundary.cpp
+mongoose_qpboundary.o: ../Source/mongoose_qpboundary.cpp
 	$(CXX) -c $(INC) $<
 
-QPgradproj.o: ../Source/QPgradproj.cpp
+mongoose_qpgradproj.o: ../Source/mongoose_qpgradproj.cpp
 	$(CXX) -c $(INC) $<
 
-QPlinks.o: ../Source/QPlinks.cpp
+mongoose_qplinks.o: ../Source/mongoose_qplinks.cpp
 	$(CXX) -c $(INC) $<
 
-QPmaxheap.o: ../Source/QPmaxheap.cpp
+mongoose_qpmaxheap.o: ../Source/mongoose_qpmaxheap.cpp
 	$(CXX) -c $(INC) $<
 
-QPminheap.o: ../Source/QPminheap.cpp
+mongoose_qpminheap.o: ../Source/mongoose_qpminheap.cpp
 	$(CXX) -c $(INC) $<
 
-QPnapdown.o: ../Source/QPnapdown.cpp
+mongoose_qpnapdown.o: ../Source/mongoose_qpnapdown.cpp
 	$(CXX) -c $(INC) $<
 
-QPnapsack.o: ../Source/QPnapsack.cpp
+mongoose_qpnapsack.o: ../Source/mongoose_qpnapsack.cpp
 	$(CXX) -c $(INC) $<
 
-QPnapsack2.o: ../Source/QPnapsack2.cpp
+mongoose_qpnapsack2.o: ../Source/mongoose_qpnapsack2.cpp
 	$(CXX) -c $(INC) $<
 
-QPnapup.o: ../Source/QPnapup.cpp
+mongoose_qpnapup.o: ../Source/mongoose_qpnapup.cpp
 	$(CXX) -c $(INC) $<
 
-Refinement.o: ../Source/Refinement.cpp
+mongoose_refinement.o: ../Source/mongoose_refinement.cpp
 	$(CXX) -c $(INC) $<
 
-Waterdance.o: ../Source/Waterdance.cpp
+mongoose_waterdance.o: ../Source/mongoose_waterdance.cpp
 	$(CXX) -c $(INC) $<

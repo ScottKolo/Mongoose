@@ -22,9 +22,9 @@ enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_
 }
 
 /* Structures */
-#include "Graph.hpp"
-#include "Options.hpp"
-#include "Interop.hpp"
+#include "mongoose_graph.hpp"
+#include "mongoose_options.hpp"
+#include "mongoose_interop.hpp"
 
 namespace SuiteSparse_Mongoose
 {

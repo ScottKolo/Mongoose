@@ -17,6 +17,6 @@
 #define MONGOOSE_MAX2(x,y) ((x)>(y) ? (x) : (y))
 #endif
 
-#include "Mongoose.hpp"
+#include "mongoose.hpp"
 
 #endif

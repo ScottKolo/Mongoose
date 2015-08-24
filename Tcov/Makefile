@@ -15,33 +15,33 @@ include ../../SuiteSparse_config/SuiteSparse_config.mk
 #-------------------------------------------------------------------------------
 
 LIBS = \
-    ../../SuiteSparse_config/libsuitesparseconfig.a \
-    -lrt
+    ../../SuiteSparse_config/libsuitesparseconfig.a
+#    -lrt
 
 INC = -I./Include -I../../SuiteSparse_config
 
 OBJ = \
-  cs.o \
-  BoundaryHeap.o \
-  Coarsening.o \
-  Conditioning.o \
-  EdgeSeparator.o \
-  FidduciaMattheyes.o \
-  GuessCut.o \
-  Interop.o \
-  Matching.o \
-  Nuri_qpGradProj.o \
-  QPboundary.o \
-  QPgradproj.o \
-  QPlinks.o \
-  QPmaxheap.o \
-  QPminheap.o \
-  QPnapdown.o \
-  QPnapsack.o \
-  QPnapsack2.o \
-  QPnapup.o \
-  Refinement.o \
-  Waterdance.o
+  mongoose_cs.o \
+  mongoose_boundaryheap.o \
+  mongoose_coarsening.o \
+  mongoose_conditioning.o \
+  mongoose_edgeseparator.o \
+  mongoose_fidduciamattheyes.o \
+  mongoose_guesscut.o \
+  mongoose_interop.o \
+  mongoose_matching.o \
+  mongoose_nuri_qpgradproj.o \
+  mongoose_qpboundary.o \
+  mongoose_qpgradproj.o \
+  mongoose_qplinks.o \
+  mongoose_qpmaxheap.o \
+  mongoose_qpminheap.o \
+  mongoose_qpnapdown.o \
+  mongoose_qpnapsack.o \
+  mongoose_qpnapsack2.o \
+  mongoose_qpnapup.o \
+  mongoose_refinement.o \
+  mongoose_waterdance.o
 
 CF =  -pg \
 	-O0 -g -fprofile-arcs -ftest-coverage \
@@ -58,11 +58,11 @@ library: test1
 purge: distclean
 
 distclean: clean
-	- $(RM) test1 *.mtx.txt pfile tfile cov.out *.o *.dot *.hpp
+	- $(RM) test1 *.mtx.txt test1 cov.out *.o *.dot *.hpp
+	- $(RM) -r mongoose_*.cpp *.dSYM
 
 clean:
-	- $(RM) $(CLEAN)
-	- $(RM) -r *.dSYM
+	- $(RM) *.gcov *.gcda *.gcno
 
 #------------------------------------------------------------------------------
 
@@ -73,73 +73,72 @@ copy_resources:
 test1: test1.cpp $(OBJ)
 	$(C) test1.cpp -o test1 $(OBJ) $(LIBS) -lm
 	
-go: copy_resources test1
-	- rm cov.out	
-	- ./test1 ~/PROBLEMS/139.mtx > test1_139.mtx.txt
-	- ./test1 ~/PROBLEMS/515.mtx > test1_515.mtx.txt
+go: copy_resources test1	
+	- ./test1 ../Matrix/dwt_992.mtx > test1_dw.mtx.txt
+	- ./test1 ../Matrix/G51.mtx > test1_g51.mtx.txt
 	- ./cov
 
 #------------------------------------------------------------------------------
 
-cs.o: cs.cpp
+mongoose_cs.o: mongoose_cs.cpp
 	$(C) -c $(INC) $<
 	
-BoundaryHeap.o: BoundaryHeap.cpp
+mongoose_boundaryheap.o: mongoose_boundaryheap.cpp
 	$(C) -c $(INC) $<
 
-Coarsening.o: Coarsening.cpp
+mongoose_coarsening.o: mongoose_coarsening.cpp
 	$(C) -c $(INC) $<
 
-Conditioning.o: Conditioning.cpp
+mongoose_conditioning.o: mongoose_conditioning.cpp
 	$(C) -c $(INC) $<
 
-EdgeSeparator.o: EdgeSeparator.cpp
+mongoose_edgeseparator.o: mongoose_edgeseparator.cpp
 	$(C) -c $(INC) $<
 
-FidduciaMattheyes.o: FidduciaMattheyes.cpp
+mongoose_fidduciamattheyes.o: mongoose_fidduciamattheyes.cpp
 	$(C) -c $(INC) $<
 
-GuessCut.o: GuessCut.cpp
+mongoose_guesscut.o: mongoose_guesscut.cpp
 	$(C) -c $(INC) $<
 
-Interop.o: Interop.cpp
+mongoose_interop.o: mongoose_interop.cpp
 	$(C) -c $(INC) $<
 
-Matching.o: Matching.cpp
+mongoose_matching.o: mongoose_matching.cpp
 	$(C) -c $(INC) $<
 
-Nuri_qpGradProj.o: Nuri_qpGradProj.cpp
+mongoose_nuri_qpgradproj.o: mongoose_nuri_qpgradproj.cpp
 	$(C) -c $(INC) $<
 
-QPboundary.o: QPboundary.cpp
+mongoose_qpboundary.o: mongoose_qpboundary.cpp
 	$(C) -c $(INC) $<
 
-QPgradproj.o: QPgradproj.cpp
+mongoose_qpgradproj.o: mongoose_qpgradproj.cpp
 	$(C) -c $(INC) $<
 
-QPlinks.o: QPlinks.cpp
+mongoose_qplinks.o: mongoose_qplinks.cpp
 	$(C) -c $(INC) $<
 
-QPmaxheap.o: QPmaxheap.cpp
+mongoose_qpmaxheap.o: mongoose_qpmaxheap.cpp
 	$(C) -c $(INC) $<
 
-QPminheap.o: QPminheap.cpp
+mongoose_qpminheap.o: mongoose_qpminheap.cpp
 	$(C) -c $(INC) $<
 
-QPnapdown.o: QPnapdown.cpp
+mongoose_qpnapdown.o: mongoose_qpnapdown.cpp
 	$(C) -c $(INC) $<
 
-QPnapsack.o: QPnapsack.cpp
+mongoose_qpnapsack.o: mongoose_qpnapsack.cpp
 	$(C) -c $(INC) $<
 
-QPnapsack2.o: QPnapsack2.cpp
+mongoose_qpnapsack2.o: mongoose_qpnapsack2.cpp
 	$(C) -c $(INC) $<
 
-QPnapup.o: QPnapup.cpp
+mongoose_qpnapup.o: mongoose_qpnapup.cpp
 	$(C) -c $(INC) $<
 
-Refinement.o: Refinement.cpp
+mongoose_refinement.o: mongoose_refinement.cpp
 	$(C) -c $(INC) $<
 
-Waterdance.o: Waterdance.cpp
+mongoose_waterdance.o: mongoose_waterdance.cpp
 	$(C) -c $(INC) $<

@@ -1,6 +1,6 @@
 
-#include "Mongoose.hpp"
-#include "Conditioning.hpp"
+#include "mongoose.hpp"
+#include "mongoose_conditioning.hpp"
 #include "SuiteSparse_config.h"
 
 using namespace SuiteSparse_Mongoose;
