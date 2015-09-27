@@ -21,11 +21,13 @@ library:
 # Remove all files not in the original distribution
 purge:
 	( cd Lib ; $(MAKE) purge )
+	( cd MATLAB ; $(RM) *.o *.mex* )
 
 # Remove all files not in the original distribution, except keep the 
 # compiled libraries.
 clean:
 	( cd Lib ; $(MAKE) clean )
+	( cd MATLAB ; $(RM) *.o )
 
 distclean: purge
 
