@@ -15,17 +15,12 @@ void fmRefine(Graph *G, Options *O)
 {
     if(!O->useFM) return;
 
-//printf("> fm CutCost = %f, W[0] = %f, W[1] = %f, Imbalance = %f\n", G->cutCost, G->W0, G->W1, G->imbalance);
     Weight heuCost = INFINITY;
     for(Int i=0; i<O->fmMaxNumRefinements && G->heuCost < heuCost; i++)
     {
         heuCost = G->heuCost;
         fmRefine_worker(G, O);
-#if 0
-        writeDot(G, O, "FidduciaMattheyes", CutSet);
-#endif
     }
-//printf("< fm CutCost = %f, W[0] = %f, W[1] = %f, Imbalance = %f\n", G->cutCost, G->W0, G->W1, G->imbalance);
 }
 
 //-----------------------------------------------------------------------------
@@ -119,8 +114,6 @@ void fmRefine_worker(Graph *G, Options *O)
         /* If we were able to find the best unmoved boundary vertex: */
         if(bestCandidate.heuCost < INFINITY)
         {
-//printf("Proposed Vertex %d (gain %f) : ", bestCandidate.vertex, bestCandidate.gain);
-
             productive = true;
             MONGOOSE_MARK(bestCandidate.vertex);
 
@@ -152,16 +145,9 @@ void fmRefine_worker(Graph *G, Options *O)
                 bestCost = workingCost;
                 head = tail;
                 i = 0;
-//printf("accepted.\n");
-            }
-            else
-            {
-//printf("searching.\n");
             }
         }
     }
-
-//printf("Undo\n");
 
     /* We've exhausted our search space, so undo all suboptimal moves. */
     for(Int u=tail-1; u>=head; u--)

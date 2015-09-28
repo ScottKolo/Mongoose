@@ -12,14 +12,7 @@ Graph *refine(Graph *G, Options *O)
     Graph *P = G->parent;
 
     Int cn = G->n;
-//    Int *Gp = G->p;
-//    Int *Gi = G->i;
     bool *cPartition = G->partition;
-//    Int *bhIndex = G->bhIndex;
-
-//    Int fn = P->n;
-//    Int *Pp = P->p;
-//    Int *Pi = P->i;
     Int *invmatchmap = P->invmatchmap;
     Int *matching = P->matching;
     bool *fPartition = P->partition;
@@ -106,8 +99,6 @@ Graph *refine(Graph *G, Options *O)
     /* Now that we're done with the coarse graph, we can release it. */
     G->~Graph();
     G = (Graph*) SuiteSparse_free(G);
-
-// writeDot(P, O, "refined", CutSet);
 
     return P;
 }

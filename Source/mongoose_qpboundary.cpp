@@ -72,7 +72,6 @@ void QPboundary
 
     /* work array */
     Double *D  = QP->D ;   /* diagonal of quadratic */
-//    Int *w0 = QP->wi0 ; /* Int size n, always zero */
 
     /* ---------------------------------------------------------------------- */
     /* Step 1. if lo < b < hi, then for each free j,                          */
@@ -218,14 +217,11 @@ void QPboundary
         for(Int p = Ep[j]; p < Ep[j+1]; p++)
         {
             MONGOOSE_MARK(Ei[p]);
-//            w0[Ei[p]] = 1;
         }
         MONGOOSE_MARK(j);
-//        w0[j] = 1;
 
         for (Int i = LinkUp[n]; i < n && (LinkUp[i] != LinkUp[n]); i = LinkUp[i])
         {
-//            if (w0[i] == 0) /* a_{ij} = 0 */
             if(!MONGOOSE_MARKED(i))
             {
                 Double aj = a[j];
@@ -327,13 +323,6 @@ void QPboundary
         }
 
         markValue++;
-#if 0
-        /* ---------------------------------------------------------------------- */
-        /* restore w0 to zero */
-        /* ---------------------------------------------------------------------- */
-        for(Int k = Ep[j]; k<Ep[j+1]; k++) w0[Ei[k]] = 0;
-        w0[j] = 0;
-#endif
     }
 
     /* ---------------------------------------------------------------------- */

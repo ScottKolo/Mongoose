@@ -162,7 +162,6 @@ Double QPgradproj
         /* If directional derivative has wrong sign, save context and exit. */
         if(s >= MONGOOSE_ZERO)
         {
-//printf("%d: Directional derivative has wrong sign (%f).\n", it, s);
             QP_GRADPROJ_saveContextAndExit();
         }
 

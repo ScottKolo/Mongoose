@@ -109,25 +109,21 @@ Graph *coarsen(Graph *G, Options *O)
     /* Cleanup resources */
     htable = (Int*) SuiteSparse_free(htable);
 
-/* If we want to do expensive checks, make sure we didn't break
- * the problem into multiple connected components. */
-if(O->doExpensiveChecks)
-{
-    Weight W = 0.0;
-    for(Int k=0; k<cn; k++)
+    /* If we want to do expensive checks, make sure we didn't break
+     * the problem into multiple connected components. */
+    if(O->doExpensiveChecks)
     {
-        Int degree = Cp[k+1] - Cp[k];
-        assert(degree > 0);
+        Weight W = 0.0;
+        for(Int k=0; k<cn; k++)
+        {
+            Int degree = Cp[k+1] - Cp[k];
+            assert(degree > 0);
 
-        W += Cw[k];
+            W += Cw[k];
+        }
+        assert(W == C->W);
     }
-    assert(W == C->W);
-}
-
-#if 0
-writeDot(C, O, "coarsened");
-#endif
-
+    
     /* Return the coarse graph */
     return C;
 }

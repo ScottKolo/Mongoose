@@ -96,24 +96,11 @@ bool guessCut(Graph *G, Options *O)
             qpGradProj(G, O, true);
             break;
         }
-
-#if 0
-        case QP_BallOpt:
-        {
-            pseudoperipheralGuess(G, O);
-            qpBallOpt(G, O);
-            break;
-        }
-#endif
-
     }
 
     /* Do the waterdance refinement. */
     waterdance(G, O);
-
-// writeDot(G, O, "guess", CutSet);
-// printf("     CutCost = %f, W[0] = %f, W[1] = %f, Imbalance = %f\n", G->cutCost, G->W0, G->W1, G->imbalance);
-
+    
     return true;
 }
 

@@ -15,7 +15,6 @@ void qpGradProj
 )
 {
     if(!O->useQPGradProj) return;
-//printf("> qp CutCost = %f, W[0] = %f, W[1] = %f, Imbalance = %f\n", G->cutCost, G->W0, G->W1, G->imbalance);
 
     /* Unpack structure fields */
     Int n = G->n;
@@ -120,10 +119,6 @@ void qpGradProj
     }
     G->markValue = markValue + 1;
 
-#if 0
-writeDot(G, O, "GradProj", CutSet);
-#endif
-
     /* Free the QP structure */
     QP->~QPDelta();
     QP = (QPDelta*) SuiteSparse_free(QP);
@@ -135,8 +130,6 @@ writeDot(G, O, "GradProj", CutSet);
     G->imbalance = cost.imbalance;
     Weight absImbalance = fabs(G->imbalance);
     G->heuCost = G->cutCost + (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
-
-//printf("< qp CutCost = %f, W[0] = %f, W[1] = %f, Imbalance = %f\n", G->cutCost, G->W0, G->W1, G->imbalance);
 }
 
 }

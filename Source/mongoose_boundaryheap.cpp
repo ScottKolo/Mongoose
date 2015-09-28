@@ -157,42 +157,6 @@ void bhRemove
     heapifyDown(bhIndex, bhHeap, size, gains, v, bhPosition, gains[v]);
 }
 
-#if 0
-//-----------------------------------------------------------------------------
-// This function returns the vertex at the top of the heap or a -1 if empty
-//-----------------------------------------------------------------------------
-Int bhDequeue
-(
-    Graph *G,
-    Options *O,
-    Int *bhIndex,
-    Int *bhHeap,
-    Int *inout_size,
-    Weight *gains
-)
-{
-    Int size = *inout_size;
-    if(size == 0) return -1;
-
-    Int returner = bhHeap[0];
-    bhIndex[returner] = 0;
-
-    size--;
-
-    /* Swap the element from the end to the top of the heap. */
-    Int v = bhHeap[0] = bhHeap[size];
-    MONGOOSE_PUT_BHINDEX(v,0);
-
-    /* Heapify down */
-    heapifyDown(bhIndex, bhHeap, size, gains, v, 0, gains[v]);
-
-    /* Save the modification to the size. */
-    *inout_size = size;
-
-    return returner;
-}
-#endif
-
 //-----------------------------------------------------------------------------
 // Starting at a position, this function will heapify from a vertex upwards
 //-----------------------------------------------------------------------------
