@@ -79,7 +79,7 @@ void QPboundary
     /*         see if x_j can be pushed to 0 or 1                             */
     /* ---------------------------------------------------------------------- */
 
-    for(Int k=LinkUp[n]; (k<n) && (ib==0); k=LinkUp[k])
+    for(Int k=LinkUp[n]; (k<n) && (ib==0) && (LinkUp[k] != LinkUp[n]); k=LinkUp[k])
     {
         Double s, ak = a[k];
         if (grad[k] > 0.0) /* decrease x_j */
@@ -202,7 +202,7 @@ void QPboundary
     /* Step 3. Search for a_{ij} = 0 in the free index set */
     /* ---------------------------------------------------------------------- */
 
-    for(Int j = LinkUp[n]; j<n; j = LinkUp[j])
+    for(Int j = LinkUp[n]; j < n && (LinkUp[j] != LinkUp[n]); j = LinkUp[j])
     {
         Int m = 1;
         for(Int p = Ep[j]; p < Ep[j+1]; p++)
@@ -223,7 +223,7 @@ void QPboundary
         MONGOOSE_MARK(j);
 //        w0[j] = 1;
 
-        for (Int i = LinkUp[n]; i < n; i = LinkUp[i])
+        for (Int i = LinkUp[n]; i < n && (LinkUp[i] != LinkUp[n]); i = LinkUp[i])
         {
 //            if (w0[i] == 0) /* a_{ij} = 0 */
             if(!MONGOOSE_MARKED(i))
@@ -343,7 +343,7 @@ void QPboundary
     /* free variables:0 < x_j < 1 */
 
     Int j;
-    for(j = LinkUp[n]; j < n; j = LinkUp[j]) /* free variables:0 < x_j < 1 */
+    for(j = LinkUp[n]; j < n && (LinkUp[j] != LinkUp[n]); j = LinkUp[j]) /* free variables:0 < x_j < 1 */
     {
         /* choose s so that first derivative terms decrease */
 

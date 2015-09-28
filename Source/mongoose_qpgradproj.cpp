@@ -100,18 +100,18 @@ Double QPgradproj
         /* compute stepsize st = g_F'g_F/-g_F'(A+D)g_F */
         /* TODO: Can Dgrad be cleared after use to avoid O(n)? */
         for (Int k = 0; k < n; k++) Dgrad[k] = MONGOOSE_ZERO;
-Int lastLink = -1;
-        for (Int i = LinkUp[n]; i < n; i = LinkUp[i])
+        Int lastLink = -1;
+        for (Int i = LinkUp[n]; i < n && (LinkUp[i] != LinkUp[n]); i = LinkUp[i])
         {
-/* INFINITE LOOP i=LinkUp[i] links to itself. */
-if(i != lastLink)
-{
-    lastLink = i;
-}
-else
-{
-    abort();
-}
+            /* INFINITE LOOP i=LinkUp[i] links to itself. */
+            if(i != lastLink)
+            {
+                lastLink = i;
+            }
+            else
+            {
+                abort();
+            }
 
             /* compute -(A+D)g_F */
             Double s = grad[i];
@@ -124,7 +124,7 @@ else
 
         Double st_num = MONGOOSE_ZERO;
         Double st_den = MONGOOSE_ZERO;
-        for (Int j = LinkUp[n]; j < n; j = LinkUp[j])
+        for (Int j = LinkUp[n]; j < n && (LinkUp[j] != LinkUp[n]); j = LinkUp[j])
         {
             st_num += grad[j] * grad[j];
             st_den += grad[j] * Dgrad[j];
