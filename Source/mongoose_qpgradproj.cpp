@@ -101,7 +101,7 @@ Double QPgradproj
         /* TODO: Can Dgrad be cleared after use to avoid O(n)? */
         for (Int k = 0; k < n; k++) Dgrad[k] = MONGOOSE_ZERO;
         Int lastLink = -1;
-        for (Int i = LinkUp[n]; i < n && (LinkUp[i] != LinkUp[n]); i = LinkUp[i])
+        for (Int i = LinkUp[n]; i < n && (LinkUp[LinkDn[i]] != i); i = LinkUp[i])
         {
             /* INFINITE LOOP i=LinkUp[i] links to itself. */
             if(i != lastLink)
@@ -124,7 +124,7 @@ Double QPgradproj
 
         Double st_num = MONGOOSE_ZERO;
         Double st_den = MONGOOSE_ZERO;
-        for (Int j = LinkUp[n]; j < n && (LinkUp[j] != LinkUp[n]); j = LinkUp[j])
+        for (Int j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j])
         {
             st_num += grad[j] * grad[j];
             st_den += grad[j] * Dgrad[j];
