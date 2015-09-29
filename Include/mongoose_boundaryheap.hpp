@@ -37,18 +37,6 @@ void bhInsert
     Int vertex
 );
 
-#if 0
-Int bhDequeue
-(
-    Graph *G,
-    Options *O,
-    Int *bhIndex,
-    Int *bhHeap,
-    Int *inout_size,
-    Weight *gains
-);
-#endif
-
 void bhRemove
 (
     Graph *G,
