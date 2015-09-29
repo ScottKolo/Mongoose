@@ -44,13 +44,6 @@ struct Options
     /** Debug Options ********************************************************/
     bool doExpensiveChecks;
 
-#if 0
-    /** DOT Integration Options **********************************************/
-    bool writeDot;
-    const char *problemName;
-    Int graphSID;
-#endif
-
     /* Constructor & Destructor */
     static Options *Create()
     {

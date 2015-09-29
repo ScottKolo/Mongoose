@@ -33,13 +33,6 @@ void mexFunction
 
     ComputeEdgeSeparator(G, O);
 
-#if 0
-    /* Compute the edge separator */
-    writeDot(G, O, "initial");
-    computeEdgeSeparator(G, O);
-    writeDot(G, O, "final", CutSet);
-#endif
-
     /* Copy the partition choices back to matlab. */
     pargout[0] = gp_mex_put_logical(G->partition, G->n) ;
 
