@@ -43,10 +43,6 @@ typedef struct cs_sparse    /* matrix in compressed-column or triplet form */
 cs *cs_add (const cs *A, const cs *B, double alpha, double beta) ;
 cs *cs_transpose (const cs *A, csi values) ;
 
-#if 0
-cs *cs_load (FILE *f) ;
-#endif
-
 csi cs_entry (cs *T, csi i, csi j, double x) ;
 cs *cs_compress (const cs *T) ;
 
