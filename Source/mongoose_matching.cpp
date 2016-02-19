@@ -1,5 +1,6 @@
 
 #include "mongoose_matching.hpp"
+#include <iostream>
 
 namespace SuiteSparse_Mongoose
 {
@@ -313,6 +314,8 @@ void matching_DavisPA(Graph *G, Options *O)
 
     /* Save the # of coarse nodes. */
     G->cn = cn;
+    assert(cn < n);
+    std::cout << "cn = " << cn << " n = " << n << std::endl;
 }
 
 //-----------------------------------------------------------------------------

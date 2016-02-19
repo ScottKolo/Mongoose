@@ -52,7 +52,7 @@ Graph *coarsen(Graph *G, Options *O)
             v[2] = MONGOOSE_GETMATCH(v[1]);
             if(v[0] == v[2]){ v[2] = -1; }
         }
-
+        
         Int ps = Cp[k] = munch;     /* The munch start for this column */
 
         Weight nodeWeight = 0.0;

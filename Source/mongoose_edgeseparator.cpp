@@ -27,7 +27,6 @@ void ComputeEdgeSeparator(Graph *G, Options *O)
     {
         match(current, O);
         Graph *next = coarsen(current, O);
-
         /* If we ran out of memory during coarsening, unwind the stack. */
         if(!next)
         {
