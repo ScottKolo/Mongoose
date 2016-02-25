@@ -30,6 +30,7 @@ public:
 
     /** Partition Data *******************************************************/
     bool *partition;                     /* T/F denoting partition side      */
+    bool *separator;                     /* T/F denoting separator           */
     Weight *vertexGains;                 /* Gains for each vertex            */
     Int *externalDegree;                 /* # edges lying across the cut     */
     Int *bhIndex;                        /* Index+1 of a vertex in the heap  */
@@ -139,6 +140,7 @@ public:
         }
 
         ret->partition = (bool*) SuiteSparse_malloc(n, sizeof(bool));
+        ret->separator = (bool*) SuiteSparse_malloc(n, sizeof(bool));
         ret->vertexGains = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
         ret->externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
         ret->bhIndex = (Int*) SuiteSparse_calloc(n, sizeof(Int));
@@ -212,6 +214,7 @@ public:
         }
 
         ret->partition = (bool*) SuiteSparse_malloc(n, sizeof(bool));
+        ret->separator = (bool*) SuiteSparse_malloc(n, sizeof(bool));
         ret->vertexGains = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
         ret->externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
         ret->bhIndex = (Int*) SuiteSparse_calloc(n, sizeof(Int));
@@ -263,6 +266,7 @@ public:
         w = (Weight*) SuiteSparse_free(w);
 
         partition = (bool*) SuiteSparse_free(partition);
+        separator = (bool*) SuiteSparse_free(separator);
         vertexGains = (Weight*) SuiteSparse_free(vertexGains);
         externalDegree = (Int*) SuiteSparse_free(externalDegree);
         bhIndex = (Int*) SuiteSparse_free(bhIndex);

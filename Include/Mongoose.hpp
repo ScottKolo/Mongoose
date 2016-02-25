@@ -32,7 +32,9 @@ namespace SuiteSparse_Mongoose
 /* Function pointers */
 typedef void (*fxMatcher) (Graph *G, Options *O);
 
+bool initialize(Graph *G, Options *O);
 void ComputeEdgeSeparator(Graph *G, Options *O);
+void ComputeVertexSeparator(Graph *G, Options *O);
 
 }
 

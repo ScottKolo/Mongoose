@@ -28,11 +28,12 @@ OBJS = \
   mongoose_qpnapsack2.o \
   mongoose_qpnapup.o \
   mongoose_refinement.o \
+  mongoose_vertexseparator.o \
   mongoose_waterdance.o
 
 CLIB = ../../SuiteSparse_config/libsuitesparseconfig.a
 
-INC = -I../Include -I../../SuiteSparse_config
+INC = -I../Include -I../../SuiteSparse_config -I/Library/gurobi650/mac64/include
 
 #-------------------------------------------------------------------------------
 
@@ -114,6 +115,9 @@ mongoose_qpnapup.o: ../Source/mongoose_qpnapup.cpp
 	$(CXX) -c $(INC) $<
 
 mongoose_refinement.o: ../Source/mongoose_refinement.cpp
+	$(CXX) -c $(INC) $<
+
+mongoose_vertexseparator.o: ../Source/mongoose_vertexseparator.cpp
 	$(CXX) -c $(INC) $<
 
 mongoose_waterdance.o: ../Source/mongoose_waterdance.cpp

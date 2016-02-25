@@ -8,7 +8,9 @@ include ../../SuiteSparse_config/SuiteSparse_config.mk
 
 LIBS = \
     ../Lib/libMongoose.a \
-    ../../SuiteSparse_config/libsuitesparseconfig.a
+    ../../SuiteSparse_config/libsuitesparseconfig.a \
+    /Library/gurobi650/mac64/lib/libgurobi_c++.a \
+    /Library/gurobi650/mac64/lib/libgurobi65.so
 #    -lrt
 
 INC = -I../Include -I../../SuiteSparse_config

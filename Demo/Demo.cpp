@@ -56,11 +56,15 @@ int main(int argn, const char **argv)
                                 dmperm->r[largest_scc+1]-1) ;
     Graph *V = CSparse3ToGraph(submatrix);
     U = conditionGraph (V, options) ;
-    ComputeEdgeSeparator (U, options) ;
+    printf("U->n = %ld\n", U->n);
+    //ComputeEdgeSeparator (U, options) ;
 
-    printf ("U->cutCost = %f\n", U->cutCost) ;
-    printf ("U->imbalance = %f\n", U->imbalance) ;
-    printf ("Partitioning Complete\n") ;
+    //printf ("U->cutCost = %f\n", U->cutCost) ;
+    //printf ("U->imbalance = %f\n", U->imbalance) ;
+    //printf ("Partitioning Complete\n") ;
+
+    ComputeVertexSeparator (U, options);
+    printf("Done!\n");
 
     U->~Graph () ;
     free (U) ;

@@ -8,8 +8,6 @@
 namespace SuiteSparse_Mongoose
 {
 
-bool initialize(Graph *G, Options *O);
-
 /* The input must be a single connected component. */
 void ComputeEdgeSeparator(Graph *G, Options *O)
 {
@@ -86,6 +84,7 @@ bool initialize(Graph *G, Options *O)
     G->markValue = 1;
 
     G->partition = (bool*) SuiteSparse_malloc(n, sizeof(bool));
+    G->separator = (bool*) SuiteSparse_malloc(n, sizeof(bool));
     G->bhIndex = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     G->bhHeap[0] = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     G->bhHeap[1] = (Int*) SuiteSparse_malloc(n, sizeof(Int));
