@@ -10,10 +10,11 @@ LIBS = \
     ../Lib/libMongoose.a \
     ../../SuiteSparse_config/libsuitesparseconfig.a \
     /Library/gurobi650/mac64/lib/libgurobi_c++.a \
-    /Library/gurobi650/mac64/lib/libgurobi65.so
+    /Library/gurobi650/mac64/lib/libgurobi65.so \
+    /usr/local/lib/libmetis.a
 #    -lrt
 
-INC = -I../Include -I../../SuiteSparse_config
+INC = -I../Include -I../../SuiteSparse_config -I/usr/local/include
 
 C = $(CXX) $(CF) $(INC)
 

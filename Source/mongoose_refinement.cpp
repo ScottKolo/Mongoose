@@ -13,9 +13,11 @@ Graph *refine(Graph *G, Options *O)
 
     Int cn = G->n;
     bool *cPartition = G->partition;
+    bool *cSeparator = G->separator;
     Int *invmatchmap = P->invmatchmap;
     Int *matching = P->matching;
     bool *fPartition = P->partition;
+    bool *fSeparator = P->separator;
     Weight *fGains = P->vertexGains;
     Int *fExternalDegree = P->externalDegree;
 
@@ -42,10 +44,12 @@ Graph *refine(Graph *G, Options *O)
 
         /* Transfer the partition choices to the fine level. */
         bool cp = cPartition[k];
+        bool cs = cSeparator[k];
         for(Int i=0; i<3 && v[i] != -1; i++)
         {
             Int vertex = v[i];
             fPartition[vertex] = cp;
+            fSeparator[vertex] = cs;
         }
     }
 

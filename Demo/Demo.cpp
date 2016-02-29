@@ -4,6 +4,8 @@
 #include "mongoose_cs.hpp"
 #include <ctime>
 
+#include "metis.h"
+
 using namespace SuiteSparse_Mongoose;
 
 int main(int argn, const char **argv)
@@ -62,7 +64,7 @@ int main(int argn, const char **argv)
     //printf ("U->cutCost = %f\n", U->cutCost) ;
     //printf ("U->imbalance = %f\n", U->imbalance) ;
     //printf ("Partitioning Complete\n") ;
-
+    options->coarsenLimit = 50; // Performance problems at larger limits
     ComputeVertexSeparator (U, options);
     printf("Done!\n");
 
@@ -73,7 +75,16 @@ int main(int argn, const char **argv)
     free (options) ;
 
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
+    /*
+    idx_t *perm = (idx_t*)SuiteSparse_malloc(U->n, sizeof(idx_t));
+    idx_t *iperm = (idx_t*)SuiteSparse_malloc(U->n, sizeof(idx_t));
+    idx_t met_options[METIS_NOPTIONS];
+    METIS_SetDefaultOptions(met_options);
+    met_options[METIS_OPTION_DBGLVL] = 1 + 2 + 4 + 8 + 64;
+    met_options[METIS_OPTION_NO2HOP] = 0; 
+    met_options[METIS_OPTION_CCORDER] = 1; 
+    //int status = METIS_NodeND((idx_t*)U->n, (idx_t*)U->p, (idx_t*)U->i, (idx_t*)U->w, met_options, perm, iperm);
+    */
     printf("Total Time: %f\n", duration);
 
     /* Return success */

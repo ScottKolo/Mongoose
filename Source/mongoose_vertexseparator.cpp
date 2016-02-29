@@ -7,12 +7,14 @@
 
 #include "gurobi_c++.h"
 #include <iostream>
+
 using namespace std;
 
 namespace SuiteSparse_Mongoose
 {
 
 void milp_refine(Graph *G, Options *O);
+vector<Int> reduceProblem(Graph *G, Int hops, vector<Int> &red_to_orig, Int &red_n);
 
 /* The input must be a single connected component. */
 void ComputeVertexSeparator(Graph *G, Options *O)
@@ -47,30 +49,14 @@ void ComputeVertexSeparator(Graph *G, Options *O)
         current = next;
     }
 
-    /* 
-     * Generate a guess cut and do FM refinement.
-     * On failure, unwind the stack.
-     */
-     /*
-    if(!guessCut(current, O))
-    {
-         while(current != G)
-         {
-              Graph *next = current->parent;
-              current->~Graph();
-              SuiteSparse_free(current);
-              current = next;
-         }
-         return;
-    }
-    */
     /*
      * Refine the guess cut back to the beginning.
      */
+    milp_refine(current, O);
     while(current->parent != NULL)
     {
-        current = refine(current, O);
-        milp_refine(current, O);
+      current = refine(current, O);
+      milp_refine(current, O);
     }
 }
 
@@ -82,49 +68,92 @@ void milp_refine(Graph *G, Options *O)
     GRBEnv env = GRBEnv();
     GRBModel model = GRBModel(env);
     model.getEnv().set("OutputFlag", "0");
+    //model.getEnv().set("MIPGapAbs", "0");
+    model.set(GRB_IntAttr_ModelSense, -1);
+
+    // Massive heuristic optimization
+    // Only add vertices within 3 hops of the separator
+
+    Int n = G->n;
+    Int red_n;
+    vector<Int> red_to_orig;
+    vector<Int> orig_to_red = reduceProblem(G, 3, red_to_orig, red_n);
 
     // Create variables
-    csi n = G->n;
     double *c = G->w;
-    // Can optimize mallocs here later
-    // UB/LB may be redundant with GRB_BINARY
-    double *x_lb = (double*)SuiteSparse_malloc(n, sizeof(double));
-    double *x_ub = (double*)SuiteSparse_malloc(n, sizeof(double));
-    double *y_lb = (double*)SuiteSparse_malloc(n, sizeof(double));
-    double *y_ub = (double*)SuiteSparse_malloc(n, sizeof(double));
-    char *types = (char*)SuiteSparse_malloc(n, sizeof(char));
-    for (int i = 0; i < n; i++) {
-      x_lb[i] = 0;
-      x_ub[i] = 1;
-      y_lb[i] = 0;
-      y_ub[i] = 1;
+    double *red_c = (double*)SuiteSparse_malloc(red_n, sizeof(double));
+    char *types = (char*)SuiteSparse_malloc(red_n, sizeof(char));
+
+    for (Int i = 0; i < red_n; i++)
+    {
       types[i] = GRB_BINARY;
+      red_c[i] = c[red_to_orig[i]];
     }
-    GRBVar* x_vars = model.addVars (x_lb, x_ub, c, types, NULL, n);
-    GRBVar* y_vars = model.addVars (y_lb, y_ub, c, types, NULL, n);
+    GRBVar* x_vars = model.addVars (NULL, NULL, red_c, types, NULL, red_n);
+    GRBVar* y_vars = model.addVars (NULL, NULL, red_c, types, NULL, red_n);
 
     // Integrate new variables
-
     model.update();
-    // Set objective: maximize c'*(x+y)
-    GRBLinExpr obj = GRBLinExpr (0.0);
-    obj.addTerms (c, x_vars, n);
-    obj.addTerms (c, y_vars, n);
-    model.setObjective(obj, GRB_MAXIMIZE);
 
-    // Add constraints: x_i + y_i <= 1
-    for (int i = 0; i < n; i++)
+    // Initialize variables (warm start)
+    for (Int i = 0; i < red_n; i++)
     {
-      model.addConstr(x_vars[i] + y_vars[i], GRB_LESS_EQUAL, 1.0);
+      x_vars[i].set(GRB_DoubleAttr_Start, (G->partition[red_to_orig[i]])?1:0);
+      y_vars[i].set(GRB_DoubleAttr_Start, (G->separator[red_to_orig[i]])?1:0);
+    }
+
+    // Add constraints: x_i + y_j <= 1 for all (i,j) in E
+    // O(nnz)
+    for (Int j = 0 ; j < red_n ; j++)
+    {
+        Int col = red_to_orig[j];
+        for (Int p = G->p [col] ; p < G->p [col+1] ; p++)
+        {
+          if(orig_to_red[G->i[p]] >= 0)
+          {
+            model.addConstr(x_vars[j] + y_vars[orig_to_red[G->i[p]]], GRB_LESS_EQUAL, 1.0);
+            model.addConstr(x_vars[orig_to_red[G->i[p]]] + y_vars[j], GRB_LESS_EQUAL, 1.0);
+          }
+          else if (G->partition[G->i[p]] && !G->separator[G->i[p]])
+          {
+            model.addConstr(x_vars[j], GRB_LESS_EQUAL, 1.0);
+            model.addConstr(y_vars[j], GRB_EQUAL, 0);
+          }
+          else if (!G->partition[G->i[p]] && G->separator[G->i[p]])
+          {
+            model.addConstr(x_vars[j], GRB_EQUAL, 0);
+            model.addConstr(y_vars[j], GRB_LESS_EQUAL, 1.0);
+          }
+        }
+    }
+
+    // Add constraints: x_i + y_i <= 1 for i in 1:n
+    for (Int j = 0 ; j < red_n ; j++)
+    {
+        model.addConstr(x_vars[j] + y_vars[j], GRB_LESS_EQUAL, 1.0);
     }
 
     // Add constraints: lb <= sum(x) <= ub
-    GRBLinExpr sum_x = GRBLinExpr (0.0);
-    GRBLinExpr sum_y = GRBLinExpr (0.0);
-    for(int i = 0; i < n; i++)
+    // O(n)
+    Int x_wgts = 0;
+    Int y_wgts = 0;
+    for(Int i = 0; i < n; i++)
     {
-      sum_x += c[i]*x_vars[i];
-      sum_y += c[i]*y_vars[i];
+      if(G->partition[i] && !G->separator[i])
+      {
+        x_wgts += G->w[i];
+      }
+      else if(!G->partition[i] && G->separator[i])
+      {
+        y_wgts += G->w[i];
+      }
+    }
+    GRBLinExpr sum_x = GRBLinExpr (x_wgts);
+    GRBLinExpr sum_y = GRBLinExpr (y_wgts);
+    for(Int i = 0; i < red_n; i++)
+    {
+      sum_x += red_c[i]*x_vars[i];
+      sum_y += red_c[i]*y_vars[i];
     }
     double ub = 2.0/3.0*G->W;
     double lb = 1;
@@ -133,29 +162,84 @@ void milp_refine(Graph *G, Options *O)
     model.addConstr(sum_x, GRB_GREATER_EQUAL, lb);
     model.addConstr(sum_y, GRB_GREATER_EQUAL, lb);
 
-    // Optimize model
+    // Output model to file - Debugging
     //model.update();
-    //model.write("check.lp");
+    //model.write("check" +to_string(G->clevel) + ".lp");
+
+    // Optimize model
     model.optimize();
-    /*
-    for(int i = 0; i < n; i++)
+
+    Int sepsize = 0;
+    for(Int i = 0; i < red_n; i++)
     {
-      cout << "x[" << i << "] = " << x_vars[i].get(GRB_DoubleAttr_X)*G->w[i];
-      cout << ", y[" << i << "] = " << y_vars[i].get(GRB_DoubleAttr_X)*G->w[i] << endl;
+      G->partition[red_to_orig[i]] = (x_vars[i].get(GRB_DoubleAttr_X) < 0.5)? false : true;
+      G->separator[red_to_orig[i]] = (y_vars[i].get(GRB_DoubleAttr_X) < 0.5)? false : true;
+      if(!G->partition[red_to_orig[i]] && !G->separator[red_to_orig[i]])
+        sepsize++;
     }
-    cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
-    */
-    for(int i = 0; i < n; i++)
-    {
-      G->partition[i] = (x_vars[i].get(GRB_DoubleAttr_X) > 0.9)? 0 : 1;
-      G->separator[i] = (y_vars[i].get(GRB_DoubleAttr_X) > 0.9)? 0 : 1;
-    }
+    printf("Sep size: %f %ld\n", red_n - model.get(GRB_DoubleAttr_ObjVal), sepsize);
+
+    // Free allocated variables
+    red_c = (double*)SuiteSparse_free(red_c);
+    types = (char*)SuiteSparse_free(types);
   } catch(GRBException e) {
     cout << "Error code = " << e.getErrorCode() << endl;
     cout << e.getMessage() << endl;
   } catch(...) {
     cout << "Exception during optimization" << endl;
   }
+}
+
+// Reduce the problem to include only the separator plus vertices within a
+// certain distance (hops). Return the reduced number of vertices (red_n),
+// the mapping of reduced vertices to original vertices (red_to_orig), and
+// the mapping of original vertices to reduced vertices (orig_to_red, function
+// return).
+vector<Int> reduceProblem(Graph *G, Int hops, vector<Int> &red_to_orig, Int &red_n)
+{
+  Int *Gp = G->p;
+  Int *Gi = G->i;
+  Int n = G->n;
+  red_n = 0;
+
+  vector<Int> red_index(n, -1);
+  Int count = 0;
+  for(Int i = 0; i < n; i++)
+  {
+    if(!G->partition[i] && !G->separator[i])
+    {
+      red_index[i] = count;
+      red_to_orig.push_back(i);
+      count++;
+    }
+  }
+
+  Int start = 0;
+  Int end = count;
+  for(Int k = 0; k < hops-1; k++)
+  {
+    start = end;
+    end = count;
+    for(Int i = start; i < end; i++)
+    {
+      Int j = red_to_orig[i];
+      for(Int p = Gp[j]; p < Gp[j+1]; p++)
+      {
+        if(red_index[Gi[p]] >= 0)
+        {
+          continue;
+        }
+        else
+        {
+          red_index[Gi[p]] = count;
+          red_to_orig.push_back(Gi[p]);
+          count++;
+        }
+      }
+    }
+  }
+  red_n = count;
+  return red_index;
 }
 
 }
