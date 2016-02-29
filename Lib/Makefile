@@ -15,6 +15,7 @@ OBJS = \
   mongoose_edgeseparator.o \
   mongoose_fidduciamattheyes.o \
   mongoose_guesscut.o \
+  mongoose_internal.o \
   mongoose_interop.o \
   mongoose_matching.o \
   mongoose_nuri_qpgradproj.o \
@@ -76,6 +77,9 @@ mongoose_fidduciamattheyes.o: ../Source/mongoose_fidduciamattheyes.cpp
 	$(CXX) -c $(INC) $<
 
 mongoose_guesscut.o: ../Source/mongoose_guesscut.cpp
+	$(CXX) -c $(INC) $<
+
+mongoose_internal.o: ../Source/mongoose_internal.cpp
 	$(CXX) -c $(INC) $<
 
 mongoose_interop.o: ../Source/mongoose_interop.cpp

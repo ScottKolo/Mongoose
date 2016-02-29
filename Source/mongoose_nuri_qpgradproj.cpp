@@ -2,7 +2,6 @@
 #include "mongoose_hager.hpp"
 #include "mongoose_boundaryheap.hpp"
 #include "mongoose_fidduciamattheyes.hpp"
-#include "SuiteSparse_config.h"
 
 namespace SuiteSparse_Mongoose
 {

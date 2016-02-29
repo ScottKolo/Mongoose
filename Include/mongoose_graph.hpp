@@ -2,7 +2,7 @@
 #define GRAPH_HPP_
 
 #include "stdio.h"
-#include "SuiteSparse_config.h"
+#include "mongoose_internal.hpp"
 
 namespace SuiteSparse_Mongoose
 {
