@@ -27,7 +27,7 @@ struct SuiteSparse_config_struct
     void *(*realloc_func) (void *, size_t) ;    /* pointer to realloc */
     void (*free_func) (void *) ;                /* pointer to free */
     int (*printf_func) (const char *, ...) ;    /* pointer to printf */
-} ;
+};
 
 extern struct SuiteSparse_config_struct SuiteSparse_config ;
 

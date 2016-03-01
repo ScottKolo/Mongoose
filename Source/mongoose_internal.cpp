@@ -1,5 +1,38 @@
 #include "mongoose_internal.hpp"
 
+struct SuiteSparse_config_struct SuiteSparse_config =
+{
+
+    /* memory management functions */
+    #ifndef NMALLOC
+        #ifdef MATLAB_MEX_FILE
+            /* MATLAB mexFunction: */
+            mxMalloc, mxCalloc, mxRealloc, mxFree,
+        #else
+            /* standard ANSI C: */
+            malloc, calloc, realloc, free,
+        #endif
+    #else
+        /* no memory manager defined; you must define one at run-time: */
+        NULL, NULL, NULL, NULL,
+    #endif
+
+    /* printf function */
+    #ifndef NPRINT
+        #ifdef MATLAB_MEX_FILE
+            /* MATLAB mexFunction: */
+            mexPrintf,
+        #else
+            /* standard ANSI C: */
+            printf,
+        #endif
+    #else
+        /* printf is disabled */
+        NULL,
+    #endif
+
+} ;
+
 /* -------------------------------------------------------------------------- */
 /* SuiteSparse_malloc: malloc wrapper */
 /* -------------------------------------------------------------------------- */
