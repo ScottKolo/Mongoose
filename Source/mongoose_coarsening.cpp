@@ -1,6 +1,6 @@
 
 #include "mongoose_coarsening.hpp"
-#include "SuiteSparse_config.h"
+#include "mongoose_internal.hpp"
 
 namespace SuiteSparse_Mongoose
 {

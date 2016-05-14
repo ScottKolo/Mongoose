@@ -2,7 +2,7 @@
 #define QPDelta_HPP_
 
 #include <new>
-#include "SuiteSparse_config.h"
+#include "mongoose_internal.hpp"
 using namespace SuiteSparse_Mongoose;
 
 namespace SuiteSparse_Mongoose

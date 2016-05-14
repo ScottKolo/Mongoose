@@ -1,7 +1,7 @@
 
 #include "mongoose_internal.hpp"
 #include "mongoose_cs.hpp"
-#include "SuiteSparse_config.h"
+#include "mongoose_internal.hpp"
 
 namespace SuiteSparse_Mongoose
 {
