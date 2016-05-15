@@ -1,6 +1,7 @@
 
 #include "mex.h"
-#include "Mongoose.hpp"
+#include "mongoose.hpp"
+#include "mongoose_internal.hpp"
 
 namespace SuiteSparse_Mongoose
 {
