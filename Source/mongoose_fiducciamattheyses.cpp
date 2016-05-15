@@ -1,9 +1,9 @@
 
-#include "mongoose_fidduciamattheyes.hpp"
+#include "mongoose_fiducciamattheyses.hpp"
 #include "mongoose_boundaryheap.hpp"
 #include "mongoose_interop.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void fmRefine_worker(Graph *G, Options *O);
@@ -330,4 +330,4 @@ void calculateGain
     *out_externalDegree = externalDegree;
 }
 
-}
+} // end namespace Mongoose

@@ -3,7 +3,7 @@
 
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Graph *conditionGraph
@@ -14,6 +14,6 @@ Graph *conditionGraph
     bool resetNW = false
 );
 
-}
+} // end namespace Mongoose
 
 #endif

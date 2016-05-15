@@ -4,11 +4,11 @@
 #include "mongoose_internal.hpp"
 #include "mongoose_matching.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Graph *coarsen(Graph *G, Options *O);
 
-}
+} // end namespace Mongoose
 
 #endif

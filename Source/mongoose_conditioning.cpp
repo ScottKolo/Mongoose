@@ -2,7 +2,7 @@
 #include "mongoose_conditioning.hpp"
 #include "mongoose_cs.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /******************************************************************************
@@ -61,4 +61,4 @@ Graph *conditionGraph
     return G;
 }
 
-}
+} // end namespace Mongoose

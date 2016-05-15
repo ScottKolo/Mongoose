@@ -5,7 +5,7 @@
 #include "mongoose_qpdelta.hpp"
 #include "mongoose_gradproj.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void qpGradProj
@@ -21,6 +21,6 @@ void qpBallOpt
     Options *O
 );
 
-}
+} // end namespace Mongoose
 
 #endif

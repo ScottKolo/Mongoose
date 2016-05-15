@@ -6,7 +6,7 @@
 #include "stdio.h"
 #include "string.h"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* Sanitizes a matrix market input file into a CSparse3 input file. */
@@ -219,4 +219,4 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     return returner;
 }
 
-}
+} // end namespace Mongoose

@@ -1,10 +1,10 @@
-#ifndef FIDDUCIAMATTHEYES_HPP_
-#define FIDDUCIAMATTHEYES_HPP_
+#ifndef FIDUCCIAMATTHEYSES_HPP_
+#define FIDUCCIAMATTHEYSES_HPP_
 
 #include "mongoose_internal.hpp"
 #include "mongoose_cutcost.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* Swap candidates have the following features: */
@@ -55,6 +55,6 @@ void calculateGain
     Int *out_externalDegree
 );
 
-}
+} // end namespace Mongoose
 
-#endif /* FIDDUCIAMATTHEYES_HPP_ */
+#endif /* FIDUCCIAMATTHEYSES_HPP_ */

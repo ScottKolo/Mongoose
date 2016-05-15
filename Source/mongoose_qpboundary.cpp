@@ -31,7 +31,7 @@ while decreasing the cost function. The algorithm has the following parts
 
 #include "mongoose_gradproj.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void QPboundary
@@ -509,4 +509,4 @@ void QPboundary
     G->markValue = markValue + 1;
 }
 
-}
+} // end namespace Mongoose

@@ -3,7 +3,7 @@
 
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 enum MatchType
@@ -22,7 +22,7 @@ void matching_PA(Graph *G, Options *O);
 void matching_DavisPA(Graph *G, Options *O);
 void matching_Cleanup(Graph *G, Options *O);
 
-}
+} // end namespace Mongoose
 
 /* Mongoose Matching Macros */
 #ifndef MONGOOSE_MATCHING_MACROS

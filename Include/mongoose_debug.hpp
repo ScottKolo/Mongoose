@@ -2,10 +2,7 @@
 #define DEBUG_HPP_
 
 #include "mongoose_internal.hpp"
-
-extern "C" {
-    #include "cs.hpp"
-}
+#include "mongoose_cs.hpp"
 
 /* Mongoose Logic Macros */
 #ifndef MONGOOSE_IMPLIES
@@ -15,7 +12,7 @@ extern "C" {
 #define MONGOOSE_IFF(p,q)        (IMPLIES(p,q) && IMPLIES(q,p))
 #endif
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* debug_Print */
@@ -33,6 +30,6 @@ void bhCheckHeapProperty(Int *bhIndex, Int *bhHeap, Int bhSize, Weight *gains);
 void checkGraph(Graph *G, Options *O);
 void checkBoundary(Graph *G, Options *O);
 
-}
+} // end namespace Mongoose
 
 #endif

@@ -3,7 +3,7 @@
 #include "mongoose.hpp"
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void shcpDataToMAT

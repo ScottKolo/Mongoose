@@ -1,10 +1,10 @@
 
 #include "mongoose_hager.hpp"
 #include "mongoose_boundaryheap.hpp"
-#include "mongoose_fidduciamattheyes.hpp"
+#include "mongoose_fiducciamattheyses.hpp"
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void qpGradProj
@@ -132,4 +132,4 @@ void qpGradProj
     G->heuCost = G->cutCost + (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
 }
 
-}
+} // end namespace Mongoose

@@ -5,7 +5,7 @@
 #include "mongoose_cs.hpp"
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* Take a matrix market format file, sanitize it, and use the sanitized file
@@ -19,6 +19,6 @@ cs *cs_load2 (FILE *f);
 cs *GraphToCSparse3(Graph *G, bool copy = false);
 Graph *CSparse3ToGraph(cs *G, bool resetEW = false, bool resetNW = false);
 
-}
+} // end namespace Mongoose
 
 #endif

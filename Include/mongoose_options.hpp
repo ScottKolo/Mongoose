@@ -3,7 +3,7 @@
 
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 struct Options
@@ -83,6 +83,6 @@ struct Options
     }
 };
 
-}
+} // end namespace Mongoose
 
 #endif

@@ -3,9 +3,9 @@
 
 #include <new>
 #include "mongoose_internal.hpp"
-using namespace SuiteSparse_Mongoose;
+using namespace Mongoose;
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 class QPDelta
@@ -72,6 +72,6 @@ public:
     }
 };
 
-}
+} // end namespace Mongoose
 
 #endif

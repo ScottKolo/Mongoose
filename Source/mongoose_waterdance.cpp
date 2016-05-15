@@ -1,7 +1,7 @@
 
 #include "mongoose_waterdance.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void waterdance(Graph *G, Options *O)
@@ -14,4 +14,4 @@ void waterdance(Graph *G, Options *O)
     }
 }
 
-}
+} // end namespace Mongoose

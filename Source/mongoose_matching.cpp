@@ -2,7 +2,7 @@
 #include "mongoose_matching.hpp"
 #include <iostream>
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 //-----------------------------------------------------------------------------
@@ -386,4 +386,4 @@ void matching_HEM(Graph *G, Options *O)
     }
 }
 
-}
+} // end namespace Mongoose

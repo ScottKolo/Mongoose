@@ -3,7 +3,7 @@
 #include "mongoose_cutcost.hpp"
 #include "mongoose_cs.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 //-----------------------------------------------------------------------------
@@ -233,4 +233,4 @@ void heapifyDown
     }
 }
 
-}
+} // end namespace Mongoose

@@ -2,14 +2,14 @@
 #define WATERDANCE_HPP_
 
 #include "mongoose_internal.hpp"
-#include "mongoose_fidduciamattheyes.hpp"
+#include "mongoose_fiducciamattheyses.hpp"
 #include "mongoose_hager.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void waterdance(Graph *G, Options *O);
 
-}
+} // end namespace Mongoose
 
 #endif

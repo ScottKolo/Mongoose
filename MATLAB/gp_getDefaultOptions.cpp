@@ -1,7 +1,7 @@
 
 #include "gp_mex.hpp"
 
-using namespace SuiteSparse_Mongoose;
+using namespace Mongoose;
 
 void mexFunction
 (

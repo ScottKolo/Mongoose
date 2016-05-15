@@ -3,7 +3,7 @@
 
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void QPmaxheap_build
@@ -138,6 +138,6 @@ Double QPnapdown            /* return lambda */
     Int *free_heap          /* work array */
 );
 
-}
+} // end namespace Mongoose
 
 #endif

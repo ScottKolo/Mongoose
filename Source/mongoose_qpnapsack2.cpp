@@ -18,7 +18,7 @@
 
 #include "mongoose_napsack.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void QPnapsack2
@@ -49,4 +49,4 @@ void QPnapsack2
     lambda[1] = QPnapsack(x+m, n-m, lo[1], hi[1], am, lambda[1], ixm, wx1, wi1, wi2);
 }
 
-}
+} // end namespace Mongoose

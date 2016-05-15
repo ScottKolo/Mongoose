@@ -4,7 +4,7 @@
 #include "stdio.h"
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 class Graph
@@ -286,7 +286,7 @@ public:
     }
 };
 
-}
+} // end namespace Mongoose
 
 /* Mongoose graph-related macros */
 #ifndef MONGOOSE_MARKED

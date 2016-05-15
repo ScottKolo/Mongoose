@@ -3,7 +3,7 @@
 #include "mongoose_hager.hpp"
 #include "mongoose_waterdance.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Int diagBFS
@@ -306,4 +306,4 @@ void pseudoperipheralGuess
     bhLoad(G, O);
 }
 
-}
+} // end namespace Mongoose

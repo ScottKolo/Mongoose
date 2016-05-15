@@ -13,7 +13,7 @@
 #include "mongoose_gradproj.hpp"
 #include "mongoose_napsack.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Double QPgradproj
@@ -273,4 +273,4 @@ Double QPgradproj
     return err;
 }
 
-}
+} // end namespace Mongoose

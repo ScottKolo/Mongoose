@@ -82,7 +82,7 @@
 
 #include "mongoose_napsack.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Double QPnapsack	/* return the final lambda */
@@ -263,4 +263,4 @@ Double QPnapsack	/* return the final lambda */
     return lambda;
 }
 
-}
+} // end namespace Mongoose

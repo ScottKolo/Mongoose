@@ -4,7 +4,7 @@
 #include "mongoose_cs.hpp"
 #include <ctime>
 
-using namespace SuiteSparse_Mongoose;
+using namespace Mongoose;
 
 int main(int argn, const char **argv)
 {

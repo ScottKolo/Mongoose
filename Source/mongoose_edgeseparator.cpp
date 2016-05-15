@@ -5,7 +5,7 @@
 #include "mongoose_refining.hpp"
 #include "mongoose_waterdance.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 bool initialize(Graph *G, Options *O);
@@ -130,4 +130,4 @@ bool initialize(Graph *G, Options *O)
     return true;
 }
 
-}
+} // end namespace Mongoose

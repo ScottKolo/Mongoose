@@ -1,6 +1,6 @@
 #include "gp_mex.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /*****************************************************************************

@@ -31,7 +31,7 @@ set(MONGOOSE_LIB_FILES
         Include/mongoose_cs.hpp
         Include/mongoose_cutcost.hpp
         Include/mongoose_debug.hpp
-        Include/mongoose_fidduciamattheyes.hpp
+        Include/mongoose_fiducciamattheyses.hpp
         Include/mongoose_gradproj.hpp
         Include/mongoose_graph.hpp
         Include/mongoose_guesscut.hpp
@@ -49,7 +49,7 @@ set(MONGOOSE_LIB_FILES
         Source/mongoose_conditioning.cpp
         Source/mongoose_cs.cpp
         Source/mongoose_edgeseparator.cpp
-        Source/mongoose_fidduciamattheyes.cpp
+        Source/mongoose_fiducciamattheyses.cpp
         Source/mongoose_guesscut.cpp
         Source/mongoose_internal.cpp
         Source/mongoose_interop.cpp

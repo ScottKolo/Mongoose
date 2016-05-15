@@ -1,7 +1,7 @@
 
 #include "mongoose_gradproj.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void QPlinks
@@ -64,4 +64,4 @@ void QPlinks
     QP->ib = (s <= lo ? -1 : s < hi ? 0 : 1);
 }
 
-}
+} // end namespace Mongoose

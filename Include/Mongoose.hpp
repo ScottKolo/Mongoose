@@ -7,7 +7,7 @@
 #include "stdlib.h"
 #include "math.h"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* Type definitions */
@@ -19,14 +19,14 @@ typedef double Double;  /* Used for floating point other calculations  */
 enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
 
-}
+} // end namespace Mongoose
 
 /* Structures */
 #include "mongoose_graph.hpp"
 #include "mongoose_options.hpp"
 #include "mongoose_interop.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* Function pointers */
@@ -34,6 +34,6 @@ typedef void (*fxMatcher) (Graph *G, Options *O);
 
 void ComputeEdgeSeparator(Graph *G, Options *O);
 
-}
+} // end namespace Mongoose
 
 #endif

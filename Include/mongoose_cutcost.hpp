@@ -1,7 +1,7 @@
 #ifndef CUTCOST_HPP_
 #define CUTCOST_HPP_
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* A partitioning has the following metrics: */
@@ -13,6 +13,6 @@ struct CutCost
     Weight imbalance;   /* targetSplit - (W[0] / W)               */
 };
 
-}
+} // end namespace Mongoose
 
 #endif /* CUTCOST_HPP_ */

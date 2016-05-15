@@ -43,7 +43,7 @@
 #define CS_MARK(w,j) { w [j] = CS_FLIP (w [j]) ; }
 #endif
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* --- primary CSparse routines and data structures ------------------------- */
@@ -83,6 +83,6 @@ cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2);
 cs *cs_permute (const cs *A, const csi *pinv, const csi *q, csi values);
 csi *cs_pinv (csi const *p, csi n);
 
-}
+} // end namespace Mongoose
 
 #endif

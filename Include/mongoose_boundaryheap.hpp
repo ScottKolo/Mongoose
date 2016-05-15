@@ -17,7 +17,7 @@
 
 #endif
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void bhLoad
@@ -68,6 +68,6 @@ void heapifyDown
     Weight gain
 );
 
-}
+} // end namespace Mongoose
 
 #endif

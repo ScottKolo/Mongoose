@@ -4,7 +4,7 @@
 #include "mongoose_internal.hpp"
 #include "mongoose_qpdelta.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 void QPlinks
@@ -49,6 +49,6 @@ void QPboundary
     return err;                                                               \
 }                                                                             \
 
-}
+} // end namespace Mongoose
 
 #endif

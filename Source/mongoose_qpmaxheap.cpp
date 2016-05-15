@@ -4,7 +4,7 @@
 
 #include "mongoose_napsack.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 /* ========================================================================== */
@@ -227,4 +227,4 @@ void QPmaxheap_check
     free(w);
 }
 
-}
+} // end namespace Mongoose

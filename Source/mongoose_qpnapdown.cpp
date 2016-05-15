@@ -14,7 +14,7 @@
 
 #include "mongoose_napsack.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Double QPnapdown            /* return lambda */
@@ -205,4 +205,4 @@ Double QPnapdown            /* return lambda */
     return lambda;
 }
 
-}
+} // end namespace Mongoose

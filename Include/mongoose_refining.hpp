@@ -3,11 +3,11 @@
 
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Graph *refine(Graph *G, Options *O);
 
-}
+} // end namespace Mongoose
 
 #endif

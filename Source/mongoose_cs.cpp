@@ -3,7 +3,7 @@
 #include "mongoose_cs.hpp"
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 csi *cs_counts (const cs *A, const csi *parent, const csi *post, csi ata) ;
@@ -421,4 +421,4 @@ csi *cs_pinv (csi const *p, csi n)
     return (pinv) ;                             /* return result */
 }
 
-}
+} // end namespace Mongoose

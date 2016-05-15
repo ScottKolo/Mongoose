@@ -5,7 +5,7 @@
 #include "mongoose_cutcost.hpp"
 #include "mongoose_boundaryheap.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 bool guessCut(Graph *G, Options *O);
@@ -30,6 +30,6 @@ void partBFS
     Int start
 );
 
-}
+} // end namespace Mongoose
 
 #endif

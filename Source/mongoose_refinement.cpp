@@ -2,9 +2,9 @@
 #include "mongoose_refining.hpp"
 #include "mongoose_matching.hpp"
 #include "mongoose_boundaryheap.hpp"
-#include "mongoose_fidduciamattheyes.hpp"
+#include "mongoose_fiducciamattheyses.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Graph *refine(Graph *G, Options *O)
@@ -103,4 +103,4 @@ Graph *refine(Graph *G, Options *O)
     return P;
 }
 
-}
+} // end namespace Mongoose

@@ -2,7 +2,7 @@
 #include "mongoose_coarsening.hpp"
 #include "mongoose_internal.hpp"
 
-namespace SuiteSparse_Mongoose
+namespace Mongoose
 {
 
 Graph *coarsen(Graph *G, Options *O)
@@ -128,4 +128,4 @@ Graph *coarsen(Graph *G, Options *O)
     return C;
 }
 
-}
+} // end namespace Mongoose
