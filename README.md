@@ -1,6 +1,6 @@
 # Mongoose
 
-Mongoose is an graph partitioning library. Currently, Mongoose only supports 
+Mongoose is a graph partitioning library. Currently, Mongoose only supports 
 edge partitioning, but in the future a vertex separator will be added.
 
 ## Installation
