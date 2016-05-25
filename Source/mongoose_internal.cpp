@@ -34,6 +34,87 @@ struct SuiteSparse_config_struct SuiteSparse_config =
 } ;
 
 /* -------------------------------------------------------------------------- */
+/* SuiteSparse_start */
+/* -------------------------------------------------------------------------- */
+
+/* All applications that use SuiteSparse should call SuiteSparse_start prior
+   to using any SuiteSparse function.  Only a single thread should call this
+   function, in a multithreaded application.  Currently, this function is
+   optional, since all this function currently does is to set the four memory
+   function pointers to NULL (which tells SuiteSparse to use the default
+   functions).  In a multi- threaded application, only a single thread should
+   call this function.
+
+   Future releases of SuiteSparse might enforce a requirement that
+   SuiteSparse_start be called prior to calling any SuiteSparse function.
+ */
+
+void SuiteSparse_start ( void )
+{
+
+    /* memory management functions */
+    #ifndef NMALLOC
+        #ifdef MATLAB_MEX_FILE
+            /* MATLAB mexFunction: */
+            SuiteSparse_config.malloc_func  = mxMalloc ;
+            SuiteSparse_config.calloc_func  = mxCalloc ;
+            SuiteSparse_config.realloc_func = mxRealloc ;
+            SuiteSparse_config.free_func    = mxFree ;
+        #else
+            /* standard ANSI C: */
+            SuiteSparse_config.malloc_func  = malloc ;
+            SuiteSparse_config.calloc_func  = calloc ;
+            SuiteSparse_config.realloc_func = realloc ;
+            SuiteSparse_config.free_func    = free ;
+        #endif
+    #else
+        /* no memory manager defined; you must define one after calling
+           SuiteSparse_start */
+        SuiteSparse_config.malloc_func  = NULL ;
+        SuiteSparse_config.calloc_func  = NULL ;
+        SuiteSparse_config.realloc_func = NULL ;
+        SuiteSparse_config.free_func    = NULL ;
+    #endif
+
+    /* printf function */
+    #ifndef NPRINT
+        #ifdef MATLAB_MEX_FILE
+            /* MATLAB mexFunction: */
+            SuiteSparse_config.printf_func = mexPrintf ;
+        #else
+            /* standard ANSI C: */
+            SuiteSparse_config.printf_func = printf ;
+        #endif
+    #else
+        /* printf is disabled */
+        SuiteSparse_config.printf_func = NULL ;
+    #endif
+
+    /* math functions */
+    SuiteSparse_config.hypot_func = SuiteSparse_hypot ;
+    SuiteSparse_config.divcomplex_func = SuiteSparse_divcomplex ;
+}
+
+/* -------------------------------------------------------------------------- */
+/* SuiteSparse_finish */
+/* -------------------------------------------------------------------------- */
+
+/* This currently does nothing, but in the future, applications should call
+   SuiteSparse_start before calling any SuiteSparse function, and then
+   SuiteSparse_finish after calling the last SuiteSparse function, just before
+   exiting.  In a multithreaded application, only a single thread should call
+   this function.
+
+   Future releases of SuiteSparse might use this function for any
+   SuiteSparse-wide cleanup operations or finalization of statistics.
+ */
+
+void SuiteSparse_finish ( void )
+{
+    /* do nothing */ ;
+}
+
+/* -------------------------------------------------------------------------- */
 /* SuiteSparse_malloc: malloc wrapper */
 /* -------------------------------------------------------------------------- */
 
@@ -177,4 +258,103 @@ void *SuiteSparse_free      /* always returns NULL */
         (SuiteSparse_config.free_func) (p) ;
     }
     return (NULL) ;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* SuiteSparse_hypot */
+/* -------------------------------------------------------------------------- */
+
+/* There is an equivalent routine called hypot in <math.h>, which conforms
+ * to ANSI C99.  However, SuiteSparse does not assume that ANSI C99 is
+ * available.  You can use the ANSI C99 hypot routine with:
+ *
+ *  #include <math.h>
+ *  SuiteSparse_config.hypot_func = hypot ;
+ *
+ * Default value of the SuiteSparse_config.hypot_func pointer is
+ * SuiteSparse_hypot, defined below.
+ *
+ * s = hypot (x,y) computes s = sqrt (x*x + y*y) but does so more accurately.
+ * The NaN cases for the double relops x >= y and x+y == x are safely ignored.
+ * 
+ * Source: Algorithm 312, "Absolute value and square root of a complex number,"
+ * P. Friedland, Comm. ACM, vol 10, no 10, October 1967, page 665.
+ */
+
+double SuiteSparse_hypot (double x, double y)
+{
+    double s, r ;
+    x = fabs (x) ;
+    y = fabs (y) ;
+    if (x >= y)
+    {
+    if (x + y == x)
+    {
+        s = x ;
+    }
+    else
+    {
+        r = y / x ;
+        s = x * sqrt (1.0 + r*r) ;
+    }
+    }
+    else
+    {
+    if (y + x == y)
+    {
+        s = y ;
+    }
+    else
+    {
+        r = x / y ;
+        s = y * sqrt (1.0 + r*r) ;
+    }
+    } 
+    return (s) ;
+}
+
+/* -------------------------------------------------------------------------- */
+/* SuiteSparse_divcomplex */
+/* -------------------------------------------------------------------------- */
+
+/* c = a/b where c, a, and b are complex.  The real and imaginary parts are
+ * passed as separate arguments to this routine.  The NaN case is ignored
+ * for the double relop br >= bi.  Returns 1 if the denominator is zero,
+ * 0 otherwise.
+ *
+ * This uses ACM Algo 116, by R. L. Smith, 1962, which tries to avoid
+ * underflow and overflow.
+ *
+ * c can be the same variable as a or b.
+ *
+ * Default value of the SuiteSparse_config.divcomplex_func pointer is
+ * SuiteSparse_divcomplex.
+ */
+
+int SuiteSparse_divcomplex
+(
+    double ar, double ai,   /* real and imaginary parts of a */
+    double br, double bi,   /* real and imaginary parts of b */
+    double *cr, double *ci  /* real and imaginary parts of c */
+)
+{
+    double tr, ti, r, den ;
+    if (fabs (br) >= fabs (bi))
+    {
+    r = bi / br ;
+    den = br + r * bi ;
+    tr = (ar + ai * r) / den ;
+    ti = (ai - ar * r) / den ;
+    }
+    else
+    {
+    r = br / bi ;
+    den = r * br + bi ;
+    tr = (ar * r + ai) / den ;
+    ti = (ai * r - ar) / den ;
+    }
+    *cr = tr ;
+    *ci = ti ;
+    return (den == 0.) ;
 }

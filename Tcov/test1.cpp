@@ -1,9 +1,9 @@
 
 #include "mongoose.hpp"
 #include "mongoose_conditioning.hpp"
-#include "SuiteSparse_config.h"
+#include "mongoose_internal.hpp"
 
-using namespace SuiteSparse_Mongoose;
+using namespace Mongoose;
 
 void RunAllTests (
     const char *inputFile, 
