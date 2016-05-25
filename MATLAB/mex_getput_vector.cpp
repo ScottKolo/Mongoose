@@ -1,4 +1,4 @@
-#include "gp_mex.hpp"
+#include "mongoose_mex.hpp"
 
 namespace Mongoose
 {

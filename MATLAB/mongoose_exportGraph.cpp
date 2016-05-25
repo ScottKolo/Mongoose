@@ -1,5 +1,5 @@
 
-#include "gp_mex.hpp"
+#include "mongoose_mex.hpp"
 
 using namespace Mongoose;
 
@@ -13,7 +13,7 @@ void mexFunction
 {
     cs Amatrix;
 
-    const char* usage = "Usage: gp_export(A)";
+    const char* usage = "Usage: mongoose_exportGraph(A)";
     if(nargout != 0 || nargin != 1) mexErrMsgTxt(usage);
 
     Graph *G = mex_get_graph(pargin[0]);

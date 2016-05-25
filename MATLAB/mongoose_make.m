@@ -60,7 +60,9 @@ gp_src = {
     './mex_put_options', ...
     './mex_struct_util' } ;
 
-gp_mex_src = { 'gp_getDefaultOptions', 'gp_computeEdgeSeparator', 'gp_exportGraph' } ;
+gp_mex_src = { 'mongoose_getDefaultOptions', ...
+               'mongoose_computeEdgeSeparator', ...
+               'mongoose_exportGraph' } ;
 
 obj_extension = '.o' ;
 

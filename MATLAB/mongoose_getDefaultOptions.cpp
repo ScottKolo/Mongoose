@@ -1,5 +1,5 @@
 
-#include "gp_mex.hpp"
+#include "mongoose_mex.hpp"
 
 using namespace Mongoose;
 
@@ -14,7 +14,7 @@ void mexFunction
     cs Amatrix;
     int i, gtype, values;
 
-    const char* usage = "Usage: O = gp_getDefaultOptions()";
+    const char* usage = "Usage: O = mongoose_getDefaultOptions()";
     if(nargout != 1 || nargin != 0) mexErrMsgTxt(usage);
 
     Options *ret = Options::Create();

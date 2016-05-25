@@ -1,5 +1,5 @@
 
-#include "gp_mex.hpp"
+#include "mongoose_mex.hpp"
 
 using namespace Mongoose;
 
@@ -14,7 +14,7 @@ void mexFunction
     cs Amatrix;
     int i, gtype, values;
 
-    const char* usage = "Usage: partition = gp_computeEdgeSeparator(G, (O, A))";
+    const char* usage = "Usage: partition = mongoose_computeEdgeSeparator(G, (O, A))";
     if(nargout != 1 || nargin < 1 || nargin > 3) mexErrMsgTxt(usage);
 
     const mxArray *matGraph = pargin[0];
