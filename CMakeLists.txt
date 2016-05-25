@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.3)
 project(Mongoose)
 
+set(MONGOOSE_VERSION_MAJOR   "0")
+set(MONGOOSE_VERSION_MINOR   "1")
+set(MONGOOSE_VERSION_PATCH   "0")
+set(MONGOOSE_VERSION "${MONGOOSE_VERSION_MAJOR}.
+                      ${MONGOOSE_VERSION_MINOR}.
+                      ${MONGOOSE_VERSION_PATCH}")
+
 if(NOT WIN32)
   string(ASCII 27 Esc)
   set(ColourReset "${Esc}[m")
@@ -20,8 +27,6 @@ if(NOT WIN32)
   set(BoldCyan    "${Esc}[1;36m")
   set(BoldWhite   "${Esc}[1;37m")
 endif()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(MONGOOSE_LIB_FILES
         Include/Mongoose.hpp
@@ -70,7 +75,20 @@ set(MONGOOSE_LIB_FILES
 set(DEMO_FILES
     Demo/Demo.cpp)
 
+set(TEST_FILES
+    Tcov/test1.cpp)
+
+# Specify the Include directory for *.hpp files
+include_directories(Include)
+
+# Build the Mongoose library
 add_library(Mongoose ${MONGOOSE_LIB_FILES})
+set_property(TARGET Mongoose PROPERTY CXX_STANDARD 11)
+
+# Build the Demo executable
 add_executable(Demo ${DEMO_FILES})
 target_link_libraries(Demo Mongoose)
-include_directories(Include)
+
+# Build the test executable
+add_executable(test1 ${TEST_FILES})
+target_link_libraries(test1 Mongoose)
