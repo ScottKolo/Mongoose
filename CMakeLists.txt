@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.3)
 project(Mongoose)
 
-set(MONGOOSE_VERSION_MAJOR   "0")
-set(MONGOOSE_VERSION_MINOR   "1")
-set(MONGOOSE_VERSION_PATCH   "0")
+set(MONGOOSE_VERSION_MAJOR   "1")
+set(MONGOOSE_VERSION_MINOR   "0")
+set(MONGOOSE_VERSION_PATCH   "4")
 set(MONGOOSE_VERSION "${MONGOOSE_VERSION_MAJOR}.
                       ${MONGOOSE_VERSION_MINOR}.
                       ${MONGOOSE_VERSION_PATCH}")
@@ -29,7 +29,7 @@ if(NOT WIN32)
 endif()
 
 set(MONGOOSE_LIB_FILES
-        Include/Mongoose.hpp
+        Include/mongoose.hpp
         Include/mongoose_boundaryheap.hpp
         Include/mongoose_coarsening.hpp
         Include/mongoose_conditioning.hpp
