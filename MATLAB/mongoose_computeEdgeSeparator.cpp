@@ -43,7 +43,7 @@ void mexFunction
 
     /* Cleanup */
     G->~Graph();
-    SuiteSparse_free(G);
+    delete G;
     O->~Options();
     SuiteSparse_free(O);
 }
