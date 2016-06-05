@@ -1,5 +1,5 @@
-#ifndef DEBUG_HPP_
-#define DEBUG_HPP_
+#ifndef MONGOOSE_DEBUG_HPP_
+#define MONGOOSE_DEBUG_HPP_
 
 #include "mongoose_internal.hpp"
 #include "mongoose_cs.hpp"

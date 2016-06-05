@@ -1,5 +1,5 @@
-#ifndef GRAPH_HPP_
-#define GRAPH_HPP_
+#ifndef MONGOOSE_GRAPH_HPP_
+#define MONGOOSE_GRAPH_HPP_
 
 #include "stdio.h"
 #include "mongoose_internal.hpp"

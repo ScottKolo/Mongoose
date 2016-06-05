@@ -1,5 +1,5 @@
-#ifndef GUESSCUT_HPP_
-#define GUESSCUT_HPP_
+#ifndef MONGOOSE_GUESSCUT_HPP_
+#define MONGOOSE_GUESSCUT_HPP_
 
 #include "mongoose_internal.hpp"
 #include "mongoose_cutcost.hpp"

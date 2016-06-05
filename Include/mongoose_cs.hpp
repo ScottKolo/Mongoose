@@ -1,5 +1,5 @@
-#ifndef _CS_H
-#define _CS_H
+#ifndef MONGOOSE_CS_HPP_
+#define MONGOOSE_CS_HPP_
 #include <stdlib.h>
 #include <limits.h>
 #include <math.h>

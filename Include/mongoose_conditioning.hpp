@@ -1,5 +1,5 @@
-#ifndef CONDITIONING_HPP_
-#define CONDITIONING_HPP_
+#ifndef MONGOOSE_CONDITIONING_HPP_
+#define MONGOOSE_CONDITIONING_HPP_
 
 #include "mongoose_internal.hpp"
 

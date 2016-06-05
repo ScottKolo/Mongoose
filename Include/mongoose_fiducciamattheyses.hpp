@@ -1,5 +1,5 @@
-#ifndef FIDUCCIAMATTHEYSES_HPP_
-#define FIDUCCIAMATTHEYSES_HPP_
+#ifndef MONGOOSE_FIDUCCIAMATTHEYSES_HPP_
+#define MONGOOSE_FIDUCCIAMATTHEYSES_HPP_
 
 #include "mongoose_internal.hpp"
 #include "mongoose_cutcost.hpp"
@@ -57,4 +57,4 @@ void calculateGain
 
 } // end namespace Mongoose
 
-#endif /* FIDUCCIAMATTHEYSES_HPP_ */
+#endif

@@ -1,5 +1,5 @@
-#ifndef WATERDANCE_HPP_
-#define WATERDANCE_HPP_
+#ifndef MONGOOSE_WATERDANCE_HPP_
+#define MONGOOSE_WATERDANCE_HPP_
 
 #include "mongoose_internal.hpp"
 #include "mongoose_fiducciamattheyses.hpp"

@@ -1,5 +1,5 @@
-#ifndef BOUNDARYHEAP_HPP_
-#define BOUNDARYHEAP_HPP_
+#ifndef MONGOOSE_BOUNDARYHEAP_HPP_
+#define MONGOOSE_BOUNDARYHEAP_HPP_
 
 #include "mongoose_internal.hpp"
 

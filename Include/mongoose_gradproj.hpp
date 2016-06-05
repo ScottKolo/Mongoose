@@ -1,5 +1,5 @@
-#ifndef GRADPROJ_HPP_
-#define GRADPROJ_HPP_
+#ifndef MONGOOSE_GRADPROJ_HPP_
+#define MONGOOSE_GRADPROJ_HPP_
 
 #include "mongoose_internal.hpp"
 #include "mongoose_qpdelta.hpp"

@@ -1,5 +1,5 @@
-#ifndef CUTCOST_HPP_
-#define CUTCOST_HPP_
+#ifndef MONGOOSE_CUTCOST_HPP_
+#define MONGOOSE_CUTCOST_HPP_
 
 namespace Mongoose
 {

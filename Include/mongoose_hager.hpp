@@ -1,5 +1,5 @@
-#ifndef HAGER_HPP_
-#define HAGER_HPP_
+#ifndef MONGOOSE_HAGER_HPP_
+#define MONGOOSE_HAGER_HPP_
 
 #include "mongoose_internal.hpp"
 #include "mongoose_qpdelta.hpp"

@@ -1,5 +1,5 @@
-#ifndef OPTIONS_HPP_
-#define OPTIONS_HPP_
+#ifndef MONGOOSE_OPTIONS_HPP_
+#define MONGOOSE_OPTIONS_HPP_
 
 #include "mongoose_internal.hpp"
 

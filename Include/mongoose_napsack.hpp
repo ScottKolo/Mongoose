@@ -1,5 +1,5 @@
-#ifndef NAPSACK_HPP_
-#define NAPSACK_HPP_
+#ifndef MONGOOSE_NAPSACK_HPP_
+#define MONGOOSE_NAPSACK_HPP_
 
 #include "mongoose_internal.hpp"
 

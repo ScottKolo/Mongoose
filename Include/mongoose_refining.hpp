@@ -1,5 +1,5 @@
-#ifndef REFINING_HPP_
-#define REFINING_HPP_
+#ifndef MONGOOSE_REFINING_HPP_
+#define MONGOOSE_REFINING_HPP_
 
 #include "mongoose_internal.hpp"
 

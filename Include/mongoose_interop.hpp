@@ -1,5 +1,5 @@
-#ifndef INTEROP_HPP_
-#define INTEROP_HPP_
+#ifndef MONGOOSE_INTEROP_HPP_
+#define MONGOOSE_INTEROP_HPP_
 
 #include "string.h"
 #include "mongoose_cs.hpp"

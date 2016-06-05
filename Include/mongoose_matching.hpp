@@ -1,5 +1,5 @@
-#ifndef MATCHING_HPP_
-#define MATCHING_HPP_
+#ifndef MONGOOSE_MATCHING_HPP_
+#define MONGOOSE_MATCHING_HPP_
 
 #include "mongoose_internal.hpp"
 
