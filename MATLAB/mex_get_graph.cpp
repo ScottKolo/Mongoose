@@ -26,7 +26,7 @@ Graph *mex_get_graph
     }
     else
     {
-        returner->w = (Weight*) malloc(n * sizeof(Weight));
+        returner->w = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
         for(Int k=0; k<n; k++) returner->w[k] = 1.0;
     }
 
