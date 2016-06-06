@@ -46,7 +46,8 @@ void QPnapsack2
     am = (a ? a+m : NULL);
     ixm = (ix ? ix+m : NULL);
 
-    lambda[1] = QPnapsack(x+m, n-m, lo[1], hi[1], am, lambda[1], ixm, wx1, wi1, wi2);
+    lambda[1] = QPnapsack(x+m, n-m, lo[1], hi[1], am, lambda[1], 
+                          ixm, wx1, wi1, wi2);
 }
 
 } // end namespace Mongoose

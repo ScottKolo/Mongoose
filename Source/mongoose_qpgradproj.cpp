@@ -1,14 +1,14 @@
 /* ========================================================================== */
 /* === QPgradproj =========================================================== */
 /* ==========================================================================
- Apply gradient projection algorithm to the quadratic program which
- arises in graph partitioning:
+   Apply gradient projection algorithm to the quadratic program which
+   arises in graph partitioning:
 
- min (1-x)'(D+A)x subject to lo <= b <= hi, a'x = b, 0 <= x <= 1
+   min (1-x)'(D+A)x subject to lo <= b <= hi, a'x = b, 0 <= x <= 1
 
- The gradient at the current point is provided as input, and the
- gradient is updated in each iteration.
- ============================================================================ */
+   The gradient at the current point is provided as input, and the
+   gradient is updated in each iteration.
+   ============================================================================ */
 
 #include "mongoose_gradproj.hpp"
 #include "mongoose_napsack.hpp"
@@ -47,8 +47,10 @@ Double QPgradproj
     Int *Ei = G->i;                /* adjacent vertices for each node */
     Weight *Ex = G->x;             /* edge weights */
     Weight *Ew = G->w;             /* node weights; a'x = b, lo <= b <= hi */
-    Double lo = G->W * (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-    Double hi = G->W * (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+    Double lo = G->W *
+                (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+    Double hi = G->W *
+                (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
 
     Double *D = QP->D; /* diagonal of quadratic */
 
@@ -70,7 +72,7 @@ Double QPgradproj
 
     /* TODO: ?? is this comment a correct interpretation ?? */
     /* Project x into feasible set. */
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
         ix[k] = (x[k] >= MONGOOSE_ONE ? 1 : x[k] <= MONGOOSE_ZERO ? -1 : 0);
     }
@@ -79,7 +81,7 @@ Double QPgradproj
     {
 /* TODO: ?? is this comment a correct interpretation ?? */
         /* Moving in the gradient direction. */
-        for(Int k=0; k<n; k++) y[k] = x[k] - grad[k];
+        for (Int k = 0; k < n; k++) y[k] = x[k] - grad[k];
 
         /* Run the napsack. */
         lambda = QPnapsack(y, n, lo, hi, Ew, lambda, ix, wx, wi1, wi2);
@@ -87,7 +89,7 @@ Double QPgradproj
 /* TODO: This can probably be done in the napsack to avoid O(n) loop. */
         /* Compute the maximum error. */
         err = -INFINITY;
-        for(Int k=0; k<n; k++) err = MONGOOSE_MAX2(err, fabs(y[k]-x[k]));
+        for (Int k = 0; k < n; k++) err = MONGOOSE_MAX2(err, fabs(y[k]-x[k]));
 
         /* If we converged or got exhausted, save context and exit. */
         if ((err <= tol) || (it >= limit))
@@ -101,10 +103,11 @@ Double QPgradproj
         /* TODO: Can Dgrad be cleared after use to avoid O(n)? */
         for (Int k = 0; k < n; k++) Dgrad[k] = MONGOOSE_ZERO;
         Int lastLink = -1;
-        for (Int i = LinkUp[n]; i < n && (LinkUp[LinkDn[i]] != i); i = LinkUp[i])
+        for (Int i = LinkUp[n]; i < n && (LinkUp[LinkDn[i]] != i);
+             i = LinkUp[i])
         {
             /* INFINITE LOOP i=LinkUp[i] links to itself. */
-            if(i != lastLink)
+            if (i != lastLink)
             {
                 lastLink = i;
             }
@@ -124,7 +127,8 @@ Double QPgradproj
 
         Double st_num = MONGOOSE_ZERO;
         Double st_den = MONGOOSE_ZERO;
-        for (Int j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j])
+        for (Int j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j);
+             j = LinkUp[j])
         {
             st_num += grad[j] * grad[j];
             st_den += grad[j] * Dgrad[j];
@@ -151,7 +155,7 @@ Double QPgradproj
                 s += t * grad[j]; /* derivative in the direction y - x */
                 C[nc] = j;
                 nc++;
-                for(Int p=Ep[j]; p<Ep[j+1]; p++)
+                for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
                     Dgrad[Ei[p]] -= Ex[p] * t;
                 }
@@ -160,7 +164,7 @@ Double QPgradproj
         }
 
         /* If directional derivative has wrong sign, save context and exit. */
-        if(s >= MONGOOSE_ZERO)
+        if (s >= MONGOOSE_ZERO)
         {
             QP_GRADPROJ_saveContextAndExit();
         }
@@ -172,16 +176,16 @@ Double QPgradproj
             t += Dgrad[j] * d[j]; /* -dg'd */
         }
 
-        if(s+t <= 0) /* min attained at y, slope at y <= 0 */
+        if (s+t <= 0) /* min attained at y, slope at y <= 0 */
         {
             ib = (lambda > 0 ? 1 : lambda < 0 ? -1 : 0);
-            for(Int k = 0; k < nc; k++)
+            for (Int k = 0; k < nc; k++)
             {
                 Int j = C[k];
                 Double yj = y[j];
                 x[j] = yj;
                 Int bind = -1; /* -1 = no change, 0 = free, +1 = bind */
-                if(ix[j] > 0)
+                if (ix[j] > 0)
                 {
                     if (yj == MONGOOSE_ZERO)
                     {
@@ -217,7 +221,7 @@ Double QPgradproj
                     }
                     /* else x_j is free before and after step */
                 }
-                if(bind == 0)
+                if (bind == 0)
                 {
                     ix[j] = 0;
                     nf++;
@@ -227,7 +231,7 @@ Double QPgradproj
                     LinkDn[m] = j;
                     LinkDn[j] = n;
                 }
-                else if(bind == 1)
+                else if (bind == 1)
                 {
                     nf--;
                     Int h = LinkUp[j];
@@ -243,7 +247,7 @@ Double QPgradproj
         }
         else /* partial step towards y, st < 1 */
         {
-            if((ib > 0 && lambda <= 0) || (ib < 0 && lambda >= 0))
+            if ((ib > 0 && lambda <= 0) || (ib < 0 && lambda >= 0))
             {
                 ib = 0;
             }
@@ -252,7 +256,7 @@ Double QPgradproj
             for (Int k = 0; k < nc; k++)
             {
                 Int j = C[k];
-                if(ix[j] != 0) /* x_j became free */
+                if (ix[j] != 0) /* x_j became free */
                 {
                     ix[j] = 0;
                     nf++;
@@ -267,7 +271,7 @@ Double QPgradproj
                 x[j] += st * d[j];
             }
 
-            for(Int k=0; k<n; k++) grad[k] += st * Dgrad[k];
+            for (Int k = 0; k < n; k++) grad[k] += st * Dgrad[k];
         }
     }
     return err;

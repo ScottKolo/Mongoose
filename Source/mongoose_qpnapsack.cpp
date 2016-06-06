@@ -6,7 +6,7 @@
     positive since, in our application, the vector a is the node weights, which
     are >= 1. If a is NULL, then it is assumed that a is identically 1.
     The approach is to solve the dual problem obtained by introducing
-    a multiplier lambda for the constraint a'x = b.  The dual function is 
+    a multiplier lambda for the constraint a'x = b.  The dual function is
 
     L (lambda) = min { ||x-y||^2 + lambda (a'x - b): 0 <= x <= 1, lo <= b <= hi}
 
@@ -43,21 +43,21 @@
     The solution technique is to start with an initial guess lambda for
     mu and search for a zero of L'. We have the following cases:
 
-  1. lambda >= 0, L'(lambda+) >= 0: mu >= lambda. If L' = 0, then done. Other-
-                                    wise, increase lambda using napup until
+    1. lambda >= 0, L'(lambda+) >= 0: mu >= lambda. If L' = 0, then done. 
+                                    Otherwise, increase lambda using napup until
                                     slope vanishes
 
-  2. lambda <= 0, L'(lambda-) <= 0: mu <= lambda. If L' = 0, then done. Other-
-                                    wise, decrease lambda using napdown until
-                                    slope vanishes
+    2. lambda <= 0, L'(lambda-) <= 0: mu <= lambda. If L' = 0, then done. 
+                                    Otherwise, decrease lambda using napdown 
+                                    until slope vanishes
 
-  3. lambda >= 0, L'(lambda+)  < 0: If L' (0-) < 0, then mu < 0. Call napdown
+    3. lambda >= 0, L'(lambda+)  < 0: If L' (0-) < 0, then mu < 0. Call napdown
                                     with lambda = 0 as starting guess.  If
                                     L' (0+) > 0, then 0 < mu < lambda. Call
                                     napdown with given starting guess lambda.
                                     Otherwise, if L' (0+) <= 0, then mu = 0.
 
-  4. lambda <= 0, L'(lambda-)  > 0: If L' (0+) > 0, then mu > 0. Call napup
+    4. lambda <= 0, L'(lambda-)  > 0: If L' (0+) > 0, then mu > 0. Call napup
                                     with lambda = 0 as starting guess.  If
                                     L' (0-) < 0, then lambda < mu < 0.  Call
                                     napup with given starting guess lambda.
@@ -85,7 +85,7 @@
 namespace Mongoose
 {
 
-Double QPnapsack	/* return the final lambda */
+Double QPnapsack        /* return the final lambda */
 (
     Double *x,      /* holds y on input, and the solution x on output */
     Int n,          /* size of x, constraint lo <= a'x <= hi */
@@ -110,13 +110,13 @@ Double QPnapsack	/* return the final lambda */
         Double asum = (lambda > 0 ? -hi : -lo);
         Double a2sum = MONGOOSE_ZERO;
 
-        for (Int k=0; k<n; k++)
+        for (Int k = 0; k < n; k++)
         {
-            if(ix[k] == 1)
+            if (ix[k] == 1)
             {
                 asum += Gw[k];
             }
-            else if(ix[k] == 0)
+            else if (ix[k] == 0)
             {
                 Weight ai = Gw[k];
                 asum += x[k] * ai;
@@ -124,7 +124,7 @@ Double QPnapsack	/* return the final lambda */
             }
         }
 
-        if(a2sum != MONGOOSE_ZERO) lambda = asum / a2sum;
+        if (a2sum != MONGOOSE_ZERO) lambda = asum / a2sum;
     }
 
     /* ---------------------------------------------------------------------- */
@@ -132,10 +132,10 @@ Double QPnapsack	/* return the final lambda */
     /* ---------------------------------------------------------------------- */
 
     Int slope = 0;
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
         Double xi = x[k] - Gw[k] * lambda;
-        if(xi >= MONGOOSE_ONE)
+        if (xi >= MONGOOSE_ONE)
         {
             slope += Gw[k];
         }
@@ -168,7 +168,7 @@ Double QPnapsack	/* return the final lambda */
         if (lambda != MONGOOSE_ZERO)
         {
             Double slope0 = MONGOOSE_ZERO;
-            for(Int k=0; k<n; k++)
+            for (Int k = 0; k < n; k++)
             {
                 Double xi = x[k];
                 if (xi >= MONGOOSE_ONE)
@@ -220,9 +220,9 @@ Double QPnapsack	/* return the final lambda */
         }
         else /* lambda == 0 */
         {
-            if(slope < hi) /* case 3 */
+            if (slope < hi) /* case 3 */
             {
-                if(slope < lo)
+                if (slope < lo)
                 {
                     lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
                     lambda = MONGOOSE_MIN2(MONGOOSE_ZERO, lambda);
@@ -243,12 +243,15 @@ Double QPnapsack	/* return the final lambda */
     /* replace x by x (lambda) */
     /* ---------------------------------------------------------------------- */
 
-    if(lambda == MONGOOSE_ZERO)
+    if (lambda == MONGOOSE_ZERO)
     {
-        for (Int k=0; k<n; k++)
+        for (Int k = 0; k < n; k++)
         {
             Double xi = x[k];
-            x[k] = (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ? MONGOOSE_ONE : xi);
+            // TODO: Rewrite nested ternary operator
+            x[k] =
+                (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ?
+                 MONGOOSE_ONE : xi);
         }
     }
     else
@@ -256,7 +259,10 @@ Double QPnapsack	/* return the final lambda */
         for (Int k = 0; k < n; k++)
         {
             Double xi = x[k] - Gw[k] * lambda;
-            x[k] = (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ? MONGOOSE_ONE : xi);
+            // TODO: Rewrite nested ternary operator
+            x[k] =
+                (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ?
+                 MONGOOSE_ONE : xi);
         }
     }
 

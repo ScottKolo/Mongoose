@@ -3,29 +3,29 @@
 /* ========================================================================== */
 
 /*
-Move all components of x to boundary of the feasible region
+   Move all components of x to boundary of the feasible region
 
     0 <= x <= 1, a'x = b, lo <= b <= hi
 
-while decreasing the cost function. The algorithm has the following parts
+   while decreasing the cost function. The algorithm has the following parts
 
-1. For each i in the free set, see if x_i can be feasibly pushed to either
-   boundary while decreasing the cost.
+   1. For each i in the free set, see if x_i can be feasibly pushed to either
+      boundary while decreasing the cost.
 
-2. For each i in the bound set, see if x_i can be feasibly flipped to opposite
-   boundary while decreasing the cost.
+   2. For each i in the bound set, see if x_i can be feasibly flipped to opposite
+      boundary while decreasing the cost.
 
-3. For each i in the free list with a_{ij} = 0 and with j free,
-   move either x_i or x_j to the boundary while decreasing
-   the cost. The adjustments has the form x_i = s/a_i and x_j = -s/a_j 
-   where s is a scalar factor. These adjustments must decrease cost.
+   3. For each i in the free list with a_{ij} = 0 and with j free,
+      move either x_i or x_j to the boundary while decreasing
+      the cost. The adjustments has the form x_i = s/a_i and x_j = -s/a_j
+      where s is a scalar factor. These adjustments must decrease cost.
 
-4. For the remaining i in the free list, take pair x_i and x_j and
-   apply adjustments of the same form as in #2 above to push at least one
-   component to boundary. The quadratic terms can only decrease the
-   cost function. We choose the sign of s such that g_i x_i + g_j x_j <= 0.
-   Hence, this adjustment cannot increase the cost.
-*/
+   4. For the remaining i in the free list, take pair x_i and x_j and
+      apply adjustments of the same form as in #2 above to push at least one
+      component to boundary. The quadratic terms can only decrease the
+      cost function. We choose the sign of s such that g_i x_i + g_j x_j <= 0.
+      Hence, this adjustment cannot increase the cost.
+ */
 
 /* ========================================================================== */
 
@@ -46,45 +46,50 @@ void QPboundary
     /* ---------------------------------------------------------------------- */
 
     /* input and output */
-    Int nf = QP->nf ;
-    if(nf == 0) return;
+    Int nf = QP->nf;
+    if (nf == 0) return;
 
-    Double pert0 = 0.5 - 1e-10; //QP->Parm->boundary_pert0 ;
-    Double pert1 = 0.5 + 1e-10; //QP->Parm->boundary_pert1 ;
-    Double *x = QP->x ;         /* current estimate of solution */
-    Double *grad = QP->g ;      /* gradient at current x */
-    Int ib = QP->ib ;           /* ib = +1, -1, or 0 if b = hi, lo, or lo < b < hi */
-    Int *ix = QP->ix ;          /* ix_i = +1, -1, or 0 if x_i = 1, 0, or 0 < x_i < 1*/
-    Int *LinkUp = QP->LinkUp ;  /* linked list for free indices */
-    Int *LinkDn = QP->LinkDn ;  /* linked list, LinkDn [LinkUp [i] = i*/
-    Double b = QP->b ;          /* current value for a'x */
+    Double pert0 = 0.5 - 1e-10; // QP->Parm->boundary_pert0;
+    Double pert1 = 0.5 + 1e-10; // QP->Parm->boundary_pert1;
+    Double *x = QP->x;          /* current estimate of solution */
+    Double *grad = QP->g;       /* gradient at current x */
+    Int ib = QP->ib;            /* ib = +1, -1, or 0 
+                                   if b = hi, lo, or lo < b < hi */
+    Int *ix = QP->ix;           /* ix_i = +1, -1, or 0 
+                                   if x_i = 1, 0, or 0 < x_i < 1 */
+    Int *LinkUp = QP->LinkUp;   /* linked list for free indices */
+    Int *LinkDn = QP->LinkDn;   /* linked list, LinkDn [LinkUp [i] = i */
+    Double b = QP->b;           /* current value for a'x */
 
     /* problem specification */
-    Int n  = G->n ;             /* problem dimension */
-    Double *Ex = G->x ;         /* numerical values for edge weights */
-    Int *Ei = G->i ;            /* adjacent vertices for each node */
-    Int *Ep = G->p ;            /* points into Ex or Ei */
-    Double *a  = G->w ;         /* a'x = b, lo <= b <= hi */
-    Double lo = G->W * (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-    Double hi = G->W * (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+    Int n  = G->n;              /* problem dimension */
+    Double *Ex = G->x;          /* numerical values for edge weights */
+    Int *Ei = G->i;             /* adjacent vertices for each node */
+    Int *Ep = G->p;             /* points into Ex or Ei */
+    Double *a  = G->w;          /* a'x = b, lo <= b <= hi */
+    Double lo = G->W *
+                (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+    Double hi = G->W *
+                (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
     Int *mark = G->mark;
     Int markValue = G->markValue;
 
     /* work array */
-    Double *D  = QP->D ;   /* diagonal of quadratic */
+    Double *D  = QP->D;    /* diagonal of quadratic */
 
     /* ---------------------------------------------------------------------- */
     /* Step 1. if lo < b < hi, then for each free j,                          */
     /*         see if x_j can be pushed to 0 or 1                             */
     /* ---------------------------------------------------------------------- */
 
-    for(Int k=LinkUp[n]; (k<n) && (ib==0) && (LinkUp[LinkDn[k]] != k); k=LinkUp[k])
+    for (Int k = LinkUp[n]; (k < n) && (ib == 0) && (LinkUp[LinkDn[k]] != k);
+         k = LinkUp[k])
     {
         Double s, ak = a[k];
         if (grad[k] > 0.0) /* decrease x_j */
         {
             s = (b - lo) / ak;
-            if(s < x[k])  /* lo is reached */
+            if (s < x[k])  /* lo is reached */
             {
                 ib = -1;
                 b = lo;
@@ -114,7 +119,7 @@ void QPboundary
             }
         }
 
-        if(ib == 0) /* x_j hits boundary */
+        if (ib == 0) /* x_j hits boundary */
         {
             nf--;
             Int h = LinkUp[k];
@@ -124,7 +129,7 @@ void QPboundary
             b -= s * ak;
         }
 
-        for(Int p = Ep[k]; p < Ep[k+1]; p++)
+        for (Int p = Ep[k]; p < Ep[k+1]; p++)
         {
             grad[Ei[p]] += s * Ex[p];
         }
@@ -135,7 +140,7 @@ void QPboundary
     /* Step 2. Examine flips of x_j from 0 to 1 or from 1 to 0 */
     /* ---------------------------------------------------------------------- */
 
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
         Int ixj = ix[k];
         if (ixj == 0) continue;
@@ -172,7 +177,7 @@ void QPboundary
         {
             if (ixj == 1) /* x [j] was 1, now it is 0 */
             {
-                for(Int p = Ep[k]; p < Ep[k+1]; p++)
+                for (Int p = Ep[k]; p < Ep[k+1]; p++)
                 {
                     grad[Ei[p]] += Ex[p];
                 }
@@ -180,7 +185,7 @@ void QPboundary
             }
             else /* x [j] was 0, now it is 1 */
             {
-                for(Int p = Ep[k]; p < Ep[k+1]; p++)
+                for (Int p = Ep[k]; p < Ep[k+1]; p++)
                 {
                     grad[Ei[p]] -= Ex[p];
                 }
@@ -201,28 +206,29 @@ void QPboundary
     /* Step 3. Search for a_{ij} = 0 in the free index set */
     /* ---------------------------------------------------------------------- */
 
-    for(Int j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j])
+    for (Int j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j])
     {
         Int m = 1;
-        for(Int p = Ep[j]; p < Ep[j+1]; p++)
+        for (Int p = Ep[j]; p < Ep[j+1]; p++)
         {
-            if(ix[Ei[p]] == 0) m++;
+            if (ix[Ei[p]] == 0) m++;
         }
         if (m == nf) continue;
 
-        /* ---------------------------------------------------------------------- */
+        /* -------------------------------------------------------------- */
         /* otherwise there exist i and j free with a_{ij} = 0, scatter Ei */
-        /* ---------------------------------------------------------------------- */
+        /* -------------------------------------------------------------- */
 
-        for(Int p = Ep[j]; p < Ep[j+1]; p++)
+        for (Int p = Ep[j]; p < Ep[j+1]; p++)
         {
             MONGOOSE_MARK(Ei[p]);
         }
         MONGOOSE_MARK(j);
 
-        for (Int i = LinkUp[n]; i < n && (LinkUp[LinkDn[i]] != i); i = LinkUp[i])
+        for (Int i = LinkUp[n]; i < n && (LinkUp[LinkDn[i]] != i);
+             i = LinkUp[i])
         {
-            if(!MONGOOSE_MARKED(i))
+            if (!MONGOOSE_MARKED(i))
             {
                 Double aj = a[j];
                 Double ai = a[i];
@@ -232,7 +238,7 @@ void QPboundary
                 /* cost change if x_j increases dx_j = s/a_j, dx_i = s/a_i */
                 Double s;
                 Int bind1, bind2;
-                if (aj * (MONGOOSE_ONE - xj) < ai * xi) /* x_j hits upper bound */
+                if (aj * (MONGOOSE_ONE - xj) < ai * xi) // x_j hits upper bound
                 {
                     s = aj * (MONGOOSE_ONE - xj);
                     bind1 = 1;
@@ -244,10 +250,11 @@ void QPboundary
                 }
                 Double dxj = s / aj;
                 Double dxi = -s / ai;
-                Double c1 = (grad[j] - .5 * D[j] * dxj) * dxj + (grad[i] - .5 * D[i] * dxi) * dxi;
+                Double c1 = (grad[j] - .5 * D[j] * dxj) * dxj +
+                            (grad[i] - .5 * D[i] * dxi) * dxi;
 
                 /* cost change if x_j decreases dx_j = s/a_j, dx_i = s/a_i */
-                if (aj * xj < ai * (MONGOOSE_ONE - xi)) /* x_j hits lower bound */
+                if (aj * xj < ai * (MONGOOSE_ONE - xi)) // x_j hits lower bound
                 {
                     s = -aj * xj;
                     bind2 = -1;
@@ -259,7 +266,8 @@ void QPboundary
                 }
                 dxj = s / aj;
                 dxi = -s / ai;
-                Double c2 = (grad[j] - 0.5 * D[j] * dxj) * dxj + (grad[i] - 0.5 * D[i] * dxi) * dxi;
+                Double c2 = (grad[j] - 0.5 * D[j] * dxj) * dxj +
+                            (grad[i] - 0.5 * D[i] * dxi) * dxi;
                 if (c1 < c2) /* increase x_j */
                 {
                     if (bind1 == 1) /* x_j = 1 */
@@ -297,8 +305,10 @@ void QPboundary
                     }
                 }
 
-                for (Int p = Ep[j]; p < Ep[j+1]; p++) grad[Ei[p]] -= Ex[p] * dxj;
-                for (Int p = Ep[i]; p < Ep[i+1]; p++) grad[Ei[p]] -= Ex[p] * dxi;
+                for (Int p = Ep[j]; p < Ep[j+1]; p++)
+                    grad[Ei[p]] -= Ex[p] * dxj;
+                for (Int p = Ep[i]; p < Ep[i+1]; p++) 
+                    grad[Ei[p]] -= Ex[p] * dxi;
                 grad[j] -= D[j] * dxj;
                 grad[i] -= D[i] * dxi;
                 nf--;
@@ -332,12 +342,12 @@ void QPboundary
     /* free variables:0 < x_j < 1 */
 
     Int j;
-    for(j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j]) /* free variables:0 < x_j < 1 */
+    for (j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j])
     {
         /* choose s so that first derivative terms decrease */
 
         Int i = LinkUp[j];
-        if(i == n) break;
+        if (i == n) break;
         Double ai = a[i];
         Double aj = a[j];
         Double xi = x[i];
@@ -388,8 +398,8 @@ void QPboundary
             }
         }
 
-        for(Int k = Ep[j]; k < Ep[j+1]; k++) grad[Ei[k]] -= Ex[k] * dxj;
-        for(Int k = Ep[i]; k < Ep[i+1]; k++) grad[Ei[k]] -= Ex[k] * dxi;
+        for (Int k = Ep[j]; k < Ep[j+1]; k++) grad[Ei[k]] -= Ex[k] * dxj;
+        for (Int k = Ep[i]; k < Ep[i+1]; k++) grad[Ei[k]] -= Ex[k] * dxi;
         grad[j] -= D[j] * dxj;
         grad[i] -= D[i] * dxi;
 
@@ -478,14 +488,14 @@ void QPboundary
 
         if (dxj != MONGOOSE_ZERO)
         {
-            for(Int p = Ep[j]; p < Ep[j+1]; p++)
+            for (Int p = Ep[j]; p < Ep[j+1]; p++)
             {
                 grad[Ei[p]] -= Ex[p] * dxj;
             }
             grad[j] -= D[j] * dxj;
         }
 
-        if((x[j] >= pert1) || ((aj == MONGOOSE_ONE) && (x[j] > 0.5)))
+        if ((x[j] >= pert1) || ((aj == MONGOOSE_ONE) && (x[j] > 0.5)))
         {
             nf--;
             LinkUp[n] = n;

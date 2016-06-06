@@ -14,7 +14,7 @@ void qpGradProj
     bool isInitial
 )
 {
-    if(!O->useQPGradProj) return;
+    if (!O->useQPGradProj) return;
 
     /* Unpack structure fields */
     Int n = G->n;
@@ -27,22 +27,22 @@ void qpGradProj
 
     /* Create workspaces */
     QPDelta *QP = QPDelta::Create(n);
-    if(!QP) return;
+    if (!QP) return;
 
     Weight *D = QP->D;
 
     /* Convert the guess from discrete to continuous. */
     Double *guess = QP->x;
     bool *partition = G->partition;
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
-        if(isInitial)
+        if (isInitial)
         {
             guess[k] = 0.5;
         }
         else
         {
-            if(partition[k])
+            if (partition[k])
             {
                 guess[k] = MONGOOSE_IN_BOUNDARY(k) ? 0.75 : 1.0;
             }
@@ -53,7 +53,7 @@ void qpGradProj
         }
 
         Weight maxWeight = -INFINITY;
-        for(Int p=Gp[k]; p<Gp[k+1]; p++)
+        for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
             maxWeight = MONGOOSE_MAX2(maxWeight, Gx[p]);
         }
@@ -80,12 +80,12 @@ void qpGradProj
     Int *mark = G->mark;
     Int markValue = G->markValue;
 
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
         bool newPartition = (guess[k] > 0.5);
         bool oldPartition = partition[k];
 
-        if(newPartition != oldPartition)
+        if (newPartition != oldPartition)
         {
             /* Update the cut cost. */
             cost.cutCost -= 2 * gains[k];
@@ -99,7 +99,7 @@ void qpGradProj
              * from not in the boundary to an undo state that places it in
              * the boundary. It is also possible that a previous swap added
              * this vertex to the boundary already. */
-            if(bhVertexPosition != -1)
+            if (bhVertexPosition != -1)
             {
                 bhRemove(G, O, k, gains[k], partition[k], bhVertexPosition);
             }
@@ -114,7 +114,7 @@ void qpGradProj
                 mark, markValue
             );
 
-            if(externalDegree[k] > 0) bhInsert(G, k);
+            if (externalDegree[k] > 0) bhInsert(G, k);
         }
     }
     G->markValue = markValue + 1;
@@ -129,7 +129,8 @@ void qpGradProj
     G->W1 = cost.W[1];
     G->imbalance = cost.imbalance;
     Weight absImbalance = fabs(G->imbalance);
-    G->heuCost = G->cutCost + (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
+    G->heuCost = G->cutCost +
+                 (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
 }
 
 } // end namespace Mongoose

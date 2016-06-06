@@ -14,55 +14,55 @@ bool initialize(Graph *G, Options *O);
 void ComputeEdgeSeparator(Graph *G, Options *O)
 {
     /* Check inputs */
-    if(!G || !O) return;
+    if (!G || !O) return;
 
     /* Finish initialization */
-    if(!initialize(G, O)) return;
+    if (!initialize(G, O)) return;
 
     /* Keep track of what the current graph is at any stage */
     Graph *current = G;
 
     /* If we need to coarsen the graph, do the coarsening. */
-    while(current->n >= O->coarsenLimit)
+    while (current->n >= O->coarsenLimit)
     {
         match(current, O);
         Graph *next = coarsen(current, O);
         /* If we ran out of memory during coarsening, unwind the stack. */
-        if(!next)
+        if (!next)
         {
-             while(current != G)
-             {
-                  next = current->parent;
-                  current->~Graph();
-                  SuiteSparse_free(current);
-                  current = next;
-             }
-             return;
+            while (current != G)
+            {
+                next = current->parent;
+                current->~Graph();
+                SuiteSparse_free(current);
+                current = next;
+            }
+            return;
         }
 
         current = next;
     }
 
-    /* 
+    /*
      * Generate a guess cut and do FM refinement.
      * On failure, unwind the stack.
      */
-    if(!guessCut(current, O))
+    if (!guessCut(current, O))
     {
-         while(current != G)
-         {
-              Graph *next = current->parent;
-              current->~Graph();
-              SuiteSparse_free(current);
-              current = next;
-         }
-         return;
+        while (current != G)
+        {
+            Graph *next = current->parent;
+            current->~Graph();
+            SuiteSparse_free(current);
+            current = next;
+        }
+        return;
     }
 
     /*
      * Refine the guess cut back to the beginning.
      */
-    while(current->parent != NULL)
+    while (current->parent != NULL)
     {
         current = refine(current, O);
         waterdance(current, O);
@@ -93,9 +93,10 @@ bool initialize(Graph *G, Options *O)
     G->externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
 
     /* Check memory and abort if necessary. */
-    if (!G->matching || !G->matchmap || !G->invmatchmap || !G->matchtype || 
-        !G->mark || !G->partition || !G->bhIndex || !G->bhHeap[0] || !G->bhHeap[1] ||
-        !G->vertexGains || !G->externalDegree) 
+    if (!G->matching || !G->matchmap || !G->invmatchmap || !G->matchtype ||
+        !G->mark || !G->partition || !G->bhIndex || !G->bhHeap[0] ||
+        !G->bhHeap[1] ||
+        !G->vertexGains || !G->externalDegree)
     {
         G->matching = (Int*) SuiteSparse_free(G->matching);
         G->matchmap = (Int*) SuiteSparse_free(G->matchmap);
@@ -114,12 +115,12 @@ bool initialize(Graph *G, Options *O)
     /* Compute worst-case gains, and compute X. */
     Weight X = 0.0, W = 0.0;
     Weight *gains = G->vertexGains;
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
         W += Gw[k];
         Weight sumEdgeWeights = 0.0;
 
-        for(Int p=Gp[k]; p<Gp[k+1]; p++) sumEdgeWeights += Gx[p];
+        for (Int p = Gp[k]; p < Gp[k+1]; p++) sumEdgeWeights += Gx[p];
 
         gains[k] = -sumEdgeWeights;
         X += sumEdgeWeights;

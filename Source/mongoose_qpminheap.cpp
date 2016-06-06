@@ -15,8 +15,8 @@ namespace Mongoose
 
 void QPminheap_build
 (
-    Int *heap,	    /* on input, an unsorted set of elements */
-    Int size,		/* number of elements to build into the heap */
+    Int *heap,      /* on input, an unsorted set of elements */
+    Int size,       /* number of elements to build into the heap */
     Double *x
 )
 {
@@ -34,11 +34,11 @@ void QPminheap_build
 
 /* delete the top element in a min heap */
 
-Int QPminheap_delete	/* return new size of heap */
+Int QPminheap_delete    /* return new size of heap */
 (
-    Int *heap,	/* containing indices into x, 1..n on input */
-    Int size,		/* number of items in heap */
-    Double *x	/* not modified */
+    Int *heap,  /* containing indices into x, 1..n on input */
+    Int size,   /* number of items in heap */
+    Double *x   /* not modified */
 )
 {
     if (size <= 1)
@@ -108,10 +108,10 @@ Int QPminheap_add
 
 void QPminheapify
 (
-    Int p,		/* start at node p in the heap */
-    Int *heap,	/* size n, containing indices into x */
-    Int size,		/* heap [ ... nheap] is in use */
-    Double *x	/* not modified */
+    Int p,      /* start at node p in the heap */
+    Int *heap,  /* size n, containing indices into x */
+    Int size,   /* heap [ ... nheap] is in use */
+    Double *x   /* not modified */
 )
 {
     Int left, right, e, hleft, hright;
@@ -120,12 +120,12 @@ void QPminheapify
     e = heap[p];
     xe = x[e];
 
-    while(true)
+    while (true)
     {
         left = p * 2;
         right = left + 1;
 
-        if(right <= size)
+        if (right <= size)
         {
             hleft = heap[left];
             hright = heap[right];
@@ -185,11 +185,11 @@ void QPminheapify
 
 void QPminheap_check
 (
-    Int *heap,	/* vector of size n+1 */
-    Double *x,	/* vector of size n */
-    Int size,		/* # items in heap */
+    Int *heap,  /* vector of size n+1 */
+    Double *x,  /* vector of size n */
+    Int size,   /* # items in heap */
     Int n,
-    Int p		/* start checking at heap [p] */
+    Int p       /* start checking at heap [p] */
 )
 {
     Int *w, left, right, i, e, eleft, eright;

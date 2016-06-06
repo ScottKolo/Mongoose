@@ -34,19 +34,19 @@ void bhLoad
     cost.imbalance = 0.0;
 
     /* Compute the gains & discover if the vertex is on the boundary. */
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
         bool kPartition = partition[k];
         cost.W[kPartition] += Gw[k];
 
         Weight gain = 0.0;
         Int exD = 0;
-        for(Int p=Gp[k]; p<Gp[k+1]; p++)
+        for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
             Weight edgeWeight = Gx[p];
             bool onSameSide = (kPartition == partition[Gi[p]]);
             gain += (onSameSide ? -edgeWeight : edgeWeight);
-            if(!onSameSide)
+            if (!onSameSide)
             {
                 exD++;
                 cost.cutCost += edgeWeight;
@@ -54,7 +54,7 @@ void bhLoad
         }
         gains[k] = gain;
         externalDegree[k] = exD;
-        if(exD > 0) bhInsert(G, k);
+        if (exD > 0) bhInsert(G, k);
     }
 
     /* Save the cut cost to the graph. */
@@ -63,8 +63,8 @@ void bhLoad
     G->W1 = cost.W[1];
     G->imbalance = O->targetSplit - G->W0 / G->W;
     G->heuCost = (G->cutCost + (fabs(G->imbalance) > O->tolerance
-                   ? fabs(G->imbalance) * G->H
-                   : 0.0));
+                                ? fabs(G->imbalance) * G->H
+                                : 0.0));
 }
 
 //-----------------------------------------------------------------------------
@@ -103,11 +103,11 @@ void bhClear
     /* Clear the index entries for the heaps. */
     Int *bhIndex = G->bhIndex;
     Int *externalDegree = G->externalDegree;
-    for(Int h=0; h<2; h++)
+    for (Int h = 0; h < 2; h++)
     {
         Int *bhHeap = G->bhHeap[h];
         Int size = G->bhSize[h];
-        for(Int i=0; i<size; i++)
+        for (Int i = 0; i < size; i++)
         {
             Int v = bhHeap[i];
             bhIndex[v] = 0;
@@ -141,7 +141,7 @@ void bhRemove
     Int size = (--G->bhSize[partition]);
 
     /* If we removed the last position in the heap, there's nothing to do. */
-    if(bhPosition == size){ bhIndex[vertex] = 0; return; }
+    if (bhPosition == size) { bhIndex[vertex] = 0; return; }
 
     /* Replace the vertex with the last element in the heap. */
     Int v = bhHeap[bhPosition] = bhHeap[size];
@@ -170,14 +170,14 @@ void heapifyUp
     Weight gain
 )
 {
-    if(position == 0) return;
+    if (position == 0) return;
 
     Int posParent = MONGOOSE_HEAP_PARENT(position);
     Int pVertex = bhHeap[posParent];
     Weight pGain = gains[pVertex];
 
     /* If we need to swap this node with the parent then: */
-    if(pGain < gain)
+    if (pGain < gain)
     {
         bhHeap[posParent] = vertex;
         bhHeap[position] = pVertex;
@@ -201,7 +201,7 @@ void heapifyDown
     Weight gain
 )
 {
-    if(position >= size) return;
+    if (position >= size) return;
 
     Int lp = MONGOOSE_LEFT_CHILD(position);
     Int rp = MONGOOSE_RIGHT_CHILD(position);
@@ -212,9 +212,9 @@ void heapifyDown
     Weight lg = (lv >= 0 ? gains[lv] : -INFINITY);
     Weight rg = (rv >= 0 ? gains[rv] : -INFINITY);
 
-    if(gain < lg || gain < rg)
+    if (gain < lg || gain < rg)
     {
-        if(lg > rg)
+        if (lg > rg)
         {
             bhHeap[position] = lv;
             MONGOOSE_PUT_BHINDEX(lv, position);

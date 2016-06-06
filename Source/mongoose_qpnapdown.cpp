@@ -19,11 +19,11 @@ namespace Mongoose
 
 Double QPnapdown            /* return lambda */
 (
-    Double *x,	            /* holds y on input, not modified */
-    Int n,	            /* size of x */
+    Double *x,              /* holds y on input, not modified */
+    Int n,                  /* size of x */
     Double lambda,          /* initial guess for the shift */
     Double *a,              /* input constraint vector */
-    Double b,        	    /* input constraint scalar */
+    Double b,               /* input constraint scalar */
     Double *breakpts,       /* break points */
     Int *bound_heap,        /* work array */
     Int *free_heap          /* work array */
@@ -111,7 +111,7 @@ Double QPnapdown            /* return lambda */
         s = asum - new_break * a2sum;
         if ((s >= b) || (new_break == -INFINITY)) /* done */
         {
-            if(a2sum != MONGOOSE_ZERO) lambda = (asum - b) / a2sum;
+            if (a2sum != MONGOOSE_ZERO) lambda = (asum - b) / a2sum;
             return lambda;
         }
         lambda = new_break;

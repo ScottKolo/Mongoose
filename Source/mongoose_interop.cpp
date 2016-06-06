@@ -21,20 +21,20 @@ void sanitize
 //-----------------------------------------------------------------------------
 cs *cs_load2 (FILE *f)
 {
-    if(!f) return NULL;
+    if (!f) return NULL;
 
-    double i, j ;   /* use double for integers to avoid csi conflicts */
-    double x ;
-    cs *T ;
-    T = cs_spalloc (0, 0, 1, 1, 1) ;                    /* allocate result */
+    double i, j;    /* use double for integers to avoid csi conflicts */
+    double x;
+    cs *T;
+    T = cs_spalloc (0, 0, 1, 1, 1);                     /* allocate result */
 
-    double m, n, nz ;
-    fscanf (f, "%lg %lg %lg\n", &m, &n, &nz) ;
+    double m, n, nz;
+    fscanf (f, "%lg %lg %lg\n", &m, &n, &nz);
 
     while (fscanf (f, "%lg %lg %lg\n", &i, &j, &x) == 3)
     {
-        if(i == j) continue;
-        if (!cs_entry (T, (csi) i-1, (csi) j-1, x)) return (cs_spfree (T)) ;
+        if (i == j) continue;
+        if (!cs_entry (T, (csi) i-1, (csi) j-1, x)) return (cs_spfree (T));
     }
 
     /* Override cs_entry with what the proclaimed values are,
@@ -42,7 +42,7 @@ cs *cs_load2 (FILE *f)
     T->m = (csi) m;
     T->n = (csi) n;
 
-    return (T) ;
+    return (T);
 }
 
 //-----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ Graph *readGraphFromMM
     const char *mmFilename
 )
 {
-    if(!mmFilename) return NULL;
+    if (!mmFilename) return NULL;
 
     /* Build the name of the output file. */
     char outputFile[256];
@@ -66,10 +66,10 @@ Graph *readGraphFromMM
 
     /* Open the output file. */
     FILE *csFile = fopen(outputFile, "r");
-    if(!csFile) return NULL;
+    if (!csFile) return NULL;
     cs *A = cs_load2(csFile);
     fclose(csFile);
-    if(!A) return NULL;
+    if (!A) return NULL;
 
     /* Compress to column pointer form. */
     cs *G = cs_compress(A);
@@ -89,16 +89,16 @@ void sanitize
 )
 {
     FILE *graph = fopen(mmFilename, "r");
-    if(!graph) return;
+    if (!graph) return;
     FILE *output = fopen(csFilename, "w");
-    if(!output) return;
+    if (!output) return;
 
     bool isFirst = true;
     char line[256];
-    while(fgets(line, 256, graph))
+    while (fgets(line, 256, graph))
     {
-        if(line[0] == '%') continue;
-        else if(isFirst)
+        if (line[0] == '%') continue;
+        else if (isFirst)
         {
             fprintf(output, "%s", line);
             isFirst = false;
@@ -118,12 +118,12 @@ void sanitize
 cs *GraphToCSparse3(Graph *G, bool copy)
 {
     cs *A = (cs*) SuiteSparse_malloc(1, sizeof(cs));
-    if(!A) return NULL;
+    if (!A) return NULL;
     A->n = G->cs_n;
     A->m = G->cs_m;
     A->nz = G->cs_nz;
     A->nzmax = G->cs_nzmax;
-    if(!copy)
+    if (!copy)
     {
         A->p = (ptrdiff_t*) G->p;
         A->i = (ptrdiff_t*) G->i;
@@ -136,17 +136,17 @@ cs *GraphToCSparse3(Graph *G, bool copy)
         A->p = (ptrdiff_t*) SuiteSparse_malloc((n+1), sizeof(ptrdiff_t));
         A->i = (ptrdiff_t*) SuiteSparse_malloc(nz, sizeof(ptrdiff_t));
         A->x = (Double*) SuiteSparse_malloc(nz, sizeof(Double));
-        if(!A->p || !A->i || !A->x)
+        if (!A->p || !A->i || !A->x)
         {
             cs_spfree(A);
             return NULL;
         }
 
-        for(Int k=0; k<=n; k++)
+        for (Int k = 0; k <= n; k++)
         {
             A->p[k] = (ptrdiff_t) G->p[k];
         }
-        for(Int p=0; p<nz; p++)
+        for (Int p = 0; p < nz; p++)
         {
             A->i[p] = (ptrdiff_t) G->i[p];
             A->x[p] = G->x[p];
@@ -160,7 +160,7 @@ cs *GraphToCSparse3(Graph *G, bool copy)
 Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
 {
     Graph *returner = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
-    if(!returner) return NULL;
+    if (!returner) return NULL;
     new (returner) Graph();
 
     /* Brain-transplant the graph to the new representation. */
@@ -176,24 +176,25 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
 
     /* Allocate edge weights if necessary. */
     bool attachEdgeWeights = false;
-    if(!returner->x || resetEW)
+    if (!returner->x || resetEW)
     {
         Int nz = returner->nz;
         returner->x = (Weight*) SuiteSparse_malloc(nz, sizeof(Weight));
-        attachEdgeWeights = true;        
+        attachEdgeWeights = true;
     }
 
     /* Allocate node weights if necessary. */
     bool attachNodeWeights = false;
-    if(!returner->w || resetNW)
+    if (!returner->w || resetNW)
     {
         Int n = returner->n;
         returner->w = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
-        attachNodeWeights = true;        
+        attachNodeWeights = true;
     }
 
     /* If we failed to attach weights, free the graph and return. */
-    if((attachEdgeWeights && !returner->x) || (attachNodeWeights && !returner->w))
+    if ((attachEdgeWeights && !returner->x) ||
+        (attachNodeWeights && !returner->w))
     {
         /* Undo the brain transplant, free the Graph skeleton, and return. */
         returner->p = NULL;
@@ -204,16 +205,16 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
         return NULL;
     }
 
-    if(attachEdgeWeights)
+    if (attachEdgeWeights)
     {
         Int nz = returner->nz;
-        for(Int p=0; p<nz; p++) returner->x[p] = 1.0;
+        for (Int p = 0; p < nz; p++) returner->x[p] = 1.0;
     }
 
-    if(attachNodeWeights)
+    if (attachNodeWeights)
     {
         int n = returner->n;
-        for(Int k=0; k<n; k++) returner->w[k] = 1.0;
+        for (Int k = 0; k < n; k++) returner->w[k] = 1.0;
     }
 
     return returner;

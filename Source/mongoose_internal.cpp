@@ -31,7 +31,7 @@ struct SuiteSparse_config_struct SuiteSparse_config =
         NULL,
     #endif
 
-} ;
+};
 
 /* -------------------------------------------------------------------------- */
 /* SuiteSparse_start */
@@ -56,43 +56,43 @@ void SuiteSparse_start ( void )
     #ifndef NMALLOC
         #ifdef MATLAB_MEX_FILE
             /* MATLAB mexFunction: */
-            SuiteSparse_config.malloc_func  = mxMalloc ;
-            SuiteSparse_config.calloc_func  = mxCalloc ;
-            SuiteSparse_config.realloc_func = mxRealloc ;
-            SuiteSparse_config.free_func    = mxFree ;
+            SuiteSparse_config.malloc_func  = mxMalloc;
+            SuiteSparse_config.calloc_func  = mxCalloc;
+            SuiteSparse_config.realloc_func = mxRealloc;
+            SuiteSparse_config.free_func    = mxFree;
         #else
             /* standard ANSI C: */
-            SuiteSparse_config.malloc_func  = malloc ;
-            SuiteSparse_config.calloc_func  = calloc ;
-            SuiteSparse_config.realloc_func = realloc ;
-            SuiteSparse_config.free_func    = free ;
+            SuiteSparse_config.malloc_func  = malloc;
+            SuiteSparse_config.calloc_func  = calloc;
+            SuiteSparse_config.realloc_func = realloc;
+            SuiteSparse_config.free_func    = free;
         #endif
     #else
         /* no memory manager defined; you must define one after calling
            SuiteSparse_start */
-        SuiteSparse_config.malloc_func  = NULL ;
-        SuiteSparse_config.calloc_func  = NULL ;
-        SuiteSparse_config.realloc_func = NULL ;
-        SuiteSparse_config.free_func    = NULL ;
+        SuiteSparse_config.malloc_func  = NULL;
+        SuiteSparse_config.calloc_func  = NULL;
+        SuiteSparse_config.realloc_func = NULL;
+        SuiteSparse_config.free_func    = NULL;
     #endif
 
     /* printf function */
     #ifndef NPRINT
         #ifdef MATLAB_MEX_FILE
             /* MATLAB mexFunction: */
-            SuiteSparse_config.printf_func = mexPrintf ;
+            SuiteSparse_config.printf_func = mexPrintf;
         #else
             /* standard ANSI C: */
-            SuiteSparse_config.printf_func = printf ;
+            SuiteSparse_config.printf_func = printf;
         #endif
     #else
         /* printf is disabled */
-        SuiteSparse_config.printf_func = NULL ;
+        SuiteSparse_config.printf_func = NULL;
     #endif
 
     /* math functions */
-    SuiteSparse_config.hypot_func = SuiteSparse_hypot ;
-    SuiteSparse_config.divcomplex_func = SuiteSparse_divcomplex ;
+    SuiteSparse_config.hypot_func = SuiteSparse_hypot;
+    SuiteSparse_config.divcomplex_func = SuiteSparse_divcomplex;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -111,7 +111,7 @@ void SuiteSparse_start ( void )
 
 void SuiteSparse_finish ( void )
 {
-    /* do nothing */ ;
+    /* do nothing */;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -124,22 +124,22 @@ void *SuiteSparse_malloc    /* pointer to allocated block of memory */
     size_t size_of_item     /* sizeof each item */
 )
 {
-    void *p ;
-    size_t size ;
-    if (nitems < 1) nitems = 1 ;
-    if (size_of_item < 1) size_of_item = 1 ;
-    size = nitems * size_of_item  ;
+    void *p;
+    size_t size;
+    if (nitems < 1) nitems = 1;
+    if (size_of_item < 1) size_of_item = 1;
+    size = nitems * size_of_item;
 
     if (size != ((double) nitems) * size_of_item)
     {
         /* size_t overflow */
-        p = NULL ;
+        p = NULL;
     }
     else
     {
-        p = (void *) (SuiteSparse_config.malloc_func) (size) ;
+        p = (void *) (SuiteSparse_config.malloc_func)(size);
     }
-    return (p) ;
+    return (p);
 }
 
 
@@ -153,22 +153,22 @@ void *SuiteSparse_calloc    /* pointer to allocated block of memory */
     size_t size_of_item     /* sizeof each item */
 )
 {
-    void *p ;
-    size_t size ;
-    if (nitems < 1) nitems = 1 ;
-    if (size_of_item < 1) size_of_item = 1 ;
-    size = nitems * size_of_item  ;
+    void *p;
+    size_t size;
+    if (nitems < 1) nitems = 1;
+    if (size_of_item < 1) size_of_item = 1;
+    size = nitems * size_of_item;
 
     if (size != ((double) nitems) * size_of_item)
     {
         /* size_t overflow */
-        p = NULL ;
+        p = NULL;
     }
     else
     {
-        p = (void *) (SuiteSparse_config.calloc_func) (nitems, size_of_item) ;
+        p = (void *) (SuiteSparse_config.calloc_func)(nitems, size_of_item);
     }
-    return (p) ;
+    return (p);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -193,55 +193,55 @@ void *SuiteSparse_realloc   /* pointer to reallocated block of memory, or
     int *ok                 /* 1 if successful, 0 otherwise */
 )
 {
-    size_t size ;
-    if (nitems_old < 1) nitems_old = 1 ;
-    if (nitems_new < 1) nitems_new = 1 ;
-    if (size_of_item < 1) size_of_item = 1 ;
-    size = nitems_new * size_of_item  ;
+    size_t size;
+    if (nitems_old < 1) nitems_old = 1;
+    if (nitems_new < 1) nitems_new = 1;
+    if (size_of_item < 1) size_of_item = 1;
+    size = nitems_new * size_of_item;
 
     if (size != ((double) nitems_new) * size_of_item)
     {
         /* size_t overflow */
-        (*ok) = 0 ;
+        (*ok) = 0;
     }
     else if (p == NULL)
     {
         /* a fresh object is being allocated */
-        p = SuiteSparse_malloc (nitems_new, size_of_item) ;
-        (*ok) = (p != NULL) ;
+        p = SuiteSparse_malloc (nitems_new, size_of_item);
+        (*ok) = (p != NULL);
     }
     else if (nitems_old == nitems_new)
     {
         /* the object does not change; do nothing */
-        (*ok) = 1 ;
+        (*ok) = 1;
     }
     else
     {
         /* change the size of the object from nitems_old to nitems_new */
-        void *pnew ;
-        pnew = (void *) (SuiteSparse_config.realloc_func) (p, size) ;
+        void *pnew;
+        pnew = (void *) (SuiteSparse_config.realloc_func)(p, size);
         if (pnew == NULL)
         {
             if (nitems_new < nitems_old)
             {
                 /* the attempt to reduce the size of the block failed, but
                    the old block is unchanged.  So pretend to succeed. */
-                (*ok) = 1 ;
+                (*ok) = 1;
             }
             else
             {
                 /* out of memory */
-                (*ok) = 0 ;
+                (*ok) = 0;
             }
         }
         else
         {
             /* success */
-            p = pnew ;
-            (*ok) = 1 ;
+            p = pnew;
+            (*ok) = 1;
         }
     }
-    return (p) ;
+    return (p);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -255,9 +255,9 @@ void *SuiteSparse_free      /* always returns NULL */
 {
     if (p)
     {
-        (SuiteSparse_config.free_func) (p) ;
+        (SuiteSparse_config.free_func)(p);
     }
-    return (NULL) ;
+    return (NULL);
 }
 
 
@@ -277,41 +277,41 @@ void *SuiteSparse_free      /* always returns NULL */
  *
  * s = hypot (x,y) computes s = sqrt (x*x + y*y) but does so more accurately.
  * The NaN cases for the double relops x >= y and x+y == x are safely ignored.
- * 
+ *
  * Source: Algorithm 312, "Absolute value and square root of a complex number,"
  * P. Friedland, Comm. ACM, vol 10, no 10, October 1967, page 665.
  */
 
 double SuiteSparse_hypot (double x, double y)
 {
-    double s, r ;
-    x = fabs (x) ;
-    y = fabs (y) ;
+    double s, r;
+    x = fabs (x);
+    y = fabs (y);
     if (x >= y)
     {
-    if (x + y == x)
-    {
-        s = x ;
+        if (x + y == x)
+        {
+            s = x;
+        }
+        else
+        {
+            r = y / x;
+            s = x * sqrt (1.0 + r*r);
+        }
     }
     else
     {
-        r = y / x ;
-        s = x * sqrt (1.0 + r*r) ;
+        if (y + x == y)
+        {
+            s = y;
+        }
+        else
+        {
+            r = x / y;
+            s = y * sqrt (1.0 + r*r);
+        }
     }
-    }
-    else
-    {
-    if (y + x == y)
-    {
-        s = y ;
-    }
-    else
-    {
-        r = x / y ;
-        s = y * sqrt (1.0 + r*r) ;
-    }
-    } 
-    return (s) ;
+    return (s);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -339,22 +339,22 @@ int SuiteSparse_divcomplex
     double *cr, double *ci  /* real and imaginary parts of c */
 )
 {
-    double tr, ti, r, den ;
+    double tr, ti, r, den;
     if (fabs (br) >= fabs (bi))
     {
-    r = bi / br ;
-    den = br + r * bi ;
-    tr = (ar + ai * r) / den ;
-    ti = (ai - ar * r) / den ;
+        r = bi / br;
+        den = br + r * bi;
+        tr = (ar + ai * r) / den;
+        ti = (ai - ar * r) / den;
     }
     else
     {
-    r = br / bi ;
-    den = r * br + bi ;
-    tr = (ar * r + ai) / den ;
-    ti = (ai * r - ar) / den ;
+        r = br / bi;
+        den = r * br + bi;
+        tr = (ar * r + ai) / den;
+        ti = (ai * r - ar) / den;
     }
-    *cr = tr ;
-    *ci = ti ;
-    return (den == 0.) ;
+    *cr = tr;
+    *ci = ti;
+    return (den == 0.);
 }

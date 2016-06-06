@@ -21,7 +21,7 @@ Graph *conditionGraph
     bool resetNW
 )
 {
-    if(!G || !O) return NULL;
+    if (!G || !O) return NULL;
 
     Int n = G->n;
     Int nz = G->nz;
@@ -40,7 +40,7 @@ Graph *conditionGraph
     oG = (Graph*) SuiteSparse_free(oG);
 
     /* If we're out of memory converting CSparse3 to Graph, free R. */
-    if(!G)
+    if (!G)
     {
         cs_spfree(R);
         return NULL;
@@ -52,9 +52,9 @@ Graph *conditionGraph
     Gw = G->w;
 
     /* Make edge weights positive. */
-    for(Int k=0; k<n; k++)
+    for (Int k = 0; k < n; k++)
     {
-        for(Int p=Gp[k]; p<Gp[k+1]; p++) Gx[p] = fabs(Gx[p]);
+        for (Int p = Gp[k]; p < Gp[k+1]; p++) Gx[p] = fabs(Gx[p]);
     }
 
     /* Return the conditioned graph. */

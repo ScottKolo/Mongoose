@@ -20,7 +20,7 @@ void QPmaxheap_build
     Double *x
 )
 {
-    for(Int p=size/2; p>=1; p--) QPmaxheapify(p, heap, size, x);
+    for (Int p = size/2; p >= 1; p--) QPmaxheapify(p, heap, size, x);
 }
 
 /* ========================================================================== */
@@ -29,14 +29,14 @@ void QPmaxheap_build
 
 /* delete the top element in a max heap */
 
-Int QPmaxheap_delete	/* return new size of heap */
+Int QPmaxheap_delete    /* return new size of heap */
 (
-    Int *heap,                  /* containing indices into x, 1..n on input */
-    Int size,                  /* number of items in heap */
-    Double *x                   /* not modified */
+    Int *heap,   /* containing indices into x, 1..n on input */
+    Int size,    /* number of items in heap */
+    Double *x    /* not modified */
 )
 {
-    if(size <= 1) return 0;
+    if (size <= 1) return 0;
 
     /* Replace top element with last element. */
     heap[1] = heap[size];
@@ -53,9 +53,9 @@ Int QPmaxheap_delete	/* return new size of heap */
 
 Int QPmaxheap_add
 (
-    Int leaf ,   /* the new leaf */
-    Int *heap ,  /* size n, containing indices into x */
-    Double *x ,  /* not modified */
+    Int leaf,    /* the new leaf */
+    Int *heap,   /* size n, containing indices into x */
+    Double *x,   /* not modified */
     Int size     /* number of elements in heap not counting new one */
 )
 {
@@ -105,13 +105,13 @@ void QPmaxheapify
     Double *x                    /* not modified */
 )
 {
-    Int left, right, e, hleft, hright ;
-    Double xe, xleft, xright ;
+    Int left, right, e, hleft, hright;
+    Double xe, xleft, xright;
 
     e = heap[p];
     xe = x[e];
 
-    while(true)
+    while (true)
     {
         left = p * 2;
         right = left + 1;
@@ -123,9 +123,9 @@ void QPmaxheapify
             xleft  = x[hleft];
             xright = x[hright];
 
-            if(xleft > xright)
+            if (xleft > xright)
             {
-                if(xe < xleft)
+                if (xe < xleft)
                 {
                     heap[p] = hleft;
                     p = left;
@@ -138,7 +138,7 @@ void QPmaxheapify
             }
             else
             {
-                if(xe < xright)
+                if (xe < xright)
                 {
                     heap[p] = hright;
                     p = right;
@@ -179,9 +179,9 @@ void QPmaxheap_check
 (
     Int *heap,  /* vector of size n+1 */
     Double *x,  /* vector of size n */
-    Int size,		/* # items in heap */
+    Int size,   /* # items in heap */
     Int n,
-    Int p		/* start checking at heap [p] */
+    Int p       /* start checking at heap [p] */
 )
 {
     Int *w, left, right, i, e, eleft, eright;

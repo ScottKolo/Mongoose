@@ -13,10 +13,10 @@ void fmRefine_worker(Graph *G, Options *O);
 //-----------------------------------------------------------------------------
 void fmRefine(Graph *G, Options *O)
 {
-    if(!O->useFM) return;
+    if (!O->useFM) return;
 
     Weight heuCost = INFINITY;
-    for(Int i=0; i<O->fmMaxNumRefinements && G->heuCost < heuCost; i++)
+    for (Int i = 0; i < O->fmMaxNumRefinements && G->heuCost < heuCost; i++)
     {
         heuCost = G->heuCost;
         fmRefine_worker(G, O);
@@ -61,34 +61,36 @@ void fmRefine_worker(Graph *G, Options *O)
     Int fmConsiderCount = O->fmConsiderCount;
     Int i = 0;
     bool productive = true;
-    for( ; i<fmSearchDepth && productive; i++)
+    for (; i < fmSearchDepth && productive; i++)
     {
         productive = false;
 
         /* Look for the best vertex to swap: */
         struct SwapCandidate bestCandidate;
-        for(Int h=0; h<2; h++)
+        for (Int h = 0; h < 2; h++)
         {
             Int *heap = bhHeap[h];
             Int size = bhSize[h];
-            for(Int c=0; c<fmConsiderCount && c<size; c++)
+            for (Int c = 0; c < fmConsiderCount && c < size; c++)
             {
                 /* Read the vertex, and if it's marked, try the next one. */
                 Int v = heap[c];
-                if(MONGOOSE_MARKED(v)) continue;
+                if (MONGOOSE_MARKED(v)) continue;
 
                 /* Read the gain for the vertex. */
                 Weight gain = gains[v];
 
                 /* The balance penalty is the penalty to assess for the move. */
                 Weight nodeWeight = Gw[v];
-                Weight imbalance = workingCost.imbalance + (h ? -1.0 : 1.0) * (nodeWeight / W);
+                Weight imbalance = workingCost.imbalance + (h ? -1.0 : 1.0) *
+                                   (nodeWeight / W);
                 Weight absImbalance = fabs(imbalance);
-                Weight imbalanceDelta = absImbalance - fabs(workingCost.imbalance);
+                Weight imbalanceDelta = absImbalance - fabs(
+                    workingCost.imbalance);
 
                 /* If the move hurts the balance past tol, add a penalty. */
                 Weight balPenalty = 0.0;
-                if(imbalanceDelta > 0 && absImbalance > tol)
+                if (imbalanceDelta > 0 && absImbalance > tol)
                 {
                     balPenalty = absImbalance * H;
                 }
@@ -98,7 +100,7 @@ void fmRefine_worker(Graph *G, Options *O)
                 Weight heuCost = workingCost.cutCost - (gain - balPenalty);
 
                 /* If our heuristic value is better than the running one: */
-                if(heuCost < bestCandidate.heuCost)
+                if (heuCost < bestCandidate.heuCost)
                 {
                     bestCandidate.vertex = v;
                     bestCandidate.partition = h;
@@ -112,13 +114,14 @@ void fmRefine_worker(Graph *G, Options *O)
         }
 
         /* If we were able to find the best unmoved boundary vertex: */
-        if(bestCandidate.heuCost < INFINITY)
+        if (bestCandidate.heuCost < INFINITY)
         {
             productive = true;
             MONGOOSE_MARK(bestCandidate.vertex);
 
             /* Move the vertex from the boundary into the move set. */
-            bhRemove(G, O, bestCandidate.vertex, bestCandidate.gain, bestCandidate.partition, bestCandidate.bhPosition);
+            bhRemove(G, O, bestCandidate.vertex, bestCandidate.gain,
+                     bestCandidate.partition, bestCandidate.bhPosition);
             stack[tail++] = bestCandidate.vertex;
 
             /* Swap & update the vertex and its neighbors afterwards. */
@@ -137,10 +140,11 @@ void fmRefine_worker(Graph *G, Options *O)
             workingCost.W[!bestCandidate.partition] += bestCandidate.nodeWeight;
             workingCost.imbalance = bestCandidate.imbalance;
             Weight absImbalance = fabs(bestCandidate.imbalance);
-            workingCost.heuCost = workingCost.cutCost + (absImbalance > tol ? absImbalance * H : 0.0);
+            workingCost.heuCost = workingCost.cutCost +
+                                  (absImbalance > tol ? absImbalance * H : 0.0);
 
             /* Commit the cut if it's better. */
-            if(workingCost.heuCost < bestCost.heuCost)
+            if (workingCost.heuCost < bestCost.heuCost)
             {
                 bestCost = workingCost;
                 head = tail;
@@ -150,7 +154,7 @@ void fmRefine_worker(Graph *G, Options *O)
     }
 
     /* We've exhausted our search space, so undo all suboptimal moves. */
-    for(Int u=tail-1; u>=head; u--)
+    for (Int u = tail-1; u >= head; u--)
     {
         Int vertex = stack[u];
         Int bhVertexPosition = MONGOOSE_GET_BHINDEX(vertex);
@@ -162,9 +166,10 @@ void fmRefine_worker(Graph *G, Options *O)
          * from not in the boundary to an undo state that places it in
          * the boundary. It is also possible that a previous swap added
          * this vertex to the boundary already. */
-        if(bhVertexPosition != -1)
+        if (bhVertexPosition != -1)
         {
-            bhRemove(G, O, vertex, gains[vertex], partition[vertex], bhVertexPosition);
+            bhRemove(G, O, vertex, gains[vertex], partition[vertex],
+                     bhVertexPosition);
         }
 
         /* Swap the partition and compute the impact on neighbors. */
@@ -177,17 +182,17 @@ void fmRefine_worker(Graph *G, Options *O)
             mark, markValue
         );
 
-        if(externalDegree[vertex] > 0) bhInsert(G, vertex);
+        if (externalDegree[vertex] > 0) bhInsert(G, vertex);
     }
 
     /* Clear the moved mark in constant time. */
     markValue++;
 
     /* Re-add any vertices that were moved that are still on the boundary. */
-    for(Int i=0; i<head; i++)
+    for (Int i = 0; i < head; i++)
     {
         Int vertex = stack[i];
-        if(externalDegree[vertex] > 0 && !MONGOOSE_IN_BOUNDARY(vertex))
+        if (externalDegree[vertex] > 0 && !MONGOOSE_IN_BOUNDARY(vertex))
         {
             bhInsert(G, vertex);
         }
@@ -235,14 +240,14 @@ void fmSwap
 
     /* Update neighbors. */
     Int exD = 0;
-    for(Int p=Gp[vertex]; p<Gp[vertex+1]; p++)
+    for (Int p = Gp[vertex]; p < Gp[vertex+1]; p++)
     {
         Int neighbor = Gi[p];
         bool neighborPartition = partition[neighbor];
         bool sameSide = (newPartition == neighborPartition);
 
         /* Update the bestCandidate vertex's external degree. */
-        if(!sameSide) exD++;
+        if (!sameSide) exD++;
 
         /* Update the neighbor's gain. */
         Weight edgeWeight = Gx[p];
@@ -258,10 +263,10 @@ void fmSwap
         Int position = MONGOOSE_GET_BHINDEX(neighbor);
 
         /* If the neighbor was in a heap: */
-        if(position != -1)
+        if (position != -1)
         {
             /* If it had its externalDegree reduced to 0, remove it from the heap. */
-            if(neighborExD == 0)
+            if (neighborExD == 0)
             {
                 bhRemove
                 (
@@ -277,15 +282,18 @@ void fmSwap
             else
             {
                 Int v = neighbor;
-                heapifyUp(bhIndex, bhHeap[neighborPartition], gains, v, position, neighborGain);
+                heapifyUp(bhIndex, bhHeap[neighborPartition], gains, v,
+                          position, neighborGain);
                 v = bhHeap[neighborPartition][position];
-                heapifyDown(bhIndex, bhHeap[neighborPartition], bhSize[neighborPartition], gains, v, position, gains[v]);
+                heapifyDown(bhIndex, bhHeap[neighborPartition],
+                            bhSize[neighborPartition], gains, v, position,
+                            gains[v]);
             }
         }
         /* Else the neighbor wasn't in the heap so add it. */
         else
         {
-            if(!MONGOOSE_MARKED(neighbor))
+            if (!MONGOOSE_MARKED(neighbor))
             {
                 assert(!MONGOOSE_IN_BOUNDARY(neighbor));
                 bhInsert(G, neighbor);
@@ -316,13 +324,13 @@ void calculateGain
 
     Weight gain = 0.0;
     Int externalDegree = 0;
-    for(Int p=Gp[vertex]; p<Gp[vertex+1]; p++)
+    for (Int p = Gp[vertex]; p < Gp[vertex+1]; p++)
     {
         Weight ew = (Gx ? Gx[p] : 1.0);
         bool sameSide = (partition[Gi[p]] == vp);
         gain += (sameSide ? -ew : ew);
 
-        if(!sameSide) externalDegree++;
+        if (!sameSide) externalDegree++;
     }
 
     /* Save outputs */

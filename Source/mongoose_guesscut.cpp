@@ -43,64 +43,64 @@ void pseudoperipheralGuess
 //-----------------------------------------------------------------------------
 bool guessCut(Graph *G, Options *O)
 {
-    switch(O->guessCutType)
+    switch (O->guessCutType)
     {
-        case Pseudoperipheral_All:
-        {
-            bool *ppvMark = (bool*) SuiteSparse_calloc(G->n, sizeof(bool));
-            if(!ppvMark) return false;
+      case Pseudoperipheral_All:
+      {
+          bool *ppvMark = (bool*) SuiteSparse_calloc(G->n, sizeof(bool));
+          if (!ppvMark) return false;
 
-            /* Find pseudoperipheral nodes from which we can generate guess cuts. */
-            Int *list = G->matching, size = 0;
-            findAllPseudoperipheralNodes(G, O, list, &size, ppvMark);
+          /* Find pseudoperipheral nodes from which we can generate guess cuts. */
+          Int *list = G->matching, size = 0;
+          findAllPseudoperipheralNodes(G, O, list, &size, ppvMark);
 
-            /* Find the best guess. */
-            Weight bestCost = INFINITY;
-            Int bestGuess = -1;
+          /* Find the best guess. */
+          Weight bestCost = INFINITY;
+          Int bestGuess = -1;
 
-            for(Int i=0; i<size; i++)
-            {
-                /* Generate guess partition using a BFS from the start node and do FM on it. */
-                partBFS(G, O, list[i]);
-                bhLoad(G, O);
-                waterdance(G, O);
-                bhClear(G);
+          for (Int i = 0; i < size; i++)
+          {
+              /* Generate guess partition using a BFS from the start node and do FM on it. */
+              partBFS(G, O, list[i]);
+              bhLoad(G, O);
+              waterdance(G, O);
+              bhClear(G);
 
-                if(G->cutCost < bestCost)
-                {
-                    bestGuess = i;
-                    bestCost = G->cutCost;
-                }
-            }
+              if (G->cutCost < bestCost)
+              {
+                  bestGuess = i;
+                  bestCost = G->cutCost;
+              }
+          }
 
-            /* Load the best guess. */
-            partBFS(G, O, list[bestGuess]);
-            bhLoad(G, O);
+          /* Load the best guess. */
+          partBFS(G, O, list[bestGuess]);
+          bhLoad(G, O);
 
-            ppvMark = (bool*) SuiteSparse_free(ppvMark);
-            break;
-        }
+          ppvMark = (bool*) SuiteSparse_free(ppvMark);
+          break;
+      }
 
-        default: case Pseudoperipheral_Fast:
-        {
-            pseudoperipheralGuess(G, O);
-            break;
-        }
+      default: case Pseudoperipheral_Fast:
+      {
+          pseudoperipheralGuess(G, O);
+          break;
+      }
 
-        case QP_GradProj:
-        {
-            for(Int k=0; k<G->n; k++) G->partition[k] = false;
-            G->W0 = G->W;
-            G->W1 = 0.0;
-            bhLoad(G, O);
-            qpGradProj(G, O, true);
-            break;
-        }
+      case QP_GradProj:
+      {
+          for (Int k = 0; k < G->n; k++) G->partition[k] = false;
+          G->W0 = G->W;
+          G->W1 = 0.0;
+          bhLoad(G, O);
+          qpGradProj(G, O, true);
+          break;
+      }
     }
 
     /* Do the waterdance refinement. */
     waterdance(G, O);
-    
+
     return true;
 }
 
@@ -134,17 +134,17 @@ Int diagBFS
     MONGOOSE_MARK(start);
 
     Int v, vmark;
-    while(head < tail)
+    while (head < tail)
     {
         v = stack[head++];
         W0 += Gw[v];
         partition[v] = (W0 < halfW);
         vmark = mark[v]+1;
 
-        for(Int p=Gp[v]; p<Gp[v+1]; p++)
+        for (Int p = Gp[v]; p < Gp[v+1]; p++)
         {
             Int neighbor = Gi[p];
-            if(mark[neighbor] < markStart)
+            if (mark[neighbor] < markStart)
             {
                 mark[neighbor] = vmark;
                 stack[tail++] = neighbor;
@@ -157,13 +157,14 @@ Int diagBFS
 
     /* Choose the next start based on the smallest degree. */
     Int minDegree = n;
-    for(Int v=stack[--head]; mark[v]==maxLevel && minDegree>1; v=stack[--head])
+    for (Int v = stack[--head]; mark[v] == maxLevel && minDegree > 1;
+         v = stack[--head])
     {
         Int degree = Gp[v+1] - Gp[v];
-        if(degree < minDegree)
+        if (degree < minDegree)
         {
-           minDegree = degree;
-           *inout_start = v;
+            minDegree = degree;
+            *inout_start = v;
         }
     }
 
@@ -196,16 +197,16 @@ void partBFS
     stack[tail++] = start;
     MONGOOSE_MARK(start);
 
-    while(head < tail)
+    while (head < tail)
     {
         Int v = stack[head++];
         W0 += Gw[v];
         partition[v] = (W0 < halfW);
 
-        for(Int p=Gp[v]; p<Gp[v+1]; p++)
+        for (Int p = Gp[v]; p < Gp[v+1]; p++)
         {
             Int neighbor = Gi[p];
-            if(!MONGOOSE_MARKED(neighbor))
+            if (!MONGOOSE_MARKED(neighbor))
             {
                 MONGOOSE_MARK(neighbor);
                 stack[tail++] = neighbor;
@@ -242,22 +243,22 @@ void findAllPseudoperipheralNodes
     ppvMark[startVertex] = true;
 
     /* Do a number of BFSs in order to find a pseudoperipheral node. */
-    Int i=0, guessSearchDepth = O->guessSearchDepth;
-    while(head != tail)
+    Int i = 0, guessSearchDepth = O->guessSearchDepth;
+    while (head != tail)
     {
-        if(i++ > guessSearchDepth) break;
+        if (i++ > guessSearchDepth) break;
 
         Int start = list[head++];
         diameter = diagBFS(G, O, stack, mark, markValue, &start);
         markValue += diameter + 1;
 
         /* Go backwards through the last level and add new vertices to the list of pseudoperipheral nodes that we're finding. */
-        for(Int s=n-1; s>=0; s--)
+        for (Int s = n-1; s >= 0; s--)
         {
             Int v = stack[s];
-            if(!MONGOOSE_MARKED(v)) break;
+            if (!MONGOOSE_MARKED(v)) break;
 
-            if(!ppvMark[v])
+            if (!ppvMark[v])
             {
                 list[tail++] = v;
                 ppvMark[v] = true;
@@ -287,14 +288,14 @@ void pseudoperipheralGuess
     Int markValue = G->markValue;
 
     Int *stack = G->matching;
-    for(Int k=0; k<n; k++) stack[k] = 0;
+    for (Int k = 0; k < n; k++) stack[k] = 0;
 
     Int start = O->randomSeed % n;
     Int diameter = -1, newDiameter = 0;
 
     /* Do a number of BFSs in order to find a pseudoperipheral node. */
     Int guessSearchDepth = O->guessSearchDepth;
-    for(Int i=0; i<guessSearchDepth || diameter < newDiameter; i++)
+    for (Int i = 0; i < guessSearchDepth || diameter < newDiameter; i++)
     {
         diameter = newDiameter;
         newDiameter = diagBFS(G, O, stack, mark, markValue, &start);

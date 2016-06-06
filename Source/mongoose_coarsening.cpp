@@ -19,7 +19,7 @@ Graph *coarsen(Graph *G, Options *O)
 
     /* Build the coarse graph */
     Graph *C = Graph::Create(G);
-    if(!C) return NULL;
+    if (!C) return NULL;
 
     Int *Cp = C->p;
     Int *Ci = C->i;
@@ -31,42 +31,42 @@ Graph *coarsen(Graph *G, Options *O)
 
     /* Hashtable stores column pointer values. */
     Int *htable = (Int*) SuiteSparse_malloc(cn, sizeof(Int));
-    if(!htable) 
+    if (!htable)
     {
         C->~Graph();
         C = (Graph*) SuiteSparse_free(C);
         return NULL;
     }
-    for(Int i=0; i<cn; i++) htable[i] = -1;
+    for (Int i = 0; i < cn; i++) htable[i] = -1;
 
     /* For each vertex in the coarse graph. */
-    for(Int k=0; k<cn; k++)
+    for (Int k = 0; k < cn; k++)
     {
         /* Load up the inverse matching */
         Int v[3] = {-1, -1, -1};
         v[0] = invmatchmap[k];
         v[1] = MONGOOSE_GETMATCH(v[0]);
-        if(v[0] == v[1]){ v[1] = -1; }
+        if (v[0] == v[1]) { v[1] = -1; }
         else
         {
             v[2] = MONGOOSE_GETMATCH(v[1]);
-            if(v[0] == v[2]){ v[2] = -1; }
+            if (v[0] == v[2]) { v[2] = -1; }
         }
-        
+
         Int ps = Cp[k] = munch;     /* The munch start for this column */
 
         Weight nodeWeight = 0.0;
         Weight sumEdgeWeights = 0.0;
-        for(Int i=0; i<3 && v[i] != -1; i++)
+        for (Int i = 0; i < 3 && v[i] != -1; i++)
         {
             /* Read the matched vertex and accumulate the node weight. */
             Int vertex = v[i];
             nodeWeight += Gw[vertex];
 
-            for(Int p=Gp[vertex]; p<Gp[vertex+1]; p++)
+            for (Int p = Gp[vertex]; p < Gp[vertex+1]; p++)
             {
                 Int toCoarsened = matchmap[Gi[p]];
-                if(toCoarsened == k) continue;         /* Delete self-edges */
+                if (toCoarsened == k) continue;         /* Delete self-edges */
 
                 /* Read the edge weight and accumulate the sum of edge weights. */
                 Weight edgeWeight = Gx[p];
@@ -74,7 +74,7 @@ Graph *coarsen(Graph *G, Options *O)
 
                 /* Check the hashtable before scattering. */
                 Int cp = htable[toCoarsened];
-                if(cp < ps)             /* Hasn't been seen yet this column */
+                if (cp < ps)             /* Hasn't been seen yet this column */
                 {
                     htable[toCoarsened] = munch;
                     Ci[munch] = toCoarsened;
@@ -111,10 +111,10 @@ Graph *coarsen(Graph *G, Options *O)
 
     /* If we want to do expensive checks, make sure we didn't break
      * the problem into multiple connected components. */
-    if(O->doExpensiveChecks)
+    if (O->doExpensiveChecks)
     {
         Weight W = 0.0;
-        for(Int k=0; k<cn; k++)
+        for (Int k = 0; k < cn; k++)
         {
             Int degree = Cp[k+1] - Cp[k];
             assert(degree > 0);
@@ -123,7 +123,7 @@ Graph *coarsen(Graph *G, Options *O)
         }
         assert(W == C->W);
     }
-    
+
     /* Return the coarse graph */
     return C;
 }

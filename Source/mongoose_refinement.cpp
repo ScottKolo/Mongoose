@@ -27,22 +27,22 @@ Graph *refine(Graph *G, Options *O)
     P->imbalance = G->imbalance;
 
     /* For each vertex in the coarse graph. */
-    for(Int k=0; k<cn; k++)
+    for (Int k = 0; k < cn; k++)
     {
         /* Load up the inverse matching */
         Int v[3] = {-1, -1, -1};
         v[0] = invmatchmap[k];
         v[1] = MONGOOSE_GETMATCH(v[0]);
-        if(v[0] == v[1]){ v[1] = -1; }
+        if (v[0] == v[1]) { v[1] = -1; }
         else
         {
             v[2] = MONGOOSE_GETMATCH(v[1]);
-            if(v[0] == v[2]){ v[2] = -1; }
+            if (v[0] == v[2]) { v[2] = -1; }
         }
 
         /* Transfer the partition choices to the fine level. */
         bool cp = cPartition[k];
-        for(Int i=0; i<3 && v[i] != -1; i++)
+        for (Int i = 0; i < 3 && v[i] != -1; i++)
         {
             Int vertex = v[i];
             fPartition[vertex] = cp;
@@ -53,14 +53,14 @@ Graph *refine(Graph *G, Options *O)
      * vertices on the boundary.
      * NOTE: For this, we only need to go through the set of vertices that
      * were on the boundary in the coarse representation. */
-    for(Int h=0; h<2; h++)
+    for (Int h = 0; h < 2; h++)
     {
         /* Get the appropriate heap's data. */
         Int *heap = G->bhHeap[h];
         Int size = G->bhSize[h];
 
         /* Go through all the boundary nodes. */
-        for(Int hpos=0; hpos<size; hpos++)
+        for (Int hpos = 0; hpos < size; hpos++)
         {
             /* Get the coarse vertex from the heap. */
             Int k = heap[hpos];
@@ -69,15 +69,15 @@ Graph *refine(Graph *G, Options *O)
             Int v[3] = {-1, -1, -1};
             v[0] = invmatchmap[k];
             v[1] = MONGOOSE_GETMATCH(v[0]);
-            if(v[0] == v[1]){ v[1] = -1; }
+            if (v[0] == v[1]) { v[1] = -1; }
             else
             {
                 v[2] = MONGOOSE_GETMATCH(v[1]);
-                if(v[0] == v[2]){ v[2] = -1; }
+                if (v[0] == v[2]) { v[2] = -1; }
             }
 
             /* Relax the boundary constraint. */
-            for(Int i=0; i<3 && v[i] != -1; i++)
+            for (Int i = 0; i < 3 && v[i] != -1; i++)
             {
                 Int vertex = v[i];
 
@@ -86,7 +86,7 @@ Graph *refine(Graph *G, Options *O)
                 calculateGain(P, O, vertex, &gain, &externalDegree);
 
                 /* Only add relevant vertices to the boundary heap. */
-                if(externalDegree > 0)
+                if (externalDegree > 0)
                 {
                     fExternalDegree[vertex] = externalDegree;
                     fGains[vertex] = gain;
