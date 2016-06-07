@@ -28,26 +28,34 @@ void QPboundary
     QPDelta *QP
 );
 
-#define QP_GRADPROJ_saveContextAndExit()                                      \
-{                                                                             \
-    QP->its = it;                                                             \
-    QP->err = err;                                                            \
-    QP->nf = nf;                                                              \
-                                                                              \
-    Double b = 0.;                                                            \
-    if(ib != 0)                                                               \
-    {                                                                         \
-        b = (ib > 0 ? hi : lo);                                               \
-    }                                                                         \
-    else                                                                      \
-    {                                                                         \
-        for (Int k = 0; k < n; k++) b += Ew[k] * x[k];                        \
-    }                                                                         \
-    QP->ib = ib;                                                              \
-    QP->b = b;                                                                \
-                                                                              \
-    return err;                                                               \
-}                                                                             \
+inline void saveContext
+(
+    Graph *G,
+    QPDelta *QP, 
+    Int it,
+    Double err,
+    Int nf,
+    Int ib,
+    Double lo,
+    Double hi
+)
+{
+    QP->its = it;
+    QP->err = err;
+    QP->nf = nf;
+    
+    Double b = 0.0;
+    if(ib != 0)
+    {
+        b = (ib > 0 ? hi : lo);
+    }
+    else
+    {
+        for (Int k = 0; k < G->n; k++) b += G->w[k] * QP->x[k];
+    }
+    QP->ib = ib;
+    QP->b = b;
+}
 
 } // end namespace Mongoose
 

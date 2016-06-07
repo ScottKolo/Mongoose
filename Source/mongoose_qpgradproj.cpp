@@ -94,7 +94,8 @@ Double QPgradproj
         /* If we converged or got exhausted, save context and exit. */
         if ((err <= tol) || (it >= limit))
         {
-            QP_GRADPROJ_saveContextAndExit();
+            saveContext(G, QP, it, err, nf, ib, lo, hi);
+            return err;
         }
 
         it++;
@@ -166,7 +167,8 @@ Double QPgradproj
         /* If directional derivative has wrong sign, save context and exit. */
         if (s >= MONGOOSE_ZERO)
         {
-            QP_GRADPROJ_saveContextAndExit();
+            saveContext(G, QP, it, err, nf, ib, lo, hi);
+            return err;
         }
 
         Double t = MONGOOSE_ZERO;
