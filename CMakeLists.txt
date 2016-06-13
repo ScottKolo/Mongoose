@@ -43,6 +43,7 @@ set(MONGOOSE_LIB_FILES
         Include/mongoose_hager.hpp
         Include/mongoose_internal.hpp
         Include/mongoose_interop.hpp
+        Include/mongoose_io.hpp
         Include/mongoose_matching.hpp
         Include/mongoose_napsack.hpp
         Include/mongoose_options.hpp
@@ -58,6 +59,7 @@ set(MONGOOSE_LIB_FILES
         Source/mongoose_guesscut.cpp
         Source/mongoose_internal.cpp
         Source/mongoose_interop.cpp
+        Source/mongoose_io.cpp
         Source/mongoose_matching.cpp
         Source/mongoose_nuri_qpgradproj.cpp
         Source/mongoose_qpboundary.cpp
@@ -70,25 +72,36 @@ set(MONGOOSE_LIB_FILES
         Source/mongoose_qpnapsack2.cpp
         Source/mongoose_qpnapup.cpp
         Source/mongoose_refinement.cpp
-        Source/mongoose_waterdance.cpp)
+        Source/mongoose_waterdance.cpp
+        External/Include/mmio.h
+        External/Source/mmio.c)
+
+set(EXE_FILES
+    Executable/Mongoose.cpp)
 
 set(DEMO_FILES
     Demo/Demo.cpp)
 
 set(TEST_FILES
-    Tcov/test1.cpp)
+    Tests/catch.hpp
+    Tests/mongoose_test_main.cpp)
 
 # Specify the Include directory for *.hpp files
-include_directories(Include)
+include_directories(Include
+                    External/Include)
 
 # Build the Mongoose library
-add_library(Mongoose ${MONGOOSE_LIB_FILES})
-set_property(TARGET Mongoose PROPERTY CXX_STANDARD 11)
+add_library(MongooseLib ${MONGOOSE_LIB_FILES})
+set_property(TARGET MongooseLib PROPERTY CXX_STANDARD 11)
+
+# Build the Mongoose executable
+add_executable(Mongoose ${EXE_FILES})
+target_link_libraries(Mongoose MongooseLib)
 
 # Build the Demo executable
 add_executable(Demo ${DEMO_FILES})
-target_link_libraries(Demo Mongoose)
+target_link_libraries(Demo MongooseLib)
 
-# Build the test executable
-add_executable(test1 ${TEST_FILES})
-target_link_libraries(test1 Mongoose)
+# Build the Test executable
+add_executable(RunTests ${TEST_FILES})
+target_link_libraries(RunTests MongooseLib)

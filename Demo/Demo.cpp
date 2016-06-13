@@ -2,6 +2,7 @@
 #include "mongoose.hpp"
 #include "mongoose_conditioning.hpp"
 #include "mongoose_cs.hpp"
+#include "mongoose_io.hpp"
 #include <ctime>
 
 using namespace Mongoose;
@@ -30,9 +31,10 @@ int main(int argn, const char **argv)
     options->guessCutType = QP_BallOpt ;
 
     /* Read & condition the matrix market input. */
-    Graph *U = conditionGraph (readGraphFromMM (inputFile), options) ;
+    //Graph *U = conditionGraph (read_graph (inputFile), options) ;
     /* Only process the largest connected component */
-    cs *B = GraphToCSparse3(U, 1);
+    //cs *B = GraphToCSparse3(U, 1);
+    cs *B = read_matrix(inputFile);
     csd* dmperm = cs_scc (B) ;
     int largest_size = 0 ;
     int largest_scc = 0 ;
@@ -55,7 +57,8 @@ int main(int argn, const char **argv)
                                 dmperm->r[largest_scc], 
                                 dmperm->r[largest_scc+1]-1) ;
     Graph *V = CSparse3ToGraph(submatrix);
-    U = conditionGraph (V, options) ;
+    Graph *U = conditionGraph (V, options) ;
+    printf("%d\n", U->cn);
     ComputeEdgeSeparator (U, options) ;
 
     printf ("U->cutCost = %f\n", U->cutCost) ;
