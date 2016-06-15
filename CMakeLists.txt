@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.2)
 project(Mongoose)
 
 set(MONGOOSE_VERSION_MAJOR   "1")
