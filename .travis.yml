@@ -1,0 +1,23 @@
+sudo: required
+dist: trusty
+
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq cmake
+
+before_script:
+  - mkdir _build
+  - cd _build
+  - cmake ..
+
+script: make
+
+after_success:
+  - ./RunTests
+  - ./Demo
