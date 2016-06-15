@@ -1,6 +1,5 @@
 
 #include "mongoose_matching.hpp"
-#include <iostream>
 
 namespace Mongoose
 {

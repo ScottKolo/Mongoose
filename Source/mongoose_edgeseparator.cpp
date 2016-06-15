@@ -78,17 +78,17 @@ bool initialize(Graph *G, Options *O)
     Weight *Gw = G->w;
 
     G->cn = 0;
-    G->matching = (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    G->matchmap = (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    G->invmatchmap = (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    G->matchtype = (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    G->mark = (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    G->matching =       (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    G->matchmap =       (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    G->invmatchmap =    (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    G->matchtype =      (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    G->mark =           (Int*) SuiteSparse_calloc(n, sizeof(Int));
     G->markValue = 1;
 
-    G->partition = (bool*) SuiteSparse_malloc(n, sizeof(bool));
-    G->bhIndex = (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    G->bhHeap[0] = (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    G->bhHeap[1] = (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    G->partition =     (bool*) SuiteSparse_malloc(n, sizeof(bool));
+    G->bhIndex =        (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    G->bhHeap[0] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    G->bhHeap[1] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
     G->vertexGains = (Weight*) SuiteSparse_malloc(G->n, sizeof(Weight));
     G->externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
 
@@ -98,15 +98,15 @@ bool initialize(Graph *G, Options *O)
         !G->bhHeap[1] ||
         !G->vertexGains || !G->externalDegree)
     {
-        G->matching = (Int*) SuiteSparse_free(G->matching);
-        G->matchmap = (Int*) SuiteSparse_free(G->matchmap);
-        G->invmatchmap = (Int*) SuiteSparse_free(G->invmatchmap);
-        G->matchtype = (Int*) SuiteSparse_free(G->matchtype);
-        G->mark = (Int*) SuiteSparse_free(G->mark);
-        G->partition = (bool*) SuiteSparse_free(G->partition);
-        G->bhIndex = (Int*) SuiteSparse_free(G->bhIndex);
-        G->bhHeap[0] = (Int*) SuiteSparse_free(G->bhHeap[0]);
-        G->bhHeap[1] = (Int*) SuiteSparse_free(G->bhHeap[1]);
+        G->matching =       (Int*) SuiteSparse_free(G->matching);
+        G->matchmap =       (Int*) SuiteSparse_free(G->matchmap);
+        G->invmatchmap =    (Int*) SuiteSparse_free(G->invmatchmap);
+        G->matchtype =      (Int*) SuiteSparse_free(G->matchtype);
+        G->mark =           (Int*) SuiteSparse_free(G->mark);
+        G->partition =     (bool*) SuiteSparse_free(G->partition);
+        G->bhIndex =        (Int*) SuiteSparse_free(G->bhIndex);
+        G->bhHeap[0] =      (Int*) SuiteSparse_free(G->bhHeap[0]);
+        G->bhHeap[1] =      (Int*) SuiteSparse_free(G->bhHeap[1]);
         G->vertexGains = (Weight*) SuiteSparse_free(G->vertexGains);
         G->externalDegree = (Int*) SuiteSparse_free(G->externalDegree);
         return false;
