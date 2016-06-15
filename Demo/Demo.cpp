@@ -1,80 +1,91 @@
+/**
+ * Demo.cpp
+ * Runs a variety of computations on several input matrices and outputs
+ * the results. Does not take any input. This application can be used to
+ * test that compilation was successful and that everything is working
+ * properly.
+ */
 
 #include "mongoose.hpp"
 #include "mongoose_conditioning.hpp"
 #include "mongoose_cs.hpp"
 #include "mongoose_io.hpp"
 #include <ctime>
+#include <string>
+#include <iostream>
 
 using namespace Mongoose;
+using namespace std;
+
+const std::string demo_files[12] = {
+    "bcspwr01.mtx",
+    "bcspwr02.mtx",
+    "bcspwr03.mtx",
+    "bcspwr04.mtx",
+    "bcspwr05.mtx",
+    "bcspwr06.mtx",
+    "bcspwr07.mtx",
+    "bcspwr08.mtx",
+    "bcspwr09.mtx",
+    "bcspwr10.mtx",
+    "jagmesh7.mtx",
+    "troll.mtx"
+};
 
 int main(int argn, const char **argv)
 {
-    std::clock_t start;
-    double duration;
+    clock_t start = clock();
+    clock_t trial_start;
+    double duration, trial_duration;
 
-    start = std::clock();
-    /* Get the input file from the console input. */
-    const char *inputFile = NULL ;
-    if (argn == 2)
-        inputFile = argv[1] ;
-    else
+    Options *options;
+    Graph *G;
+
+    for (int k = 0; k < 12; k++)
     {
-        printf ("Usage: Demo <MM-input-file.mtx>\n") ;
-        return 0 ;
-    }
+        cout << "**************************************************" << endl;
+        cout << "Computing an edge cut for " << demo_files[k] << "..." << endl;
+        
+        trial_start = clock();
+        options = Options::Create();
+        if (!options) return 1; // Return an error if we failed.
 
-    Options *options = Options::Create();
-    if (!options) return 1 ; // Return an error if we failed.
+        options->doExpensiveChecks = false;
+        options->matchingStrategy = HEMDavisPA;
+        options->guessCutType = QP_BallOpt;
 
-    options->doExpensiveChecks = false ;
-    options->matchingStrategy = HEMDavisPA ;
-    options->guessCutType = QP_BallOpt ;
-
-    /* Read & condition the matrix market input. */
-    //Graph *U = conditionGraph (read_graph (inputFile), options) ;
-    /* Only process the largest connected component */
-    //cs *B = GraphToCSparse3(U, 1);
-    cs *B = read_matrix(inputFile);
-    csd* dmperm = cs_scc (B) ;
-    int largest_size = 0 ;
-    int largest_scc = 0 ;
-    int scc_size = 0 ;
-    for (int i = 0 ; i < dmperm->nb ; i++)
-    {
-        scc_size = dmperm->r[i+1]-1 - dmperm->r[i] ;
-        if (scc_size > largest_size)
+        Graph *G = read_graph("../Matrix/" + demo_files[k]);
+        if (!G)
         {
-            largest_size = scc_size ;
-            largest_scc = i ;
+            free(options);
+            return 1;
         }
+
+        ComputeEdgeSeparator (G, options);
+
+        cout << "Partitioning Complete!" << endl;
+        printf("Cut Cost:      %.2f\n", G->cutCost);
+        printf("Cut Imbalance: %.2f%%\n", fabs(100*G->imbalance));
+
+        trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
+        printf("Trial Time:    %.0fms\n", trial_duration*1000);
+
+        G->~Graph();
+        free(G);
+        free(options);
     }
 
-    // Get submatrix from dmperm
-    csi *pinv = cs_pinv(dmperm->p, B->n);
-    cs *C = cs_permute(B, pinv, dmperm->p, 1);
-    cs *submatrix = cs_submat(C, dmperm->r[largest_scc], 
-                                dmperm->r[largest_scc+1]-1, 
-                                dmperm->r[largest_scc], 
-                                dmperm->r[largest_scc+1]-1) ;
-    Graph *V = CSparse3ToGraph(submatrix);
-    Graph *U = conditionGraph (V, options) ;
-    printf("%d\n", U->cn);
-    ComputeEdgeSeparator (U, options) ;
+    duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
 
-    printf ("U->cutCost = %f\n", U->cutCost) ;
-    printf ("U->imbalance = %f\n", U->imbalance) ;
-    printf ("Partitioning Complete\n") ;
+    cout << "**************************************************" << endl;
+    printf("Total Demo Time: %.2fs\n", duration);
 
-    U->~Graph () ;
-    free (U) ;
-
-    options->~Options () ;
-    free (options) ;
-
-    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
-    printf("Total Time: %f\n", duration);
+    cout << endl;
+    cout << "**************************************************" << endl;
+    cout << "***************** Demo Complete! *****************" << endl;
+    cout << "**************************************************" << endl;
+    cout << endl;
 
     /* Return success */
-    return 0 ;
+    return 0;
 }
