@@ -54,6 +54,7 @@ set(MONGOOSE_LIB_FILES
         Source/mongoose_coarsening.cpp
         Source/mongoose_conditioning.cpp
         Source/mongoose_cs.cpp
+        Source/mongoose_debug.cpp
         Source/mongoose_edgeseparator.cpp
         Source/mongoose_fiducciamattheyses.cpp
         Source/mongoose_guesscut.cpp
