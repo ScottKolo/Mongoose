@@ -15,10 +15,11 @@ before_script:
   - mkdir _build
   - cd _build
   - cmake -DCMAKE_BUILD_TYPE=Coverage ..
+  - pip install --user pyyaml cpp-coveralls
 
 script: make
 
 after_success:
   - ./RunTests
   - ./Demo
-  - coveralls -i ../Source ../Include
+  - coveralls -i ../Source -i ../Include
