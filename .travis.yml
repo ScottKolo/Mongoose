@@ -13,12 +13,13 @@ before_install:
 before_script:
   - mkdir _build
   - cd _build
-  - cmake -DCMAKE_BUILD_TYPE=Coverage ..
+  - cmake -DCOVERALLS=ON -DCMAKE_BUILD_TYPE=Debug ..
   - pip install --user pyyaml cpp-coveralls
 
-script: make
+script:
+  - make
+  - make coveralls
 
 after_success:
   - ./RunTests
   - ./Demo
-  - coveralls -t ${COVERALLS_REPO_TOKEN} --coveralls-yaml ../.coveralls.yml -i ../Source

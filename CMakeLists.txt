@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.2)
 project(Mongoose)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+
+option(COVERALLS "Generate coveralls data" OFF)
+
+if (COVERALLS)
+    include(Coveralls)
+    coveralls_turn_on_coverage()
+endif()
+
 set(MONGOOSE_VERSION_MAJOR   "1")
 set(MONGOOSE_VERSION_MINOR   "0")
 set(MONGOOSE_VERSION_PATCH   "4")
@@ -108,14 +117,12 @@ add_executable(RunTests ${TEST_FILES})
 target_link_libraries(RunTests MongooseLib)
 
 # Set up test coverage
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
-  set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
-  set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} --coverage")
-endif(CMAKE_COMPILER_IS_GNUCXX)
+if (COVERALLS)
+    set(COVERAGE_SRCS ${TEST_FILES})
 
-if(CMAKE_COMPILER_IS_GNUCC)
-  set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
-  set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
-  set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} --coverage")
-endif(CMAKE_COMPILER_IS_GNUCC)
+    # Create the coveralls target.
+    coveralls_setup(
+        "${COVERAGE_SRCS}" # The source files.
+        ON                 # If we should upload.
+    )
+endif()
