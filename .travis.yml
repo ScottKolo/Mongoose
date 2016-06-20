@@ -14,10 +14,11 @@ before_install:
 before_script:
   - mkdir _build
   - cd _build
-  - cmake ..
+  - cmake -DCMAKE_BUILD_TYPE=Coverage ..
 
 script: make
 
 after_success:
   - ./RunTests
   - ./Demo
+  - coveralls -i ../Source ../Include
