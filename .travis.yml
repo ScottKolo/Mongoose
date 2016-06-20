@@ -22,4 +22,4 @@ script: make
 after_success:
   - ./RunTests
   - ./Demo
-  - coveralls -i ../Source -i ../Include
+  - coveralls -t ${COVERALLS_REPO_TOKEN}
