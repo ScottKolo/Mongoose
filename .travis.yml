@@ -4,7 +4,6 @@ dist: trusty
 language: cpp
 
 compiler:
-  - clang
   - gcc
 
 before_install:
