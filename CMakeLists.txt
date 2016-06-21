@@ -1,15 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 project(Mongoose)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
-
-option(COVERALLS "Generate coveralls data" OFF)
-
-if (COVERALLS)
-    include(Coveralls)
-    coveralls_turn_on_coverage()
-endif()
-
 set(MONGOOSE_VERSION_MAJOR   "1")
 set(MONGOOSE_VERSION_MINOR   "0")
 set(MONGOOSE_VERSION_PATCH   "4")
@@ -117,12 +108,10 @@ add_executable(RunTests ${TEST_FILES})
 target_link_libraries(RunTests MongooseLib)
 
 # Set up test coverage
-if (COVERALLS)
-    set(COVERAGE_SRCS ${TEST_FILES})
+set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -fprofile-arcs -ftest-coverage")
+set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
 
-    # Create the coveralls target.
-    coveralls_setup(
-        "${COVERAGE_SRCS}" # The source files.
-        ON                 # If we should upload.
-    )
-endif()
+set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -fprofile-arcs -ftest-coverage")
+set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")

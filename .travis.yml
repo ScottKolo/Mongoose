@@ -5,6 +5,7 @@ language: cpp
 
 compiler:
   - gcc
+  - clang
 
 before_install:
   - sudo apt-get update -qq
@@ -13,13 +14,13 @@ before_install:
 before_script:
   - mkdir _build
   - cd _build
-  - cmake -DCOVERALLS=ON -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake -DCMAKE_BUILD_TYPE=Coverage ..
   - pip install --user pyyaml cpp-coveralls
 
 script:
   - make
-  - make coveralls
 
 after_success:
   - ./RunTests
   - ./Demo
+  - coveralls --gcov-options '\-lpr' -i ./CMakeFiles/MongooseLib.dir/Source -i ./CMakeFiles/MongooseLib.dir/External/Source -t ${COVERALLS_REPO_TOKEN}
