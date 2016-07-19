@@ -24,4 +24,4 @@ script:
 after_success:
   - ./RunTests
   - ./Demo
-  - coveralls --gcov-options '\-lpr' -i ./CMakeFiles/MongooseLib.dir/Source -i ./CMakeFiles/MongooseLib.dir/External/Source -t ${COVERALLS_REPO_TOKEN} --coveralls-yaml ../.coveralls.yml
+  - cpp-coveralls -b ./CMakeFiles/MongooseLibCov.dir/Source --coveralls-yaml ../.coveralls.yml -t ${COVERALLS_REPO_TOKEN}
