@@ -20,6 +20,7 @@ before_script:
 
 script:
   - make
+  - make test
 
 after_success:
   - ./mongoose_test_io_coverage
