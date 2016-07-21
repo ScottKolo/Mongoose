@@ -16,7 +16,6 @@ before_script:
   - mkdir _build
   - cd _build
   - cmake ..
-  - pip install --user pyyaml cpp-coveralls
 
 script:
   - make
@@ -24,4 +23,4 @@ script:
 
 after_success:
   - ./mongoose_test_io_coverage
-  - cpp-coveralls -b ./CMakeFiles/MongooseLibCov.dir/Source -r ../ -i ../Source --coveralls-yaml ../.coveralls.yml --gcov-options '\-lp' -t ${COVERALLS_REPO_TOKEN}
+  - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c
