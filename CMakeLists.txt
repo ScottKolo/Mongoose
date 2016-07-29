@@ -109,39 +109,3 @@ add_executable(mongoose_test_io ${TEST_FILES})
 target_link_libraries(mongoose_test_io MongooseLib)
 
 add_test( TEST_IO mongoose_test_io )
-
-# Coverage Tests
-# Build the Mongoose library
-add_library(MongooseLibCov ${MONGOOSE_LIB_FILES})
-add_executable(mongoose_test_io_coverage ${TEST_FILES})
-
-MESSAGE( STATUS "CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER_ID} )
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-  # using Clang
-  SET(CMAKE_CXX_FLAGS_COVERAGE "--coverage")
-  SET(CMAKE_C_FLAGS_COVERAGE "--coverage")
-  SET(CMAKE_EXE_LINKER_FLAGS_COVERAGE "--coverage")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # using GCC
-  SET(CMAKE_CXX_FLAGS_COVERAGE "-g -O0 -Wall -W -Wshadow -Wunused-variable -Wunused-parameter -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated -Woverloaded-virtual -Wwrite-strings -fprofile-arcs -ftest-coverage")
-  SET(CMAKE_C_FLAGS_COVERAGE "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
-  SET(CMAKE_EXE_LINKER_FLAGS_COVERAGE "-fprofile-arcs -ftest-coverage")
-#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-  # using Intel C++
-#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  # using Visual Studio C++
-endif()
-
-target_link_libraries(mongoose_test_io_coverage MongooseLibCov)
-set_target_properties(MongooseLibCov PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
-set_target_properties(MongooseLibCov PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
-
-set_target_properties(mongoose_test_io_coverage PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
-set_target_properties(mongoose_test_io_coverage PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
-set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
-add_test(Coverage mongoose_test_io_coverage)
-#get_property(mongoose_lib_location TARGET mongoose_test_io_coverage PROPERTY LOCATION)
-
-add_custom_command(TARGET mongoose_test_io_coverage
-                   POST_BUILD
-                   COMMAND mongoose_test_io_coverage && gcov ../Source/*.cpp -o ./CMakeFiles/MongooseLibCov.dir/Source/*.o)
