@@ -83,8 +83,8 @@ set(EXE_FILES
 set(DEMO_FILES
     Demo/Demo.cpp)
 
-set(TEST_FILES
-    Tests/mongoose_test_io.cpp)
+#set(TEST_FILES
+#    Tests/mongoose_test_io.cpp)
 
 # Specify the Include directory for *.hpp files
 include_directories(Include
@@ -102,18 +102,25 @@ target_link_libraries(Mongoose MongooseLib)
 add_executable(Demo ${DEMO_FILES})
 target_link_libraries(Demo MongooseLib)
 
-# Build the Test executable
+# Coverage and Unit Testing Setup
 enable_testing()
 
-add_executable(mongoose_test_io ${TEST_FILES})
+# Unit Tests
+add_executable(mongoose_test_io Tests/mongoose_test_io.cpp)
 target_link_libraries(mongoose_test_io MongooseLib)
 
-add_test( TEST_IO mongoose_test_io )
+add_test(test_io mongoose_test_io)
+
+# Exhaustive Memory Test
+add_executable(mongoose_memory_test Tests/mongoose_memory_test.cpp)
+target_link_libraries(mongoose_memory_test MongooseLib)
+
+add_test(test_memory mongoose_memory_test)
 
 # Coverage Tests
 # Build the Mongoose library
 add_library(MongooseLibCov ${MONGOOSE_LIB_FILES})
-add_executable(mongoose_test_io_coverage ${TEST_FILES})
+add_executable(mongoose_test_io_coverage Tests/mongoose_test_io.cpp)
 
 MESSAGE( STATUS "CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER_ID} )
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
@@ -140,8 +147,3 @@ set_target_properties(mongoose_test_io_coverage PROPERTIES COMPILE_FLAGS "${CMAK
 set_target_properties(mongoose_test_io_coverage PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
 add_test(Coverage mongoose_test_io_coverage)
-#get_property(mongoose_lib_location TARGET mongoose_test_io_coverage PROPERTY LOCATION)
-
-#add_custom_command(TARGET mongoose_test_io_coverage
-#                   POST_BUILD
-#                   COMMAND mongoose_test_io_coverage && gcov ../Source/*.cpp -o ./CMakeFiles/MongooseLibCov.dir/Source/*.o)

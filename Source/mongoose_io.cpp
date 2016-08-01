@@ -34,7 +34,7 @@ Graph *read_graph (const char* filename)
 cs *read_matrix (const char* filename)
 {
     FILE *file = fopen(filename,"r");
-    if (file == NULL)
+    if (!file)
     {
         cout << "Error: Cannot find file " << filename << endl;
         return NULL;
@@ -67,6 +67,8 @@ cs *read_matrix (const char* filename)
     Int *J = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Weight *val = (Weight *) SuiteSparse_malloc(nz, sizeof(Weight));
 
+    if (!I || !J || !val) return NULL;
+
     mm_read_mtx_crd_data(file, M, N, nz, I, J, val, matcode);
     for (Int k = 0; k < nz; k++)
     {
@@ -76,6 +78,7 @@ cs *read_matrix (const char* filename)
     }
 
     cs *A = (cs *) SuiteSparse_malloc(1, sizeof(cs));
+    if (!A) return NULL;
     A->nzmax = nz;
     A->m = M;
     A->n = N;
@@ -83,32 +86,36 @@ cs *read_matrix (const char* filename)
     A->i = I;
     A->x = val;
     A->nz = nz;
-
+    
     cs* compressed_A = cs_compress(A);
+    if (!compressed_A) return NULL;
     remove_diagonal(compressed_A);
     compressed_A = mirror_triangular(compressed_A);
-    csd* dmperm = cs_scc (compressed_A) ;
-    int largest_size = 0 ;
-    int largest_scc = 0 ;
-    int scc_size = 0 ;
-    for (int i = 0 ; i < dmperm->nb ; i++)
+    csd* dmperm = cs_scc (compressed_A);
+    if (!dmperm) return NULL;
+    int largest_size = 0;
+    int largest_scc = 0;
+    int scc_size = 0;
+    for (int i = 0; i < dmperm->nb; i++)
     {
         scc_size = dmperm->r[i+1]-1 - dmperm->r[i] ;
         if (scc_size > largest_size)
         {
-            largest_size = scc_size ;
-            largest_scc = i ;
+            largest_size = scc_size;
+            largest_scc = i;
         }
     }
-
+    
     // Get submatrix from dmperm
     csi *pinv = cs_pinv(dmperm->p, compressed_A->n);
+    if (!pinv) return NULL;
     cs *C = cs_permute(compressed_A, pinv, dmperm->p, 1);
+    if (!C) return NULL;
     cs *submatrix = cs_submat(C, dmperm->r[largest_scc], 
                                 dmperm->r[largest_scc+1]-1, 
                                 dmperm->r[largest_scc], 
                                 dmperm->r[largest_scc+1]-1) ;
-
+    if (!submatrix) return NULL;
     return submatrix;
 }
 
@@ -165,6 +172,7 @@ cs *mirror_triangular(cs *A)
     Int B_nz = 2*A_nz;
 
     cs *B = cs_spalloc (A_n, A_n, B_nz, 1, 1);
+    if (!B) return NULL;
 
     Int *Ap = A->p; Int *Ai = A->i; double *Ax = A->x;
     Int *Bp = B->p; Int *Bi = B->i; double *Bx = B->x;
