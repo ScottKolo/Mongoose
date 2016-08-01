@@ -64,4 +64,15 @@ int main(int argc, char** argv)
             assert( equals_0 + equals_1 == 1 );
         }
     }
+
+    // Corner cases
+    Graph *G;
+
+    // Bad header
+    G = read_graph("../Matrix/bad_header.mtx");
+    assert (G == NULL);
+
+    // Bad matrix type
+    G = read_graph("../Matrix/bad_matrix_type.mtx");
+    assert (G == NULL);
 }
