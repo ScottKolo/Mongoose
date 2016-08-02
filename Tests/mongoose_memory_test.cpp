@@ -70,7 +70,7 @@ int run_memory_tests()
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 100; i++)
     {
         RunAllTests(inputFile, O, i);
     }
@@ -117,9 +117,9 @@ void RunAllTests (
             {
                 O->guessCutType = guessCutStrategies[j];
 
-                printf("+ Testing %d %d %d\n", c, i, j);
+                //printf("+ Testing %d %d %d\n", c, i, j);
                 RunTest(inputFile, O, allowedMallocs);
-                printf("- Testing %d %d %d\n", c, i, j);
+                //printf("- Testing %d %d %d\n", c, i, j);
             }
         }
     }
@@ -150,6 +150,7 @@ void RunTest (
     /* Read and condition the matrix from the MM file. */
     Graph *U = read_graph(inputFile);
     if (!U) return;
+
     ComputeEdgeSeparator(U, O);
     U->~Graph();
     SuiteSparse_free(U);

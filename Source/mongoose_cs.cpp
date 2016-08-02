@@ -365,9 +365,10 @@ cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2)
     n = j2-j1+1;
     values = (A->x != NULL);
     C = cs_spalloc (m, n, anz, values, 0);         /* allocate result */
+    if (!C) return NULL;
     Cp = C->p; Ci = C->i; Cx = C->x;
-    if (!C) return(C);
-    /* dicing the matric */
+    
+    /* dicing the matrix */
     pC = 0;
     for (j = j1; j <= j2; j++)                     /*searching through columns between j1 and j2*/
     {
@@ -382,7 +383,7 @@ cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2)
         }
     }
     Cp [n] = pC;                       /* finalize the last column of C */
-    cs_sprealloc (C, 0);                /* remove extra space from C */
+    if(!cs_sprealloc (C, 0)) return NULL;     /* remove extra space from C */
     if (C->nzmax < 1)
         C->nzmax = 1;                      /* For MATLAB */
     return (C);

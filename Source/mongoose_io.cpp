@@ -72,6 +72,7 @@ cs *read_matrix (const char* filename)
 
     if (!I || !J || !val)
     {
+        cout << "Ran out of memory, aborting." << endl;
         fclose(file);
         return NULL;
     }
@@ -86,7 +87,11 @@ cs *read_matrix (const char* filename)
     }
 
     cs *A = (cs *) SuiteSparse_malloc(1, sizeof(cs));
-    if (!A) return NULL;
+    if (!A)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
 
     A->nzmax = nz;
     A->m = M;
@@ -101,7 +106,11 @@ cs *read_matrix (const char* filename)
     remove_diagonal(compressed_A);
     compressed_A = mirror_triangular(compressed_A);
     csd* dmperm = cs_scc (compressed_A);
-    if (!dmperm) return NULL;
+    if (!dmperm)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
     int largest_size = 0;
     int largest_scc = 0;
     int scc_size = 0;
@@ -117,14 +126,26 @@ cs *read_matrix (const char* filename)
     
     // Get submatrix from dmperm
     csi *pinv = cs_pinv(dmperm->p, compressed_A->n);
-    if (!pinv) return NULL;
+    if (!pinv)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
     cs *C = cs_permute(compressed_A, pinv, dmperm->p, 1);
-    if (!C) return NULL;
+    if (!C)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
     cs *submatrix = cs_submat(C, dmperm->r[largest_scc], 
                                 dmperm->r[largest_scc+1]-1, 
                                 dmperm->r[largest_scc], 
                                 dmperm->r[largest_scc+1]-1) ;
-    if (!submatrix) return NULL;
+    if (!submatrix)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
     return submatrix;
 }
 
