@@ -125,7 +125,7 @@ target_link_libraries(mongoose_memory_test MongooseLib)
 add_test(test_memory mongoose_memory_test)
 
 # Coverage Tests
-# Build the Mongoose library
+# Build the Mongoose library and all tests with coverage flags
 add_library(MongooseLibCov ${MONGOOSE_LIB_FILES})
 add_executable(mongoose_run_all_tests ${ALL_TEST_FILES})
 

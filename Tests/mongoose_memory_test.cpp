@@ -97,7 +97,7 @@ void RunAllTests (
     * TRY A BOGUS LOAD
     */
     RunTest("bogus", O, allowedMallocs);
-    std::cout << "CHECK A" << std::endl;
+    
     /* 
      * (12 TESTS)
      * TRY A VARIETY OF MATCHING STRATEGIES AND GUESS CUT STRATEGIES
@@ -144,18 +144,13 @@ void RunTest (
     int allowedMallocs
 )
 {
-    std::cout << "Running test..." << std::endl;
     /* Set the # of mallocs that we're allowed. */
     AllowedMallocs = allowedMallocs;
 
     /* Read and condition the matrix from the MM file. */
     Graph *U = read_graph(inputFile);
-    std::cout << "CHECK X" << std::endl;
     if (!U) return;
     ComputeEdgeSeparator(U, O);
-    std::cout << "CHECK B" << std::endl;
     U->~Graph();
-    std::cout << "CHECK C" << std::endl;
     SuiteSparse_free(U);
-    std::cout << "CHECK D" << std::endl;
 }
