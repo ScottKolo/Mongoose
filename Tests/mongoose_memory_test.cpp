@@ -97,7 +97,7 @@ void RunAllTests (
     * TRY A BOGUS LOAD
     */
     RunTest("bogus", O, allowedMallocs);
-    cout << "CHECK A" << std::endl;
+    std::cout << "CHECK A" << std::endl;
     /* 
      * (12 TESTS)
      * TRY A VARIETY OF MATCHING STRATEGIES AND GUESS CUT STRATEGIES
@@ -144,6 +144,7 @@ void RunTest (
     int allowedMallocs
 )
 {
+    std::cout << "Running test..." << std::endl;
     /* Set the # of mallocs that we're allowed. */
     AllowedMallocs = allowedMallocs;
 
