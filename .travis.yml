@@ -19,6 +19,7 @@ before_script:
 
 script:
   - make
+  - cat /home/travis/build.sh
   - ./mongoose_memory_test
   - make test
 
