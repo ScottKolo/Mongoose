@@ -150,7 +150,6 @@ void RunTest (
     /* Read and condition the matrix from the MM file. */
     Graph *U = read_graph(inputFile);
     if (!U) return;
-    std::cout << "Remaining mallocs: " << AllowedMallocs << std::endl;
     ComputeEdgeSeparator(U, O);
 
     U->~Graph();
