@@ -122,7 +122,7 @@ add_executable(mongoose_memory_test
   Tests/mongoose_memory_test_exe.cpp)
 target_link_libraries(mongoose_memory_test MongooseLib)
 
-add_test(test_memory mongoose_memory_test)
+#add_test(test_memory mongoose_memory_test)
 
 # Coverage Tests
 # Build the Mongoose library and all tests with coverage flags
