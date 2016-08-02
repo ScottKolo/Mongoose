@@ -83,8 +83,11 @@ set(EXE_FILES
 set(DEMO_FILES
     Demo/Demo.cpp)
 
-#set(TEST_FILES
-#    Tests/mongoose_test_io.cpp)
+set(ALL_TEST_FILES
+    Tests/mongoose_test.hpp
+    Tests/mongoose_test_io.cpp
+    Tests/mongoose_memory_test.cpp
+    Tests/mongoose_run_all_tests.cpp)
 
 # Specify the Include directory for *.hpp files
 include_directories(Include
@@ -106,13 +109,17 @@ target_link_libraries(Demo MongooseLib)
 enable_testing()
 
 # Unit Tests
-add_executable(mongoose_test_io Tests/mongoose_test_io.cpp)
+add_executable(mongoose_test_io 
+  Tests/mongoose_test_io.cpp
+  Tests/mongoose_test_io_exe.cpp)
 target_link_libraries(mongoose_test_io MongooseLib)
 
 add_test(test_io mongoose_test_io)
 
 # Exhaustive Memory Test
-add_executable(mongoose_memory_test Tests/mongoose_memory_test.cpp)
+add_executable(mongoose_memory_test 
+  Tests/mongoose_memory_test.cpp
+  Tests/mongoose_memory_test_exe.cpp)
 target_link_libraries(mongoose_memory_test MongooseLib)
 
 add_test(test_memory mongoose_memory_test)
@@ -120,7 +127,7 @@ add_test(test_memory mongoose_memory_test)
 # Coverage Tests
 # Build the Mongoose library
 add_library(MongooseLibCov ${MONGOOSE_LIB_FILES})
-add_executable(mongoose_test_io_coverage Tests/mongoose_test_io.cpp)
+add_executable(mongoose_run_all_tests ${ALL_TEST_FILES})
 
 MESSAGE( STATUS "CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER_ID} )
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
@@ -139,11 +146,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using Visual Studio C++
 endif()
 
-target_link_libraries(mongoose_test_io_coverage MongooseLibCov)
+target_link_libraries(mongoose_run_all_tests MongooseLibCov)
 set_target_properties(MongooseLibCov PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
 set_target_properties(MongooseLibCov PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
 
-set_target_properties(mongoose_test_io_coverage PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
-set_target_properties(mongoose_test_io_coverage PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
+set_target_properties(mongoose_run_all_tests PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
+set_target_properties(mongoose_run_all_tests PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
-add_test(Coverage mongoose_test_io_coverage)
+add_test(Coverage mongoose_run_all_tests)

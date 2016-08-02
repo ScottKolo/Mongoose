@@ -2,6 +2,7 @@
 #include "mongoose_io.hpp"
 #include "mongoose_conditioning.hpp"
 #include <cassert>
+#include "mongoose_test.hpp"
 
 using namespace Mongoose;
 
@@ -25,7 +26,7 @@ mm_file mm_data[] = {
     {"bcspwr10.mtx", 5300, 16542}
 };
 
-int main(int argc, char** argv)
+void run_io_tests()
 {
     for (int k = 0; k < 10; k++)
     {
@@ -36,32 +37,33 @@ int main(int argc, char** argv)
         options = Options::Create();
         G = read_graph("../Matrix/" + mm_data[k].filename);
 
-        // The graph should not be null
-        assert(G != NULL);
-
-        // The default options should not be null
-        assert (options != NULL);
-
-        // The number of vertices should be correct
-        assert (G->n == mm_data[k].n);
-
-        // The number of edges should be correct
-        assert (G->nz == mm_data[k].nz);
-
-        // An edge separator should be computed with default options
-        ComputeEdgeSeparator(G, options);
-
-        // The graph sizes should not change
-        assert (G->n == mm_data[k].n);
-        assert (G->nz == mm_data[k].nz);
-
-        // The graph should be partitioned
-        assert (G->partition != NULL);
-        for (int i = 0; i < G->n; i++)
+        if (!G || !options)
         {
-            bool equals_0 = G->partition[i] == 0;
-            bool equals_1 = G->partition[i] == 1;
-            assert( equals_0 + equals_1 == 1 );
+            // Ran out of memory
+        }
+        else
+        {
+            // The number of vertices should be correct
+            assert (G->n == mm_data[k].n);
+
+            // The number of edges should be correct
+            assert (G->nz == mm_data[k].nz);
+
+            // An edge separator should be computed with default options
+            ComputeEdgeSeparator(G, options);
+
+            // The graph sizes should not change
+            assert (G->n == mm_data[k].n);
+            assert (G->nz == mm_data[k].nz);
+
+            // The graph should be partitioned
+            assert (G->partition != NULL);
+            for (int i = 0; i < G->n; i++)
+            {
+                bool equals_0 = G->partition[i] == 0;
+                bool equals_1 = G->partition[i] == 1;
+                assert( equals_0 + equals_1 == 1 );
+            }
         }
     }
 

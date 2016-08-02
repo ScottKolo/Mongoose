@@ -4,6 +4,7 @@
 #include "mongoose_io.hpp"
 #include <string>
 #include <iostream>
+#include "mongoose_test.hpp"
 
 using namespace Mongoose;
 
@@ -48,7 +49,7 @@ void myFree(void *ptr)
     if(ptr != NULL) free(ptr);
 }
 
-int main(int argn, const char **argv)
+int run_memory_tests()
 {
     SuiteSparse_start();
 
@@ -79,6 +80,7 @@ int main(int argn, const char **argv)
 
     /* Return success */
     SuiteSparse_finish();
+
     return 0;
 }
 
