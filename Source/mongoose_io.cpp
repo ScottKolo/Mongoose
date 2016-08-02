@@ -39,7 +39,6 @@ cs *read_matrix (const char* filename)
     {
         cout << "Error: Cannot find file " << filename << endl;
         cout << "Exiting..." << endl;
-        fclose(file);
         cout << "File closed, returning NULL" << endl;
         return NULL;
     }
