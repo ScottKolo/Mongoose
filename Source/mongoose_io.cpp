@@ -37,6 +37,7 @@ cs *read_matrix (const char* filename)
     if (!file)
     {
         cout << "Error: Cannot find file " << filename << endl;
+        fclose(file);
         return NULL;
     }
 
@@ -44,6 +45,7 @@ cs *read_matrix (const char* filename)
     if (mm_read_banner(file, &matcode) != 0)
     {
         cout << "Could not process Matrix Market banner." << endl;
+        fclose(file);
         return NULL;
     }
     if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode) || 
@@ -52,6 +54,7 @@ cs *read_matrix (const char* filename)
         cout << 
             "Unsupported matrix format - Must be real, sparse, and symmetric"
              << endl;
+        fclose(file);
         return NULL;
     }
 
@@ -60,6 +63,7 @@ cs *read_matrix (const char* filename)
     if ((ret_code = mm_read_mtx_crd_size(file, &M, &N, &nz)) !=0)
     {
         cout << "Could not parse matrix dimension and size." << endl;
+        fclose(file);
         return NULL;
     }
     
@@ -67,9 +71,14 @@ cs *read_matrix (const char* filename)
     Int *J = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Weight *val = (Weight *) SuiteSparse_malloc(nz, sizeof(Weight));
 
-    if (!I || !J || !val) return NULL;
+    if (!I || !J || !val)
+    {
+        fclose(file);
+        return NULL;
+    }
 
     mm_read_mtx_crd_data(file, M, N, nz, I, J, val, matcode);
+    fclose(file); // Close the file
     for (Int k = 0; k < nz; k++)
     {
         --I[k];
@@ -79,6 +88,7 @@ cs *read_matrix (const char* filename)
 
     cs *A = (cs *) SuiteSparse_malloc(1, sizeof(cs));
     if (!A) return NULL;
+
     A->nzmax = nz;
     A->m = M;
     A->n = N;
