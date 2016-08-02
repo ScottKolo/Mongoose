@@ -97,7 +97,7 @@ void RunAllTests (
     * TRY A BOGUS LOAD
     */
     RunTest("bogus", O, allowedMallocs);
-
+    printf("CHECK A\n");
     /* 
      * (12 TESTS)
      * TRY A VARIETY OF MATCHING STRATEGIES AND GUESS CUT STRATEGIES
@@ -149,9 +149,12 @@ void RunTest (
 
     /* Read and condition the matrix from the MM file. */
     Graph *U = read_graph(inputFile);
+    printf("CHECK X\n");
     if (!U) return;
     ComputeEdgeSeparator(U, O);
-
+    printf("CHECK B\n");
     U->~Graph();
+    printf("CHECK C\n");
     SuiteSparse_free(U);
+    printf("CHECK D\n");
 }
