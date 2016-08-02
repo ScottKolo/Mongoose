@@ -15,6 +15,7 @@ namespace Mongoose
 
 Graph *read_graph (const std::string filename)
 {
+    cout << "Reading graph file " << filename << endl;
     return read_graph(filename.c_str());
 }
 
@@ -33,11 +34,13 @@ Graph *read_graph (const char* filename)
 
 cs *read_matrix (const char* filename)
 {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename, "r");
     if (!file)
     {
         cout << "Error: Cannot find file " << filename << endl;
+        cout << "Exiting..." << endl;
         fclose(file);
+        cout << "File closed, returning NULL" << endl;
         return NULL;
     }
 
