@@ -19,6 +19,7 @@ before_script:
 
 script:
   - make
+  - ./mongoose_memory_test
   - make test
 
 after_success:
