@@ -53,7 +53,7 @@ int run_memory_tests()
 {
     SuiteSparse_start();
 
-    const std::string inputFile = "../Matrix/bcspwr10.mtx";
+    const std::string inputFile = "../Matrix/bcspwr01.mtx";
 
     Options *O = Options::Create();
     if(!O)
@@ -70,7 +70,7 @@ int run_memory_tests()
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
 
-    for(int i = 0; i < 501; i++)
+    for(int i = 0; i < 118; i++)
     {
         RunAllTests(inputFile, O, i);
     }
