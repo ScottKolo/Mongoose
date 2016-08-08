@@ -1,6 +1,6 @@
 # Mongoose
 
-[![Build Status](https://travis-ci.com/ScottKolo/Mongoose.svg?token=EK93uAGLjknx2p216TUE&branch=edgesep)](https://travis-ci.com/ScottKolo/Mongoose)[![codecov](https://codecov.io/gh/ScottKolo/Mongoose/branch/edgesep/graph/badge.svg?token=s3KMuP6lOp)](https://codecov.io/gh/ScottKolo/Mongoose)
+[![Build Status](https://travis-ci.com/ScottKolo/Mongoose.svg?token=EK93uAGLjknx2p216TUE&branch=edgesep)](https://travis-ci.com/ScottKolo/Mongoose) [![codecov](https://codecov.io/gh/ScottKolo/Mongoose/branch/edgesep/graph/badge.svg?token=s3KMuP6lOp)](https://codecov.io/gh/ScottKolo/Mongoose)
 
 
 Mongoose is a graph partitioning library. Currently, Mongoose only supports 

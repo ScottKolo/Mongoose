@@ -48,10 +48,10 @@ cs *read_matrix (const char* filename)
         return NULL;
     }
     if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode) || 
-        mm_is_complex(matcode) || !mm_is_symmetric(matcode))
+        mm_is_complex(matcode))
     {
         cout << 
-            "Unsupported matrix format - Must be real, sparse, and symmetric"
+            "Unsupported matrix format - Must be real and sparse"
              << endl;
         fclose(file);
         return NULL;
@@ -62,6 +62,12 @@ cs *read_matrix (const char* filename)
     if ((ret_code = mm_read_mtx_crd_size(file, &M, &N, &nz)) !=0)
     {
         cout << "Could not parse matrix dimension and size." << endl;
+        fclose(file);
+        return NULL;
+    }
+    if (M != N)
+    {
+        cout << "Matrix must be square." << endl;
         fclose(file);
         return NULL;
     }
@@ -104,8 +110,16 @@ cs *read_matrix (const char* filename)
     cs* compressed_A = cs_compress(A);
     if (!compressed_A) return NULL;
     remove_diagonal(compressed_A);
-    compressed_A = mirror_triangular(compressed_A);
-    csd* dmperm = cs_scc (compressed_A);
+    if (mm_is_symmetric(matcode))
+    {
+        compressed_A = mirror_triangular(compressed_A);
+    }
+    else
+    {
+        cs* A_transpose = cs_transpose(compressed_A, 1);
+        compressed_A = cs_add(compressed_A, A_transpose, 0.5, 0.5);
+    }
+    csd* dmperm = cs_scc(compressed_A);
     if (!dmperm)
     {
         cout << "Ran out of memory, aborting." << endl;

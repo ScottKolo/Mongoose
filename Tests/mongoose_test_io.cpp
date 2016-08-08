@@ -3,6 +3,7 @@
 #include "mongoose_conditioning.hpp"
 #include <cassert>
 #include "mongoose_test.hpp"
+#include <iostream>
 
 using namespace Mongoose;
 
@@ -14,6 +15,7 @@ typedef struct mm_file_data
 } mm_file;
 
 mm_file mm_data[] = {
+    {"Pd.mtx",       1337,  2982},
     {"bcspwr01.mtx",   39,    92},
     {"bcspwr02.mtx",   49,   118},
     {"bcspwr03.mtx",  118,   358},
@@ -28,7 +30,7 @@ mm_file mm_data[] = {
 
 void run_io_tests()
 {
-    for (int k = 0; k < 10; k++)
+    for (int k = 0; k < 11; k++)
     {
         // Given a symmetryc matrix
         Options *options;
@@ -77,4 +79,8 @@ void run_io_tests()
     // Bad matrix type
     G = read_graph("../Matrix/bad_matrix_type.mtx");
     assert (G == NULL);
+
+    // Other tests
+    // TODO: Move these to another file
+
 }
