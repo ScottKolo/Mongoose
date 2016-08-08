@@ -11,13 +11,13 @@ namespace Mongoose
 bool initialize(Graph *G, Options *O);
 
 /* The input must be a single connected component. */
-void ComputeEdgeSeparator(Graph *G, Options *O)
+int ComputeEdgeSeparator(Graph *G, Options *O)
 {
     /* Check inputs */
-    if (!G || !O) return;
+    if (!G || !O) return EXIT_FAILURE;
 
     /* Finish initialization */
-    if (!initialize(G, O)) return;
+    if (!initialize(G, O)) return EXIT_FAILURE;
 
     /* Keep track of what the current graph is at any stage */
     Graph *current = G;
@@ -37,7 +37,7 @@ void ComputeEdgeSeparator(Graph *G, Options *O)
                 SuiteSparse_free(current);
                 current = next;
             }
-            return;
+            return EXIT_FAILURE;
         }
 
         current = next;
@@ -56,7 +56,7 @@ void ComputeEdgeSeparator(Graph *G, Options *O)
             SuiteSparse_free(current);
             current = next;
         }
-        return;
+        return EXIT_FAILURE;
     }
 
     /*
@@ -67,6 +67,8 @@ void ComputeEdgeSeparator(Graph *G, Options *O)
         current = refine(current, O);
         waterdance(current, O);
     }
+
+    return EXIT_SUCCESS;
 }
 
 /* Finish the initialization of the top level graph. */

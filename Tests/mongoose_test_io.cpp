@@ -52,20 +52,28 @@ void run_io_tests()
             assert (G->nz == mm_data[k].nz);
 
             // An edge separator should be computed with default options
-            ComputeEdgeSeparator(G, options);
+            int success = ComputeEdgeSeparator(G, options);
+
+            if (!success)
+            {
+                // Error occurred
+
+            }
+            else
+            {
+                // The graph should be partitioned
+                assert (G->partition != NULL);
+                for (int i = 0; i < G->n; i++)
+                {
+                    bool equals_0 = G->partition[i] == 0;
+                    bool equals_1 = G->partition[i] == 1;
+                    assert( equals_0 + equals_1 == 1 );
+                }
+            }
 
             // The graph sizes should not change
             assert (G->n == mm_data[k].n);
             assert (G->nz == mm_data[k].nz);
-
-            // The graph should be partitioned
-            assert (G->partition != NULL);
-            for (int i = 0; i < G->n; i++)
-            {
-                bool equals_0 = G->partition[i] == 0;
-                bool equals_1 = G->partition[i] == 1;
-                assert( equals_0 + equals_1 == 1 );
-            }
         }
     }
 

@@ -32,7 +32,7 @@ namespace Mongoose
 /* Function pointers */
 typedef void (*fxMatcher) (Graph *G, Options *O);
 
-void ComputeEdgeSeparator(Graph *G, Options *O);
+int ComputeEdgeSeparator(Graph *G, Options *O);
 
 } // end namespace Mongoose
 
