@@ -67,9 +67,7 @@ void run_io_tests()
                 {
                     bool equals_0 = G->partition[i] == 0;
                     bool equals_1 = G->partition[i] == 1;
-                    if (!(equals_0 || equals_1))
-                        std::cout << (equals_0 || equals_1) << " at " << i << std::endl;
-                    assert( equals_0 + equals_1 == 1 );
+                    assert( (equals_0 || equals_1) == 1 );
                 }
             }
 
