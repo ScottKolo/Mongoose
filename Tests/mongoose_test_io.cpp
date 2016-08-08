@@ -57,7 +57,6 @@ void run_io_tests()
             if (!success)
             {
                 // Error occurred
-
             }
             else
             {
@@ -65,13 +64,8 @@ void run_io_tests()
                 assert (G->partition != NULL);
                 for (int i = 0; i < G->n; i++)
                 {
-                    bool equals_0 = G->partition[i] == 0;
-                    bool equals_1 = G->partition[i] == 1;
-                    /*if (!(equals_0 || equals_1)) {
-                        std::cout << equals_0 << " || " << equals_1 << " = " << (equals_0 || equals_1) << std::endl;
-                        std::cout << "!(equals_0 || equals_1): " << (!(equals_0 || equals_1)) << std::endl;
-                        std::cout << "(equals_0 || equals_1):  " << (equals_0 || equals_1) << std::endl;
-                    }*/
+                    bool equals_0 = (G->partition[i] == 0);
+                    bool equals_1 = (G->partition[i] == 1);
                     assert( equals_0 != equals_1 );
                 }
             }
