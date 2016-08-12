@@ -11,6 +11,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq cmake
   - sudo apt-get install -qq ggcov
+  - sudo apt-get install -qq valgrind
 
 before_script:
   - mkdir _build
@@ -24,3 +25,4 @@ script:
 after_success:
   - ./mongoose_run_all_tests
   - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c
+  - valgrind --error-exitcode=42 --leak-check=full ./mongoose_run_all_tests
