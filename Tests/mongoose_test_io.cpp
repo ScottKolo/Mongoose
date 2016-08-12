@@ -30,6 +30,8 @@ mm_file mm_data[] = {
 
 void run_io_tests()
 {
+    SuiteSparse_start();
+
     for (int k = 0; k < 11; k++)
     {
         // Given a symmetryc matrix
@@ -42,6 +44,13 @@ void run_io_tests()
         if (!G || !options)
         {
             // Ran out of memory
+            SuiteSparse_free(options);
+
+            //G->p = NULL;
+            //G->i = NULL;
+            //G->x = NULL;
+            G->~Graph();
+            SuiteSparse_free(G);
         }
         else
         {
@@ -66,6 +75,10 @@ void run_io_tests()
                 {
                     bool equals_0 = (G->partition[i] == 0);
                     bool equals_1 = (G->partition[i] == 1);
+                    if(equals_0 == equals_1) {
+                        std::cout << k << " " << mm_data[k].filename << std::endl;
+                        std::cout << equals_0 << " != " << equals_1 << std::endl;
+                    }
                     assert( equals_0 != equals_1 );
                 }
             }
@@ -74,6 +87,11 @@ void run_io_tests()
             assert (G->n == mm_data[k].n);
             assert (G->nz == mm_data[k].nz);
         }
+
+        G->~Graph();
+        SuiteSparse_free(G);
+        SuiteSparse_free(options);
+        SuiteSparse_finish();
     }
 
     // Corner cases
@@ -82,12 +100,13 @@ void run_io_tests()
     // Bad header
     G = read_graph("../Matrix/bad_header.mtx");
     assert (G == NULL);
+    SuiteSparse_free(G);
 
     // Bad matrix type
     G = read_graph("../Matrix/bad_matrix_type.mtx");
     assert (G == NULL);
+    SuiteSparse_free(G);
 
     // Other tests
     // TODO: Move these to another file
-
 }

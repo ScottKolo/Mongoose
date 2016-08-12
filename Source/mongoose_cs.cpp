@@ -15,7 +15,6 @@ void *cs_realloc (void *p, csi n, size_t size, csi *ok);
 cs *cs_done (cs *C, void *w, void *x, csi ok);
 csd *cs_dalloc (csi m, csi n);
 cs *cs_spfree (cs *A);
-csd *cs_dfree (csd *D);
 csd *cs_ddone (csd *D, cs *C, void *w, csi ok);
 csi cs_dfs (csi j, cs *G, csi top, csi *xi, csi *pstack, const csi *pinv);
 void *cs_malloc (csi n, size_t size);
@@ -383,7 +382,11 @@ cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2)
         }
     }
     Cp [n] = pC;                       /* finalize the last column of C */
-    if(!cs_sprealloc (C, 0)) return NULL;     /* remove extra space from C */
+    if(!cs_sprealloc (C, 0)) /* remove extra space from C */
+    {
+        cs_spfree(C);
+        return NULL;
+    }
     if (C->nzmax < 1)
         C->nzmax = 1;                      /* For MATLAB */
     return (C);

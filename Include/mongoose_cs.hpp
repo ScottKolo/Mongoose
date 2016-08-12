@@ -77,6 +77,7 @@ cs *cs_compress (const cs *T) ;
 
 cs *cs_spalloc (csi m, csi n, csi nzmax, csi values, csi triplet) ;
 cs *cs_spfree (cs *A) ;
+csd *cs_dfree (csd *D);
 
 csd *cs_scc (cs *A) ;
 cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2);

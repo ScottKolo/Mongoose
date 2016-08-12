@@ -112,7 +112,7 @@ enable_testing()
 add_executable(mongoose_test_io 
   Tests/mongoose_test_io.cpp
   Tests/mongoose_test_io_exe.cpp)
-target_link_libraries(mongoose_test_io MongooseLib)
+target_link_libraries(mongoose_test_io MongooseLibCov)
 
 add_test(test_io mongoose_test_io)
 
@@ -132,9 +132,9 @@ add_executable(mongoose_run_all_tests ${ALL_TEST_FILES})
 MESSAGE( STATUS "CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER_ID} )
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
   # using Clang
-  SET(CMAKE_CXX_FLAGS_COVERAGE "--coverage")
-  SET(CMAKE_C_FLAGS_COVERAGE "--coverage")
-  SET(CMAKE_EXE_LINKER_FLAGS_COVERAGE "--coverage")
+  SET(CMAKE_CXX_FLAGS_COVERAGE "--coverage -g")
+  SET(CMAKE_C_FLAGS_COVERAGE "--coverage -g")
+  SET(CMAKE_EXE_LINKER_FLAGS_COVERAGE "--coverage -g")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   SET(CMAKE_CXX_FLAGS_COVERAGE "-g -O0 -Wall -W -Wshadow -Wunused-variable -Wunused-parameter -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated -Woverloaded-virtual -Wwrite-strings -fprofile-arcs -ftest-coverage")
@@ -149,6 +149,10 @@ endif()
 target_link_libraries(mongoose_run_all_tests MongooseLibCov)
 set_target_properties(MongooseLibCov PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
 set_target_properties(MongooseLibCov PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
+
+# Temporary
+set_target_properties(mongoose_test_io PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
+set_target_properties(mongoose_test_io PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
 
 set_target_properties(mongoose_run_all_tests PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
 set_target_properties(mongoose_run_all_tests PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")

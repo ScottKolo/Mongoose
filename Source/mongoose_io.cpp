@@ -28,6 +28,10 @@ Graph *read_graph (const char* filename)
     cs* A = read_matrix(filename);
     if (!A) return NULL;
     Graph *G = CSparse3ToGraph(A);
+    A->p = NULL;
+    A->i = NULL;
+    A->x = NULL;
+    cs_spfree(A);
     return G;
 }
 
@@ -79,6 +83,9 @@ cs *read_matrix (const char* filename)
     if (!I || !J || !val)
     {
         cout << "Ran out of memory, aborting." << endl;
+        SuiteSparse_free(I);
+        SuiteSparse_free(J);
+        SuiteSparse_free(val);
         fclose(file);
         return NULL;
     }
@@ -96,6 +103,9 @@ cs *read_matrix (const char* filename)
     if (!A)
     {
         cout << "Ran out of memory, aborting." << endl;
+        SuiteSparse_free(I);
+        SuiteSparse_free(J);
+        SuiteSparse_free(val);
         return NULL;
     }
 
@@ -108,21 +118,34 @@ cs *read_matrix (const char* filename)
     A->nz = nz;
     
     cs* compressed_A = cs_compress(A);
-    if (!compressed_A) return NULL;
+    cs_spfree(A);
+    if (!compressed_A)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
     remove_diagonal(compressed_A);
     if (mm_is_symmetric(matcode))
     {
-        compressed_A = mirror_triangular(compressed_A);
+        //compressed_A = mirror_triangular(compressed_A);
+        cs* temp = mirror_triangular(compressed_A);
+        cs_spfree(compressed_A);
+        compressed_A = temp;
     }
     else
     {
         cs* A_transpose = cs_transpose(compressed_A, 1);
-        compressed_A = cs_add(compressed_A, A_transpose, 0.5, 0.5);
+        //compressed_A = cs_add(compressed_A, A_transpose, 0.5, 0.5);
+        cs* temp = cs_add(compressed_A, A_transpose, 0.5, 0.5);
+        cs_spfree(compressed_A);
+        compressed_A = temp;
+        cs_spfree(A_transpose);
     }
     csd* dmperm = cs_scc(compressed_A);
     if (!dmperm)
     {
         cout << "Ran out of memory, aborting." << endl;
+        cs_spfree(compressed_A);
         return NULL;
     }
     int largest_size = 0;
@@ -143,18 +166,26 @@ cs *read_matrix (const char* filename)
     if (!pinv)
     {
         cout << "Ran out of memory, aborting." << endl;
+        SuiteSparse_free(pinv);
+        cs_spfree(compressed_A);
+        cs_dfree(dmperm);
         return NULL;
     }
     cs *C = cs_permute(compressed_A, pinv, dmperm->p, 1);
+    SuiteSparse_free(pinv);
+    cs_spfree(compressed_A);
     if (!C)
     {
         cout << "Ran out of memory, aborting." << endl;
+        cs_dfree(dmperm);
         return NULL;
     }
     cs *submatrix = cs_submat(C, dmperm->r[largest_scc], 
-                                dmperm->r[largest_scc+1]-1, 
-                                dmperm->r[largest_scc], 
-                                dmperm->r[largest_scc+1]-1) ;
+                                 dmperm->r[largest_scc+1]-1, 
+                                 dmperm->r[largest_scc], 
+                                 dmperm->r[largest_scc+1]-1) ;
+    cs_spfree(C);
+    cs_dfree(dmperm);
     if (!submatrix)
     {
         cout << "Ran out of memory, aborting." << endl;
@@ -237,8 +268,10 @@ cs *mirror_triangular(cs *A)
         }
     }
     B->nz = nz;
+    cs* C = cs_compress(B);
+    cs_spfree(B);
 
-    return cs_compress(B);
+    return C;
 }
 
 } // end namespace Mongoose
