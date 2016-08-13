@@ -120,7 +120,7 @@ add_test(test_io mongoose_test_io)
 add_executable(mongoose_memory_test 
   Tests/mongoose_memory_test.cpp
   Tests/mongoose_memory_test_exe.cpp)
-target_link_libraries(mongoose_memory_test MongooseLib)
+target_link_libraries(mongoose_memory_test MongooseLibCov)
 
 #add_test(test_memory mongoose_memory_test)
 
@@ -153,6 +153,8 @@ set_target_properties(MongooseLibCov PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_F
 # Temporary
 set_target_properties(mongoose_test_io PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
 set_target_properties(mongoose_test_io PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
+set_target_properties(mongoose_memory_test PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
+set_target_properties(mongoose_memory_test PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
 
 set_target_properties(mongoose_run_all_tests PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_COVERAGE}")
 set_target_properties(mongoose_run_all_tests PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_COVERAGE}")
