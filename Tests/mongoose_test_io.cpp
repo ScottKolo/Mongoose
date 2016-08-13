@@ -91,7 +91,6 @@ void run_io_tests()
         G->~Graph();
         SuiteSparse_free(G);
         SuiteSparse_free(options);
-        SuiteSparse_finish();
     }
 
     // Corner cases
@@ -109,4 +108,6 @@ void run_io_tests()
 
     // Other tests
     // TODO: Move these to another file
+
+    SuiteSparse_finish();
 }
