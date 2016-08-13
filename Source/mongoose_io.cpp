@@ -28,6 +28,11 @@ Graph *read_graph (const char* filename)
     cs* A = read_matrix(filename);
     if (!A) return NULL;
     Graph *G = CSparse3ToGraph(A);
+    if (!G)
+    {
+        cs_spfree(A);
+        return NULL;
+    }
     A->p = NULL;
     A->i = NULL;
     A->x = NULL;
