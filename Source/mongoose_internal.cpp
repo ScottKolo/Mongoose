@@ -89,10 +89,6 @@ void SuiteSparse_start ( void )
         /* printf is disabled */
         SuiteSparse_config.printf_func = NULL;
     #endif
-
-    /* math functions */
-    SuiteSparse_config.hypot_func = SuiteSparse_hypot;
-    SuiteSparse_config.divcomplex_func = SuiteSparse_divcomplex;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -258,103 +254,4 @@ void *SuiteSparse_free      /* always returns NULL */
         (SuiteSparse_config.free_func)(p);
     }
     return (NULL);
-}
-
-
-/* -------------------------------------------------------------------------- */
-/* SuiteSparse_hypot */
-/* -------------------------------------------------------------------------- */
-
-/* There is an equivalent routine called hypot in <math.h>, which conforms
- * to ANSI C99.  However, SuiteSparse does not assume that ANSI C99 is
- * available.  You can use the ANSI C99 hypot routine with:
- *
- *  #include <math.h>
- *  SuiteSparse_config.hypot_func = hypot ;
- *
- * Default value of the SuiteSparse_config.hypot_func pointer is
- * SuiteSparse_hypot, defined below.
- *
- * s = hypot (x,y) computes s = sqrt (x*x + y*y) but does so more accurately.
- * The NaN cases for the double relops x >= y and x+y == x are safely ignored.
- *
- * Source: Algorithm 312, "Absolute value and square root of a complex number,"
- * P. Friedland, Comm. ACM, vol 10, no 10, October 1967, page 665.
- */
-
-double SuiteSparse_hypot (double x, double y)
-{
-    double s, r;
-    x = fabs (x);
-    y = fabs (y);
-    if (x >= y)
-    {
-        if (x + y == x)
-        {
-            s = x;
-        }
-        else
-        {
-            r = y / x;
-            s = x * sqrt (1.0 + r*r);
-        }
-    }
-    else
-    {
-        if (y + x == y)
-        {
-            s = y;
-        }
-        else
-        {
-            r = x / y;
-            s = y * sqrt (1.0 + r*r);
-        }
-    }
-    return (s);
-}
-
-/* -------------------------------------------------------------------------- */
-/* SuiteSparse_divcomplex */
-/* -------------------------------------------------------------------------- */
-
-/* c = a/b where c, a, and b are complex.  The real and imaginary parts are
- * passed as separate arguments to this routine.  The NaN case is ignored
- * for the double relop br >= bi.  Returns 1 if the denominator is zero,
- * 0 otherwise.
- *
- * This uses ACM Algo 116, by R. L. Smith, 1962, which tries to avoid
- * underflow and overflow.
- *
- * c can be the same variable as a or b.
- *
- * Default value of the SuiteSparse_config.divcomplex_func pointer is
- * SuiteSparse_divcomplex.
- */
-
-int SuiteSparse_divcomplex
-(
-    double ar, double ai,   /* real and imaginary parts of a */
-    double br, double bi,   /* real and imaginary parts of b */
-    double *cr, double *ci  /* real and imaginary parts of c */
-)
-{
-    double tr, ti, r, den;
-    if (fabs (br) >= fabs (bi))
-    {
-        r = bi / br;
-        den = br + r * bi;
-        tr = (ar + ai * r) / den;
-        ti = (ai - ar * r) / den;
-    }
-    else
-    {
-        r = br / bi;
-        den = r * br + bi;
-        tr = (ar * r + ai) / den;
-        ti = (ai * r - ar) / den;
-    }
-    *cr = tr;
-    *ci = ti;
-    return (den == 0.);
 }

@@ -27,8 +27,6 @@ struct SuiteSparse_config_struct
     void *(*realloc_func) (void *, size_t) ;    /* pointer to realloc */
     void (*free_func) (void *) ;                /* pointer to free */
     int (*printf_func) (const char *, ...) ;    /* pointer to printf */
-    double (*hypot_func) (double, double) ;     /* pointer to hypot */
-    int (*divcomplex_func) (double, double, double, double, double *, double *);
 };
 
 extern struct SuiteSparse_config_struct SuiteSparse_config ;
@@ -62,17 +60,6 @@ void *SuiteSparse_realloc   /* pointer to reallocated block of memory, or
 void *SuiteSparse_free      /* always returns NULL */
 (
     void *p                 /* block to free */
-) ;
-
-/* returns sqrt (x^2 + y^2), computed reliably */
-double SuiteSparse_hypot (double x, double y) ;
-
-/* complex division of c = a/b */
-int SuiteSparse_divcomplex
-(
-    double ar, double ai,   /* real and imaginary parts of a */
-    double br, double bi,   /* real and imaginary parts of b */
-    double *cr, double *ci  /* real and imaginary parts of c */
 ) ;
 
 #include "mongoose.hpp"
