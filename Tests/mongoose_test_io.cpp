@@ -4,6 +4,7 @@
 #include <cassert>
 #include "mongoose_test.hpp"
 #include <iostream>
+#include <fstream>
 
 using namespace Mongoose;
 
@@ -15,17 +16,17 @@ typedef struct mm_file_data
 } mm_file;
 
 mm_file mm_data[] = {
-    {"Pd.mtx",       1337,  2982},
-    {"bcspwr01.mtx",   39,    92},
-    {"bcspwr02.mtx",   49,   118},
-    {"bcspwr03.mtx",  118,   358},
-    {"bcspwr04.mtx",  274,  1338},
-    {"bcspwr05.mtx",  443,  1180},
-    {"bcspwr06.mtx", 1454,  3846},
-    {"bcspwr07.mtx", 1612,  4212},
-    {"bcspwr08.mtx", 1624,  4426},
-    {"bcspwr09.mtx", 1723,  4788},
-    {"bcspwr10.mtx", 5300, 16542}
+    {"Pd",       1337,  2982},
+    {"bcspwr01",   39,    92},
+    {"bcspwr02",   49,   118},
+    {"bcspwr03",  118,   358},
+    {"bcspwr04",  274,  1338},
+    {"bcspwr05",  443,  1180},
+    {"bcspwr06", 1454,  3846},
+    {"bcspwr07", 1612,  4212},
+    {"bcspwr08", 1624,  4426},
+    {"bcspwr09", 1723,  4788},
+    {"bcspwr10", 5300, 16542}
 };
 
 void run_io_tests()
@@ -34,21 +35,17 @@ void run_io_tests()
 
     for (int k = 0; k < 11; k++)
     {
-        // Given a symmetryc matrix
+        // Given a symmetric matrix
         Options *options;
         Graph *G;
         
         options = Options::Create();
-        G = read_graph("../Matrix/" + mm_data[k].filename);
+        G = read_graph("../Matrix/" + mm_data[k].filename + ".mtx");
 
         if (!G || !options)
         {
             // Ran out of memory
             SuiteSparse_free(options);
-
-            //G->p = NULL;
-            //G->i = NULL;
-            //G->x = NULL;
             G->~Graph();
             SuiteSparse_free(G);
         }
@@ -61,9 +58,9 @@ void run_io_tests()
             assert (G->nz == mm_data[k].nz);
 
             // An edge separator should be computed with default options
-            int success = ComputeEdgeSeparator(G, options);
+            int error = ComputeEdgeSeparator(G, options);
 
-            if (!success)
+            if (error)
             {
                 // Error occurred
             }
@@ -75,10 +72,6 @@ void run_io_tests()
                 {
                     bool equals_0 = (G->partition[i] == 0);
                     bool equals_1 = (G->partition[i] == 1);
-                    if(equals_0 == equals_1) {
-                        std::cout << k << " " << mm_data[k].filename << std::endl;
-                        std::cout << equals_0 << " != " << equals_1 << std::endl;
-                    }
                     assert( equals_0 != equals_1 );
                 }
             }
