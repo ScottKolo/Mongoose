@@ -77,9 +77,13 @@ set(ALL_TEST_FILES
 include_directories(Include
                     External/Include)
 
+# Require C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Build the Mongoose library
 add_library(libmongoose ${MONGOOSE_LIB_FILES})
-set_property(TARGET libmongoose PROPERTY CXX_STANDARD 11)
+#set_property(TARGET libmongoose PROPERTY CXX_STANDARD 11)
 
 # Build the Mongoose executable
 add_executable(Mongoose ${EXE_FILES})
