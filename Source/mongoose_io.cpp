@@ -131,7 +131,8 @@ cs *read_matrix (const char* filename)
         return NULL;
     }
     cs *sanitized_A = sanitize_matrix(compressed_A, mm_is_symmetric(matcode));
-
+    cs_spfree(compressed_A);
+    
     return sanitized_A;
 }
 

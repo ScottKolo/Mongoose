@@ -80,7 +80,19 @@ cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
 
     cs *D = cs_transpose (submatrix, 1);
     cs_spfree(submatrix);
+
+    if(!D)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
     submatrix = cs_transpose (D, 1);
+    cs_spfree(D);
+    if (!submatrix)
+    {
+        cout << "Ran out of memory, aborting." << endl;
+        return NULL;
+    }
 
     return submatrix;
 }
