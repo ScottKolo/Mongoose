@@ -31,6 +31,7 @@ set(MONGOOSE_LIB_FILES
         Include/mongoose_options.hpp
         Include/mongoose_qpdelta.hpp
         Include/mongoose_refining.hpp
+        Include/mongoose_sanitize.hpp
         Include/mongoose_waterdance.hpp
         Source/mongoose_boundaryheap.cpp
         Source/mongoose_coarsening.cpp
@@ -55,6 +56,7 @@ set(MONGOOSE_LIB_FILES
         Source/mongoose_qpnapsack2.cpp
         Source/mongoose_qpnapup.cpp
         Source/mongoose_refinement.cpp
+        Source/mongoose_sanitize.cpp
         Source/mongoose_waterdance.cpp
         External/Include/mmio.h
         External/Source/mmio.c)
@@ -103,6 +105,12 @@ add_executable(mongoose_test_memory
   Tests/mongoose_test_memory.cpp
   Tests/mongoose_test_memory_exe.cpp)
 target_link_libraries(mongoose_test_memory libmongoose_dbg)
+
+# Timing and Results Test
+add_executable(mongoose_test_results
+  Tests/mongoose_test_results.cpp
+  Tests/mongoose_test_results_exe.cpp)
+target_link_libraries(mongoose_test_results libmongoose)
 
 #add_test(test_memory mongoose_memory_test)
 

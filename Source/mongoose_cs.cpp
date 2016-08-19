@@ -184,13 +184,13 @@ cs *cs_spalloc (csi m, csi n, csi nzmax, csi values, csi triplet)
 /* change the max # of entries sparse matrix */
 csi cs_sprealloc (cs *A, csi nzmax)
 {
-    csi ok, oki, okj = 1, okx = 1;
+    int ok, oki, okj = 1, okx = 1;
     if (!A) return (0);
     if (nzmax <= 0) nzmax = (CS_CSC (A)) ? (A->p [A->n]) : A->nz;
-    A->i = (csi*) cs_realloc (A->i, nzmax, sizeof (csi), &oki);
-    if (CS_TRIPLET (A)) A->p = (csi*) cs_realloc (A->p, nzmax, sizeof (csi),
+    A->i = (csi*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof (csi), A->i, &oki);
+    if (CS_TRIPLET (A)) A->p = (csi*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof (csi), A->p,
                                                   &okj);
-    if (A->x) A->x = (double*) cs_realloc (A->x, nzmax, sizeof (double), &okx);
+    if (A->x) A->x = (double*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof (double), A->x, &okx);
     ok = (oki && okj && okx);
     if (ok) A->nzmax = nzmax;
     return (ok);
@@ -247,15 +247,6 @@ csd *cs_dfree (csd *D)
     cs_free (D->r);
     cs_free (D->s);
     return ((csd *) cs_free (D));   /* free the csd struct and return NULL */
-}
-
-/* wrapper for realloc */
-void *cs_realloc (void *p, csi n, size_t size, csi *ok)
-{
-    void *pnew;
-    pnew = realloc (p, MONGOOSE_MAX2 (n,1) * size); /* realloc the block */
-    *ok = (pnew != NULL);                     /* realloc fails if pnew is NULL */
-    return ((*ok) ? pnew : p);                /* return original p if failure */
 }
 
 /* release workspace and return a sparse matrix result */
@@ -422,7 +413,7 @@ csi *cs_pinv (csi const *p, csi n)
 {
     csi k, *pinv;
     if (!p) return (NULL);                      /* p = NULL denotes identity */
-    pinv = (csi *)cs_malloc (n, sizeof (csi));         /* allocate result */
+    pinv = (csi *)SuiteSparse_malloc (n, sizeof (csi));         /* allocate result */
     if (!pinv) return (NULL);                   /* out of memory */
     for (k = 0; k < n; k++) pinv [p [k]] = k;   /* invert the permutation */
     return (pinv);                              /* return result */

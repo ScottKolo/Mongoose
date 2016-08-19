@@ -31,6 +31,14 @@ double readField
 Options *mex_get_options(const mxArray *Omatlab = NULL);
 mxArray *mex_put_options(const Options *O);
 
+/* check MATLAB input argument */
+void cs_mex_check (csi nel, csi m, csi n, csi square, csi sparse, csi values,
+    const mxArray *A);
+/* get a MATLAB sparse matrix and convert to cs */
+cs *cs_mex_get_sparse (cs *A, csi square, csi values, const mxArray *Amatlab);
+/* return a sparse matrix to MATLAB */
+mxArray *cs_mex_put_sparse (cs **Ahandle);
+
 Graph *mex_get_graph
 (
     const mxArray *Gmatlab,        /* The sparse matrix            */

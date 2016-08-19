@@ -9,7 +9,10 @@ Graph *mex_get_graph
     const mxArray *Amatlab  /* The real-valued node weights */
 )
 {
-    Graph *returner = (Graph*) calloc(1, sizeof(Graph));
+    // Check for valid sparse matrix
+    cs_mex_check (0, -1, -1, 1, 1, 1, Gmatlab) ;
+
+    Graph *returner = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
     if(!returner) return NULL;
     new (returner) Graph();
 

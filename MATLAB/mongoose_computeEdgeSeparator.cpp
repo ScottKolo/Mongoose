@@ -13,19 +13,20 @@ void mexFunction
 {
     cs Amatrix;
     int i, gtype, values;
-
+    
     const char* usage = "Usage: partition = mongoose_computeEdgeSeparator(G, (O, A))";
     if(nargout != 1 || nargin < 1 || nargin > 3) mexErrMsgTxt(usage);
-
+    
     const mxArray *matGraph = pargin[0];
     const mxArray *matOptions = (nargin >= 2 ? pargin[1] : NULL);
     const mxArray *matNodeWeights = (nargin >= 3 ? pargin[2] : NULL);
-
+    
     /* Get the graph from the matlab inputs. */
     Graph *G = mex_get_graph(matGraph, matNodeWeights);
+    
     if(!G)
         mexErrMsgTxt("Unable to get Graph struct");
-
+    
     /* Get the options from the matlab inputs. */
     Options *O = mex_get_options(matOptions);
     if(!O)
@@ -43,7 +44,7 @@ void mexFunction
 
     /* Cleanup */
     G->~Graph();
-    delete G;
+    SuiteSparse_free(G);
     O->~Options();
     SuiteSparse_free(O);
 }
