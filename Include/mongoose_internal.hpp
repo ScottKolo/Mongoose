@@ -20,47 +20,7 @@
 #include <climits>
 #include <cstdlib>
 
-struct SuiteSparse_config_struct
-{
-    void *(*malloc_func) (size_t) ;             /* pointer to malloc */
-    void *(*calloc_func) (size_t, size_t) ;     /* pointer to calloc */
-    void *(*realloc_func) (void *, size_t) ;    /* pointer to realloc */
-    void (*free_func) (void *) ;                /* pointer to free */
-    int (*printf_func) (const char *, ...) ;    /* pointer to printf */
-};
-
-extern struct SuiteSparse_config_struct SuiteSparse_config ;
-
-void SuiteSparse_start ( void ) ;   /* called to start SuiteSparse */
-
-void SuiteSparse_finish ( void ) ;  /* called to finish SuiteSparse */
-
-void *SuiteSparse_malloc    /* pointer to allocated block of memory */
-(
-    size_t nitems,          /* number of items to malloc (>=1 is enforced) */
-    size_t size_of_item     /* sizeof each item */
-) ;
-
-void *SuiteSparse_calloc    /* pointer to allocated block of memory */
-(
-    size_t nitems,          /* number of items to calloc (>=1 is enforced) */
-    size_t size_of_item     /* sizeof each item */
-) ;
-
-void *SuiteSparse_realloc   /* pointer to reallocated block of memory, or
-                               to original block if the realloc failed. */
-(
-    size_t nitems_new,      /* new number of items in the object */
-    size_t nitems_old,      /* old number of items in the object */
-    size_t size_of_item,    /* sizeof each item */
-    void *p,                /* old object to reallocate */
-    int *ok                 /* 1 if successful, 0 otherwise */
-) ;
-
-void *SuiteSparse_free      /* always returns NULL */
-(
-    void *p                 /* block to free */
-) ;
+#include "SuiteSparse_config.h"
 
 #include "mongoose.hpp"
 

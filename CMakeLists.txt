@@ -41,7 +41,6 @@ set(MONGOOSE_LIB_FILES
         Source/mongoose_edgeseparator.cpp
         Source/mongoose_fiducciamattheyses.cpp
         Source/mongoose_guesscut.cpp
-        Source/mongoose_internal.cpp
         Source/mongoose_interop.cpp
         Source/mongoose_io.cpp
         Source/mongoose_matching.cpp
@@ -81,17 +80,90 @@ include_directories(Include
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Look for common SuiteSparse_config - otherwise, use our own
+set(SUITESPARSE_CONFIG_INCLUDE_DIRS
+  ${SUITESPARSE_CONFIG_INCLUDE_DIR_HINT}
+  /usr/local/include
+  /usr/include
+  /include
+  /opt/include
+)
+
+set(SUITESPARSE_CONFIG_LIBRARY_DIRS
+  ${SUITESPARSE_CONFIG_LIBRARY_DIR_HINT}
+  /usr/local/lib
+  /usr/lib
+  /lib
+  /opt/lib
+)
+
+find_path(SUITESPARSE_CONFIG_INCLUDE_DIR
+  NAMES SuiteSparse_config.h
+  PATHS ${SUITESPARSE_CONFIG_INCLUDE_DIRS}
+)
+
+find_library(SUITESPARSE_CONFIG_LIBRARY
+  NAMES libsuitesparseconfig.a libsuitesparseconfig.dylib
+  PATHS ${SUITESPARSE_CONFIG_LIBRARY_DIRS}
+)
+
+if(EXISTS ${SUITESPARSE_CONFIG_INCLUDE_DIR} AND EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
+  message( STATUS "Installed SuiteSparse_config" ${BoldGreen} " found" ${ColourReset} " in " ${SUITESPARSE_CONFIG_INCLUDE_DIR} " and " ${SUITESPARSE_CONFIG_LIBRARY})
+  include_directories(${SUITESPARSE_CONFIG_INCLUDE_DIR})
+elseif(EXISTS ${PROJECT_SOURCE_DIR}/../SuiteSparse_config)
+  set(SUITESPARSE_CONFIG_DIR ${PROJECT_SOURCE_DIR}/../SuiteSparse_config)
+  include_directories(${SUITESPARSE_CONFIG_DIR})
+
+  if(EXISTS ${SUITESPARSE_CONFIG_DIR}/libsuitesparseconfig.a)
+    set(SUITESPARSE_CONFIG_LIBRARY ${SUITESPARSE_CONFIG_DIR}/libsuitesparseconfig.a)
+    message( STATUS "External SuiteSparse_config" ${BoldGreen} " found already compiled" ${ColourReset} ", compiling as a SuiteSparse module.")
+  else()
+    message( STATUS "External SuiteSparse_config" ${BoldGreen} " found " ${BoldRed} "uncompiled" ${ColourReset} ", compiling as a SuiteSparse module.")
+    set(SUITESPARSE_CONFIG_FILES
+    ${SUITESPARSE_CONFIG_DIR}/SuiteSparse_config.c
+    ${SUITESPARSE_CONFIG_DIR}/SuiteSparse_config.h
+  )
+  
+  set(MONGOOSE_LIB_FILES
+    ${MONGOOSE_LIB_FILES}
+    ${SUITESPARSE_CONFIG_FILES}
+  )
+  endif()
+else()
+  message( STATUS "External SuiteSparse_config" ${BoldRed} " not found" ${ColourReset} ", compiling stand-alone Mongoose.")
+  set(SUITESPARSE_CONFIG_DIR ${PROJECT_SOURCE_DIR}/SuiteSparse_config)
+  set(SUITESPARSE_CONFIG_FILES
+    ${SUITESPARSE_CONFIG_DIR}/SuiteSparse_config.c
+    ${SUITESPARSE_CONFIG_DIR}/SuiteSparse_config.h
+  )
+  include_directories(${SUITESPARSE_CONFIG_DIR})
+  set(MONGOOSE_LIB_FILES
+    ${MONGOOSE_LIB_FILES}
+    ${SUITESPARSE_CONFIG_FILES}
+  )
+endif()
+
 # Build the Mongoose library
-add_library(libmongoose ${MONGOOSE_LIB_FILES})
-#set_property(TARGET libmongoose PROPERTY CXX_STANDARD 11)
+add_library(mongoose ${MONGOOSE_LIB_FILES})
+if(EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
+  target_link_libraries(mongoose ${SUITESPARSE_CONFIG_LIBRARY})
+endif()
+
+# Build the Mongoose library and all tests with coverage flags
+add_library(mongoose_dbg ${MONGOOSE_LIB_FILES})
+if(EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
+  target_link_libraries(mongoose_dbg ${SUITESPARSE_CONFIG_LIBRARY})
+endif()
 
 # Build the Mongoose executable
-add_executable(Mongoose ${EXE_FILES})
-target_link_libraries(Mongoose libmongoose)
+add_executable(mongoose_exe ${EXE_FILES})
+SET_TARGET_PROPERTIES(mongoose_exe
+  PROPERTIES OUTPUT_NAME mongoose)
+target_link_libraries(mongoose_exe mongoose)
 
 # Build the Demo executable
 add_executable(Demo ${DEMO_FILES})
-target_link_libraries(Demo libmongoose)
+target_link_libraries(Demo mongoose)
 
 # Coverage and Unit Testing Setup
 enable_testing()
@@ -100,7 +172,7 @@ enable_testing()
 add_executable(mongoose_test_io 
   Tests/mongoose_test_io.cpp
   Tests/mongoose_test_io_exe.cpp)
-target_link_libraries(mongoose_test_io libmongoose_dbg)
+target_link_libraries(mongoose_test_io mongoose_dbg)
 
 add_test(test_io mongoose_test_io)
 
@@ -108,19 +180,18 @@ add_test(test_io mongoose_test_io)
 add_executable(mongoose_test_memory 
   Tests/mongoose_test_memory.cpp
   Tests/mongoose_test_memory_exe.cpp)
-target_link_libraries(mongoose_test_memory libmongoose_dbg)
+target_link_libraries(mongoose_test_memory mongoose_dbg)
 
 # Timing and Results Test
 add_executable(mongoose_test_results
   Tests/mongoose_test_results.cpp
   Tests/mongoose_test_results_exe.cpp)
-target_link_libraries(mongoose_test_results libmongoose)
+target_link_libraries(mongoose_test_results mongoose)
 
 #add_test(test_memory mongoose_memory_test)
 
 # Coverage Tests
-# Build the Mongoose library and all tests with coverage flags
-add_library(libmongoose_dbg ${MONGOOSE_LIB_FILES})
+
 add_executable(mongoose_run_all_tests ${ALL_TEST_FILES})
 
 MESSAGE( STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
@@ -140,9 +211,9 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using Visual Studio C++
 endif()
 
-target_link_libraries(mongoose_run_all_tests libmongoose_dbg)
-set_target_properties(libmongoose_dbg PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
-set_target_properties(libmongoose_dbg PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+target_link_libraries(mongoose_run_all_tests mongoose_dbg)
+set_target_properties(mongoose_dbg PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
+set_target_properties(mongoose_dbg PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 
 # Temporary
 set_target_properties(mongoose_test_io PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")

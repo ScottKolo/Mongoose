@@ -1,7 +1,6 @@
 
 #include "mongoose_internal.hpp"
 #include "mongoose_cs.hpp"
-#include "mongoose_internal.hpp"
 
 namespace Mongoose
 {
