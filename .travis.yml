@@ -21,6 +21,9 @@ before_script:
 script:
   - make VERBOSE=1
   - make test
+  - sudo apt-get install -qq suitesparse
+  - make VERBOSE=1
+  - make test
 
 after_success:
   - ./mongoose_run_all_tests
