@@ -21,7 +21,9 @@ before_script:
 script:
   - make VERBOSE=1
   - make test
-  - sudo apt-get install -qq suitesparse
+  - rm -rf ./*
+  - cmake ..
+  - sudo apt-get install -qq libsuitesparse-dev
   - make VERBOSE=1
   - make test
 
