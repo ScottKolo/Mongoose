@@ -22,8 +22,8 @@ script:
   - make VERBOSE=1
   - make test
   - rm -rf ./*
-  - cmake ..
   - sudo apt-get install -qq libsuitesparse-dev
+  - cmake ..
   - make VERBOSE=1
   - make test
 
