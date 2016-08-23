@@ -16,9 +16,6 @@ csd *cs_dalloc (csi m, csi n);
 cs *cs_spfree (cs *A);
 csd *cs_ddone (csd *D, cs *C, void *w, csi ok);
 csi cs_dfs (csi j, cs *G, csi top, csi *xi, csi *pstack, const csi *pinv);
-void *cs_malloc (csi n, size_t size);
-void *cs_calloc (csi n, size_t size);
-void *cs_free (void *p);
 
 //-----------------------------------------------------------------------------
 // add an entry to a triplet matrix; return 1 if ok, 0 otherwise
@@ -195,35 +192,16 @@ csi cs_sprealloc (cs *A, csi nzmax)
     return (ok);
 }
 
-/* wrapper for malloc */
-void *cs_malloc (csi n, size_t size)
-{
-    return (malloc (CS_MAX (n,1) * size));
-}
-
-/* wrapper for calloc */
-void *cs_calloc (csi n, size_t size)
-{
-    return (calloc (CS_MAX (n,1), size));
-}
-
-/* wrapper for free */
-void *cs_free (void *p)
-{
-    if (p) free (p);        /* free p if it is not already NULL */
-    return (NULL);          /* return NULL to simplify the use of cs_free */
-}
-
 /* allocate a cs_dmperm or cs_scc result */
 csd *cs_dalloc (csi m, csi n)
 {
     csd *D;
-    D = (csd *)cs_calloc (1, sizeof (csd));
+    D = (csd *)SuiteSparse_calloc (1, sizeof (csd));
     if (!D) return (NULL);
-    D->p = (csi *)cs_malloc (m, sizeof (csi));
-    D->r = (csi *)cs_malloc (m+6, sizeof (csi));
-    D->q = (csi *)cs_malloc (n, sizeof (csi));
-    D->s = (csi *)cs_malloc (n+6, sizeof (csi));
+    D->p = (csi *)SuiteSparse_malloc (m, sizeof (csi));
+    D->r = (csi *)SuiteSparse_malloc (m+6, sizeof (csi));
+    D->q = (csi *)SuiteSparse_malloc (n, sizeof (csi));
+    D->s = (csi *)SuiteSparse_malloc (n+6, sizeof (csi));
     return ((!D->p || !D->r || !D->q || !D->s) ? cs_dfree (D) : D);
 }
 
@@ -241,11 +219,11 @@ cs *cs_spfree (cs *A)
 csd *cs_dfree (csd *D)
 {
     if (!D) return (NULL);      /* do nothing if D already NULL */
-    cs_free (D->p);
-    cs_free (D->q);
-    cs_free (D->r);
-    cs_free (D->s);
-    return ((csd *) cs_free (D));   /* free the csd struct and return NULL */
+    SuiteSparse_free (D->p);
+    SuiteSparse_free (D->q);
+    SuiteSparse_free (D->r);
+    SuiteSparse_free (D->s);
+    return ((csd *) SuiteSparse_free (D));   /* free the csd struct and return NULL */
 }
 
 /* release workspace and return a sparse matrix result */
@@ -260,7 +238,7 @@ cs *cs_done (cs *C, void *w, void *x, csi ok)
 csd *cs_ddone (csd *D, cs *C, void *w, csi ok)
 {
     cs_spfree (C);                      /* free temporary matrix */
-    cs_free (w);                        /* free workspace */
+    SuiteSparse_free (w);                        /* free workspace */
     return (ok ? D : cs_dfree (D));     /* return result if OK, else free it */
 }
 
@@ -310,7 +288,7 @@ csd *cs_scc (cs *A)     /* matrix A temporarily modified, then restored */
     n = A->n; Ap = A->p;
     D = cs_dalloc (n, 0);                           /* allocate result */
     AT = cs_transpose (A, 0);                       /* AT = A' */
-    xi = (csi *)cs_malloc (2*n+1, sizeof (csi));           /* get workspace */
+    xi = (csi *)SuiteSparse_malloc (2*n+1, sizeof (csi));           /* get workspace */
     if (!D || !AT || !xi) return (cs_ddone (D, AT, xi, 0));
     Blk = xi; rcopy = pstack = xi + n;
     p = D->p; r = D->r; ATp = AT->p;

@@ -21,7 +21,6 @@
 #include <cstdlib>
 
 #include "SuiteSparse_config.h"
-
 #include "mongoose.hpp"
 
 #endif

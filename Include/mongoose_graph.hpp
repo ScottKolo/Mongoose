@@ -68,6 +68,7 @@ public:
 
     /* Constructor & Destructor */
     void *operator new(size_t size, Graph* ptr){ return ptr; }
+    
     Graph()
     {
         cs_n = cs_m = cs_nz = cs_nzmax = 0;
