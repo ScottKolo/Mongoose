@@ -17,21 +17,6 @@ csd *cs_ddone (csd *D, cs *C, void *w, csi ok);
 csi cs_dfs (csi j, cs *G, csi top, csi *xi, csi *pstack, const csi *pinv);
 
 //-----------------------------------------------------------------------------
-// add an entry to a triplet matrix; return 1 if ok, 0 otherwise
-//-----------------------------------------------------------------------------
-csi cs_entry (cs *T, csi i, csi j, double x)
-{
-    if (!CS_TRIPLET (T) || i < 0 || j < 0) return (0);      /* check inputs */
-    if (T->nz >= T->nzmax && !cs_sprealloc (T,2*(T->nzmax))) return (0);
-    if (T->x) T->x [T->nz] = x;
-    T->i [T->nz] = i;
-    T->p [T->nz++] = j;
-    T->m = MONGOOSE_MAX2 (T->m, i+1);
-    T->n = MONGOOSE_MAX2 (T->n, j+1);
-    return (1);
-}
-
-//-----------------------------------------------------------------------------
 // C = A'
 //-----------------------------------------------------------------------------
 cs *cs_transpose (
