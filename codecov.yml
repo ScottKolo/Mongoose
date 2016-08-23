@@ -9,6 +9,7 @@ coverage:
   - Demo/.*
   - Tests/.*
   - External/.*
+  - SuiteSparse_config/.*
 
 comment:
   layout: "header, diff, changes, sunburst, uncovered"
