@@ -53,7 +53,8 @@ int run_memory_tests()
 {
     SuiteSparse_start();
 
-    const std::string inputFile = "../Matrix/bcspwr04.mtx";
+    //const std::string inputFile = "../Matrix/bcspwr04.mtx";
+    const std::string inputFile = "../Matrix/GD97_b.mtx";
 
     Options *O = Options::Create();
     if(!O)
@@ -70,7 +71,7 @@ int run_memory_tests()
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
 
-    for(int i = 0; i < 236; i++)
+    for(int i = 0; i < 471; i++)
     {
         RunAllTests(inputFile, O, i);
     }
@@ -154,5 +155,5 @@ void RunTest (
     ComputeEdgeSeparator(U, O);
     U->~Graph();
     SuiteSparse_free(U);
-    //printf("Test Complete! Remaining mallocs: %d\n", AllowedMallocs);
+    printf("Test Complete! Remaining mallocs: %d\n", AllowedMallocs);
 }
