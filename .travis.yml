@@ -25,7 +25,7 @@ before_install:
 - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then cd ..; fi
 - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then brew install cmake; fi
 - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then brew install valgrind; fi
-- if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then brew install suitesparse; fi
+- if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then brew install homebrew/science/suitesparse; fi
 
 before_script:
   - mkdir _build
