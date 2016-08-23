@@ -10,11 +10,10 @@ using namespace Mongoose;
 
 void RunAllTests (
     const std::string inputFile, 
-    Options *O, 
-    int allowedMallocs
+    Options *O
 );
 
-void RunTest (
+int RunTest (
     const std::string inputFile, 
     Options *O,
     int allowedMallocs
@@ -22,6 +21,17 @@ void RunTest (
 
 /* Custom memory management functions allow for memory testing. */
 int AllowedMallocs;
+
+/*
+const int num_mallocs[][4][3] = { { { 531, 134, 146 },
+                                    { 471, 134, 146 },
+                                    { 430, 105, 117 },
+                                    { 526, 105, 117 } },
+                                  { { 531, 134, 146 },
+                                    { 471, 200,   1 },
+                                    {   1,   1,   1 },
+                                    {   1,   1, 117 } } };
+                                    */
 
 void *myMalloc(size_t size)
 {
@@ -54,7 +64,7 @@ int run_memory_tests()
     SuiteSparse_start();
 
     //const std::string inputFile = "../Matrix/bcspwr04.mtx";
-    const std::string inputFile = "../Matrix/GD97_b.mtx";
+    const std::string inputFile = "../Matrix/Erdos971.mtx";
 
     Options *O = Options::Create();
     if(!O)
@@ -71,10 +81,7 @@ int run_memory_tests()
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
 
-    for(int i = 0; i < 471; i++)
-    {
-        RunAllTests(inputFile, O, i);
-    }
+    RunAllTests(inputFile, O);
 
     O->~Options();
     SuiteSparse_free(O);
@@ -87,17 +94,16 @@ int run_memory_tests()
 
 void RunAllTests (
     const std::string inputFile,
-    Options *O,
-    int allowedMallocs
+    Options *O
 )
 {
-    printf("Running all tests with %d AllowedMallocs\n", allowedMallocs);
+    //printf("Running all tests with %d AllowedMallocs\n", allowedMallocs);
 
    /* 
     * (1 TEST)
     * TRY A BOGUS LOAD
     */
-    RunTest("bogus", O, allowedMallocs);
+    //RunTest("bogus", O, allowedMallocs);
     
     /* 
      * (12 TESTS)
@@ -118,9 +124,12 @@ void RunAllTests (
             {
                 O->guessCutType = guessCutStrategies[j];
 
-                //printf("+ Testing %d %d %d\n", c, i, j);
-                RunTest(inputFile, O, allowedMallocs);
-                //printf("- Testing %d %d %d\n", c, i, j);
+                //for(int m = 0; m < num_mallocs[c][i][j]; m++)
+                int m = 0;
+                while (RunTest(inputFile, O, m) < 1)
+                {
+                    m += 1;
+                }
             }
         }
     }
@@ -139,7 +148,7 @@ void RunAllTests (
     }
 }
 
-void RunTest (
+int RunTest (
     const std::string inputFile, 
     Options *O,
     int allowedMallocs
@@ -150,10 +159,11 @@ void RunTest (
 
     /* Read and condition the matrix from the MM file. */
     Graph *U = read_graph(inputFile);
-    if (!U) return;
+    if (!U) return -1;
 
     ComputeEdgeSeparator(U, O);
     U->~Graph();
     SuiteSparse_free(U);
-    printf("Test Complete! Remaining mallocs: %d\n", AllowedMallocs);
+    return AllowedMallocs;
+    //printf("Test Complete! Remaining mallocs: %d\n", AllowedMallocs);
 }
