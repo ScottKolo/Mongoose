@@ -103,7 +103,7 @@ find_path(SUITESPARSE_CONFIG_INCLUDE_DIR
 )
 
 find_library(SUITESPARSE_CONFIG_LIBRARY
-  NAMES libsuitesparseconfig.a libsuitesparseconfig.dylib
+  NAMES libsuitesparseconfig.a libsuitesparseconfig.dylib libsuitesparseconfig.so
   PATHS ${SUITESPARSE_CONFIG_LIBRARY_DIRS}
 )
 
