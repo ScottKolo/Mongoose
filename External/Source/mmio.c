@@ -199,7 +199,7 @@ int mm_read_mtx_crd_size(FILE *f, long *M, long *N, long *nz )
     {
         if (fgets(line,MM_MAX_LINE_LENGTH,f) == NULL) 
             return MM_PREMATURE_EOF;
-    }while (line[0] == '%');
+    } while (line[0] == '%');
 
     /* line[] is either blank or has M,N, nz */
     if (sscanf(line, "%ld %ld %ld", M, N, nz) == 3)
@@ -229,7 +229,7 @@ int mm_read_mtx_array_size(FILE *f, long *M, long *N)
     {
         if (fgets(line,MM_MAX_LINE_LENGTH,f) == NULL) 
             return MM_PREMATURE_EOF;
-    }while (line[0] == '%');
+    } while (line[0] == '%');
 
     /* line[] is either blank or has M,N, nz */
     if (sscanf(line, "%ld %ld", M, N) == 2)
