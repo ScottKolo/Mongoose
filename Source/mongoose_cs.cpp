@@ -10,7 +10,6 @@ double cs_cumsum (csi *p, csi *c, csi n);
 csi cs_scatter (const cs *A, csi j, double beta, csi *w, double *x, csi mark,
                 cs *C, csi nz);
 csi cs_sprealloc (cs *A, csi nzmax);
-void *cs_realloc (void *p, csi n, size_t size, csi *ok);
 cs *cs_done (cs *C, void *w, void *x, csi ok);
 csd *cs_dalloc (csi m, csi n);
 cs *cs_spfree (cs *A);
