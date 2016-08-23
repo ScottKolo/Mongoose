@@ -18,8 +18,7 @@ compiler:
   - clang
 
 before_install:
-- if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then mkdir cmake; fi
-- if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then wget --quiet https://cmake.org/files/v3.6/cmake-3.6.1-Linux-x86_64.tar.gz; fi
+- if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then wget https://cmake.org/files/v3.6/cmake-3.6.1-Linux-x86_64.tar.gz; fi
 - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then tar -xvf cmake-3.6.1-Linux-x86_64.tar.gz; fi
 - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then export PATH=$PWD/cmake-3.6.1-Linux-x86_64/bin:$PATH; fi
 - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then brew install cmake; fi
