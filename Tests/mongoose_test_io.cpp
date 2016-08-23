@@ -99,6 +99,11 @@ void run_io_tests()
     assert (G == NULL);
     SuiteSparse_free(G);
 
+    // Rectangular matrix
+    G = read_graph("../Matrix/Trec4.mtx");
+    assert (G == NULL);
+    SuiteSparse_free(G);
+
     // Other tests
     // TODO: Move these to another file
 
