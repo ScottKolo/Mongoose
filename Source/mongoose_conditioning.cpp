@@ -24,10 +24,8 @@ Graph *conditionGraph
     if (!G || !O) return NULL;
 
     Int n = G->n;
-    Int nz = G->nz;
     Int *Gp = G->p;
     Weight *Gx = G->x;
-    Weight *Gw = G->w;
 
     /* Make sure the matrix is symmetric */
     cs *A = GraphToCSparse3(G);
@@ -49,7 +47,6 @@ Graph *conditionGraph
     /* Refresh pointers */
     Gp = G->p;
     Gx = G->x;
-    Gw = G->w;
 
     /* Make edge weights positive. */
     for (Int k = 0; k < n; k++)

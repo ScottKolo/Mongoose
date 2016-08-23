@@ -20,7 +20,7 @@ void print(cs *G)
 
 void print(Graph *G)
 {
-
+    print(GraphToCSparse3(G, false));
 }
 
 } // end namespace Mongoose

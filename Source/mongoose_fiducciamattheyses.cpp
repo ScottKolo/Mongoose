@@ -28,7 +28,6 @@ void fmRefine(Graph *G, Options *O)
 //-----------------------------------------------------------------------------
 void fmRefine_worker(Graph *G, Options *O)
 {
-    Int n = G->n;
     Weight *Gw = G->w;
     Weight W = G->W;
     Int **bhHeap  = G->bhHeap;
