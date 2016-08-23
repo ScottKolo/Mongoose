@@ -70,7 +70,7 @@ int run_memory_tests()
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
 
-    for(int i = 0; i < 219; i++)
+    for(int i = 0; i < 236; i++)
     {
         RunAllTests(inputFile, O, i);
     }
