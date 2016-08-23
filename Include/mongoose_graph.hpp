@@ -67,8 +67,6 @@ public:
                                             markValue is unmarked.           */
 
     /* Constructor & Destructor */
-    void *operator new(size_t size, Graph* ptr){ return ptr; }
-    
     Graph()
     {
         cs_n = cs_m = cs_nz = cs_nzmax = 0;
@@ -113,7 +111,6 @@ public:
     {
         Graph *ret = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
         if(!ret) return NULL;
-        new (ret) Graph();
 
         int n =
         ret->n = 
@@ -186,7 +183,7 @@ public:
     {
         Graph *ret = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
         if(!ret) return NULL;
-        new (ret) Graph();
+        //new (ret) Graph();
 
         ret->n = 
         ret->cs_n = 

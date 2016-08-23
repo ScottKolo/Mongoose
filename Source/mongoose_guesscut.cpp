@@ -181,7 +181,6 @@ void partBFS
     Int start
 )
 {
-    Int n = G->n;
     bool *partition = G->partition;
     Int *Gp = G->p;
     Int *Gi = G->i;

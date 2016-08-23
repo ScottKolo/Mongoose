@@ -56,7 +56,6 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
 {
     Graph *returner = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
     if (!returner) return NULL;
-    new (returner) Graph();
 
     /* Brain-transplant the graph to the new representation. */
     returner->cs_n = G->n;
