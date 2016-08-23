@@ -97,29 +97,6 @@ cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
     return submatrix;
 }
 
-void get_triangular(cs *A, bool lower)
-{
-    Int n = A->n;
-    Int *Ap = A->p; Int *Ai = A->i; double *Ax = A->x;
-    Int nz = 0;
-    Int old_Ap = Ap[0];
-
-    for (Int j = 0; j < n; j++)
-    {
-        for (Int p = old_Ap; p < Ap[j+1]; p++)
-        {
-            if ((lower && Ai[p] >= j) || (!lower && Ai[p] <= j))
-            {
-                Ai[nz] = Ai[p];
-                Ax[nz] = Ax[p];
-                nz++;
-            }
-        }
-        old_Ap = Ap[j+1];
-        Ap[j+1] = nz;
-    }
-}
-
 void remove_diagonal(cs *A)
 {
     Int n = A->n;
