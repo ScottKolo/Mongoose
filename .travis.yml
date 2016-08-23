@@ -1,3 +1,13 @@
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - ggcov
+    - valgrind
+    - libsuitesparse-dev
+
 os:
   - linux
   - osx
@@ -8,23 +18,12 @@ compiler:
   - gcc
   - clang
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq cmake
-  - sudo apt-get install -qq ggcov
-  - sudo apt-get install -qq valgrind
-
 before_script:
   - mkdir _build
   - cd _build
   - cmake ..
 
 script:
-  - make VERBOSE=1
-  - make test
-  - rm -rf ./*
-  - sudo apt-get install -qq libsuitesparse-dev
-  - cmake ..
   - make VERBOSE=1
   - make test
 
