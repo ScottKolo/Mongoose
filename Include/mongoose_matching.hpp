@@ -37,8 +37,10 @@ void matching_Cleanup(Graph *G, Options *O);
     matching[(a)] = (b)+1;                              \
     matching[(b)] = (a)+1;                              \
     invmatchmap[cn] = (a);                              \
-    matchtype[(a)] = matchtype[(b)] = (t);              \
-    matchmap[(a)] = matchmap[(b)] = cn;                 \
+    matchtype[(a)] = (t);                               \
+    matchtype[(b)] = (t);                               \
+    matchmap[(a)] = cn;                                 \
+    matchmap[(b)] = cn;                                 \
     cn++;                                               \
 }                                                       \
 
