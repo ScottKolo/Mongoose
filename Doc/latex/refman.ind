@@ -1,0 +1,65 @@
+\begin{theindex}
+
+  \item {coarsen\+Limit}
+    \subitem {Mongoose\+::\+Options}, \hyperpage{6}
+  \item {cs\+\_\+n}
+    \subitem {Mongoose\+::\+Graph}, \hyperpage{5}
+
+  \indexspace
+
+  \item {do\+Expensive\+Checks}
+    \subitem {Mongoose\+::\+Options}, \hyperpage{6}
+
+  \indexspace
+
+  \item {guess\+Cut\+Type}
+    \subitem {Mongoose\+::\+Options}, \hyperpage{6}
+
+  \indexspace
+
+  \item {heu\+Cost}
+    \subitem {Mongoose\+::\+Graph}, \hyperpage{5}
+
+  \indexspace
+
+  \item {mark}
+    \subitem {Mongoose\+::\+Graph}, \hyperpage{5}
+  \item {Mongoose\+::\+Cut\+Cost}, \hyperpage{4}
+  \item {Mongoose\+::\+Graph}, \hyperpage{4}
+    \subitem {cs\+\_\+n}, \hyperpage{5}
+    \subitem {heu\+Cost}, \hyperpage{5}
+    \subitem {mark}, \hyperpage{5}
+    \subitem {n}, \hyperpage{5}
+    \subitem {parent}, \hyperpage{5}
+    \subitem {partition}, \hyperpage{5}
+  \item {Mongoose\+::\+Options}, \hyperpage{5}
+    \subitem {coarsen\+Limit}, \hyperpage{6}
+    \subitem {do\+Expensive\+Checks}, \hyperpage{6}
+    \subitem {guess\+Cut\+Type}, \hyperpage{6}
+    \subitem {num\+Dances}, \hyperpage{6}
+    \subitem {target\+Split}, \hyperpage{6}
+  \item {Mongoose\+::\+Q\+P\+Delta}, \hyperpage{7}
+  \item {Mongoose\+::\+Swap\+Candidate}, \hyperpage{7}
+  \item {Mongoose\+::cs\+\_\+dmperm\+\_\+results}, \hyperpage{3}
+  \item {Mongoose\+::cs\+\_\+sparse}, \hyperpage{3}
+
+  \indexspace
+
+  \item {n}
+    \subitem {Mongoose\+::\+Graph}, \hyperpage{5}
+  \item {num\+Dances}
+    \subitem {Mongoose\+::\+Options}, \hyperpage{6}
+
+  \indexspace
+
+  \item {parent}
+    \subitem {Mongoose\+::\+Graph}, \hyperpage{5}
+  \item {partition}
+    \subitem {Mongoose\+::\+Graph}, \hyperpage{5}
+
+  \indexspace
+
+  \item {target\+Split}
+    \subitem {Mongoose\+::\+Options}, \hyperpage{6}
+
+\end{theindex}

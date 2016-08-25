@@ -199,7 +199,7 @@ void QPminheap_check
         return;
 
     /* allocate workspace */
-    w = (Int*) SuiteSparse_malloc(n * sizeof(Int));
+    w = (Int*) SuiteSparse_malloc(n, sizeof(Int));
 
     for (i = 0; i < n; i++)
     {

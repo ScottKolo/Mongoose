@@ -1,3 +1,14 @@
+/**
+ * @file mongoose_io.cpp
+ * @author Scott Kolodziej
+ * @date 13 Jun 2016
+ * @brief Simplified I/O functions for reading matrices and graphs
+ *
+ * For reading Matrix Market files into Mongoose, read_graph and read_matrix
+ * are provided (depending on if a Graph class instance or CSparse matrix
+ * instance is needed). The filename can be specified as either a const char*
+ * (easier for C programmers) or std::string (easier from C++).
+ */
 
 #include "mongoose_io.hpp"
 #include "mongoose_interop.hpp"
@@ -19,29 +30,33 @@ Graph *read_graph (const std::string filename)
     return read_graph(filename.c_str());
 }
 
-cs *read_matrix (const std::string filename)
+cs *read_matrix (const std::string filename, MM_typecode &matcode)
 {
-    return read_matrix(filename.c_str());
+    return read_matrix(filename.c_str(), matcode);
 }
 
 Graph *read_graph (const char* filename)
 {
-    cs* A = read_matrix(filename);
+    MM_typecode matcode;
+    cs* A = read_matrix(filename, matcode);
     if (!A) return NULL;
-    Graph *G = CSparse3ToGraph(A);
+    cs *sanitized_A = sanitize_matrix(A, mm_is_symmetric(matcode));
+    cs_spfree(A);
+    if (!sanitized_A) return NULL;
+    Graph *G = CSparse3ToGraph(sanitized_A);
     if (!G)
     {
-        cs_spfree(A);
+        cs_spfree(sanitized_A);
         return NULL;
     }
-    A->p = NULL;
-    A->i = NULL;
-    A->x = NULL;
-    cs_spfree(A);
+    sanitized_A->p = NULL;
+    sanitized_A->i = NULL;
+    sanitized_A->x = NULL;
+    cs_spfree(sanitized_A);
     return G;
 }
 
-cs *read_matrix (const char* filename)
+cs *read_matrix (const char* filename, MM_typecode &matcode)
 {
     FILE *file = fopen(filename, "r");
     if (!file)
@@ -50,7 +65,7 @@ cs *read_matrix (const char* filename)
         return NULL;
     }
 
-    MM_typecode matcode;
+    //MM_typecode &matcode;
     if (mm_read_banner(file, &matcode) != 0)
     {
         cout << "Could not process Matrix Market banner." << endl;
@@ -130,10 +145,8 @@ cs *read_matrix (const char* filename)
         cout << "Ran out of memory, aborting." << endl;
         return NULL;
     }
-    cs *sanitized_A = sanitize_matrix(compressed_A, mm_is_symmetric(matcode));
-    cs_spfree(compressed_A);
     
-    return sanitized_A;
+    return compressed_A;
 }
 
 } // end namespace Mongoose
