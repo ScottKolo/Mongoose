@@ -98,7 +98,7 @@ Graph *refine(Graph *G, Options *O)
 
     /* Now that we're done with the coarse graph, we can release it. */
     G->~Graph();
-    G = (Graph*) SuiteSparse_free(G);
+    SuiteSparse_free(G);
 
     return P;
 }

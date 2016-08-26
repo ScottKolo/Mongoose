@@ -35,7 +35,7 @@ Graph *conditionGraph
     Graph *oG = G; // memory alias.
     G = CSparse3ToGraph(R, resetEW, resetNW);
     oG->~Graph();
-    oG = (Graph*) SuiteSparse_free(oG);
+    SuiteSparse_free(oG);
 
     /* If we're out of memory converting CSparse3 to Graph, free R. */
     if (!G)
@@ -45,8 +45,8 @@ Graph *conditionGraph
     }
 
     /* Refresh pointers */
-    Gp = G->p;
-    Gx = G->x;
+    //Gp = G->p;
+    //Gx = G->x;
 
     /* Make edge weights positive. */
     for (Int k = 0; k < n; k++)

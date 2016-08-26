@@ -77,7 +77,7 @@ bool guessCut(Graph *G, Options *O)
           partBFS(G, O, list[bestGuess]);
           bhLoad(G, O);
 
-          ppvMark = (bool*) SuiteSparse_free(ppvMark);
+          SuiteSparse_free(ppvMark);
           break;
       }
 

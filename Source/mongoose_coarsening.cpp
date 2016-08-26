@@ -34,7 +34,7 @@ Graph *coarsen(Graph *G, Options *O)
     if (!htable)
     {
         C->~Graph();
-        C = (Graph*) SuiteSparse_free(C);
+        SuiteSparse_free(C);
         return NULL;
     }
     for (Int i = 0; i < cn; i++) htable[i] = -1;
@@ -107,7 +107,7 @@ Graph *coarsen(Graph *G, Options *O)
     C->H = 2.0 * X;
 
     /* Cleanup resources */
-    htable = (Int*) SuiteSparse_free(htable);
+    SuiteSparse_free(htable);
 
     /* If we want to do expensive checks, make sure we didn't break
      * the problem into multiple connected components. */

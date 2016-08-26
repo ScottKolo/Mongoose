@@ -121,7 +121,7 @@ void qpGradProj
 
     /* Free the QP structure */
     QP->~QPDelta();
-    QP = (QPDelta*) SuiteSparse_free(QP);
+    SuiteSparse_free(QP);
 
     /* Write the cut cost back to the graph. */
     G->cutCost = cost.cutCost;

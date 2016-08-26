@@ -14,7 +14,6 @@ Graph *mex_get_graph
 
     Graph *returner = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
     if(!returner) return NULL;
-    new (returner) Graph();
 
     Int n = returner->n = mxGetN(Gmatlab);
     Int *Gp = returner->p = (Int*) mxGetJc(Gmatlab);

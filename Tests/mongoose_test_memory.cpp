@@ -63,8 +63,8 @@ int run_memory_tests()
 {
     SuiteSparse_start();
 
-    //const std::string inputFile = "../Matrix/bcspwr04.mtx";
-    const std::string inputFile = "../Matrix/Erdos971.mtx";
+    const std::string inputFile = "../Matrix/bcspwr04.mtx";
+    //const std::string inputFile = "../Matrix/Erdos971.mtx";
 
     Options *O = Options::Create();
     if(!O)
@@ -142,7 +142,7 @@ void RunAllTests (
     if(DCG)
     {
         cs *csDCG = GraphToCSparse3(DCG, true);
-        csDCG = cs_spfree(csDCG);
+        cs_spfree(csDCG);
         DCG->~Graph();
         SuiteSparse_free(DCG);
     }

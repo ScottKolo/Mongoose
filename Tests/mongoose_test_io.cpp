@@ -40,46 +40,51 @@ void run_io_tests()
         Graph *G;
         
         options = Options::Create();
-        G = read_graph("../Matrix/" + mm_data[k].filename + ".mtx");
-
-        if (!G || !options)
+        if (!options)
         {
             // Ran out of memory
             SuiteSparse_free(options);
-            G->~Graph();
+            continue;
+        }
+        
+        G = read_graph("../Matrix/" + mm_data[k].filename + ".mtx");
+
+        if (!G)
+        {
+            // Ran out of memory
+            SuiteSparse_free(options);
             SuiteSparse_free(G);
+            continue;
+        }
+
+        // The number of vertices should be correct
+        assert (G->n == mm_data[k].n);
+
+        // The number of edges should be correct
+        assert (G->nz == mm_data[k].nz);
+
+        // An edge separator should be computed with default options
+        int error = ComputeEdgeSeparator(G, options);
+
+        if (error)
+        {
+            // Error occurred
         }
         else
         {
-            // The number of vertices should be correct
-            assert (G->n == mm_data[k].n);
-
-            // The number of edges should be correct
-            assert (G->nz == mm_data[k].nz);
-
-            // An edge separator should be computed with default options
-            int error = ComputeEdgeSeparator(G, options);
-
-            if (error)
+            // The graph should be partitioned
+            assert (G->partition != NULL);
+            for (int i = 0; i < G->n; i++)
             {
-                // Error occurred
+                bool equals_0 = (G->partition[i] == 0);
+                bool equals_1 = (G->partition[i] == 1);
+                assert( equals_0 != equals_1 );
             }
-            else
-            {
-                // The graph should be partitioned
-                assert (G->partition != NULL);
-                for (int i = 0; i < G->n; i++)
-                {
-                    bool equals_0 = (G->partition[i] == 0);
-                    bool equals_1 = (G->partition[i] == 1);
-                    assert( equals_0 != equals_1 );
-                }
-            }
-
-            // The graph sizes should not change
-            assert (G->n == mm_data[k].n);
-            assert (G->nz == mm_data[k].nz);
         }
+
+        // The graph sizes should not change
+        assert (G->n == mm_data[k].n);
+        assert (G->nz == mm_data[k].nz);
 
         G->~Graph();
         SuiteSparse_free(G);

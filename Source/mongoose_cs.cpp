@@ -1,3 +1,12 @@
+/**
+ * @file mongoose_cs.cpp
+ * @author Timothy Davis, Nuri Yeralan, Scott Kolodziej
+ * @date 23 Aug 2015
+ * @brief Subset of CSparse library for sparse matrix handling
+ *
+ * Graphs are often represented by sparse adjacency matrices. As such, a number
+ * of sparse matrix operations are performed by Mongoose.
+ */
 
 #include "mongoose_internal.hpp"
 #include "mongoose_cs.hpp"
@@ -16,13 +25,26 @@ cs *cs_spfree (cs *A);
 csd *cs_ddone (csd *D, cs *C, void *w, csi ok);
 csi cs_dfs (csi j, cs *G, csi top, csi *xi, csi *pstack, const csi *pinv);
 
-//-----------------------------------------------------------------------------
-// C = A'
-//-----------------------------------------------------------------------------
-cs *cs_transpose (
-    const cs *A,
-    csi values
-    )
+/**
+ * @brief C = A'
+ *
+ * Given a CSparse matrix @p A, cs_transpose returns a new matrix that is the
+ * transpose of @p A. In other words, C(j,i) = A(i,j).
+ * The second parameter, @p values, allows for the copying of the A->x array.
+ * If @p values = 0, the A->x array is ignored, and C->x is left NULL. If 
+ * @p values != 0, then the A->x array is copied (transposed) to C->x.
+ * 
+ * @code
+ * cs *C = cs_transpose(A, 0); // C is A' but C->x = NULL
+ * cs *D = cs_transpose(A, 1); // D is A' and C->x is transpose of A->x
+ * @endcode
+ * 
+ * @param A Matrix to be transposed
+ * @param values 1 to transpose the values A->x, 0 to ignore
+ * @return A transposed version of A
+ * @note Allocates memory for the returned matrix, but frees on error.
+ */
+cs *cs_transpose (const cs *A, csi values)
 {
     csi p, q, j, *Cp, *Ci, n, m, *Ap, *Ai, *w;
     double *Cx, *Ax;
@@ -46,9 +68,26 @@ cs *cs_transpose (
     return (cs_done (C, w, NULL, 1));   /* success; release w and return C */
 }
 
-//-----------------------------------------------------------------------------
-// C = alpha*A + beta*B
-//-----------------------------------------------------------------------------
+/**
+ * @brief C = alpha*A + beta*B
+ *
+ * Given two CSparse matrices @p A and @p B, and scaling constants @p alpha and
+ * @p beta, cs_add returns a new matrix such that C = alpha*A + beta*B. In
+ * other words, C(i,j) = alpha*A(i,j) + beta*B(i,j).
+ * 
+ * @code
+ * cs *C = cs_add(A, B, 1, 1);     // C = A + B
+ * cs *D = cs_add(A, B, 0.5, 0.5); // C = 0.5*A + 0.5*B
+ * cs *E = cs_add(A, B, 1, 0);     // C = A
+ * @endcode
+ * 
+ * @param A Matrix to be added to B.
+ * @param B Matrix to be added to A
+ * @param alpha Scalar (double) value to scale all elements of A matrix by
+ * @param beta Scalar (double) value to scale all elements of B matrix by
+ * @return A matrix such that C = alpha*A + beta*B
+ * @note Allocates memory for the returned matrix, but frees on error.
+ */
 cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
 {
     csi p, j, nz = 0, anz, *Cp, *Ci, *Bp, m, n, bnz, *w, values;
@@ -94,7 +133,7 @@ cs *cs_compress (const cs *T)
     for (k = 0; k < nz; k++)
     {
         Ci [p = w [Tj [k]]++] = Ti [k];     /* A(i,j) is the pth entry in C */
-        if (Cx) Cx [p] = Tx [k];
+        if (Cx && Tx) Cx [p] = Tx [k];
     }
     return (cs_done (C, w, NULL, 1));       /* success; release w and return C */
 }
@@ -329,7 +368,7 @@ cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2)
             if (A->i[pA] >= i1 && A->i[pA] <= i2)
             {
                 Ci[pC] = A->i[pA]-i1;
-                Cx[pC++] = A->x[pA];
+                if (Cx && A->x) Cx[pC++] = A->x[pA];
             }
         }
     }
@@ -361,7 +400,7 @@ cs *cs_permute (const cs *A, const csi *pinv, const csi *q, csi values)
         j = q ? (q [k]) : k;
         for (t = Ap [j]; t < Ap [j+1]; t++)
         {
-            if (Cx) Cx [nz] = Ax [t];   /* row i of A is row pinv[i] of C */
+            if (Cx && Ax) Cx [nz] = Ax [t];   /* row i of A is row pinv[i] of C */
             Ci [nz++] = pinv ? (pinv [Ai [t]]) : Ai [t];
         }
     }

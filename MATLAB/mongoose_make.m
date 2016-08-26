@@ -12,7 +12,7 @@ if (is64)
     d = '-largeArrayDims' ;
 end
 
-include = '-I. -I../Include -I../External/Include -I../../SuiteSparse_config' ;
+include = '-I. -I../Include -I../External/Include -I../SuiteSparse_config' ;
 
 % Linux/Unix require these flags for large file support
 include = [include ' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE'] ;
@@ -31,6 +31,9 @@ include = strrep (include, '/', filesep) ;
 lib = strrep (lib, '/', filesep) ;
 
 %-------------------------------------------------------------------------------
+
+config_src = {
+    '../SuiteSparse_config/SuiteSparse_config' };
 
 gp_src = {
     '../Source/mongoose_cs', ...
@@ -53,7 +56,6 @@ gp_src = {
     '../Source/mongoose_qpnapsack', ...
     '../Source/mongoose_nuri_qpgradproj', ...
     '../Source/mongoose_interop', ...
-    '../Source/mongoose_internal', ...
     '../Source/mongoose_sanitize', ...
     './mex_get_graph', ...
     './mex_get_options', ...
@@ -74,6 +76,20 @@ obj = '' ;
 kk = 1 ;
 
 fprintf('\n\nBuilding Mongoose') ;
+for f = config_src
+    ff = strrep (f{1}, '/', filesep) ;
+    slash = strfind (ff, filesep) ;
+    if (isempty (slash))
+        slash = 1 ;
+    else
+        slash = slash (end) + 1 ;
+    end
+    o = ff (slash:end) ;
+    obj = [obj ' ' o obj_extension] ;
+    s = sprintf ('mex %s -DDLONG -O -silent %s -c %s.c', d, include, ff) ;
+    kk = do_cmd (s, kk, details) ;
+end
+
 for f = gp_src
     ff = strrep (f{1}, '/', filesep) ;
     slash = strfind (ff, filesep) ;

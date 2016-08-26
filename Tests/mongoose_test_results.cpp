@@ -42,74 +42,78 @@ void run_timing_and_results_tests()
         clock_t t;
         
         options = Options::Create();
-        G = read_graph("../Matrix/" + mm_data[k].filename + ".mtx");
 
-        if (!G || !options)
+        if (!options)
         {
             // Ran out of memory
             SuiteSparse_free(options);
-            G->~Graph();
+            continue;
+        }
+
+        G = read_graph("../Matrix/" + mm_data[k].filename + ".mtx");
+
+        if (!G)
+        {
+            // Ran out of memory
+            SuiteSparse_free(options);
             SuiteSparse_free(G);
+        }
+
+        // An edge separator should be computed with default options
+        t = clock();
+        int error = ComputeEdgeSeparator(G, options);
+        t = clock() - t;
+
+        if (error)
+        {
+            // Error occurred
         }
         else
         {
-            // An edge separator should be computed with default options
-            t = clock();
-            int error = ComputeEdgeSeparator(G, options);
-            t = clock() - t;
+            std::ofstream ofs (mm_data[k].filename + "_result.txt", std::ofstream::out);
+            ofs << "InputFile: " << mm_data[k].filename << ".mtx" << std::endl;
+            ofs << "TotalTime: " << ((double) t)/CLOCKS_PER_SEC << std::endl;
+            ofs << "CutSize: " << G->cutCost << std::endl;
+            ofs << "Imbalance: " << G->imbalance << std::endl;
 
-            if (error)
+            for (int i = 0; i < G->n; i++)
             {
-                // Error occurred
-            }
-            else
-            {
-                std::ofstream ofs (mm_data[k].filename + "_result.txt", std::ofstream::out);
-                ofs << "InputFile: " << mm_data[k].filename << ".mtx" << std::endl;
-                ofs << "TotalTime: " << ((double) t)/CLOCKS_PER_SEC << std::endl;
-                ofs << "CutSize: " << G->cutCost << std::endl;
-                ofs << "Imbalance: " << G->imbalance << std::endl;
-
-                for (int i = 0; i < G->n; i++)
+                ofs << i << " ";
+                if (G->partition[i] == 0)
                 {
-                    ofs << i << " ";
-                    if (G->partition[i] == 0)
-                    {
-                        ofs << "A" << std::endl;
-                    }
-                    else
-                    {
-                        ofs << "B" << std::endl;
-                    }
+                    ofs << "A" << std::endl;
                 }
-                ofs.close();
-
-                
-                std::ifstream ifs ("../Tests/Results/" + mm_data[k].filename + "_result.txt");
-                std::string input;
-
-                // Read file name
-                ifs.ignore(200, ' ');
-                ifs >> input;
-                std::cout << "File Name: " << input << std::endl;
-
-                // Read Total Time
-                ifs.ignore(200, ' ');
-                ifs >> input;
-                std::cout << "Total Time: " << input << std::endl;
-                double ref_time = std::stod(input);
-                assert(((double) t)/CLOCKS_PER_SEC <= 2*ref_time);
-
-                // Read Cut Size
-                ifs.ignore(200, ' ');
-                ifs >> input;
-                std::cout << "Cut size: " << input << std::endl;
-                double ref_cut_size = std::stod(input);
-                assert(fabs(G->cutCost) <= 1.1*fabs(ref_cut_size));
-
-                ifs.close();
-
+                else
+                {
+                    ofs << "B" << std::endl;
+                }
             }
+            ofs.close();
+
+            
+            std::ifstream ifs ("../Tests/Results/" + mm_data[k].filename + "_result.txt");
+            std::string input;
+
+            // Read file name
+            ifs.ignore(200, ' ');
+            ifs >> input;
+            std::cout << "File Name: " << input << std::endl;
+
+            // Read Total Time
+            ifs.ignore(200, ' ');
+            ifs >> input;
+            std::cout << "Total Time: " << input << std::endl;
+            double ref_time = std::stod(input);
+            assert(((double) t)/CLOCKS_PER_SEC <= 2*ref_time);
+
+            // Read Cut Size
+            ifs.ignore(200, ' ');
+            ifs >> input;
+            std::cout << "Cut size: " << input << std::endl;
+            double ref_cut_size = std::stod(input);
+            assert(fabs(G->cutCost) <= 1.1*fabs(ref_cut_size));
+
+            ifs.close();
         }
 
         G->~Graph();

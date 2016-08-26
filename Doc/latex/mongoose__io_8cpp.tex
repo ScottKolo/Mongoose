@@ -1,0 +1,86 @@
+\hypertarget{mongoose__io_8cpp}{}\section{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/mongoose\+\_\+io.cpp File Reference}
+\label{mongoose__io_8cpp}\index{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/mongoose\+\_\+io.\+cpp@{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/mongoose\+\_\+io.\+cpp}}
+
+
+Simplified I/O functions for reading matrices and graphs.  
+
+
+{\ttfamily \#include \char`\"{}mongoose\+\_\+io.\+hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}mongoose\+\_\+interop.\+hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}mongoose\+\_\+debug.\+hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}mongoose\+\_\+sanitize.\+hpp\char`\"{}}\\*
+{\ttfamily \#include $<$cstdio$>$}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include \char`\"{}mmio.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Graph $\ast$ \hyperlink{mongoose__io_8cpp_a1a6cbd06501181dbb9c2ae5e58c358aa}{Mongoose\+::read\+\_\+graph} (const std\+::string filename)
+\begin{DoxyCompactList}\small\item\em Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. \end{DoxyCompactList}\item 
+cs $\ast$ \hyperlink{mongoose__io_8cpp_a411f1f502b2f45ade9f7f37294ecefac}{Mongoose\+::read\+\_\+matrix} (const std\+::string filename, M\+M\+\_\+typecode \&matcode)
+\begin{DoxyCompactList}\small\item\em Generate a C\+Sparse matrix from a Matrix Market file. \end{DoxyCompactList}\item 
+Graph $\ast$ \hyperlink{mongoose__io_8cpp_a28db06c7dd9adf07198045e50a5a0479}{Mongoose\+::read\+\_\+graph} (const char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. \end{DoxyCompactList}\item 
+cs $\ast$ \hyperlink{mongoose__io_8cpp_aa6b63ba4454a5d1a27eacc2437ccb961}{Mongoose\+::read\+\_\+matrix} (const char $\ast$filename, M\+M\+\_\+typecode \&matcode)
+\begin{DoxyCompactList}\small\item\em Generate a C\+Sparse matrix from a Matrix Market file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Simplified I/O functions for reading matrices and graphs. 
+
+\begin{DoxyAuthor}{Author}
+Scott Kolodziej 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13 Jun 2016 For reading Matrix Market files into Mongoose, read\+\_\+graph and read\+\_\+matrix are provided (depending on if a Graph class instance or C\+Sparse matrix instance is needed). The filename can be specified as either a const char$\ast$ (easier for C programmers) or std\+::string (easier from C++). 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\index{mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}!read\+\_\+graph@{read\+\_\+graph}}
+\index{read\+\_\+graph@{read\+\_\+graph}!mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}}
+\subsubsection[{\texorpdfstring{read\+\_\+graph(const std\+::string filename)}{read_graph(const std::string filename)}}]{\setlength{\rightskip}{0pt plus 5cm}Graph $\ast$ Mongoose\+::read\+\_\+graph (
+\begin{DoxyParamCaption}
+\item[{const std\+::string}]{filename}
+\end{DoxyParamCaption}
+)}\hypertarget{mongoose__io_8cpp_file_a1a6cbd06501181dbb9c2ae5e58c358aa}{}\label{mongoose__io_8cpp_file_a1a6cbd06501181dbb9c2ae5e58c358aa}
+
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. 
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} class instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed. \index{mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}!read\+\_\+graph@{read\+\_\+graph}}
+\index{read\+\_\+graph@{read\+\_\+graph}!mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}}
+\subsubsection[{\texorpdfstring{read\+\_\+graph(const char $\ast$filename)}{read_graph(const char *filename)}}]{\setlength{\rightskip}{0pt plus 5cm}Graph $\ast$ Mongoose\+::read\+\_\+graph (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{filename}
+\end{DoxyParamCaption}
+)}\hypertarget{mongoose__io_8cpp_file_a28db06c7dd9adf07198045e50a5a0479}{}\label{mongoose__io_8cpp_file_a28db06c7dd9adf07198045e50a5a0479}
+
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. 
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} class instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed. \index{mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}!read\+\_\+matrix@{read\+\_\+matrix}}
+\index{read\+\_\+matrix@{read\+\_\+matrix}!mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}}
+\subsubsection[{\texorpdfstring{read\+\_\+matrix(const std\+::string filename, M\+M\+\_\+typecode \&matcode)}{read_matrix(const std::string filename, MM_typecode &matcode)}}]{\setlength{\rightskip}{0pt plus 5cm}cs $\ast$ Mongoose\+::read\+\_\+matrix (
+\begin{DoxyParamCaption}
+\item[{const std\+::string}]{filename, }
+\item[{M\+M\+\_\+typecode \&}]{matcode}
+\end{DoxyParamCaption}
+)}\hypertarget{mongoose__io_8cpp_file_a411f1f502b2f45ade9f7f37294ecefac}{}\label{mongoose__io_8cpp_file_a411f1f502b2f45ade9f7f37294ecefac}
+
+
+Generate a C\+Sparse matrix from a Matrix Market file. 
+
+Generate a cs struct instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed. \index{mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}!read\+\_\+matrix@{read\+\_\+matrix}}
+\index{read\+\_\+matrix@{read\+\_\+matrix}!mongoose\+\_\+io.\+cpp@{mongoose\+\_\+io.\+cpp}}
+\subsubsection[{\texorpdfstring{read\+\_\+matrix(const char $\ast$filename, M\+M\+\_\+typecode \&matcode)}{read_matrix(const char *filename, MM_typecode &matcode)}}]{\setlength{\rightskip}{0pt plus 5cm}cs $\ast$ Mongoose\+::read\+\_\+matrix (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{filename, }
+\item[{M\+M\+\_\+typecode \&}]{matcode}
+\end{DoxyParamCaption}
+)}\hypertarget{mongoose__io_8cpp_file_aa6b63ba4454a5d1a27eacc2437ccb961}{}\label{mongoose__io_8cpp_file_aa6b63ba4454a5d1a27eacc2437ccb961}
+
+
+Generate a C\+Sparse matrix from a Matrix Market file. 
+
+Generate a cs struct instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed. 
