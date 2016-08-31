@@ -10,16 +10,14 @@ set(MONGOOSE_VERSION "${MONGOOSE_VERSION_MAJOR}.
                       ${MONGOOSE_VERSION_MINOR}.
                       ${MONGOOSE_VERSION_PATCH}")
 
-set(MONGOOSE_LIB_FILES
+set(MONGOOSE_FILES
         Include/mongoose.hpp
-        Include/mongoose_boundaryheap.hpp
         Include/mongoose_coarsening.hpp
         Include/mongoose_conditioning.hpp
         Include/mongoose_cs.hpp
         Include/mongoose_cutcost.hpp
         Include/mongoose_debug.hpp
         Include/mongoose_fiducciamattheyses.hpp
-        Include/mongoose_gradproj.hpp
         Include/mongoose_graph.hpp
         Include/mongoose_guesscut.hpp
         Include/mongoose_hager.hpp
@@ -27,9 +25,7 @@ set(MONGOOSE_LIB_FILES
         Include/mongoose_interop.hpp
         Include/mongoose_io.hpp
         Include/mongoose_matching.hpp
-        Include/mongoose_napsack.hpp
         Include/mongoose_options.hpp
-        Include/mongoose_qpdelta.hpp
         Include/mongoose_refining.hpp
         Include/mongoose_sanitize.hpp
         Include/mongoose_waterdance.hpp
@@ -45,20 +41,35 @@ set(MONGOOSE_LIB_FILES
         Source/mongoose_io.cpp
         Source/mongoose_matching.cpp
         Source/mongoose_nuri_qpgradproj.cpp
-        Source/mongoose_qpboundary.cpp
-        Source/mongoose_qpgradproj.cpp
-        Source/mongoose_qplinks.cpp
-        Source/mongoose_qpmaxheap.cpp
-        Source/mongoose_qpminheap.cpp
-        Source/mongoose_qpnapdown.cpp
-        Source/mongoose_qpnapsack.cpp
-        Source/mongoose_qpnapsack2.cpp
-        Source/mongoose_qpnapup.cpp
         Source/mongoose_refinement.cpp
         Source/mongoose_sanitize.cpp
         Source/mongoose_waterdance.cpp
-        External/Include/mmio.h
-        External/Source/mmio.c)
+      )
+
+set(NAPHEAP_FILES
+    Source/mongoose_qpboundary.cpp
+    Source/mongoose_qpgradproj.cpp
+    Source/mongoose_qplinks.cpp
+    Source/mongoose_qpmaxheap.cpp
+    Source/mongoose_qpminheap.cpp
+    Source/mongoose_qpnapdown.cpp
+    Source/mongoose_qpnapsack.cpp
+    Source/mongoose_qpnapsack2.cpp
+    Source/mongoose_qpnapup.cpp
+    Include/mongoose_boundaryheap.hpp
+    Include/mongoose_napsack.hpp
+    Include/mongoose_qpdelta.hpp
+    Include/mongoose_gradproj.hpp
+  )
+
+set(MMIO_FILES
+    External/mmio/Source/mmio.c
+    External/mmio/Include/mmio.h)
+
+set(MONGOOSE_LIB_FILES
+    ${MONGOOSE_FILES}
+    ${NAPHEAP_FILES}
+    ${MMIO_FILES})
 
 set(EXE_FILES
     Executable/Mongoose.cpp)
@@ -74,7 +85,8 @@ set(ALL_TEST_FILES
 
 # Specify the Include directory for *.hpp files
 include_directories(Include
-                    External/Include)
+                    External/mmio/Include
+                    External/napheap/Include)
 
 # Require C++11
 set(CMAKE_CXX_STANDARD 11)

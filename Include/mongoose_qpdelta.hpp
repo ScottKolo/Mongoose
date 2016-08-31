@@ -1,9 +1,7 @@
 #ifndef MONGOOSE_QPDELTA_HPP_
 #define MONGOOSE_QPDELTA_HPP_
 
-#include <new>
 #include "mongoose_internal.hpp"
-using namespace Mongoose;
 
 namespace Mongoose
 {
