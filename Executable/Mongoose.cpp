@@ -1,8 +1,8 @@
 
-#include "mongoose.hpp"
-#include "mongoose_conditioning.hpp"
-#include "mongoose_cs.hpp"
-#include "mongoose_io.hpp"
+#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_Conditioning.hpp"
+#include "Mongoose_CSparse.hpp"
+#include "Mongoose_IO.hpp"
 #include <ctime>
 
 using namespace Mongoose;

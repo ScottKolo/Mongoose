@@ -1,7 +1,10 @@
 
 #include "mex.h"
-#include "mongoose.hpp"
-#include "mongoose_internal.hpp"
+#include "Mongoose_Internal.hpp"
+#include "Mongoose_CSparse.hpp"
+#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_Graph.hpp"
+#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {

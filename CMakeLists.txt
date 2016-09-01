@@ -11,55 +11,65 @@ set(MONGOOSE_VERSION "${MONGOOSE_VERSION_MAJOR}.
                       ${MONGOOSE_VERSION_PATCH}")
 
 set(MONGOOSE_FILES
-        Include/mongoose.hpp
-        Include/mongoose_coarsening.hpp
-        Include/mongoose_conditioning.hpp
-        Include/mongoose_cs.hpp
-        Include/mongoose_cutcost.hpp
-        Include/mongoose_debug.hpp
-        Include/mongoose_fiducciamattheyses.hpp
-        Include/mongoose_graph.hpp
-        Include/mongoose_guesscut.hpp
-        Include/mongoose_hager.hpp
-        Include/mongoose_internal.hpp
-        Include/mongoose_interop.hpp
-        Include/mongoose_io.hpp
-        Include/mongoose_matching.hpp
-        Include/mongoose_options.hpp
-        Include/mongoose_refining.hpp
-        Include/mongoose_sanitize.hpp
-        Include/mongoose_waterdance.hpp
-        Source/mongoose_boundaryheap.cpp
-        Source/mongoose_coarsening.cpp
-        Source/mongoose_conditioning.cpp
-        Source/mongoose_cs.cpp
-        Source/mongoose_debug.cpp
-        Source/mongoose_edgeseparator.cpp
-        Source/mongoose_fiducciamattheyses.cpp
-        Source/mongoose_guesscut.cpp
-        Source/mongoose_interop.cpp
-        Source/mongoose_io.cpp
-        Source/mongoose_matching.cpp
-        Source/mongoose_nuri_qpgradproj.cpp
-        Source/mongoose_refinement.cpp
-        Source/mongoose_sanitize.cpp
-        Source/mongoose_waterdance.cpp
-      )
+    Include/Mongoose_Coarsening.hpp
+    Include/Mongoose_Conditioning.hpp
+    Include/Mongoose_CSparse.hpp
+    Include/Mongoose_CutCost.hpp
+    Include/Mongoose_Debug.hpp
+    Include/Mongoose_EdgeSeparator.hpp
+    Include/Mongoose_Graph.hpp
+    Include/Mongoose_GuessCut.hpp
+    Include/Mongoose_ImproveFM.hpp
+    Include/Mongoose_ImproveQP.hpp
+    Include/Mongoose_Internal.hpp
+    Include/Mongoose_Interop.hpp
+    Include/Mongoose_IO.hpp
+    Include/Mongoose_Matching.hpp
+    Include/Mongoose_Options.hpp
+    Include/Mongoose_Refinement.hpp
+    Include/Mongoose_Sanitize.hpp
+    Include/Mongoose_Waterdance.hpp
+    Source/Mongoose_Coarsening.cpp
+    Source/Mongoose_Conditioning.cpp
+    Source/Mongoose_CSparse.cpp
+    Source/Mongoose_Debug.cpp
+    Source/Mongoose_EdgeSeparator.cpp
+    Source/Mongoose_Graph.cpp
+    Source/Mongoose_GuessCut.cpp
+    Source/Mongoose_ImproveFM.cpp
+    Source/Mongoose_ImproveQP.cpp
+    Source/Mongoose_Interop.cpp
+    Source/Mongoose_IO.cpp
+    Source/Mongoose_Matching.cpp
+    Source/Mongoose_Options.cpp
+    Source/Mongoose_Refinement.cpp
+    Source/Mongoose_Sanitize.cpp
+    Source/Mongoose_Waterdance.cpp
+  )
 
 set(NAPHEAP_FILES
-    Source/mongoose_qpboundary.cpp
-    Source/mongoose_qpgradproj.cpp
-    Source/mongoose_qplinks.cpp
-    Source/mongoose_qpmaxheap.cpp
-    Source/mongoose_qpminheap.cpp
-    Source/mongoose_qpnapdown.cpp
-    Source/mongoose_qpnapsack.cpp
-    Source/mongoose_qpnapsack2.cpp
-    Source/mongoose_qpnapup.cpp
-    Include/mongoose_boundaryheap.hpp
-    Include/mongoose_napsack.hpp
-    Include/mongoose_qpdelta.hpp
-    Include/mongoose_gradproj.hpp
+    Include/Mongoose_QPBoundary.hpp
+    Include/Mongoose_QPBoundaryHeap.hpp
+    Include/Mongoose_QPDelta.hpp
+    Include/Mongoose_QPGradProj.hpp
+    Include/Mongoose_QPLinks.hpp
+    Include/Mongoose_QPMaxHeap.hpp
+    Include/Mongoose_QPMinHeap.hpp
+    Include/Mongoose_QPNapDown.hpp
+    Include/Mongoose_QPNapsack.hpp
+    Include/Mongoose_QPNapsackPair.hpp
+    Include/Mongoose_QPNapUp.hpp
+    Source/Mongoose_QPBoundary.cpp
+    Source/Mongoose_QPBoundaryHeap.cpp
+    Source/Mongoose_QPDelta.cpp
+    Source/Mongoose_QPGradProj.cpp
+    Source/Mongoose_QPLinks.cpp
+    Source/Mongoose_QPMaxHeap.cpp
+    Source/Mongoose_QPMinHeap.cpp
+    Source/Mongoose_QPNapDown.cpp
+    Source/Mongoose_QPNapsack.cpp
+    Source/Mongoose_QPNapsackPair.cpp
+    Source/Mongoose_QPNapUp.cpp
   )
 
 set(MMIO_FILES
@@ -78,15 +88,15 @@ set(DEMO_FILES
     Demo/Demo.cpp)
 
 set(ALL_TEST_FILES
-    Tests/mongoose_test.hpp
-    Tests/mongoose_test_io.cpp
-    Tests/mongoose_test_memory.cpp
-    Tests/mongoose_run_all_tests.cpp)
+    Tests/Mongoose_Test.hpp
+    Tests/Mongoose_Test_IO.cpp
+    Tests/Mongoose_Test_Memory.cpp
+    Tests/Mongoose_RunAllTests.cpp)
 
 # Specify the Include directory for *.hpp files
 include_directories(Include
                     External/mmio/Include
-                    External/napheap/Include)
+                    )
 
 # Require C++11
 set(CMAKE_CXX_STANDARD 11)
@@ -182,22 +192,22 @@ enable_testing()
 
 # Unit Tests
 add_executable(mongoose_test_io 
-  Tests/mongoose_test_io.cpp
-  Tests/mongoose_test_io_exe.cpp)
+  Tests/Mongoose_Test_IO.cpp
+  Tests/Mongoose_Test_IO_exe.cpp)
 target_link_libraries(mongoose_test_io mongoose_dbg)
 
 add_test(test_io mongoose_test_io)
 
 # Exhaustive Memory Test
 add_executable(mongoose_test_memory 
-  Tests/mongoose_test_memory.cpp
-  Tests/mongoose_test_memory_exe.cpp)
+  Tests/Mongoose_Test_Memory.cpp
+  Tests/Mongoose_Test_Memory_exe.cpp)
 target_link_libraries(mongoose_test_memory mongoose_dbg)
 
 # Timing and Results Test
 add_executable(mongoose_test_results
-  Tests/mongoose_test_results.cpp
-  Tests/mongoose_test_results_exe.cpp)
+  Tests/Mongoose_Test_Results.cpp
+  Tests/Mongoose_Test_Results_exe.cpp)
 target_link_libraries(mongoose_test_results mongoose)
 
 #add_test(test_memory mongoose_memory_test)
