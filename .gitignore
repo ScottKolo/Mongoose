@@ -1,3 +1,5 @@
 _build/*
 *.mexmaci64
 Matrix/*.s
+.DS_Store
+MATLAB/plots/*
