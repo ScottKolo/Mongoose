@@ -1,4 +1,4 @@
-function coarse_graph = mongoose_coarsen_mex (G, (O, A))
+function [G_coarse, A_coarse, map] = mongoose_coarsen_mex (G, (O, A))
 %MONGOOSE_COARSEN_MEX coarsen a graph unsafely but quickly.
 %   mongoose_coarsen(G) computes a matching of vertices in the graph G
 %   and then coarsens the graph by combining all matched vertices into

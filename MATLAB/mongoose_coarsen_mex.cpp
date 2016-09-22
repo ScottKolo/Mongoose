@@ -12,7 +12,7 @@ void mexFunction
 )
 {    
     const char* usage = "Usage: [G_coarse, A_coarse] = mongoose_coarsen_mex(G, (O, A))";
-    if(nargout > 2 || nargin < 1 || nargin > 3) mexErrMsgTxt(usage);
+    if(nargout > 3 || nargin < 1 || nargin > 3) mexErrMsgTxt(usage);
     
     const mxArray *matGraph = pargin[0];
     const mxArray *matOptions = (nargin >= 2 ? pargin[1] : NULL);
@@ -38,6 +38,7 @@ void mexFunction
     /* Copy the coarsened graph back to MATLAB. */
     pargout[0] = cs_mex_put_sparse(&G_matrix);
     gp_mex_put_double(G_coarse->n, G_coarse->w, &pargout[1]);
+    pargout[2] = gp_mex_put_int(G->matchmap, G->n, 1, 0);
 
     /* Cleanup */
     G->i = NULL;
@@ -50,6 +51,7 @@ void mexFunction
     G_coarse->p = NULL;
     G_coarse->x = NULL;
     G_coarse->w = NULL;
+    G_coarse->matchmap = NULL;
     G_coarse->~Graph();
     SuiteSparse_free(G_coarse);
     O->~Options();
