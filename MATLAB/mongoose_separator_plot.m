@@ -50,7 +50,7 @@ if (nnz (G-G') > 0)
 end
 
 % get the connected components
-[p r] = cs_scc (G) ;
+[p r] = mongoose_scc (G) ;
 rsize = diff (r) ;
 [ignore k] = max (rsize) ;
 G = G (p,p) ;
