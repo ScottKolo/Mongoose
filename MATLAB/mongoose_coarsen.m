@@ -1,19 +1,18 @@
 function [G_coarse, A_coarse] = mongoose_coarsen (G, O, A)
 %MONGOOSE_COARSEN coarsen a graph.
-%   partition = mongoose_computeEdgeSeparator(G) uses a multilevel hybrid
-%   combinatoric and quadratic programming algorithm to compute a partitioning 
-%   of the graph G. With no option struct specified, the target is for each 
-%   part to contain 50% of the graph's vertices, and the coarsening is done 
+%   mongoose_coarsen(G) computes a matching of vertices in the graph G
+%   and then coarsens the graph by combining all matched vertices into
+%   supervertices. With no option struct specified, the coarsening is done 
 %   using a combination of heavy-edge matching and other more aggressive
-%   techniques to avoid stalling.
+%   techniques to avoid stalling. An optional vertex weight vector A can 
+%   also be specified.
 %
 %   Example:
-%       Prob = UFget('DNVS/troll'); A = Prob.A;
-%       part = mongoose_computeEdgeSeparator(A);
-%       part_a = find(part); part_b = find(1-part);
-%       cspy (A (part_a,part_b)) ;
+%       Prob = UFget('DNVS/troll'); G = Prob.A;
+%       G_coarse = mongoose_coarsen(G);
+%       spy(G_coarse);
 %
-%   See also MONGOOSE_GETDEFAULTOPTIONS.
+%   See also MONGOOSE_COARSEN_MEX.
 
 G_safe = mongoose_sanitizeMatrix(G);
 
