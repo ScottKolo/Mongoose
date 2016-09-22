@@ -3,3 +3,4 @@ _build/*
 Matrix/*.s
 .DS_Store
 MATLAB/plots/*
+MATLAB/*.png
