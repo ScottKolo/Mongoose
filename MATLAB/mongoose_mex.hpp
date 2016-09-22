@@ -5,6 +5,9 @@
 #include "Mongoose_EdgeSeparator.hpp"
 #include "Mongoose_Graph.hpp"
 #include "Mongoose_Options.hpp"
+#include "Mongoose_Coarsening.hpp"
+#include "Mongoose_Interop.hpp"
+#include "Mongoose_Matching.hpp"
 
 namespace Mongoose
 {

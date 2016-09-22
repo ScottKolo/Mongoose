@@ -1,11 +1,6 @@
-function partition = mongoose_computeEdgeCut(G_safe,O,A)
+function partition = mongoose_computeEdgeCut(G,O,A)
 
-%G_safe = (G+G')/2;
-
-%[~,C] = graphconncomp(G_safe);
-%G_safe = G_safe(C,C);
-
-%G_safe = G_safe - diag(diag(G));
+G_safe = mongoose_sanitizeMatrix(G);
 
 if nargin == 1
     partition = mongoose_computeEdgeSeparator(G_safe);

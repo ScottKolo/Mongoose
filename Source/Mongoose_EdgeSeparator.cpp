@@ -4,11 +4,10 @@
 #include "Mongoose_GuessCut.hpp"
 #include "Mongoose_Refinement.hpp"
 #include "Mongoose_Waterdance.hpp"
+#include "Mongoose_EdgeSeparator.hpp"
 
 namespace Mongoose
 {
-
-bool initialize(Graph *G, Options *O);
 
 /* The input must be a single connected component. */
 int ComputeEdgeSeparator(Graph *G, Options *O)

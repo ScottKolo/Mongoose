@@ -8,6 +8,7 @@ namespace Mongoose
 {
 
 int ComputeEdgeSeparator(Graph *G, Options *O);
+bool initialize(Graph *G, Options *O);
 
 } // end namespace Mongoose
 

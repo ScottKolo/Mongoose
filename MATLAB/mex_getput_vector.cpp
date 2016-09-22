@@ -81,7 +81,7 @@ mxArray *cs_mex_put_sparse (cs **Ahandle)
     mexMakeMemoryPersistent (A->p) ;    /* ensure MATLAB does not free A->p */
     mexMakeMemoryPersistent (A->i) ;
     mexMakeMemoryPersistent (A->x) ;
-    SuiteSparse_free (A) ;                       /* frees A struct only, not A->p, etc */
+    SuiteSparse_free (A) ;              /* frees A struct only, not A->p, etc */
     *Ahandle = NULL ;
     return (Amatlab) ;
 }
@@ -113,7 +113,7 @@ Int *gp_mex_get_int
 )
 {
     double *p ;
-    Int i, k, *C = (Int*) malloc(n * sizeof (Int));
+    Int i, k, *C = (Int*) SuiteSparse_malloc(n, sizeof (Int));
 
     p = mxGetPr (Imatlab) ;
     *imax = 0 ;
@@ -134,7 +134,7 @@ mxArray *gp_mex_put_int(Int *p, Int n, Int offset, Int do_free)
     double *x = mxGetPr (X) ;
     Int k ;
     for (k = 0 ; k < n ; k++) x [k] = (p ? p [k] : k) + offset ;
-    if (do_free) free(p);
+    if (do_free) SuiteSparse_free(p);
     return (X) ;
 }
 
