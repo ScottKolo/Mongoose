@@ -1,5 +1,9 @@
-function mongoose_make ( )
+function mongoose_make (run_demo)
 %MONGOOSE_MAKE compiles the GP mexFunctions
+
+if (nargin < 1)
+    run_demo = 1;
+end
 
 details = 0 ;	    % 1 if details of each command are to be printed
 
@@ -69,7 +73,8 @@ gp_src = {
 gp_mex_src = { 'mongoose_getDefaultOptions', ...
                'mongoose_computeEdgeSeparator', ...
                'mongoose_exportGraph', ...
-               'mongoose_sanitizeMatrix' } ;
+               'mongoose_sanitizeMatrix', ...
+               'mongoose_scc' } ;
 
 obj_extension = '.o' ;
 
@@ -118,6 +123,13 @@ end
 s = ['delete ' obj] ;
 do_cmd (s, kk, details) ;
 fprintf ('\nMongoose successfully compiled\n') ;
+
+% Run the demo if needed
+if (run_demo)
+    mongoose_demo
+    fprintf ('\nMongoose demo completed successfully\n') ;
+end
+
 
 %-------------------------------------------------------------------------------
 function kk = do_cmd (s, kk, details)
