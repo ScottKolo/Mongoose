@@ -114,7 +114,8 @@ Double QPgradproj
             }
             else
             {
-                abort();
+                // Something went wrong
+                return EXIT_FAILURE;
             }
 
             /* compute -(A+D)g_F */
