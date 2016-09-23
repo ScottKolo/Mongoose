@@ -51,7 +51,7 @@ void run_timing_and_results_tests()
             continue;
         }
 
-        G = read_graph("../Matrix/" + mm_data[k].filename + ".mtx");
+        G = readGraph("../Matrix/" + mm_data[k].filename + ".mtx");
 
         if (!G)
         {

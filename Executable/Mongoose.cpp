@@ -30,7 +30,7 @@ int main(int argn, const char **argv)
     options->matchingStrategy = HEMDavisPA ;
     options->guessCutType = QP_BallOpt ;
 
-    Graph *U = read_graph(inputFile);
+    Graph *U = readGraph(inputFile);
     if (!U)
     {
         free(options);

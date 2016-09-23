@@ -24,6 +24,7 @@ set(MONGOOSE_FILES
     Include/Mongoose_Internal.hpp
     Include/Mongoose_Interop.hpp
     Include/Mongoose_IO.hpp
+    Include/Mongoose_Logger.hpp
     Include/Mongoose_Matching.hpp
     Include/Mongoose_Options.hpp
     Include/Mongoose_Refinement.hpp
@@ -40,6 +41,7 @@ set(MONGOOSE_FILES
     Source/Mongoose_ImproveQP.cpp
     Source/Mongoose_Interop.cpp
     Source/Mongoose_IO.cpp
+    Source/Mongoose_Logger.cpp
     Source/Mongoose_Matching.cpp
     Source/Mongoose_Options.cpp
     Source/Mongoose_Refinement.cpp

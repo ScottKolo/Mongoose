@@ -7,12 +7,12 @@ using namespace std;
 namespace Mongoose
 {
 
-cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
+cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
 {
     cs *temp;
-    if (symmetric_triangular)
+    if (symmetricTriangular)
     {
-        temp = mirror_triangular(compressed_A);
+        temp = mirrorTriangular(compressed_A);
     }
     else
     {
@@ -24,6 +24,8 @@ cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
     csd* dmperm = cs_scc(temp);
     if (!dmperm)
     {
+        Logger::log(Error, 
+            "Error: Ran out of memory in Mongoose::sanitizeMatrix");
         cs_spfree(temp);
         return NULL;
     }
@@ -44,6 +46,8 @@ cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
     csi *pinv = cs_pinv(dmperm->p, temp->n);
     if (!pinv)
     {
+        Logger::log(Error, 
+            "Error: Ran out of memory in Mongoose::sanitizeMatrix");
         SuiteSparse_free(pinv);
         cs_spfree(temp);
         cs_dfree(dmperm);
@@ -56,6 +60,8 @@ cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
 
     if (!C)
     {
+        Logger::log(Error, 
+            "Error: Ran out of memory in Mongoose::sanitizeMatrix");
         cs_dfree(dmperm);
         return NULL;
     }
@@ -72,7 +78,7 @@ cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
         return NULL;
     }
 
-    remove_diagonal(submatrix);
+    removeDiagonal(submatrix);
 
     cs *D = cs_transpose (submatrix, 1);
     cs_spfree(submatrix);
@@ -96,7 +102,7 @@ cs *sanitize_matrix(cs *compressed_A, bool symmetric_triangular)
     return submatrix;
 }
 
-void remove_diagonal(cs *A)
+void removeDiagonal(cs *A)
 {
     Int n = A->n;
     Int *Ap = A->p; Int *Ai = A->i; double *Ax = A->x;
@@ -120,7 +126,7 @@ void remove_diagonal(cs *A)
 }
 
 // Requires A to be a triangular matrix with no diagonal.
-cs *mirror_triangular(cs *A)
+cs *mirrorTriangular(cs *A)
 {
     Int A_n = A->n; Int A_nz = A->p[A_n];
     Int B_nz = 2*A_nz;

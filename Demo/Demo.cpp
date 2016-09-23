@@ -55,7 +55,7 @@ int main(int argn, const char **argv)
         options->matchingStrategy = HEMDavisPA;
         options->guessCutType = QP_BallOpt;
 
-        Graph *G = read_graph("../Matrix/" + demo_files[k]);
+        Graph *G = readGraph("../Matrix/" + demo_files[k]);
         if (!G)
         {
             free(options);

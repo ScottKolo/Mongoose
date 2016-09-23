@@ -34,7 +34,7 @@ namespace Mongoose
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
  */ 
-Graph *read_graph (const std::string filename);
+Graph *readGraph (const std::string filename);
 
 /** 
  * @brief Generate a CSparse matrix from a Matrix Market file.
@@ -45,7 +45,7 @@ Graph *read_graph (const std::string filename);
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
  */ 
-cs *read_matrix (const std::string filename, MM_typecode &matcode);
+cs *readMatrix (const std::string filename, MM_typecode &matcode);
 
 /** 
  * @brief Generate a Graph from a Matrix Market file.
@@ -56,7 +56,7 @@ cs *read_matrix (const std::string filename, MM_typecode &matcode);
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
  */ 
-Graph *read_graph (const char* filename);
+Graph *readGraph (const char* filename);
 
 /** 
  * @brief Generate a CSparse matrix from a Matrix Market file.
@@ -67,7 +67,7 @@ Graph *read_graph (const char* filename);
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
  */ 
-cs *read_matrix (const char* filename, MM_typecode &matcode);
+cs *readMatrix (const char* filename, MM_typecode &matcode);
 
 } // end namespace Mongoose
 

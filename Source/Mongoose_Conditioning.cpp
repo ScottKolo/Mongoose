@@ -41,13 +41,11 @@ Graph *conditionGraph
     /* If we're out of memory converting CSparse3 to Graph, free R. */
     if (!G)
     {
+        Logger::log(Error, 
+            "Ran out of memory during Mongoose::conditionGraph\n");
         cs_spfree(R);
         return NULL;
     }
-
-    /* Refresh pointers */
-    //Gp = G->p;
-    //Gx = G->x;
 
     /* Make edge weights positive. */
     for (Int k = 0; k < n; k++)

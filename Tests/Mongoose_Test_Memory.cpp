@@ -25,17 +25,6 @@ int RunTest (
 /* Custom memory management functions allow for memory testing. */
 int AllowedMallocs;
 
-/*
-const int num_mallocs[][4][3] = { { { 531, 134, 146 },
-                                    { 471, 134, 146 },
-                                    { 430, 105, 117 },
-                                    { 526, 105, 117 } },
-                                  { { 531, 134, 146 },
-                                    { 471, 200,   1 },
-                                    {   1,   1,   1 },
-                                    {   1,   1, 117 } } };
-                                    */
-
 void *myMalloc(size_t size)
 {
     if(AllowedMallocs <= 0) return NULL;
@@ -67,7 +56,6 @@ int run_memory_tests()
     SuiteSparse_start();
 
     const std::string inputFile = "../Matrix/bcspwr04.mtx";
-    //const std::string inputFile = "../Matrix/Erdos971.mtx";
 
     Options *O = Options::Create();
     if(!O)
@@ -100,18 +88,9 @@ void RunAllTests (
     Options *O
 )
 {
-    //printf("Running all tests with %d AllowedMallocs\n", allowedMallocs);
+    Logger::setDebugLevel(Info);
+    Logger::log(Info, "Running Memory Test...");
 
-   /* 
-    * (1 TEST)
-    * TRY A BOGUS LOAD
-    */
-    //RunTest("bogus", O, allowedMallocs);
-    
-    /* 
-     * (12 TESTS)
-     * TRY A VARIETY OF MATCHING STRATEGIES AND GUESS CUT STRATEGIES
-     */
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
     GuessCutType guessCutStrategies[3] = {Pseudoperipheral_All, Pseudoperipheral_Fast, QP_GradProj};
 
@@ -127,7 +106,6 @@ void RunAllTests (
             {
                 O->guessCutType = guessCutStrategies[j];
 
-                //for(int m = 0; m < num_mallocs[c][i][j]; m++)
                 int m = 0;
                 while (RunTest(inputFile, O, m) < 1)
                 {
@@ -138,10 +116,9 @@ void RunAllTests (
     }
 
    /* 
-    * (1 TEST)
     * DO A DEEP COPY OF THE GRAPH AND RESET EDGEWEIGHTS
     */
-    Graph *DCG = read_graph(inputFile);
+    Graph *DCG = readGraph(inputFile);
     if(DCG)
     {
         cs *csDCG = GraphToCSparse3(DCG, true);
@@ -149,6 +126,8 @@ void RunAllTests (
         DCG->~Graph();
         SuiteSparse_free(DCG);
     }
+
+    Logger::log(Info, "Memory Test Completed Successfully");
 }
 
 int RunTest (
@@ -161,12 +140,12 @@ int RunTest (
     AllowedMallocs = allowedMallocs;
 
     /* Read and condition the matrix from the MM file. */
-    Graph *U = read_graph(inputFile);
+    Graph *U = readGraph(inputFile);
     if (!U) return -1;
 
     ComputeEdgeSeparator(U, O);
     U->~Graph();
     SuiteSparse_free(U);
+
     return AllowedMallocs;
-    //printf("Test Complete! Remaining mallocs: %d\n", AllowedMallocs);
 }

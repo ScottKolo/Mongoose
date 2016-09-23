@@ -29,6 +29,9 @@
 /* Memory Management */
 #include "SuiteSparse_config.h"
 
+/* Debug and Timing Management */
+#include "Mongoose_Logger.hpp"
+
 namespace Mongoose
 {
 
@@ -40,6 +43,8 @@ typedef double Double;  /* Used for floating point other calculations  */
 /* Enumerations */
 enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
+
+Logger log();
 
 } // end namespace Mongoose
 

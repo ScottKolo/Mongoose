@@ -33,6 +33,7 @@ mm_file mm_data[] = {
 void run_io_tests()
 {
     SuiteSparse_start();
+    Logger::log(Info, "Running I/O Test...");
 
     for (int k = 0; k < 11; k++)
     {
@@ -48,7 +49,7 @@ void run_io_tests()
             continue;
         }
         
-        G = read_graph("../Matrix/" + mm_data[k].filename + ".mtx");
+        G = readGraph("../Matrix/" + mm_data[k].filename + ".mtx");
 
         if (!G)
         {
@@ -79,7 +80,7 @@ void run_io_tests()
             {
                 bool equals_0 = (G->partition[i] == 0);
                 bool equals_1 = (G->partition[i] == 1);
-                assert( equals_0 != equals_1 );
+                assert(equals_0 != equals_1);
             }
         }
 
@@ -96,27 +97,28 @@ void run_io_tests()
     Graph *G;
 
     // Bad header
-    G = read_graph("../Matrix/bad_header.mtx");
+    G = readGraph("../Matrix/bad_header.mtx");
     assert (G == NULL);
     SuiteSparse_free(G);
 
     // Bad matrix type
-    G = read_graph("../Matrix/bad_matrix_type.mtx");
+    G = readGraph("../Matrix/bad_matrix_type.mtx");
     assert (G == NULL);
     SuiteSparse_free(G);
 
     // Bad dimensions
-    G = read_graph("../Matrix/bad_dimensions.mtx");
+    G = readGraph("../Matrix/bad_dimensions.mtx");
     assert (G == NULL);
     SuiteSparse_free(G);
 
     // Rectangular matrix
-    G = read_graph("../Matrix/Trec4.mtx");
+    G = readGraph("../Matrix/Trec4.mtx");
     assert (G == NULL);
     SuiteSparse_free(G);
 
     // Other tests
     // TODO: Move these to another file
 
+    Logger::log(Info, "I/O Test Completed Successfully");
     SuiteSparse_finish();
 }
