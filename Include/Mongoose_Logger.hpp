@@ -28,27 +28,31 @@ enum DebugType
 
 enum TimingType
 {
-    NoTiming = 0,
-    MatchingTiming = 1,
-    CoarseningTiming = 2,
-    RefinementTiming = 4,
-    FMTiming = 8,
-    QPTiming = 16,
-    IOTiming = 32
+    MatchingTiming = 0,
+    CoarseningTiming = 1,
+    RefinementTiming = 2,
+    FMTiming = 3,
+    QPTiming = 4,
+    IOTiming = 5
 } typedef TimingType;
 
 class Logger
 {
   private:
     static DebugType debugLevel;
-    static TimingType timingLevel;
+    static bool timingOn;
+    static clock_t clocks[6];
+    static float times[6];
 
   public:
     Logger();
-    Logger(DebugType dType, TimingType tType);
+    Logger(DebugType dType, bool tFlag);
     static inline void log(DebugType debugType, std::string output);
+    static inline void tic(TimingType timingType);
+    static inline void toc(TimingType timingType);
+    static inline float getTime(TimingType timingType);
     static void setDebugLevel(DebugType debugType);
-    static void setTimingLevel(TimingType timingType);
+    static void printTimingInfo();
 };
 
 inline void Logger::log(DebugType debugType, std::string output)
@@ -57,6 +61,27 @@ inline void Logger::log(DebugType debugType, std::string output)
     {
         std::cout << output << std::endl;
     }
+}
+
+inline void Logger::tic(TimingType timingType)
+{
+    if (timingOn)
+    {
+        clocks[timingType] = clock();
+    }
+}
+
+inline void Logger::toc(TimingType timingType)
+{
+    if (timingOn)
+    {
+        times[timingType] += ((float)(clock() - clocks[timingType])) / CLOCKS_PER_SEC;
+    }
+}
+
+inline float Logger::getTime(TimingType timingType)
+{
+    return times[timingType];
 }
 
 } // end namespace Mongoose

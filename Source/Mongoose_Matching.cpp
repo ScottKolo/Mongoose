@@ -9,6 +9,7 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 void match(Graph *G, Options *O)
 {
+    Logger::tic(MatchingTiming);
     switch (O->matchingStrategy)
     {
       case Random:
@@ -33,6 +34,7 @@ void match(Graph *G, Options *O)
           matching_Cleanup(G,O);
           break;
     }
+    Logger::toc(MatchingTiming);
 }
 
 //-----------------------------------------------------------------------------

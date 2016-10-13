@@ -13,6 +13,8 @@ void fmRefine_worker(Graph *G, Options *O);
 //-----------------------------------------------------------------------------
 void improveCutUsingFM(Graph *G, Options *O)
 {
+    Logger::tic(FMTiming);
+
     if (!O->useFM) return;
 
     Weight heuCost = INFINITY;
@@ -21,6 +23,8 @@ void improveCutUsingFM(Graph *G, Options *O)
         heuCost = G->heuCost;
         fmRefine_worker(G, O);
     }
+
+    Logger::toc(FMTiming);
 }
 
 //-----------------------------------------------------------------------------

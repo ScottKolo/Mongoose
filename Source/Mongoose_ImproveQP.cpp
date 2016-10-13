@@ -16,6 +16,8 @@ void improveCutUsingQP
 {
     if (!O->useQPGradProj) return;
 
+    Logger::tic(QPTiming);
+
     /* Unpack structure fields */
     Int n = G->n;
     Int *Gp = G->p;
@@ -27,7 +29,11 @@ void improveCutUsingQP
 
     /* Create workspaces */
     QPDelta *QP = QPDelta::Create(n);
-    if (!QP) return;
+    if (!QP)
+    {
+        Logger::toc(QPTiming);
+        return;
+    }
 
     Weight *D = QP->D;
 
@@ -131,6 +137,8 @@ void improveCutUsingQP
     Weight absImbalance = fabs(G->imbalance);
     G->heuCost = G->cutCost +
                  (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
+
+    Logger::toc(QPTiming);
 }
 
 } // end namespace Mongoose

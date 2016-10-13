@@ -40,6 +40,8 @@ namespace Mongoose
  */
 Graph *coarsen(Graph *G, Options *O)
 {
+    Logger::tic(CoarseningTiming);
+
     Int cn = G->cn;
     Int *Gp = G->p;
     Int *Gi = G->i;
@@ -156,6 +158,8 @@ Graph *coarsen(Graph *G, Options *O)
         }
         assert(W == C->W);
     }
+
+    Logger::toc(CoarseningTiming);
 
     /* Return the coarse graph */
     return C;

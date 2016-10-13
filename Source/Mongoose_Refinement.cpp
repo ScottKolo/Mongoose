@@ -10,6 +10,8 @@ namespace Mongoose
 
 Graph *refine(Graph *G, Options *O)
 {
+    Logger::tic(RefinementTiming);
+
     Graph *P = G->parent;
 
     Int cn = G->n;
@@ -100,6 +102,8 @@ Graph *refine(Graph *G, Options *O)
     /* Now that we're done with the coarse graph, we can release it. */
     G->~Graph();
     SuiteSparse_free(G);
+
+    Logger::toc(RefinementTiming);
 
     return P;
 }

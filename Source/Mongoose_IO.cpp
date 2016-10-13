@@ -37,6 +37,8 @@ cs *readMatrix (const std::string filename, MM_typecode &matcode)
 
 Graph *readGraph (const char* filename)
 {
+    Logger::tic(IOTiming);
+
     MM_typecode matcode;
     cs* A = readMatrix(filename, matcode);
     if (!A) return NULL;
@@ -48,12 +50,16 @@ Graph *readGraph (const char* filename)
     {
         Logger::log(Error, "Ran out of memory in Mongoose::read_graph\n");
         cs_spfree(sanitized_A);
+        Logger::toc(IOTiming);
         return NULL;
     }
     sanitized_A->p = NULL;
     sanitized_A->i = NULL;
     sanitized_A->x = NULL;
     cs_spfree(sanitized_A);
+
+    Logger::toc(IOTiming);
+
     return G;
 }
 

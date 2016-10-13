@@ -9,6 +9,8 @@ using namespace Mongoose;
 
 int main(int argn, const char **argv)
 {
+    Logger log(Info, true);
+
     // Start the overall time clock
     std::clock_t start = std::clock();
     double duration;
@@ -37,7 +39,7 @@ int main(int argn, const char **argv)
         return 1;
     }
 
-    ComputeEdgeSeparator (U, options) ;
+    ComputeEdgeSeparator(U, options) ;
 
     printf ("Partitioning Complete!\n") ;
     printf ("Cut Cost:      %.2f\n", U->cutCost) ;
@@ -49,6 +51,7 @@ int main(int argn, const char **argv)
 
     duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
     printf("Total Time:    %.2fs\n", duration);
+    Logger::printTimingInfo();
 
     // Return success
     return 0 ;
