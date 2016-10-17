@@ -51,11 +51,9 @@ void myFree(void *ptr)
     if(ptr != NULL) free(ptr);
 }
 
-int run_memory_tests()
+int run_memory_test(const std::string inputFile)
 {
     SuiteSparse_start();
-
-    const std::string inputFile = "../Matrix/bcspwr04.mtx";
 
     Options *O = Options::Create();
     if(!O)
@@ -83,6 +81,13 @@ int run_memory_tests()
     return 0;
 }
 
+int run_memory_tests()
+{
+    const std::string inputFile = "../Matrix/bcspwr04.mtx";
+
+    run_memory_test(inputFile);
+}
+
 void RunAllTests (
     const std::string inputFile,
     Options *O
@@ -107,10 +112,18 @@ void RunAllTests (
                 O->guessCutType = guessCutStrategies[j];
 
                 int m = 0;
-                while (RunTest(inputFile, O, m) < 1)
-                {
+                int remainingMallocs;
+                do {
+                    remainingMallocs = RunTest(inputFile, O, m);
+                    //Logger::log(Info, "Remaining Mallocs: " + std::to_string(remainingMallocs));
+                    if (remainingMallocs == -1)
+                    {
+                        // Error!
+                        Logger::log(Info, "Terminating Memory Test Early");
+                        return;
+                    }
                     m += 1;
-                }
+                } while (remainingMallocs < 1);
             }
         }
     }
@@ -141,7 +154,7 @@ int RunTest (
 
     /* Read and condition the matrix from the MM file. */
     Graph *U = readGraph(inputFile);
-    if (!U) return -1;
+    if (!U) return AllowedMallocs;
 
     ComputeEdgeSeparator(U, O);
     U->~Graph();

@@ -200,11 +200,16 @@ target_link_libraries(mongoose_test_io mongoose_dbg)
 
 add_test(test_io mongoose_test_io)
 
-# Exhaustive Memory Test
+# Exhaustive Memory Tests
 add_executable(mongoose_test_memory 
   Tests/Mongoose_Test_Memory.cpp
   Tests/Mongoose_Test_Memory_exe.cpp)
 target_link_libraries(mongoose_test_memory mongoose_dbg)
+
+add_executable(mongoose_test_memory_dir
+  Tests/Mongoose_Test_Memory.cpp
+  Tests/Mongoose_Test_Memory_Dir_exe.cpp)
+target_link_libraries(mongoose_test_memory_dir mongoose_dbg)
 
 # Timing and Results Test
 add_executable(mongoose_test_results
@@ -212,7 +217,7 @@ add_executable(mongoose_test_results
   Tests/Mongoose_Test_Results_exe.cpp)
 target_link_libraries(mongoose_test_results mongoose)
 
-#add_test(test_memory mongoose_memory_test)
+add_test(test_memory mongoose_test_memory)
 
 # Coverage Tests
 
@@ -244,6 +249,8 @@ set_target_properties(mongoose_test_io PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLA
 set_target_properties(mongoose_test_io PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_memory PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_memory PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+set_target_properties(mongoose_test_memory_dir PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
+set_target_properties(mongoose_test_memory_dir PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 
 set_target_properties(mongoose_run_all_tests PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_run_all_tests PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
