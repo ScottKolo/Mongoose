@@ -48,7 +48,7 @@ Graph *readGraph (const char* filename)
     Graph *G = CSparse3ToGraph(sanitized_A);
     if (!G)
     {
-        Logger::log(Error, "Ran out of memory in Mongoose::read_graph\n");
+        Logger::log(Error, "Ran out of memory in Mongoose::read_graph");
         cs_spfree(sanitized_A);
         Logger::toc(IOTiming);
         return NULL;
@@ -65,6 +65,7 @@ Graph *readGraph (const char* filename)
 
 cs *readMatrix (const char* filename, MM_typecode &matcode)
 {
+    Logger::log(Info, "Reading Matrix from " + string(filename));
     FILE *file = fopen(filename, "r");
     if (!file)
     {
