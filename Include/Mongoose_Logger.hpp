@@ -23,7 +23,8 @@ enum DebugType
     None = 0,
     Error = 1,
     Warn = 2,
-    Info = 4
+    Info = 4,
+    All = 7
 } typedef DebugType;
 
 enum TimingType
