@@ -73,7 +73,7 @@ int run_memory_test(const std::string inputFile)
     RunAllTests(inputFile, O);
 
     O->~Options();
-    SuiteSparse_free(O);
+    //SuiteSparse_free(O);
 
     /* Return success */
     SuiteSparse_finish();
@@ -115,7 +115,6 @@ void RunAllTests (
                 int remainingMallocs;
                 do {
                     remainingMallocs = RunTest(inputFile, O, m);
-                    //Logger::log(Info, "Remaining Mallocs: " + std::to_string(remainingMallocs));
                     if (remainingMallocs == -1)
                     {
                         // Error!
