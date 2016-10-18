@@ -72,8 +72,8 @@ int run_memory_test(const std::string inputFile)
 
     RunAllTests(inputFile, O);
 
-    //O->~Options();
-    //SuiteSparse_free(O);
+    O->~Options();
+    SuiteSparse_free(O);
 
     /* Return success */
     SuiteSparse_finish();
@@ -85,7 +85,7 @@ int run_memory_tests()
 {
     const std::string inputFile = "../Matrix/bcspwr04.mtx";
 
-    run_memory_test(inputFile);
+    return run_memory_test(inputFile);
 }
 
 void RunAllTests (

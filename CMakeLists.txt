@@ -222,6 +222,7 @@ add_test(test_memory mongoose_test_memory)
 # Coverage Tests
 
 add_executable(mongoose_run_all_tests ${ALL_TEST_FILES})
+target_link_libraries(mongoose_run_all_tests mongoose_dbg)
 
 MESSAGE( STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
@@ -240,7 +241,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using Visual Studio C++
 endif()
 
-target_link_libraries(mongoose_run_all_tests mongoose_dbg)
 set_target_properties(mongoose_dbg PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_dbg PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 
