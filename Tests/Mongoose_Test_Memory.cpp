@@ -72,7 +72,7 @@ int run_memory_test(const std::string inputFile)
 
     RunAllTests(inputFile, O);
 
-    O->~Options();
+    //O->~Options();
     //SuiteSparse_free(O);
 
     /* Return success */
