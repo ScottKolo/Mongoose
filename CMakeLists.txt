@@ -276,4 +276,4 @@ set_target_properties(mongoose_test_edgesep PROPERTIES LINK_FLAGS "${CMAKE_EXE_L
 set_target_properties(mongoose_run_all_tests PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_run_all_tests PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1) # Necessary for gcov - prevents file.cpp.gcda instead of file.gcda
-add_test(Generate_Coverage_Data ${TESTING_OUTPUT_PATH}/mongoose_run_all_tests)
+#add_test(Generate_Coverage_Data ${TESTING_OUTPUT_PATH}/mongoose_run_all_tests)
