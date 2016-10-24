@@ -61,7 +61,7 @@ inline void Logger::log(DebugType debugType, std::string output)
 {
     if (debugType & debugLevel)
     {
-        std::cout << output << std::endl;
+        std::cout << output << "\n";
     }
 }
 
