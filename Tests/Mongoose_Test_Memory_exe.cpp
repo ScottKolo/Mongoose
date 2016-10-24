@@ -1,8 +1,14 @@
 #include "Mongoose_Test.hpp"
+#include "Mongoose_Internal.hpp"
+
+using namespace Mongoose;
 
 int main(int argn, const char **argv)
 {
-    run_memory_tests();
+    SuiteSparse_start();
+    Logger::setDebugLevel(All);
+    runMemoryTests();
+    SuiteSparse_finish();
     
     return 0;
 }

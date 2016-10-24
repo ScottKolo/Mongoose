@@ -24,7 +24,8 @@ enum DebugType
     Error = 1,
     Warn = 2,
     Info = 4,
-    All = 7
+    Test = 8,
+    All = 15
 } typedef DebugType;
 
 enum TimingType

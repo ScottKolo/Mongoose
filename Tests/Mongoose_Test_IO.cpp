@@ -30,10 +30,9 @@ mm_file mm_data[] = {
     {"bcspwr10", 5300, 16542}
 };
 
-void run_io_tests()
+void runIOTests()
 {
-    SuiteSparse_start();
-    Logger::log(Info, "Running I/O Test...");
+    Logger::log(Test, "Running I/O Test...");
 
     for (int k = 0; k < 11; k++)
     {
@@ -119,6 +118,5 @@ void run_io_tests()
     // Other tests
     // TODO: Move these to another file
 
-    Logger::log(Info, "I/O Test Completed Successfully");
-    SuiteSparse_finish();
+    Logger::log(Test, "I/O Test Completed Successfully");
 }

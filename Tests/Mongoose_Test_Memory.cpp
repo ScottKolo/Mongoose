@@ -51,7 +51,7 @@ void myFree(void *ptr)
     if(ptr != NULL) free(ptr);
 }
 
-int run_memory_test(const std::string inputFile)
+int runMemoryTest(const std::string inputFile)
 {
     SuiteSparse_start();
 
@@ -81,11 +81,11 @@ int run_memory_test(const std::string inputFile)
     return 0;
 }
 
-int run_memory_tests()
+int runMemoryTests()
 {
     const std::string inputFile = "../Matrix/bcspwr04.mtx";
 
-    return run_memory_test(inputFile);
+    return runMemoryTest(inputFile);
 }
 
 void RunAllTests (
@@ -94,7 +94,7 @@ void RunAllTests (
 )
 {
     Logger::setDebugLevel(Info);
-    Logger::log(Info, "Running Memory Test...");
+    Logger::log(Test, "Running Memory Test...");
 
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
     GuessCutType guessCutStrategies[3] = {Pseudoperipheral_All, Pseudoperipheral_Fast, QP_GradProj};
@@ -118,7 +118,7 @@ void RunAllTests (
                     if (remainingMallocs == -1)
                     {
                         // Error!
-                        Logger::log(Info, "Terminating Memory Test Early");
+                        Logger::log(Test, "Terminating Memory Test Early");
                         return;
                     }
                     m += 1;
@@ -139,7 +139,7 @@ void RunAllTests (
         SuiteSparse_free(DCG);
     }
 
-    Logger::log(Info, "Memory Test Completed Successfully");
+    Logger::log(Test, "Memory Test Completed Successfully");
 }
 
 int RunTest (

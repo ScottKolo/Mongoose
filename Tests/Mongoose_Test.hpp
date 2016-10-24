@@ -3,9 +3,12 @@
 
 #include <string>
 
-void run_io_tests();
-int run_memory_tests();
-int run_memory_test(const std::string inputFile);
-void run_timing_and_results_tests();
+void runIOTests();
+int runMemoryTests();
+int runMemoryTest(const std::string inputFile);
+void runTimingAndResultsTests();
+void runTimingAndResultsTest(const std::string inputFile);
+void runEdgeSeparatorTests();
+void runEdgeSeparatorTest(const std::string inputFile);
 
 #endif

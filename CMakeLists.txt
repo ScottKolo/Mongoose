@@ -93,6 +93,7 @@ set(ALL_TEST_FILES
     Tests/Mongoose_Test.hpp
     Tests/Mongoose_Test_IO.cpp
     Tests/Mongoose_Test_Memory.cpp
+    Tests/Mongoose_Test_EdgeSeparator.cpp
     Tests/Mongoose_RunAllTests.cpp)
 
 # Specify the Include directory for *.hpp files
@@ -197,14 +198,23 @@ target_link_libraries(Demo mongoose)
 enable_testing()
 set(TESTING_OUTPUT_PATH ${CMAKE_BINARY_DIR}/tests)
 
-# Unit Tests
+# I/O Tests
 add_executable(mongoose_test_io 
   Tests/Mongoose_Test_IO.cpp
   Tests/Mongoose_Test_IO_exe.cpp)
 target_link_libraries(mongoose_test_io mongoose_dbg)
 set_target_properties(mongoose_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-add_test(test_io ${TESTING_OUTPUT_PATH}/mongoose_test_io)
+add_test(IO_Test ${TESTING_OUTPUT_PATH}/mongoose_test_io)
+
+# Edge Separator Tests
+add_executable(mongoose_test_edgesep 
+  Tests/Mongoose_Test_EdgeSeparator.cpp
+  Tests/Mongoose_Test_EdgeSeparator_exe.cpp)
+target_link_libraries(mongoose_test_edgesep mongoose_dbg)
+set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
+
+add_test(Edge_Separator_Test ${TESTING_OUTPUT_PATH}/mongoose_test_edgesep)
 
 # Exhaustive Memory Tests
 add_executable(mongoose_test_memory 
@@ -219,14 +229,14 @@ add_executable(mongoose_test_memory_dir
 target_link_libraries(mongoose_test_memory_dir mongoose_dbg)
 set_target_properties(mongoose_test_memory_dir PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
+add_test(Memory_Test ${TESTING_OUTPUT_PATH}/mongoose_test_memory)
+
 # Timing and Results Test
 add_executable(mongoose_test_results
   Tests/Mongoose_Test_Results.cpp
   Tests/Mongoose_Test_Results_exe.cpp)
 target_link_libraries(mongoose_test_results mongoose)
 set_target_properties(mongoose_test_results PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
-
-add_test(Memoery_Test ${TESTING_OUTPUT_PATH}/mongoose_test_memory)
 
 # Coverage Tests
 add_executable(mongoose_run_all_tests ${ALL_TEST_FILES})
@@ -260,8 +270,10 @@ set_target_properties(mongoose_test_memory PROPERTIES COMPILE_FLAGS "${CMAKE_CXX
 set_target_properties(mongoose_test_memory PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_memory_dir PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_memory_dir PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+set_target_properties(mongoose_test_edgesep PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
+set_target_properties(mongoose_test_edgesep PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 
 set_target_properties(mongoose_run_all_tests PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_run_all_tests PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
-set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
-add_test(Coverage ${TESTING_OUTPUT_PATH}/mongoose_run_all_tests)
+set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1) # Necessary for gcov - prevents file.cpp.gcda instead of file.gcda
+add_test(Generate_Coverage_Data ${TESTING_OUTPUT_PATH}/mongoose_run_all_tests)

@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 {
     SuiteSparse_start();
     Logger::setDebugLevel(All);
-    runIOTests();
+    runEdgeSeparatorTests();
     SuiteSparse_finish();
 
     return 0;

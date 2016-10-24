@@ -1,5 +1,5 @@
 #include "Mongoose_Test.hpp"
-#include "Mongoose_Logger.hpp"
+#include "Mongoose_Internal.hpp"
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -10,6 +10,7 @@ using namespace Mongoose;
 
 int main(int argn, const char **argv)
 {
+    SuiteSparse_start();
     Logger::setDebugLevel(All);
     // Get the input file from the console input.
     const char *directory = NULL;
@@ -34,11 +35,13 @@ int main(int argn, const char **argv)
         if(inputFile.length() >= 5 && inputFile.substr(inputFile.length()-3) == "mtx")
         {
             std::cout << "Running Memory Test on " << inputFile << std::endl;
-            run_memory_test(inputFile);
+            runMemoryTest(inputFile);
         }
         
     }
     closedir(dir);
+
+    SuiteSparse_finish();
     
     return 0;
 }

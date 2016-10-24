@@ -31,10 +31,8 @@ mm_file mm_data[] = {
     {"bcspwr10", 5300, 16542}
 };
 
-void run_timing_and_results_tests()
+void runTimingAndResultsTests()
 {
-    SuiteSparse_start();
-
     for (int k = 0; k < 11; k++)
     {
         // Given a symmetric matrix
@@ -128,6 +126,4 @@ void run_timing_and_results_tests()
         SuiteSparse_free(G);
         SuiteSparse_free(options);
     }
-
-    SuiteSparse_finish();
 }
