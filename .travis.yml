@@ -20,7 +20,6 @@ before_script:
 
 script:
   - make VERBOSE=1
-  - ./mongoose_test_memory
   - make test
 
 after_success:

@@ -167,6 +167,10 @@ else()
   )
 endif()
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
 # Build the Mongoose library
 add_library(mongoose ${MONGOOSE_LIB_FILES})
 if(EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
@@ -181,7 +185,7 @@ endif()
 
 # Build the Mongoose executable
 add_executable(mongoose_exe ${EXE_FILES})
-SET_TARGET_PROPERTIES(mongoose_exe
+set_target_properties(mongoose_exe
   PROPERTIES OUTPUT_NAME mongoose)
 target_link_libraries(mongoose_exe mongoose)
 
@@ -191,40 +195,45 @@ target_link_libraries(Demo mongoose)
 
 # Coverage and Unit Testing Setup
 enable_testing()
+set(TESTING_OUTPUT_PATH ${CMAKE_BINARY_DIR}/tests)
 
 # Unit Tests
 add_executable(mongoose_test_io 
   Tests/Mongoose_Test_IO.cpp
   Tests/Mongoose_Test_IO_exe.cpp)
 target_link_libraries(mongoose_test_io mongoose_dbg)
+set_target_properties(mongoose_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-add_test(test_io mongoose_test_io)
+add_test(test_io ${TESTING_OUTPUT_PATH}/mongoose_test_io)
 
 # Exhaustive Memory Tests
 add_executable(mongoose_test_memory 
   Tests/Mongoose_Test_Memory.cpp
   Tests/Mongoose_Test_Memory_exe.cpp)
 target_link_libraries(mongoose_test_memory mongoose_dbg)
+set_target_properties(mongoose_test_memory PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 add_executable(mongoose_test_memory_dir
   Tests/Mongoose_Test_Memory.cpp
   Tests/Mongoose_Test_Memory_Dir_exe.cpp)
 target_link_libraries(mongoose_test_memory_dir mongoose_dbg)
+set_target_properties(mongoose_test_memory_dir PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 # Timing and Results Test
 add_executable(mongoose_test_results
   Tests/Mongoose_Test_Results.cpp
   Tests/Mongoose_Test_Results_exe.cpp)
 target_link_libraries(mongoose_test_results mongoose)
+set_target_properties(mongoose_test_results PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-add_test(test_memory mongoose_test_memory)
+add_test(Memoery_Test ${TESTING_OUTPUT_PATH}/mongoose_test_memory)
 
 # Coverage Tests
-
 add_executable(mongoose_run_all_tests ${ALL_TEST_FILES})
 target_link_libraries(mongoose_run_all_tests mongoose_dbg)
+set_target_properties(mongoose_run_all_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-MESSAGE( STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
+message( STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
   # using Clang
   SET(CMAKE_CXX_FLAGS_DEBUG "--coverage -g")
@@ -244,7 +253,7 @@ endif()
 set_target_properties(mongoose_dbg PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_dbg PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 
-# Temporary
+# Add debug compile/linker flags
 set_target_properties(mongoose_test_io PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_io PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_memory PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
@@ -255,4 +264,4 @@ set_target_properties(mongoose_test_memory_dir PROPERTIES LINK_FLAGS "${CMAKE_EX
 set_target_properties(mongoose_run_all_tests PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_run_all_tests PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
-add_test(Coverage mongoose_run_all_tests)
+add_test(Coverage ${TESTING_OUTPUT_PATH}/mongoose_run_all_tests)
