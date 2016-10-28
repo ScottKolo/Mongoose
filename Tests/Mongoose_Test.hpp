@@ -3,12 +3,10 @@
 
 #include <string>
 
-void runIOTests();
-int runMemoryTests();
-int runMemoryTest(const std::string inputFile);
+void runIOTest(const std::string inputFile, bool validGraph);
+void runMemoryTest(const std::string inputFile);
 void runTimingAndResultsTests();
 void runTimingAndResultsTest(const std::string inputFile);
-void runEdgeSeparatorTests();
 void runEdgeSeparatorTest(const std::string inputFile);
 
 #endif

@@ -51,15 +51,14 @@ void myFree(void *ptr)
     if(ptr != NULL) free(ptr);
 }
 
-int runMemoryTest(const std::string inputFile)
+void runMemoryTest(const std::string inputFile)
 {
-    SuiteSparse_start();
-
     Options *O = Options::Create();
     if(!O)
     {
-         SuiteSparse_finish();
-         return 1; // Return an error if we failed.
+        Logger::log(Test, "Error creating Options struct in Memory Test");
+        SuiteSparse_finish();
+        return; // Return early if we failed.
     }
 
     O->doExpensiveChecks = true;
@@ -74,18 +73,6 @@ int runMemoryTest(const std::string inputFile)
 
     O->~Options();
     SuiteSparse_free(O);
-
-    /* Return success */
-    SuiteSparse_finish();
-
-    return 0;
-}
-
-int runMemoryTests()
-{
-    const std::string inputFile = "../Matrix/bcspwr04.mtx";
-
-    return runMemoryTest(inputFile);
 }
 
 void RunAllTests (
@@ -93,8 +80,7 @@ void RunAllTests (
     Options *O
 )
 {
-    Logger::setDebugLevel(Info);
-    Logger::log(Test, "Running Memory Test...");
+    Logger::log(Test, "Running Memory Test on " + inputFile);
 
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
     GuessCutType guessCutStrategies[3] = {Pseudoperipheral_All, Pseudoperipheral_Fast, QP_GradProj};
@@ -125,18 +111,6 @@ void RunAllTests (
                 } while (remainingMallocs < 1);
             }
         }
-    }
-
-   /* 
-    * DO A DEEP COPY OF THE GRAPH AND RESET EDGEWEIGHTS
-    */
-    Graph *DCG = readGraph(inputFile);
-    if(DCG)
-    {
-        cs *csDCG = GraphToCSparse3(DCG, true);
-        cs_spfree(csDCG);
-        DCG->~Graph();
-        SuiteSparse_free(DCG);
     }
 
     Logger::log(Test, "Memory Test Completed Successfully");

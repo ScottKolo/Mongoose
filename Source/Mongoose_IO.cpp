@@ -48,7 +48,7 @@ Graph *readGraph (const char* filename)
     Graph *G = CSparse3ToGraph(sanitized_A);
     if (!G)
     {
-        Logger::log(Error, "Ran out of memory in Mongoose::read_graph");
+        Logger::log(Error, "Ran out of memory in Mongoose::readGraph");
         cs_spfree(sanitized_A);
         Logger::toc(IOTiming);
         return NULL;

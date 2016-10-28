@@ -9,32 +9,6 @@
 
 using namespace Mongoose;
 
-const std::string mm_data[] = {
-    "Pd",
-    "bcspwr01",
-    "bcspwr02",
-    "bcspwr03",
-    "bcspwr04",
-    "bcspwr05",
-    "bcspwr06",
-    "bcspwr07",
-    "bcspwr08",
-    "bcspwr09",
-    "bcspwr10"
-};
-
-void runEdgeSeparatorTests()
-{
-    Logger::log(Test, "Running Edge Separator Test on all test matrices");
-
-    for (int k = 0; k < 11; k++)
-    {
-        runEdgeSeparatorTest("../Matrix/" + mm_data[k] + ".mtx");
-    }
-
-    Logger::log(Test, "Completed Edge Separator Test on all test matrices");
-}
-
 void runEdgeSeparatorTest(const std::string inputFile)
 {
     Logger::log(Test, "Running Edge Separator Test on " + inputFile);
