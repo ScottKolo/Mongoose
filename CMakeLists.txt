@@ -199,7 +199,7 @@ target_link_libraries(mongoose_test_io mongoose_dbg)
 set_target_properties(mongoose_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 #add_test(IO_Test ${TESTING_OUTPUT_PATH}/mongoose_test_io)
-add_test(IO_Test ./runTests.py -min 1 -max 30 -t io)
+add_test(IO_Test ./runTests.py -min 1 -max 15 -t io)
 
 # Edge Separator Tests
 add_executable(mongoose_test_edgesep 
@@ -209,7 +209,7 @@ target_link_libraries(mongoose_test_edgesep mongoose_dbg)
 set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 #add_test(Edge_Separator_Test ${TESTING_OUTPUT_PATH}/mongoose_test_edgesep)
-add_test(Edge_Separator_Test ./runTests.py -min 1 -max 30 -t edgesep)
+add_test(Edge_Separator_Test ./runTests.py -min 1 -max 15 -t edgesep)
 
 # Exhaustive Memory Tests
 add_executable(mongoose_test_memory 
@@ -219,7 +219,7 @@ target_link_libraries(mongoose_test_memory mongoose_dbg)
 set_target_properties(mongoose_test_memory PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 #add_test(Memory_Test ${TESTING_OUTPUT_PATH}/mongoose_test_memory)
-add_test(Memory_Test ./runTests.py -min 1 -max 30 -t memory)
+add_test(Memory_Test ./runTests.py -min 1 -max 15 -t memory)
 
 # Timing and Results Test
 add_executable(mongoose_test_results
