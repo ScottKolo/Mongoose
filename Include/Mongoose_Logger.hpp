@@ -41,7 +41,7 @@ enum TimingType
 class Logger
 {
   private:
-    static DebugType debugLevel;
+    static int debugLevel;
     static bool timingOn;
     static clock_t clocks[6];
     static float times[6];
@@ -53,7 +53,7 @@ class Logger
     static inline void tic(TimingType timingType);
     static inline void toc(TimingType timingType);
     static inline float getTime(TimingType timingType);
-    static void setDebugLevel(DebugType debugType);
+    static void setDebugLevel(int debugType);
     static void printTimingInfo();
 };
 

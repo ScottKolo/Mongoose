@@ -5,7 +5,7 @@
 namespace Mongoose
 {
 
-DebugType Logger::debugLevel = None;
+int Logger::debugLevel = None;
 bool Logger::timingOn = false;
 clock_t Logger::clocks[6];
 float Logger::times[6];
@@ -22,7 +22,7 @@ Logger::Logger(DebugType dType, bool tFlag)
     timingOn = tFlag;
 }
 
-void Logger::setDebugLevel(DebugType debugType)
+void Logger::setDebugLevel(int debugType)
 {
     debugLevel = debugType;
 }
