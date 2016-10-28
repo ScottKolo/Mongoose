@@ -3,7 +3,7 @@
 
 using namespace Mongoose;
 
-int main(int argc, char** argv)
+int main(int argn, char** argv)
 {
     SuiteSparse_start();
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     Logger::setDebugLevel(All);
 
     // Run the Edge Separator test
-    runEdgeSeparatorTest();
+    runEdgeSeparatorTest(inputFile);
 
     SuiteSparse_finish();
 
