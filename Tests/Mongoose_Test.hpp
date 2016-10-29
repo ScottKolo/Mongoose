@@ -5,8 +5,11 @@
 
 void runIOTest(const std::string inputFile, bool validGraph);
 void runMemoryTest(const std::string inputFile);
-void runTimingAndResultsTests();
-void runTimingAndResultsTest(const std::string inputFile);
+void runTimingTest(const std::string inputFile);
 void runEdgeSeparatorTest(const std::string inputFile);
+void runPerformanceTest(const std::string inputFile);
+
+// Currently unused
+void runReferenceTest(const std::string inputFile);
 
 #endif

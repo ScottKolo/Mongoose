@@ -198,8 +198,7 @@ add_executable(mongoose_test_io
 target_link_libraries(mongoose_test_io mongoose_dbg)
 set_target_properties(mongoose_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-#add_test(IO_Test ${TESTING_OUTPUT_PATH}/mongoose_test_io)
-add_test(IO_Test ./runTests.py -min 1 -max 15 -t io)
+add_test(IO_Test ./runTests.py -min 1 -max 15 -t io -k)
 
 # Edge Separator Tests
 add_executable(mongoose_test_edgesep 
@@ -208,25 +207,31 @@ add_executable(mongoose_test_edgesep
 target_link_libraries(mongoose_test_edgesep mongoose_dbg)
 set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-#add_test(Edge_Separator_Test ${TESTING_OUTPUT_PATH}/mongoose_test_edgesep)
 add_test(Edge_Separator_Test ./runTests.py -min 1 -max 15 -t edgesep)
 
-# Exhaustive Memory Tests
+# Memory Tests
 add_executable(mongoose_test_memory 
   Tests/Mongoose_Test_Memory.cpp
   Tests/Mongoose_Test_Memory_exe.cpp)
 target_link_libraries(mongoose_test_memory mongoose_dbg)
 set_target_properties(mongoose_test_memory PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-#add_test(Memory_Test ${TESTING_OUTPUT_PATH}/mongoose_test_memory)
 add_test(Memory_Test ./runTests.py -min 1 -max 15 -t memory)
 
-# Timing and Results Test
-add_executable(mongoose_test_results
-  Tests/Mongoose_Test_Results.cpp
-  Tests/Mongoose_Test_Results_exe.cpp)
-target_link_libraries(mongoose_test_results mongoose)
-set_target_properties(mongoose_test_results PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
+# Performance Test
+add_executable(mongoose_test_performance
+  Tests/Mongoose_Test_Performance.cpp
+  Tests/Mongoose_Test_Performance_exe.cpp)
+target_link_libraries(mongoose_test_performance mongoose)
+set_target_properties(mongoose_test_performance PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
+add_test(Performance_Test ./runTests.py -min 1 -max 15 -t performance -p)
+
+# Reference Test
+add_executable(mongoose_test_reference
+  Tests/Mongoose_Test_Reference.cpp
+  Tests/Mongoose_Test_Reference_exe.cpp)
+target_link_libraries(mongoose_test_reference mongoose)
+set_target_properties(mongoose_test_reference PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 message( STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
