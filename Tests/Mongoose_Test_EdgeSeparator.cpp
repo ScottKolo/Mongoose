@@ -21,6 +21,7 @@ void runEdgeSeparatorTest(const std::string inputFile)
     if (!options)
     {
         // Ran out of memory
+        Logger::log(Test, "Error creating Options struct in Edge Separator Test");
         SuiteSparse_free(options);
         assert(false);
     }
@@ -31,6 +32,7 @@ void runEdgeSeparatorTest(const std::string inputFile)
     if (!G)
     {
         // Ran out of memory
+        Logger::log(Test, "Error reading Graph from file in Edge Separator Test");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         assert(false);
@@ -42,6 +44,7 @@ void runEdgeSeparatorTest(const std::string inputFile)
     if (error)
     {
         // Error occurred
+        Logger::log(Test, "Error computing edge separator in Edge Separator Test");
         assert(false);
     }
     else
