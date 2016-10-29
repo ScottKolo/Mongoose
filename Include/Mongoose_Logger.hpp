@@ -54,6 +54,7 @@ class Logger
     static inline void toc(TimingType timingType);
     static inline float getTime(TimingType timingType);
     static void setDebugLevel(int debugType);
+    static void setTimingFlag(bool tFlag);
     static void printTimingInfo();
 };
 

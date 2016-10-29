@@ -27,6 +27,11 @@ void Logger::setDebugLevel(int debugType)
     debugLevel = debugType;
 }
 
+void Logger::setTimingFlag(bool tFlag)
+{
+    timingOn = tFlag;
+}
+
 void Logger::printTimingInfo()
 {
     printf(" Matching:   %0.3fs\n", times[MatchingTiming]);
