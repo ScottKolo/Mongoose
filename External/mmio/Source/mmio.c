@@ -272,7 +272,7 @@ int mm_read_mtx_crd_data(FILE *f, long M, long N, long nz, long I[], long J[],
             if (fscanf(f, "%ld %ld %lg %lg", &I[i], &J[i], &val[2*i], &val[2*i+1])
                 != 4) return MM_PREMATURE_EOF;
     }
-    else if (mm_is_real(matcode))
+    else if (mm_is_real(matcode) || mm_is_integer(matcode))
     {
         for (i=0; i<nz; i++)
         {
@@ -281,7 +281,6 @@ int mm_read_mtx_crd_data(FILE *f, long M, long N, long nz, long I[], long J[],
 
         }
     }
-
     else if (mm_is_pattern(matcode))
     {
         for (i=0; i<nz; i++)
@@ -303,13 +302,12 @@ int mm_read_mtx_crd_entry(FILE *f, int *I, int *J,
             if (fscanf(f, "%d %d %lg %lg", I, J, real, imag)
                 != 4) return MM_PREMATURE_EOF;
     }
-    else if (mm_is_real(matcode))
+    else if (mm_is_real(matcode) || mm_is_integer(matcode))
     {
             if (fscanf(f, "%d %d %lg\n", I, J, real)
                 != 3) return MM_PREMATURE_EOF;
 
     }
-
     else if (mm_is_pattern(matcode))
     {
             if (fscanf(f, "%d %d", I, J) != 2) return MM_PREMATURE_EOF;
@@ -364,14 +362,13 @@ int mm_read_mtx_crd(char *fname, long *M, long *N, long *nz, long **I, long **J,
                 *matcode);
         if (ret_code != 0) return ret_code;
     }
-    else if (mm_is_real(*matcode))
+    else if (mm_is_real(*matcode) || mm_is_integer(*matcode))
     {
         *val = (double *) malloc(*nz * sizeof(double));
         ret_code = mm_read_mtx_crd_data(f, *M, *N, *nz, *I, *J, *val, 
                 *matcode);
         if (ret_code != 0) return ret_code;
     }
-
     else if (mm_is_pattern(*matcode))
     {
         ret_code = mm_read_mtx_crd_data(f, *M, *N, *nz, *I, *J, *val, 
@@ -419,12 +416,13 @@ int mm_write_mtx_crd(char fname[], int M, int N, int nz, int I[], int J[],
     if (mm_is_pattern(matcode))
         for (i=0; i<nz; i++)
             fprintf(f, "%d %d\n", I[i], J[i]);
-    else
-    if (mm_is_real(matcode))
+    else if (mm_is_real(matcode))
         for (i=0; i<nz; i++)
             fprintf(f, "%d %d %20.16g\n", I[i], J[i], val[i]);
-    else
-    if (mm_is_complex(matcode))
+    else if (mm_is_integer(matcode))
+        for (i=0; i<nz; i++)
+            fprintf(f, "%d %d %ld\n", I[i], J[i], (long)val[i]);
+    else if (mm_is_complex(matcode))
         for (i=0; i<nz; i++)
             fprintf(f, "%d %d %20.16g %20.16g\n", I[i], J[i], val[2*i], 
                         val[2*i+1]);
