@@ -38,6 +38,7 @@ cs *readMatrix (const std::string filename, MM_typecode &matcode)
 Graph *readGraph (const char* filename)
 {
     Logger::tic(IOTiming);
+    Logger::log(Info, "Reading graph from file " + std::string(filename));
 
     MM_typecode matcode;
     cs* A = readMatrix(filename, matcode);
@@ -74,6 +75,7 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     }
 
     //MM_typecode &matcode;
+    Logger::log(Info, "Reading Matrix Market banner...");
     if (mm_read_banner(file, &matcode) != 0)
     {
         Logger::log(Error, "Error: Could not process Matrix Market banner");
@@ -105,6 +107,7 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
         return NULL;
     }
     
+    Logger::log(Info, "Reading matrix data...");
     Int *I = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Int *J = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Weight *val = (Weight *) SuiteSparse_malloc(nz, sizeof(Weight));
@@ -122,6 +125,7 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
 
     mm_read_mtx_crd_data(file, M, N, nz, I, J, val, matcode);
     fclose(file); // Close the file
+
     for (Int k = 0; k < nz; k++)
     {
         --I[k];
@@ -148,10 +152,13 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     A->x = val;
     A->nz = nz;
     
+    Logger::log(Info, "Compressing matrix from triplet to CSC format...");
     cs* compressed_A = cs_compress(A);
     cs_spfree(A);
     if (!compressed_A)
     {
+        Logger::log(Error, 
+            "Error: Ran out of memory in Mongoose::readMatrix");
         return NULL;
     }
     

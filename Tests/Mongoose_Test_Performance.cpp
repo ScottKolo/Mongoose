@@ -12,7 +12,6 @@ using namespace Mongoose;
 
 void runPerformanceTest(const std::string inputFile)
 {
-    // Given a symmetric matrix
     Options *options;
     Graph *G;
     clock_t t;
@@ -56,6 +55,9 @@ void runPerformanceTest(const std::string inputFile)
         double test_time = ((double) t)/CLOCKS_PER_SEC;
         Logger::log(Test, "Total Edge Separator Time: " + std::to_string(test_time) + "s");
         Logger::printTimingInfo();
+        Logger::log(Test, "Cut Properties:");
+        Logger::log(Test, "  Cut Cost:  " + std::to_string(G->cutCost));
+        Logger::log(Test, "  Imbalance: " + std::to_string(G->imbalance));
     }
 
     G->~Graph();

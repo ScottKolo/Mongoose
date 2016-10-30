@@ -9,9 +9,13 @@ int main(int argn, char** argv)
 {
     SuiteSparse_start();
 
+    // Set Logger to report all messages
+    Logger::setDebugLevel(All);
+    
     if (argn != 3)
     {
         // Wrong number of arguments - return error
+        Logger::log(Error, "Usage: mongoose_test_io <MM-input-file.mtx> <1 for valid graph, 0 for invalid>");
         SuiteSparse_finish();
         return 1;
     }
@@ -21,9 +25,6 @@ int main(int argn, char** argv)
 
     // Read in whether this file should produce a valid graph
     bool validGraph = atoi(argv[2]);
-
-    // Set Logger to report all messages
-    Logger::setDebugLevel(All);
 
     // Run the I/O test
     runIOTest(inputFile, validGraph);

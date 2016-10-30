@@ -5,7 +5,7 @@ using namespace Mongoose;
 
 int main(int argn, const char **argv)
 {
-        SuiteSparse_start();
+    SuiteSparse_start();
 
     if (argn != 2)
     {
