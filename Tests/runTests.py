@@ -50,7 +50,7 @@ parser.add_argument('-c', '--coverage',
                     help='generate coverage information')
 parser.add_argument('--html-coverage',
                     action='store_true',
-                    help='generate html coverage pages if gcovr or lcov are available')
+                    help='generate html coverage pages if gcovr is available')
 parser.add_argument('--gcov', 
                     action='store',
                     metavar='gcov_path',
@@ -138,7 +138,7 @@ with open(stats_file, 'rb') as f:
                     if args.tests == 'all':
                         print("Calling ALL Tests...")
                         print("Calling I/O Test...")
-                        call(["./tests/mongoose_test_io", matrix_path])
+                        call(["./tests/mongoose_test_io", matrix_path, "1"])
                         print("Calling Edge Separator Test...")
                         call(["./tests/mongoose_test_edgesep", matrix_path])
                         print("Calling Memory Test...")
@@ -150,7 +150,7 @@ with open(stats_file, 'rb') as f:
                         call(["./tests/mongoose_test_memory", matrix_path])
                     elif args.tests == 'io':
                         print("Calling I/O Test...")
-                        call(["./tests/mongoose_test_io", matrix_path])
+                        call(["./tests/mongoose_test_io", matrix_path, "1"])
                     elif args.tests == 'edgesep':
                         print("Calling Edge Separator Test...")
                         call(["./tests/mongoose_test_edgesep", matrix_path])
