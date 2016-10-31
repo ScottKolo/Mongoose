@@ -65,10 +65,17 @@ int main(int argn, const char **argv)
     }
     else
     {
+        long cutSize = 0;
+        for(int i = 0; i < G->n; i++)
+        {
+            cutSize += G->externalDegree[i];
+        }
+        cutSize = cutSize / 2;
         double test_time = ((double) t)/CLOCKS_PER_SEC;
         Logger::log(All, "Total Edge Separator Time: " + std::to_string(test_time) + "s");
         Logger::printTimingInfo();
         Logger::log(All, "Cut Properties:");
+        Logger::log(All, " Cut Size:  " + std::to_string(cutSize));
         Logger::log(All, " Cut Cost:  " + std::to_string(G->cutCost));
         Logger::log(All, " Imbalance: " + std::to_string(G->imbalance));
     }
