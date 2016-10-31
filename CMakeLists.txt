@@ -208,6 +208,7 @@ target_link_libraries(mongoose_test_edgesep mongoose_dbg)
 set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 add_test(Edge_Separator_Test ./runTests.py -min 1 -max 15 -t edgesep)
+add_test(Edge_Separator_Test_2 ./runTests.py -t edgesep -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533)
 
 # Memory Tests
 add_executable(mongoose_test_memory 
@@ -224,7 +225,8 @@ add_executable(mongoose_test_performance
   Tests/Mongoose_Test_Performance_exe.cpp)
 target_link_libraries(mongoose_test_performance mongoose)
 set_target_properties(mongoose_test_performance PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
-add_test(Performance_Test ./runTests.py -min 1 -max 15 -t performance -p)
+add_test(Performance_Test ./runTests.py -min 1 -max 15 -t performance)
+add_test(Performance_Test_2 ./runTests.py -t performance -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533 -p)
 
 # Reference Test
 add_executable(mongoose_test_reference
