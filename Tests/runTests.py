@@ -111,59 +111,60 @@ with open(stats_file, 'rb') as f:
 
             # Check if the matrix ID is in the proper range and 
             # that the matrix is real and symmetric
-            if (((matrix_id >= id_min and matrix_id <= id_max) or
-                 (args.ids is not None and matrix_id in args.ids)) and 
+            if (matrix_id >= id_min and 
+                matrix_id <= id_max and 
                 row[2] == row[3] and # Rows = columns (square)
                 row[5] == '1' and    # Real
                 row[10] == '1'):      # Numerically symmetric
-                matrix_name = row[0] + '/' + row[1] + '.tar.gz'
-                gzip_path = matrix_dir + row[0] + '_' + row[1] + '.tar.gz'
-                matrix_path = matrix_dir + row[1] + '/' + row[1] + ".mtx"
-                
-                matrix_exists = os.path.isfile(gzip_path)
-                if matrix_exists:
-                    tar = tarfile.open(gzip_path, mode='r:gz')
-                    matrix_files = tar.getnames()
-                else:
-                    # Download matrix if it doesn't exist
-                    print("Downloading " + matrix_name)
-                    testfile.retrieve("https://www.cise.ufl.edu/research/sparse/MM/" + matrix_name, gzip_path)
-                    tar = tarfile.open(gzip_path, mode='r:gz')
-                    tar.extractall(path=matrix_dir) # Extract the matrix from the tar.gz file
-                    tar.close()
+                if args.ids is None or matrix_id in args.ids:
+                    matrix_name = row[0] + '/' + row[1] + '.tar.gz'
+                    gzip_path = matrix_dir + row[0] + '_' + row[1] + '.tar.gz'
+                    matrix_path = matrix_dir + row[1] + '/' + row[1] + ".mtx"
+                    
+                    matrix_exists = os.path.isfile(gzip_path)
+                    if matrix_exists:
+                        tar = tarfile.open(gzip_path, mode='r:gz')
+                        matrix_files = tar.getnames()
+                    else:
+                        # Download matrix if it doesn't exist
+                        print("Downloading " + matrix_name)
+                        testfile.retrieve("https://www.cise.ufl.edu/research/sparse/MM/" + matrix_name, gzip_path)
+                        tar = tarfile.open(gzip_path, mode='r:gz')
+                        tar.extractall(path=matrix_dir) # Extract the matrix from the tar.gz file
+                        tar.close()
 
-                # Determine which test executables to run
-                if args.tests == 'all':
-                    print("Calling ALL Tests...")
-                    print("Calling I/O Test...")
-                    call(["./tests/mongoose_test_io", matrix_path, "1"])
-                    print("Calling Edge Separator Test...")
-                    call(["./tests/mongoose_test_edgesep", matrix_path])
-                    print("Calling Memory Test...")
-                    call(["./tests/mongoose_test_memory", matrix_path])
-                    print("Calling Performance Test...")
-                    call(["./tests/mongoose_test_performance", matrix_path])
-                elif args.tests == 'memory':
-                    print("Calling Memory Test...")
-                    call(["./tests/mongoose_test_memory", matrix_path])
-                elif args.tests == 'io':
-                    print("Calling I/O Test...")
-                    call(["./tests/mongoose_test_io", matrix_path, "1"])
-                elif args.tests == 'edgesep':
-                    print("Calling Edge Separator Test...")
-                    call(["./tests/mongoose_test_edgesep", matrix_path])
-                elif args.tests == 'performance':
-                    print("Calling Performance Test...")
-                    call(["./tests/mongoose_test_performance", matrix_path])
+                    # Determine which test executables to run
+                    if args.tests == 'all':
+                        print("Calling ALL Tests...")
+                        print("Calling I/O Test...")
+                        call(["./tests/mongoose_test_io", matrix_path, "1"])
+                        print("Calling Edge Separator Test...")
+                        call(["./tests/mongoose_test_edgesep", matrix_path])
+                        print("Calling Memory Test...")
+                        call(["./tests/mongoose_test_memory", matrix_path])
+                        print("Calling Performance Test...")
+                        call(["./tests/mongoose_test_performance", matrix_path])
+                    elif args.tests == 'memory':
+                        print("Calling Memory Test...")
+                        call(["./tests/mongoose_test_memory", matrix_path])
+                    elif args.tests == 'io':
+                        print("Calling I/O Test...")
+                        call(["./tests/mongoose_test_io", matrix_path, "1"])
+                    elif args.tests == 'edgesep':
+                        print("Calling Edge Separator Test...")
+                        call(["./tests/mongoose_test_edgesep", matrix_path])
+                    elif args.tests == 'performance':
+                        print("Calling Performance Test...")
+                        call(["./tests/mongoose_test_performance", matrix_path])
 
-                # Delete the matrix only if we downloaded it and the keep
-                # flag is off
-                if args.purge or not (args.keep or matrix_exists):
-                    files = os.listdir(matrix_dir + row[1])
-                    for file in files:
-                        os.remove(os.path.join(matrix_dir + row[1] + '/', file))
-                    os.rmdir(matrix_dir + row[1])
-                    os.remove(gzip_path)
+                    # Delete the matrix only if we downloaded it and the keep
+                    # flag is off
+                    if args.purge or not (args.keep or matrix_exists):
+                        files = os.listdir(matrix_dir + row[1])
+                        for file in files:
+                            os.remove(os.path.join(matrix_dir + row[1] + '/', file))
+                        os.rmdir(matrix_dir + row[1])
+                        os.remove(gzip_path)
 
 os.remove(stats_file)
 
