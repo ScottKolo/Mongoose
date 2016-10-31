@@ -116,7 +116,6 @@ with open(stats_file, 'rb') as f:
                         print("Downloading " + matrix_name)
                         testfile.retrieve("https://www.cise.ufl.edu/research/sparse/MM/" + matrix_name, gzip_path)
                         tar = tarfile.open(gzip_path, mode='r:gz')
-                        matrix_files = tar.getnames()
                         tar.extractall(path=matrix_dir) # Extract the matrix from the tar.gz file
                         tar.close()
 

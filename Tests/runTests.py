@@ -130,7 +130,6 @@ with open(stats_file, 'rb') as f:
                         print("Downloading " + matrix_name)
                         testfile.retrieve("https://www.cise.ufl.edu/research/sparse/MM/" + matrix_name, gzip_path)
                         tar = tarfile.open(gzip_path, mode='r:gz')
-                        matrix_files = tar.getnames()
                         tar.extractall(path=matrix_dir) # Extract the matrix from the tar.gz file
                         tar.close()
 
@@ -161,9 +160,10 @@ with open(stats_file, 'rb') as f:
                     # Delete the matrix only if we downloaded it and the keep
                     # flag is off
                     if args.purge or not (args.keep or matrix_exists):
-                        for file in matrix_files:
-                            os.remove(matrix_dir + file)
-                            os.rmdir(matrix_dir + row[1])
+                        files = os.listdir(matrix_dir + row[1])
+                        for file in files:
+                            os.remove(os.path.join(matrix_dir + row[1] + '/', file))
+                        os.rmdir(matrix_dir + row[1])
                         os.remove(gzip_path)
 
 os.remove(stats_file)
