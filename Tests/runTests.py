@@ -112,7 +112,7 @@ with open(stats_file, 'rb') as f:
             # Check if the matrix ID is in the proper range and 
             # that the matrix is real and symmetric
             if (((matrix_id >= id_min and matrix_id <= id_max) or
-                 (args.ids is not None and matrix_id in args.ids) and 
+                 (args.ids is not None and matrix_id in args.ids)) and 
                 row[2] == row[3] and # Rows = columns (square)
                 row[5] == '1' and    # Real
                 row[10] == '1'):      # Numerically symmetric
