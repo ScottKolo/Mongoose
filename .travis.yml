@@ -9,8 +9,8 @@ matrix:
   - os: linux
     compiler: gcc
     env:
-      - CXX=g++-6
-      - CC=gcc-6
+      - CXX=g++-4.8
+      - CC=gcc-4.8
       - SPECIAL=codecov
     addons:
       apt:
@@ -18,12 +18,12 @@ matrix:
           - ubuntu-toolchain-r-test
         packages:
           - cmake
-          - gcc-6
-          - g++-6
+          - gcc-4.8
+          - g++-4.8
           - ggcov
     before_script:
-      - export CXX="g++-6"
-      - export CC="gcc-6"
+      - export CXX="g++-4.8"
+      - export CC="gcc-4.8"
     after_success:
       - make test
       - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c
