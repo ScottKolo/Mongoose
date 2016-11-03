@@ -225,6 +225,7 @@ matrix:
       apt:
         sources:
           - llvm-toolchain-precise-3.7
+          - ubuntu-toolchain-r-test
         packages:
           - cmake
           - clang-3.7
@@ -245,6 +246,7 @@ matrix:
       apt:
         sources:
           - llvm-toolchain-precise-3.6
+          - ubuntu-toolchain-r-test
         packages:
           - cmake
           - clang-3.6
