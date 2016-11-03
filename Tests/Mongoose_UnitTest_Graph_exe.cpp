@@ -15,10 +15,10 @@ int main(int argn, char** argv)
     Logger::setTimingFlag(false);
 
     // Test default constructor
-    Graph G1 = Graph();
+    Graph G1;
     assert(&G1 != NULL);
 
-    // Test Graph(n, nz) constructor
+    // Test Graph(n, nz) static constructor
     Graph *G2 = Graph::Create(10, 20);
     assert(&G2 != NULL);
 
