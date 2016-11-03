@@ -10,18 +10,6 @@ bool Logger::timingOn = false;
 clock_t Logger::clocks[6];
 float Logger::times[6];
 
-Logger::Logger()
-{
-    // Default constructor
-}
-
-Logger::Logger(DebugType dType, bool tFlag)
-{
-    // Easy option for turning on both debug and timing information
-    debugLevel = dType;
-    timingOn = tFlag;
-}
-
 void Logger::setDebugLevel(int debugType)
 {
     debugLevel = debugType;

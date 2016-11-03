@@ -47,8 +47,6 @@ class Logger
     static float times[6];
 
   public:
-    Logger();
-    Logger(DebugType dType, bool tFlag);
     static inline void log(DebugType debugType, std::string output);
     static inline void tic(TimingType timingType);
     static inline void toc(TimingType timingType);
