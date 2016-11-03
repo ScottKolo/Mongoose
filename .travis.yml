@@ -4,7 +4,7 @@ dist: trusty
 language: cpp
 
 matrix:
-  
+  include:
   # Codecov.io build
   - os: linux
     compiler: gcc
