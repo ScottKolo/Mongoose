@@ -20,10 +20,12 @@ matrix:
           - cmake
           - gcc-6
           - g++-6
-          - gcov
+          - ggcov
+    before_script:
+      - export CXX="g++-6"
+      - export CC="gcc-6"
     after_success:
       - make test
-    after_success:
       - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c
   
   # Valgrind build
@@ -42,6 +44,9 @@ matrix:
           - gcc-6
           - g++-6
           - valgrind
+    before_script:
+      - export CXX="g++-6"
+      - export CC="gcc-6"
     after_success:
       - make test
       - valgrind --error-exitcode=1 --leak-check=full ./tests/mongoose_test_memory ../Matrix/bcspwr04.mtx
@@ -61,6 +66,9 @@ matrix:
           - cmake
           - gcc-6
           - g++-6
+    before_script:
+      - export CXX="g++-6"
+      - export CC="gcc-6"
     after_success:
       - make test
 
@@ -78,6 +86,9 @@ matrix:
           - cmake
           - gcc-5
           - g++-5
+    before_script:
+      - export CXX="g++-5"
+      - export CC="gcc-5"
     after_success:
       - make test
 
@@ -95,12 +106,72 @@ matrix:
           - cmake
           - gcc-4.9
           - g++-4.9
+    before_script:
+      - export CXX="g++-4.9"
+      - export CC="gcc-4.9"
     after_success:
       - make test
 
   # Linux GCC 4.8 build
+  - os: linux
+    compiler: gcc
+    env:
+      - CXX=g++-4.8
+      - CC=gcc-4.8
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - cmake
+          - gcc-4.8
+          - g++-4.8
+    before_script:
+      - export CXX="g++-4.8"
+      - export CC="gcc-4.8"
+    after_success:
+      - make test
+
   # Linux GCC 4.7 build
+  - os: linux
+    compiler: gcc
+    env:
+      - CXX=g++-4.7
+      - CC=gcc-4.7
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - cmake
+          - gcc-4.7
+          - g++-4.7
+    before_script:
+      - export CXX="g++-4.7"
+      - export CC="gcc-4.7"
+    after_success:
+      - make test
+
   # Linux GCC 4.6 build
+  - os: linux
+    compiler: gcc
+    env:
+      - CXX=g++-4.6
+      - CC=gcc-4.6
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - cmake
+          - gcc-4.6
+          - g++-4.6
+    before_script:
+      - export CXX="g++-4.6"
+      - export CC="gcc-4.6"
+    after_success:
+      - make test
+
   # Linux Clang 3.9.0 build
   # Linux Clang 3.8.1 build
   # Linux Clang 3.8.0 build
