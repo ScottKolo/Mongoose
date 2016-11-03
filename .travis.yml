@@ -181,17 +181,18 @@ matrix:
       - CC=clang-3.9
     addons:
       apt:
-        packages:
-        - cmake
-        - cmake-data
-        - clang-3.9
-        - libc++-dev
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
         - george-edison55-precise-backports
         - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
           key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+        packages:
+        - cmake
+        - cmake-data
+        - clang-3.9
+        - clang++-3.9
+        - libc++-dev
     before_script:
       - export CXX=clang++-3.9
       - export CC=clang-3.9
@@ -205,6 +206,7 @@ matrix:
     addons:
       apt:
         sources:
+        - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.8
         - george-edison55-precise-backports
         packages:
