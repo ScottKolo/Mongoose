@@ -10,8 +10,9 @@ int main(int argn, char** argv)
 {
     SuiteSparse_start();
 
-    // Set Logger to report all messages
+    // Set Logger to report all messages and turn off timing info
     Logger::setDebugLevel(All);
+    Logger::setTimingFlag(false);
 
     Graph *G;
 
