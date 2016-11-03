@@ -1,5 +1,5 @@
 /**
- * @file mongoose_io.cpp
+ * @file Mongoose_IO.cpp
  * @author Scott Kolodziej
  * @date 13 Jun 2016
  * @brief Simplified I/O functions for reading matrices and graphs
@@ -74,7 +74,6 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
         return NULL;
     }
 
-    //MM_typecode &matcode;
     Logger::log(Info, "Reading Matrix Market banner...");
     if (mm_read_banner(file, &matcode) != 0)
     {

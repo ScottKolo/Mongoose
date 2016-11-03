@@ -225,7 +225,7 @@ add_executable(mongoose_test_performance
   Tests/Mongoose_Test_Performance_exe.cpp)
 target_link_libraries(mongoose_test_performance mongoose)
 set_target_properties(mongoose_test_performance PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
-add_test(Performance_Test ./runTests.py -min 1 -max 15 -t performance)
+add_test(Performance_Test ./runTests.py -min 1 -max 15 -t performance -p)
 add_test(Performance_Test_2 ./runTests.py -t performance -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533 -p)
 
 # Reference Test
@@ -234,6 +234,13 @@ add_executable(mongoose_test_reference
   Tests/Mongoose_Test_Reference_exe.cpp)
 target_link_libraries(mongoose_test_reference mongoose)
 set_target_properties(mongoose_test_reference PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
+
+# Unit Tests
+add_executable(mongoose_unit_test_io
+  Tests/Mongoose_UnitTest_IO_exe.cpp)
+target_link_libraries(mongoose_unit_test_io mongoose_dbg)
+set_target_properties(mongoose_unit_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
+add_test(Unit_Test_IO ./tests/mongoose_unit_test_io)
 
 message( STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
@@ -262,6 +269,8 @@ set_target_properties(mongoose_test_memory PROPERTIES COMPILE_FLAGS "${CMAKE_CXX
 set_target_properties(mongoose_test_memory PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_edgesep PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
 set_target_properties(mongoose_test_edgesep PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+set_target_properties(mongoose_unit_test_io PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
+set_target_properties(mongoose_unit_test_io PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1) # Necessary for gcov - prevents file.cpp.gcda instead of file.gcda
 
