@@ -57,6 +57,11 @@ void runEdgeSeparatorTest(const std::string inputFile)
             bool equals_1 = (G->partition[i] == 1);
             assert(equals_0 != equals_1);
         }
+
+        Logger::printTimingInfo();
+        Logger::log(Test, "Cut Properties:");
+        Logger::log(Test, "  Cut Cost:  " + std::to_string(G->cutCost));
+        Logger::log(Test, "  Imbalance: " + std::to_string(G->imbalance));
     }
 
     G->~Graph();

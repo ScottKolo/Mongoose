@@ -20,6 +20,9 @@ int main(int argn, char** argv)
     // Set Logger to report all messages
     Logger::setDebugLevel(All);
 
+    // Turn timing information on
+    Logger::setTimingFlag(true);
+
     // Run the Edge Separator test
     runEdgeSeparatorTest(inputFile);
 
