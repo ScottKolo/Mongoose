@@ -273,7 +273,7 @@ script:
   - mkdir _build
   - cd _build
   - cmake ..
-  - make
+  - make VERBOSE=1
 
   # execute unit tests
   - make test
