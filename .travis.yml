@@ -16,8 +16,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-4.8
           - g++-4.8
           - ggcov
@@ -39,8 +41,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-6
           - g++-6
           - valgrind
@@ -62,8 +66,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-6
           - g++-6
     before_script:
@@ -82,8 +88,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-5
           - g++-5
     before_script:
@@ -102,8 +110,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-4.9
           - g++-4.9
     before_script:
@@ -122,8 +132,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-4.8
           - g++-4.8
     before_script:
@@ -142,8 +154,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-4.7
           - g++-4.7
     before_script:
@@ -162,8 +176,10 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - gcc-4.6
           - g++-4.6
     before_script:
@@ -181,12 +197,14 @@ matrix:
     addons:
         apt:
           packages:
+            - cmake
+            - cmake-data
             - clang-3.9
             - libc++-dev
-            - ggcov
           sources: &sources
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
+            - george-edison55-precise-backports
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
     before_script:
@@ -205,8 +223,10 @@ matrix:
       apt:
         sources:
           - llvm-toolchain-precise-3.8
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - clang-3.8
           - clang++-3.8
     before_script:
@@ -226,8 +246,10 @@ matrix:
         sources:
           - llvm-toolchain-precise-3.7
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - clang-3.7
           - clang++-3.7
     before_script:
@@ -247,8 +269,10 @@ matrix:
         sources:
           - llvm-toolchain-precise-3.6
           - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
         packages:
           - cmake
+          - cmake-data
           - clang-3.6
           - clang++-3.6
     before_script:
