@@ -1,5 +1,6 @@
 sudo: false
 dist: trusty
+group: beta
 
 language: cpp
 
@@ -15,19 +16,18 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-4.8
-          - g++-4.8
-          - gcovr
+        - cmake
+        - cmake-data
+        - gcc-4.8
+        - g++-4.8
+        - gcovr
     before_script:
       - export CXX="g++-4.8"
       - export CC="gcc-4.8"
     after_success:
-      - make test
       - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c
   
   # Valgrind build
@@ -40,21 +40,19 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-6
-          - g++-6
-          - valgrind
+        - cmake
+        - cmake-data
+        - gcc-6
+        - g++-6
+        - valgrind
     before_script:
       - export CXX="g++-6"
       - export CC="gcc-6"
     after_success:
-      - make test
       - valgrind --error-exitcode=1 --leak-check=full ./tests/mongoose_test_memory ../Matrix/bcspwr04.mtx
-
 
   # Linux GCC 6 build
   - os: linux
@@ -65,18 +63,16 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-6
-          - g++-6
+        - cmake
+        - cmake-data
+        - gcc-6
+        - g++-6
     before_script:
       - export CXX="g++-6"
       - export CC="gcc-6"
-    after_success:
-      - make test
 
   # Linux GCC 5 build
   - os: linux
@@ -87,18 +83,16 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-5
-          - g++-5
+        - cmake
+        - cmake-data
+        - gcc-5
+        - g++-5
     before_script:
       - export CXX="g++-5"
       - export CC="gcc-5"
-    after_success:
-      - make test
 
   # Linux GCC 4.9 build
   - os: linux
@@ -109,18 +103,16 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-4.9
-          - g++-4.9
+        - cmake
+        - cmake-data
+        - gcc-4.9
+        - g++-4.9
     before_script:
       - export CXX="g++-4.9"
       - export CC="gcc-4.9"
-    after_success:
-      - make test
 
   # Linux GCC 4.8 build
   - os: linux
@@ -131,18 +123,16 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-4.8
-          - g++-4.8
+        - cmake
+        - cmake-data
+        - gcc-4.8
+        - g++-4.8
     before_script:
       - export CXX="g++-4.8"
       - export CC="gcc-4.8"
-    after_success:
-      - make test
 
   # Linux GCC 4.7 build
   - os: linux
@@ -153,18 +143,16 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-4.7
-          - g++-4.7
+        - cmake
+        - cmake-data
+        - gcc-4.7
+        - g++-4.7
     before_script:
       - export CXX="g++-4.7"
       - export CC="gcc-4.7"
-    after_success:
-      - make test
 
   # Linux GCC 4.6 build
   - os: linux
@@ -175,18 +163,16 @@ matrix:
     addons:
       apt:
         sources:
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - gcc-4.6
-          - g++-4.6
+        - cmake
+        - cmake-data
+        - gcc-4.6
+        - g++-4.6
     before_script:
       - export CXX="g++-4.6"
       - export CC="gcc-4.6"
-    after_success:
-      - make test
 
   # Linux Clang 3.9.0 build
   - os: linux
@@ -195,23 +181,21 @@ matrix:
       - CXX=clang++-3.9
       - CC=clang-3.9
     addons:
-        apt:
-          packages:
-            - cmake
-            - cmake-data
-            - clang-3.9
-            - libc++-dev
-          sources: &sources
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
-            - george-edison55-precise-backports
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
-              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+      apt:
+        packages:
+        - cmake
+        - cmake-data
+        - clang-3.9
+        - libc++-dev
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
+        - george-edison55-precise-backports
+        - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
+          key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
     before_script:
       - export CXX="clang++-3.9"
       - export CC="clang-3.9"
-    after_success:
-      - make test
 
   # Linux Clang 3.8 build
   - os: linux
@@ -222,18 +206,16 @@ matrix:
     addons:
       apt:
         sources:
-          - llvm-toolchain-precise-3.8
-          - george-edison55-precise-backports
+        - llvm-toolchain-precise-3.8
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - clang-3.8
-          - clang++-3.8
+        - cmake
+        - cmake-data
+        - clang-3.8
+        - clang++-3.8
     before_script:
       - export CXX="clang++-3.8"
       - export CC="clang-3.8"
-    after_success:
-      - make test
 
   # Linux Clang 3.7 build
   - os: linux
@@ -244,19 +226,17 @@ matrix:
     addons:
       apt:
         sources:
-          - llvm-toolchain-precise-3.7
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - llvm-toolchain-precise-3.7
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - clang-3.7
-          - clang++-3.7
+        - cmake
+        - cmake-data
+        - clang-3.7
+        - clang++-3.7
     before_script:
       - export CXX="clang++-3.7"
       - export CC="clang-3.7"
-    after_success:
-      - make test
 
   # Linux Clang 3.6.0 build
   - os: linux
@@ -267,19 +247,17 @@ matrix:
     addons:
       apt:
         sources:
-          - llvm-toolchain-precise-3.6
-          - ubuntu-toolchain-r-test
-          - george-edison55-precise-backports
+        - llvm-toolchain-precise-3.6
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
         packages:
-          - cmake
-          - cmake-data
-          - clang-3.6
-          - clang++-3.6
+        - cmake
+        - cmake-data
+        - clang-3.6
+        - clang++-3.6
     before_script:
       - export CXX="clang++-3.6"
       - export CC="clang-3.6"
-    after_success:
-      - make test
 
   # Linux Clang 3.5.0 build
   # Linux Clang 3.4 build
