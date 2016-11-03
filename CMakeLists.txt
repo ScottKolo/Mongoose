@@ -169,18 +169,20 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 add_library(mongoose ${MONGOOSE_LIB_FILES})
 if(EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
   target_link_libraries(mongoose ${SUITESPARSE_CONFIG_LIBRARY})
-  if (UNIX AND NOT APPLE)
-     target_link_libraries(mongoose rt)
-  endif()
+endif()
+
+if (UNIX AND NOT APPLE)
+  target_link_libraries(mongoose rt)
 endif()
 
 # Build the Mongoose library and all tests with coverage flags
 add_library(mongoose_dbg ${MONGOOSE_LIB_FILES})
 if(EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
   target_link_libraries(mongoose_dbg ${SUITESPARSE_CONFIG_LIBRARY})
-  if (UNIX AND NOT APPLE)
-     target_link_libraries(mongoose_dbg rt)
-  endif()
+endif()
+
+if (UNIX AND NOT APPLE)
+  target_link_libraries(mongoose_dbg rt)
 endif()
 
 # Build the Mongoose executable
