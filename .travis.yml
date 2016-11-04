@@ -53,6 +53,31 @@ matrix:
     after_success:
       - valgrind --error-exitcode=1 --leak-check=full ./tests/mongoose_test_memory ../Matrix/bcspwr04.mtx
 
+  # cppcheck build
+  - os: linux
+    compiler: gcc
+    env:
+      - CXX=g++-6
+      - CC=gcc-6
+      - SPECIAL=cppcheck
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
+        packages:
+        - cmake
+        - cmake-data
+        - gcc-6
+        - g++-6
+        - cppcheck
+    before_script:
+      - export CXX=g++-6
+      - export CC=gcc-6
+      - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    after_success:
+      - cppcheck --enable=all --error-exitcode=1 --project=compile_commands.json
+
   # Linux GCC 6 build
   - os: linux
     compiler: gcc
@@ -295,7 +320,7 @@ matrix:
         - cmake-data
         - clang-3.4
         - clang++-3.4
-  
+
   # macOS
   - os: osx
     osx_image: xcode6.4
