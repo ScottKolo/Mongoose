@@ -341,14 +341,23 @@ int mm_read_mtx_crd(char *fname, long *M, long *N, long *nz, long **I, long **J,
 
 
     if ((ret_code = mm_read_banner(f, matcode)) != 0)
+    {
+        fclose(f);
         return ret_code;
+    }
 
     if (!(mm_is_valid(*matcode) && mm_is_sparse(*matcode) && 
             mm_is_matrix(*matcode)))
+    {
+        fclose(f);
         return MM_UNSUPPORTED_TYPE;
+    }
 
     if ((ret_code = mm_read_mtx_crd_size(f, M, N, nz)) != 0)
+    {
+        fclose(f);
         return ret_code;
+    }
 
 
     *I = (long *)  malloc(*nz * sizeof(long));
@@ -360,20 +369,32 @@ int mm_read_mtx_crd(char *fname, long *M, long *N, long *nz, long **I, long **J,
         *val = (double *) malloc(*nz * 2 * sizeof(double));
         ret_code = mm_read_mtx_crd_data(f, *M, *N, *nz, *I, *J, *val, 
                 *matcode);
-        if (ret_code != 0) return ret_code;
+        if (ret_code != 0)
+        {
+            fclose(f);
+            return ret_code;
+        }
     }
     else if (mm_is_real(*matcode) || mm_is_integer(*matcode))
     {
         *val = (double *) malloc(*nz * sizeof(double));
         ret_code = mm_read_mtx_crd_data(f, *M, *N, *nz, *I, *J, *val, 
                 *matcode);
-        if (ret_code != 0) return ret_code;
+        if (ret_code != 0)
+        {
+            fclose(f);
+            return ret_code;
+        }
     }
     else if (mm_is_pattern(*matcode))
     {
         ret_code = mm_read_mtx_crd_data(f, *M, *N, *nz, *I, *J, *val, 
                 *matcode);
-        if (ret_code != 0) return ret_code;
+        if (ret_code != 0)
+        {
+            fclose(f);
+            return ret_code;
+        }
     }
 
     if (f != stdin) fclose(f);
