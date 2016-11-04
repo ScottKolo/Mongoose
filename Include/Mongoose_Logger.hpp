@@ -18,7 +18,7 @@
 namespace Mongoose
 {
 
-enum DebugType
+typedef enum DebugType
 {
     None = 0,
     Error = 1,
@@ -26,9 +26,9 @@ enum DebugType
     Info = 4,
     Test = 8,
     All = 15
-} typedef DebugType;
+} DebugType;
 
-enum TimingType
+typedef enum TimingType
 {
     MatchingTiming = 0,
     CoarseningTiming = 1,
@@ -36,7 +36,7 @@ enum TimingType
     FMTiming = 3,
     QPTiming = 4,
     IOTiming = 5
-} typedef TimingType;
+} TimingType;
 
 class Logger
 {
