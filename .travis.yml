@@ -295,10 +295,7 @@ matrix:
         - cmake-data
         - clang-3.4
         - clang++-3.4
-    before_script:
-      - export CXX=clang++-3.4
-      - export CC=clang-3.4
-
+  
   # macOS
   - os: osx
     osx_image: xcode6.4
