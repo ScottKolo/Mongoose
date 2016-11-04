@@ -74,7 +74,6 @@ matrix:
     before_script:
       - export CXX=g++-6
       - export CC=gcc-6
-      - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
     after_success:
       - cppcheck --enable=all --error-exitcode=1 --project=compile_commands.json
 
@@ -361,8 +360,8 @@ script:
   # compile
   - mkdir _build
   - cd _build
-  - cmake ..
+  - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
   - make VERBOSE=1
 
-  # execute unit tests
+  # execute tests
   - make test
