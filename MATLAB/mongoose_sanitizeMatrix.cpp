@@ -18,7 +18,7 @@ void mexFunction
     cs *A = (cs *) SuiteSparse_malloc(1, sizeof(cs));
     A = cs_mex_get_sparse (A, 0, 1, A_matlab);
 
-    cs *A_safe = sanitize_matrix(A, false);
+    cs *A_safe = sanitizeMatrix(A, false);
     A->p = NULL;
     A->i = NULL;
     A->x = NULL;
