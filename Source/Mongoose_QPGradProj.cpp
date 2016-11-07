@@ -1,14 +1,16 @@
-/* ========================================================================== */
-/* === QPgradproj =========================================================== */
-/* ==========================================================================
-   Apply gradient projection algorithm to the quadratic program which
-   arises in graph partitioning:
-
-   min (1-x)'(D+A)x subject to lo <= b <= hi, a'x = b, 0 <= x <= 1
-
-   The gradient at the current point is provided as input, and the
-   gradient is updated in each iteration.
-   ============================================================================ */
+/**
+ * @file Mongoose_QPGradProj.cpp
+ * @author S. Nuri Yeralan
+ * @brief Gradient projection algorithm
+ *
+ * @details Apply gradient projection algorithm to the quadratic program which
+ * arises in graph partitioning:
+ *
+ * min (1-x)'(D+A)x subject to lo <= b <= hi, a'x = b, 0 <= x <= 1
+ *
+ * The gradient at the current point is provided as input, and the
+ * gradient is updated in each iteration.
+ */
 
 #include "Mongoose_QPGradProj.hpp"
 #include "Mongoose_QPNapsack.hpp"

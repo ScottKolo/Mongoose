@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['n',['n',['../class_mongoose_1_1_graph.html#a93aec4ec3102b46598f64438e19e1867',1,'Mongoose::Graph']]],
-  ['numdances',['numDances',['../struct_mongoose_1_1_options.html#ab1d4fb2e1c43f58fd0e3b0af718cc47e',1,'Mongoose::Options']]]
+  ['h',['H',['../class_mongoose_1_1_graph.html#a12a68e1a79d1fe8de7e607e7450b4d75',1,'Mongoose::Graph']]],
+  ['heucost',['heuCost',['../class_mongoose_1_1_graph.html#ae4a5a338b693910d94884ff817cfc5de',1,'Mongoose::Graph']]]
 ];

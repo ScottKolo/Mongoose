@@ -1,13 +1,12 @@
 /**
- * @file mongoose_cs.cpp
+ * @file Mongoose_CSparse.cpp
  * @author Timothy Davis, Nuri Yeralan, Scott Kolodziej
- * @date 23 Aug 2015
- * @brief Subset of CSparse library for sparse matrix handling
+ * @brief Fundamental sparse matrix operations.
  *
- * Graphs are often represented by sparse adjacency matrices. As such, a number
- * of sparse matrix operations are performed by Mongoose.
+ * @details A subset of the CSparse library is used for its sparse matrix data
+ * structure and efficient fundamental matrix operations, such as adding, 
+ * permuting, and finding strongly connected components.
  */
-
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_CSparse.hpp"
 
@@ -28,8 +27,8 @@ csi cs_dfs (csi j, cs *G, csi top, csi *xi, csi *pstack, const csi *pinv);
 /**
  * @brief C = A'
  *
- * Given a CSparse matrix @p A, cs_transpose returns a new matrix that is the
- * transpose of @p A. In other words, C(j,i) = A(i,j).
+ * @details Given a CSparse matrix @p A, cs_transpose returns a new matrix that 
+ * is the transpose of @p A. In other words, C(j,i) = A(i,j).
  * The second parameter, @p values, allows for the copying of the A->x array.
  * If @p values = 0, the A->x array is ignored, and C->x is left NULL. If 
  * @p values != 0, then the A->x array is copied (transposed) to C->x.
@@ -71,9 +70,9 @@ cs *cs_transpose (const cs *A, csi values)
 /**
  * @brief C = alpha*A + beta*B
  *
- * Given two CSparse matrices @p A and @p B, and scaling constants @p alpha and
- * @p beta, cs_add returns a new matrix such that C = alpha*A + beta*B. In
- * other words, C(i,j) = alpha*A(i,j) + beta*B(i,j).
+ * @details Given two CSparse matrices @p A and @p B, and scaling constants 
+ * @p alpha and @p beta, cs_add returns a new matrix such that 
+ * C = alpha*A + beta*B. In other words, C(i,j) = alpha*A(i,j) + beta*B(i,j).
  * 
  * @code
  * cs *C = cs_add(A, B, 1, 1);     // C = A + B
@@ -114,9 +113,22 @@ cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
     return ((cs*) cs_done (C, w, x, 1));      /* success; release workspace, return C */
 }
 
-//-----------------------------------------------------------------------------
-// C = compressed-column form of a triplet matrix T
-//-----------------------------------------------------------------------------
+/**
+ * @brief C = compressed-column form of a triplet matrix T
+ *
+ * @details Given a CSparse matrix @p T in triplet form, cs_compress returns 
+ * the same matrix in compressed sparse column (CSC) format.
+ * 
+ * A triplet form matrix is a simple listing of the nonzeros in the matrix and
+ * their row, column coordinates. For example, the 2x2 identity matrix would be
+ * specified with the following triplets in (row, column, value) format:
+ * (1, 1, 1) and (2, 2, 1).
+ * 
+ * @param T Matrix in triplet form to be compressed
+ * @return A compressed sparse column (CSC) format matrix representing the 
+ * triplet form matrix T passed in.
+ * @note Uses an O(n) workspace w, and frees on error.
+ */
 cs *cs_compress (const cs *T)
 {
     csi m, n, nz, p, k, *Cp, *Ci, *w, *Ti, *Tj;
@@ -138,9 +150,17 @@ cs *cs_compress (const cs *T)
     return (cs_done (C, w, NULL, 1));       /* success; release w and return C */
 }
 
-//-----------------------------------------------------------------------------
-// p [0..n] = cumulative sum of c [0..n-1], and then copy p [0..n-1] into c
-//-----------------------------------------------------------------------------
+/**
+ * @brief p [0..n] = cumulative sum of c [0..n-1], and then copy p [0..n-1] 
+ * into c
+ * 
+ * @param p A vector of size @p n to be summed. On return, p is overwritten such
+ * that p[i] contains the cumulative sum of p[0..i] that was passed in.
+ * @param c A vector of size @p n used as a workspace. On return, c[i] contains
+ * the cumulative sum of p[0..i].
+ * @param n The dimension of @p p and @p c
+ * @return The cumulative sum of c[0..n-1]
+ */
 double cs_cumsum (csi *p, csi *c, csi n)
 {
     csi i, nz = 0;
@@ -200,7 +220,19 @@ cs *cs_spalloc (csi m, csi n, csi nzmax, csi values, csi triplet)
     return ((!A->p || !A->i || (values && !A->x)) ? cs_spfree (A) : A);
 }
 
-/* change the max # of entries sparse matrix */
+/**
+ * @brief Change the max number of entries in a sparse matrix
+ *
+ * @details Given a CSparse matrix @p A in compressed sparse column format,
+ * cs_sprealloc (i.e. Sparse Matrix Reallocation) will modify the matrix data
+ * structure to allow for a new maximum capacity.
+ * 
+ * @param A The sparse matrix (in compressed sparse column format) to be 
+ * reallocated.
+ * @param nzmax The new maximum number of nonzeros the matrix should be able to
+ * accomodate.
+ * @return An error code ok valued 1 for success and 0 for failure.
+ */
 csi cs_sprealloc (cs *A, csi nzmax)
 {
     int ok, oki, okj = 1, okx = 1;
@@ -360,7 +392,7 @@ cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2)
     
     /* dicing the matrix */
     pC = 0;
-    for (j = j1; j <= j2; j++)                     /*searching through columns between j1 and j2*/
+    for (j = j1; j <= j2; j++)   /*searching through columns between j1 and j2*/
     {
         Cp[j-j1] = pC;
         for (pA = A->p[j]; pA < A->p [j+1]; pA++)   /* finding the rows */
@@ -413,7 +445,7 @@ csi *cs_pinv (csi const *p, csi n)
 {
     csi k, *pinv;
     if (!p) return (NULL);                      /* p = NULL denotes identity */
-    pinv = (csi *)SuiteSparse_malloc (n, sizeof (csi));         /* allocate result */
+    pinv = (csi *)SuiteSparse_malloc (n, sizeof (csi));   /* allocate result */
     if (!pinv) return (NULL);                   /* out of memory */
     for (k = 0; k < n; k++) pinv [p [k]] = k;   /* invert the permutation */
     return (pinv);                              /* return result */

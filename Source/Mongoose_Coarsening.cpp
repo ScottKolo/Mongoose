@@ -1,11 +1,10 @@
 /**
- * @file mongoose_coarsening.cpp
+ * @file Mongoose_Coarsening.cpp
  * @author Nuri Yeralan, Scott Kolodziej
- * @date 23 Aug 2015
  * @brief Coarsening of a graph given a previously determined matching
  *
- * In order to operate on extremely large graphs, a pre-processing is done
- * to reduce the size of the graph while maintaining its overall structure.
+ * @details In order to operate on extremely large graphs, a pre-processing is 
+ * done to reduce the size of the graph while maintaining its overall structure.
  * Given a matching of vertices with other vertices (e.g. heavy edge matching, 
  * random, etc.), coarsening constructs the new, coarsened graph.
  */

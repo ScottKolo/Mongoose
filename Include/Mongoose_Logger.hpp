@@ -4,8 +4,10 @@
  * @date 23 Sep 2016
  * @brief Centralized debug and timing manager
  *
- * For debug and timing information to be displayed via stdin. This system
+ * @details For debug and timing information to be displayed via stdin. This system
  * allows this information to be displayed (or not) without recompilation.
+ * Timing inforation for different *portions of the library are also managed 
+ * here with a tic/toc pattern.
  */
 
 #ifndef Mongoose_Logger_hpp
@@ -56,6 +58,19 @@ class Logger
     static void printTimingInfo();
 };
 
+/** 
+ * @brief Log information at a specific log level.
+ * 
+ * Given a debugType (Error, Warn, Info, or Test), the log function will
+ * route the output string to stdin (if the appropriate log level is activated).
+ * For performance, this is an inline function, and a single bitwise AND
+ * operation is used to determine if the output string should be displayed.
+ *
+ * @param debugType the logging level this message belongs to (either Error, 
+ *    Warn, Info, or Test).
+ * @param output the string to be displayed if the appropriate logging level
+ *    is enabled.
+ */ 
 inline void Logger::log(DebugType debugType, std::string output)
 {
     if (debugType & debugLevel)
@@ -64,6 +79,23 @@ inline void Logger::log(DebugType debugType, std::string output)
     }
 }
 
+/** 
+ * @brief Start a timer for a given type/part of the code.
+ * 
+ * Given a timingType (MatchingTiming, CoarseningTiming, RefinementTiming, 
+ * FMTiming, QPTiming, or IOTiming), a clock is started for that computation.
+ * The general structure is to call tic(IOTiming) at the beginning of an I/O
+ * operation, then call toc(IOTiming) at the end of the I/O operation.
+ *
+ * Note that problems can occur and timing results may be inaccurate if a tic
+ * is followed by another tic (or a toc is followed by another toc).
+ *
+ * @param timingType The portion of the library being timed (MatchingTiming, 
+ *   CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
+ *
+ * @see toc()
+ * @see getTime()
+ */ 
 inline void Logger::tic(TimingType timingType)
 {
     if (timingOn)
@@ -72,6 +104,23 @@ inline void Logger::tic(TimingType timingType)
     }
 }
 
+/** 
+ * @brief Stop a timer for a given type/part of the code.
+ * 
+ * Given a timingType (MatchingTiming, CoarseningTiming, RefinementTiming, 
+ * FMTiming, QPTiming, or IOTiming), a clock is stopped for that computation.
+ * The general structure is to call tic(IOTiming) at the beginning of an I/O
+ * operation, then call toc(IOTiming) at the end of the I/O operation.
+ *
+ * Note that problems can occur and timing results may be inaccurate if a tic
+ * is followed by another tic (or a toc is followed by another toc).
+ *
+ * @param timingType The portion of the library being timed (MatchingTiming, 
+ *   CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
+ *
+ * @see tic()
+ * @see getTime()
+ */ 
 inline void Logger::toc(TimingType timingType)
 {
     if (timingOn)
@@ -80,6 +129,18 @@ inline void Logger::toc(TimingType timingType)
     }
 }
 
+/** 
+ * @brief Get the time recorded for a given timing type.
+ * 
+ * Retreive the total clock time for a given timing type (MatchingTiming, 
+ * CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
+ *
+ * @param timingType The portion of the library being timed (MatchingTiming, 
+ *   CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
+ *
+ * @see tic()
+ * @see toc()
+ */ 
 inline float Logger::getTime(TimingType timingType)
 {
     return times[timingType];

@@ -1,0 +1,38 @@
+\hypertarget{_mongoose___matching_8cpp}{}\section{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/\+Mongoose\+\_\+\+Matching.cpp File Reference}
+\label{_mongoose___matching_8cpp}\index{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/\+Mongoose\+\_\+\+Matching.\+cpp@{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/\+Mongoose\+\_\+\+Matching.\+cpp}}
+
+
+For computing vertex matchings.  
+
+
+{\ttfamily \#include \char`\"{}Mongoose\+\_\+\+Matching.\+hpp\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{_mongoose___matching_8cpp_aefab310f2e333537524d66169cce451a}{}\label{_mongoose___matching_8cpp_aefab310f2e333537524d66169cce451a} 
+void {\bfseries Mongoose\+::match} (Graph $\ast$G, Options $\ast$O)
+\item 
+\hypertarget{_mongoose___matching_8cpp_a9b0d5724549e229dc9a3369d5e15f97e}{}\label{_mongoose___matching_8cpp_a9b0d5724549e229dc9a3369d5e15f97e} 
+void {\bfseries Mongoose\+::matching\+\_\+\+Cleanup} (Graph $\ast$G, Options $\ast$O)
+\item 
+\hypertarget{_mongoose___matching_8cpp_a5b1b17d3dd6b054c56f78da1aa0df2b7}{}\label{_mongoose___matching_8cpp_a5b1b17d3dd6b054c56f78da1aa0df2b7} 
+void {\bfseries Mongoose\+::matching\+\_\+\+Random} (Graph $\ast$G, Options $\ast$O)
+\item 
+\hypertarget{_mongoose___matching_8cpp_ad924122b4fa833866881a36e50421485}{}\label{_mongoose___matching_8cpp_ad924122b4fa833866881a36e50421485} 
+void {\bfseries Mongoose\+::matching\+\_\+\+PA} (Graph $\ast$G, Options $\ast$O)
+\item 
+\hypertarget{_mongoose___matching_8cpp_ac60cd6f25e57c65747eac170b699170c}{}\label{_mongoose___matching_8cpp_ac60cd6f25e57c65747eac170b699170c} 
+void {\bfseries Mongoose\+::matching\+\_\+\+Davis\+PA} (Graph $\ast$G, Options $\ast$O)
+\item 
+\hypertarget{_mongoose___matching_8cpp_a5a393a8b1557ea4ea1b4bfc703c06c25}{}\label{_mongoose___matching_8cpp_a5a393a8b1557ea4ea1b4bfc703c06c25} 
+void {\bfseries Mongoose\+::matching\+\_\+\+H\+EM} (Graph $\ast$G, Options $\ast$O)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+For computing vertex matchings. 
+
+\begin{DoxyAuthor}{Author}
+S. Nuri Yeralan
+\end{DoxyAuthor}
+During coarsening, a matching of vertices is computed to determine which vertices are combined together into supernodes. This can be done using a number of different strategies, including Heavy Edge Matching and Community/\+Brotherly (similar to 2-\/hop) Matching. 

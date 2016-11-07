@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['guesscuttype',['guessCutType',['../struct_mongoose_1_1_options.html#a31abd6eab9505fb7d3964e314f75b18c',1,'Mongoose::Options']]]
+  ['doexpensivechecks',['doExpensiveChecks',['../struct_mongoose_1_1_options.html#a75794c7e8f81ebc9cf7f7eef07f56eb4',1,'Mongoose::Options']]]
 ];

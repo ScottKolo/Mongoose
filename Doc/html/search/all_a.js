@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['swapcandidate',['SwapCandidate',['../struct_mongoose_1_1_swap_candidate.html',1,'Mongoose']]]
+  ['options',['Options',['../struct_mongoose_1_1_options.html',1,'Mongoose']]]
 ];

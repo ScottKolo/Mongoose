@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['heucost',['heuCost',['../class_mongoose_1_1_graph.html#ae4a5a338b693910d94884ff817cfc5de',1,'Mongoose::Graph']]]
+  ['externaldegree',['externalDegree',['../class_mongoose_1_1_graph.html#a60624f281d036722273fbb61c3780efa',1,'Mongoose::Graph']]]
 ];

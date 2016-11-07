@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['coarsenlimit',['coarsenLimit',['../struct_mongoose_1_1_options.html#a240d271ff083f6d841cf8f3ea626dd5a',1,'Mongoose::Options']]],
-  ['cs_5fn',['cs_n',['../class_mongoose_1_1_graph.html#a83cb71d4acb332e402220e2899667da0',1,'Mongoose::Graph']]]
+  ['bhheap',['bhHeap',['../class_mongoose_1_1_graph.html#a8fb629455d09b3dc44da3724aeb2dde9',1,'Mongoose::Graph']]],
+  ['bhindex',['bhIndex',['../class_mongoose_1_1_graph.html#af86e4a4881a318cdad331d8249f36e7a',1,'Mongoose::Graph']]],
+  ['bhsize',['bhSize',['../class_mongoose_1_1_graph.html#aafe78f0432fa8964d9890e151094b6fc',1,'Mongoose::Graph']]]
 ];

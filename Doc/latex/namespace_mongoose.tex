@@ -1,0 +1,541 @@
+\hypertarget{namespace_mongoose}{}\section{Mongoose Namespace Reference}
+\label{namespace_mongoose}\index{Mongoose@{Mongoose}}
+
+
+Centralized debug and timing manager.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_mongoose_1_1cs__dmperm__results}{cs\+\_\+dmperm\+\_\+results}
+\item 
+struct \hyperlink{struct_mongoose_1_1cs__sparse}{cs\+\_\+sparse}
+\item 
+struct \hyperlink{struct_mongoose_1_1_cut_cost}{Cut\+Cost}
+\item 
+class \hyperlink{class_mongoose_1_1_graph}{Graph}
+\item 
+class \hyperlink{class_mongoose_1_1_logger}{Logger}
+\item 
+struct \hyperlink{struct_mongoose_1_1_options}{Options}
+\item 
+class \hyperlink{class_mongoose_1_1_q_p_delta}{Q\+P\+Delta}
+\item 
+struct \hyperlink{struct_mongoose_1_1_swap_candidate}{Swap\+Candidate}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespace_mongoose_a1b8d282946ae505da1ce3002ac974876}{}\label{namespace_mongoose_a1b8d282946ae505da1ce3002ac974876} 
+typedef struct \hyperlink{struct_mongoose_1_1cs__sparse}{Mongoose\+::cs\+\_\+sparse} {\bfseries cs}
+\item 
+\hypertarget{namespace_mongoose_af36de6b101bac4a587e3b3651af89308}{}\label{namespace_mongoose_af36de6b101bac4a587e3b3651af89308} 
+typedef struct \hyperlink{struct_mongoose_1_1cs__dmperm__results}{Mongoose\+::cs\+\_\+dmperm\+\_\+results} {\bfseries csd}
+\item 
+\hypertarget{namespace_mongoose_afa81a5f4071f80c779794b10703cd6c4}{}\label{namespace_mongoose_afa81a5f4071f80c779794b10703cd6c4} 
+typedef long {\bfseries Int}
+\item 
+\hypertarget{namespace_mongoose_af7f337a1111b7e1b3c8375fd1649e675}{}\label{namespace_mongoose_af7f337a1111b7e1b3c8375fd1649e675} 
+typedef double {\bfseries Weight}
+\item 
+\hypertarget{namespace_mongoose_a1612ef2565308c2f3e7c794e06c91098}{}\label{namespace_mongoose_a1612ef2565308c2f3e7c794e06c91098} 
+typedef double {\bfseries Double}
+\item 
+\hypertarget{namespace_mongoose_a8c083356efe5952fed500d6ac126125e}{}\label{namespace_mongoose_a8c083356efe5952fed500d6ac126125e} 
+typedef enum Mongoose\+::\+Debug\+Type {\bfseries Debug\+Type}
+\item 
+\hypertarget{namespace_mongoose_aa34013708f826931df6989b8af96c938}{}\label{namespace_mongoose_aa34013708f826931df6989b8af96c938} 
+typedef enum Mongoose\+::\+Timing\+Type {\bfseries Timing\+Type}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespace_mongoose_a6f59634712403813cafd0879184469ae}{}\label{namespace_mongoose_a6f59634712403813cafd0879184469ae} 
+enum {\bfseries Matching\+Strategy} \{ {\bfseries Random}, 
+{\bfseries H\+EM}, 
+{\bfseries H\+E\+M\+PA}, 
+{\bfseries H\+E\+M\+Davis\+PA}
+ \}
+\item 
+\hypertarget{namespace_mongoose_af092ffb972b126218f8eef0425f007e7}{}\label{namespace_mongoose_af092ffb972b126218f8eef0425f007e7} 
+enum {\bfseries Guess\+Cut\+Type} \{ {\bfseries Pseudoperipheral\+\_\+\+Fast}, 
+{\bfseries Pseudoperipheral\+\_\+\+All}, 
+{\bfseries Q\+P\+\_\+\+Grad\+Proj}, 
+{\bfseries Q\+P\+\_\+\+Ball\+Opt}
+ \}
+\item 
+\hypertarget{namespace_mongoose_a7eceda98a2f475e3ad2e5c2863f4034c}{}\label{namespace_mongoose_a7eceda98a2f475e3ad2e5c2863f4034c} 
+enum {\bfseries Debug\+Type} \{ \newline
+{\bfseries None} = 0, 
+{\bfseries Error} = 1, 
+{\bfseries Warn} = 2, 
+{\bfseries Info} = 4, 
+\newline
+{\bfseries Test} = 8, 
+{\bfseries All} = 15
+ \}
+\item 
+\hypertarget{namespace_mongoose_ad2aa39a9ad52fd6839bf59774c13ce3d}{}\label{namespace_mongoose_ad2aa39a9ad52fd6839bf59774c13ce3d} 
+enum {\bfseries Timing\+Type} \{ \newline
+{\bfseries Matching\+Timing} = 0, 
+{\bfseries Coarsening\+Timing} = 1, 
+{\bfseries Refinement\+Timing} = 2, 
+{\bfseries F\+M\+Timing} = 3, 
+\newline
+{\bfseries Q\+P\+Timing} = 4, 
+{\bfseries I\+O\+Timing} = 5
+ \}
+\item 
+\hypertarget{namespace_mongoose_ac32d7c700642b419d0aa42107c6599a5}{}\label{namespace_mongoose_ac32d7c700642b419d0aa42107c6599a5} 
+enum {\bfseries Match\+Type} \{ {\bfseries Match\+Type\+\_\+\+Orphan} = 0, 
+{\bfseries Match\+Type\+\_\+\+Standard} = 1, 
+{\bfseries Match\+Type\+\_\+\+Brotherly} = 2, 
+{\bfseries Match\+Type\+\_\+\+Community} = 3
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ \hyperlink{namespace_mongoose_a449a68ce1571bc656fe05abd1fc6bbc8}{coarsen} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\begin{DoxyCompactList}\small\item\em Coarsen a \hyperlink{class_mongoose_1_1_graph}{Graph} given a previously calculated matching. \end{DoxyCompactList}\item 
+\hypertarget{namespace_mongoose_a678a1f81adbafc8dcdde0fb1ce2cc44f}{}\label{namespace_mongoose_a678a1f81adbafc8dcdde0fb1ce2cc44f} 
+\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ {\bfseries condition\+Graph} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, bool reset\+EW, bool reset\+NW)
+\item 
+\hypertarget{namespace_mongoose_acb29e4bf4084eda121225ece4ce31cf6}{}\label{namespace_mongoose_acb29e4bf4084eda121225ece4ce31cf6} 
+csi $\ast$ {\bfseries cs\+\_\+counts} (const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A, const csi $\ast$parent, const csi $\ast$post, csi ata)
+\item 
+\hypertarget{namespace_mongoose_a23d4d5e0800aad2fc913da64ab134905}{}\label{namespace_mongoose_a23d4d5e0800aad2fc913da64ab134905} 
+double {\bfseries cs\+\_\+cumsum} (csi $\ast$p, csi $\ast$c, csi n)
+\item 
+\hypertarget{namespace_mongoose_ad49815602060d8a608d27023c146d576}{}\label{namespace_mongoose_ad49815602060d8a608d27023c146d576} 
+csi {\bfseries cs\+\_\+scatter} (const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A, csi j, double beta, csi $\ast$w, double $\ast$x, csi mark, \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$C, csi nz)
+\item 
+\hypertarget{namespace_mongoose_ae481bc1af8affa90b40d463ea4b3b395}{}\label{namespace_mongoose_ae481bc1af8affa90b40d463ea4b3b395} 
+csi {\bfseries cs\+\_\+sprealloc} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A, csi nzmax)
+\item 
+\hypertarget{namespace_mongoose_a0ec8f329559f55565f8dd8f7f34e0d47}{}\label{namespace_mongoose_a0ec8f329559f55565f8dd8f7f34e0d47} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries cs\+\_\+done} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$C, void $\ast$w, void $\ast$x, csi ok)
+\item 
+\hypertarget{namespace_mongoose_a717587c618e588fbffe0ac282ee8a580}{}\label{namespace_mongoose_a717587c618e588fbffe0ac282ee8a580} 
+\hyperlink{struct_mongoose_1_1cs__dmperm__results}{csd} $\ast$ {\bfseries cs\+\_\+dalloc} (csi m, csi n)
+\item 
+\hypertarget{namespace_mongoose_a091935bb14f70e4ca2875ea35617d9b3}{}\label{namespace_mongoose_a091935bb14f70e4ca2875ea35617d9b3} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries cs\+\_\+spfree} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A)
+\item 
+\hypertarget{namespace_mongoose_a8dd64763b1b9de06458fc6ade81ea55e}{}\label{namespace_mongoose_a8dd64763b1b9de06458fc6ade81ea55e} 
+\hyperlink{struct_mongoose_1_1cs__dmperm__results}{csd} $\ast$ {\bfseries cs\+\_\+ddone} (\hyperlink{struct_mongoose_1_1cs__dmperm__results}{csd} $\ast$D, \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$C, void $\ast$w, csi ok)
+\item 
+\hypertarget{namespace_mongoose_a7e2c227f9682c652f423a5a17f4f5d0f}{}\label{namespace_mongoose_a7e2c227f9682c652f423a5a17f4f5d0f} 
+csi {\bfseries cs\+\_\+dfs} (csi j, \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$G, csi top, csi $\ast$xi, csi $\ast$pstack, const csi $\ast$pinv)
+\item 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ \hyperlink{namespace_mongoose_afd7b4530c280c91c43ae695c8d515a42}{cs\+\_\+transpose} (const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A, csi values)
+\begin{DoxyCompactList}\small\item\em C = A\textquotesingle{}. \end{DoxyCompactList}\item 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ \hyperlink{namespace_mongoose_a2153d61eda5ac1e1b70617e8cf8cde33}{cs\+\_\+add} (const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A, const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$B, double alpha, double beta)
+\begin{DoxyCompactList}\small\item\em C = alpha$\ast$A + beta$\ast$B. \end{DoxyCompactList}\item 
+\hypertarget{namespace_mongoose_a867fb9806212fa756422dd9b01cad293}{}\label{namespace_mongoose_a867fb9806212fa756422dd9b01cad293} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries cs\+\_\+compress} (const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$T)
+\item 
+\hypertarget{namespace_mongoose_a0fa999ba128bf47a2d3e850902632ee0}{}\label{namespace_mongoose_a0fa999ba128bf47a2d3e850902632ee0} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries cs\+\_\+spalloc} (csi m, csi n, csi nzmax, csi values, csi triplet)
+\item 
+\hypertarget{namespace_mongoose_af890f3acd5e9c91d56db604c9588ac75}{}\label{namespace_mongoose_af890f3acd5e9c91d56db604c9588ac75} 
+\hyperlink{struct_mongoose_1_1cs__dmperm__results}{csd} $\ast$ {\bfseries cs\+\_\+dfree} (\hyperlink{struct_mongoose_1_1cs__dmperm__results}{csd} $\ast$D)
+\item 
+\hypertarget{namespace_mongoose_ae7a5086f0e92053c57ee14e6983a6864}{}\label{namespace_mongoose_ae7a5086f0e92053c57ee14e6983a6864} 
+\hyperlink{struct_mongoose_1_1cs__dmperm__results}{csd} $\ast$ {\bfseries cs\+\_\+scc} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A)
+\item 
+\hypertarget{namespace_mongoose_af1b3fa2cdde0640c61538248856248f1}{}\label{namespace_mongoose_af1b3fa2cdde0640c61538248856248f1} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries cs\+\_\+submat} (const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A, const csi i1, const csi i2, const csi j1, const csi j2)
+\item 
+\hypertarget{namespace_mongoose_af26cb6523bce1312c41c05aa81682451}{}\label{namespace_mongoose_af26cb6523bce1312c41c05aa81682451} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries cs\+\_\+permute} (const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A, const csi $\ast$pinv, const csi $\ast$q, csi values)
+\item 
+\hypertarget{namespace_mongoose_acf53ac9514abcb8d1775ee586bd5c331}{}\label{namespace_mongoose_acf53ac9514abcb8d1775ee586bd5c331} 
+csi $\ast$ {\bfseries cs\+\_\+pinv} (csi const $\ast$p, csi n)
+\item 
+\hypertarget{namespace_mongoose_a7595a65b084413408f4a67b324d69eb8}{}\label{namespace_mongoose_a7595a65b084413408f4a67b324d69eb8} 
+void {\bfseries print} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$G)
+\item 
+\hypertarget{namespace_mongoose_af395e653d0b0b5e7d255865bdf29dce5}{}\label{namespace_mongoose_af395e653d0b0b5e7d255865bdf29dce5} 
+void {\bfseries print} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G)
+\item 
+\hypertarget{namespace_mongoose_ad8595d581461c57e6da403a3fc7a0604}{}\label{namespace_mongoose_ad8595d581461c57e6da403a3fc7a0604} 
+int {\bfseries Compute\+Edge\+Separator} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a29db101ebccc8a6570f6d9457afd6629}{}\label{namespace_mongoose_a29db101ebccc8a6570f6d9457afd6629} 
+bool {\bfseries initialize} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_af97548a965b44daddc8e1e517963796d}{}\label{namespace_mongoose_af97548a965b44daddc8e1e517963796d} 
+Int {\bfseries diag\+B\+FS} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, Int $\ast$stack, Int $\ast$mark, Int mark\+Start, Int $\ast$inout\+\_\+start)
+\item 
+\hypertarget{namespace_mongoose_a3eadbf0bc0b05932eb3543c361bd7496}{}\label{namespace_mongoose_a3eadbf0bc0b05932eb3543c361bd7496} 
+void {\bfseries part\+B\+FS} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, Int start)
+\item 
+\hypertarget{namespace_mongoose_adea23a128e557385a7ca6c5e09bd9d1d}{}\label{namespace_mongoose_adea23a128e557385a7ca6c5e09bd9d1d} 
+void {\bfseries find\+All\+Pseudoperipheral\+Nodes} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, Int $\ast$list, Int $\ast$listsize, bool $\ast$ppv\+Mark)
+\item 
+\hypertarget{namespace_mongoose_a5e3abdf9337ae48b66942a62e6ec981d}{}\label{namespace_mongoose_a5e3abdf9337ae48b66942a62e6ec981d} 
+void {\bfseries pseudoperipheral\+Guess} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a8a62b5b07991028afb8af0b82b39f66e}{}\label{namespace_mongoose_a8a62b5b07991028afb8af0b82b39f66e} 
+bool {\bfseries guess\+Cut} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_aeb464d0e63dccc884cd7c263be5075ee}{}\label{namespace_mongoose_aeb464d0e63dccc884cd7c263be5075ee} 
+void {\bfseries fm\+Refine\+\_\+worker} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_acb49900518e10126690fb51a170ce20f}{}\label{namespace_mongoose_acb49900518e10126690fb51a170ce20f} 
+void {\bfseries improve\+Cut\+Using\+FM} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_af3413f738c2ef291db0d26e13c55bf48}{}\label{namespace_mongoose_af3413f738c2ef291db0d26e13c55bf48} 
+void {\bfseries fm\+Swap} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, Int vertex, Weight gain, bool old\+Partition, Int $\ast$mark, Int mark\+Value)
+\item 
+\hypertarget{namespace_mongoose_aeae6a68c8c8d7f25fe15544d206a06aa}{}\label{namespace_mongoose_aeae6a68c8c8d7f25fe15544d206a06aa} 
+void {\bfseries calculate\+Gain} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, Int vertex, Weight $\ast$out\+\_\+gain, Int $\ast$out\+\_\+external\+Degree)
+\item 
+\hypertarget{namespace_mongoose_a85b29287adbe15db49d766610de33013}{}\label{namespace_mongoose_a85b29287adbe15db49d766610de33013} 
+void {\bfseries improve\+Cut\+Using\+QP} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, bool is\+Initial)
+\item 
+\hypertarget{namespace_mongoose_afad39ca8d0d45fa3690724df9f186532}{}\label{namespace_mongoose_afad39ca8d0d45fa3690724df9f186532} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries Graph\+To\+C\+Sparse3} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, bool copy)
+\item 
+\hypertarget{namespace_mongoose_aaa577194ad5e0b36ef28329b26633dac}{}\label{namespace_mongoose_aaa577194ad5e0b36ef28329b26633dac} 
+\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ {\bfseries C\+Sparse3\+To\+Graph} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$G, bool reset\+EW, bool reset\+NW)
+\item 
+\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ \hyperlink{namespace_mongoose_a6dba86117ea57ef9d093db03e0e9a08d}{read\+Graph} (const std\+::string filename)
+\begin{DoxyCompactList}\small\item\em Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. \end{DoxyCompactList}\item 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ \hyperlink{namespace_mongoose_a155be3fa8b76110fb4a0a69cd220de4c}{read\+Matrix} (const std\+::string filename, M\+M\+\_\+typecode \&matcode)
+\begin{DoxyCompactList}\small\item\em Generate a C\+Sparse matrix from a Matrix Market file. \end{DoxyCompactList}\item 
+\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ \hyperlink{namespace_mongoose_a13ce6efb0d1b7dc6420eeda564b03511}{read\+Graph} (const char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. \end{DoxyCompactList}\item 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ \hyperlink{namespace_mongoose_a008f29c7dc05d2436f6e82e117d80ab8}{read\+Matrix} (const char $\ast$filename, M\+M\+\_\+typecode \&matcode)
+\begin{DoxyCompactList}\small\item\em Generate a C\+Sparse matrix from a Matrix Market file. \end{DoxyCompactList}\item 
+\hypertarget{namespace_mongoose_aefab310f2e333537524d66169cce451a}{}\label{namespace_mongoose_aefab310f2e333537524d66169cce451a} 
+void {\bfseries match} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a9b0d5724549e229dc9a3369d5e15f97e}{}\label{namespace_mongoose_a9b0d5724549e229dc9a3369d5e15f97e} 
+void {\bfseries matching\+\_\+\+Cleanup} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a5b1b17d3dd6b054c56f78da1aa0df2b7}{}\label{namespace_mongoose_a5b1b17d3dd6b054c56f78da1aa0df2b7} 
+void {\bfseries matching\+\_\+\+Random} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_ad924122b4fa833866881a36e50421485}{}\label{namespace_mongoose_ad924122b4fa833866881a36e50421485} 
+void {\bfseries matching\+\_\+\+PA} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_ac60cd6f25e57c65747eac170b699170c}{}\label{namespace_mongoose_ac60cd6f25e57c65747eac170b699170c} 
+void {\bfseries matching\+\_\+\+Davis\+PA} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a5a393a8b1557ea4ea1b4bfc703c06c25}{}\label{namespace_mongoose_a5a393a8b1557ea4ea1b4bfc703c06c25} 
+void {\bfseries matching\+\_\+\+H\+EM} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a8615a1a03d2a7895d15c3b06407dc414}{}\label{namespace_mongoose_a8615a1a03d2a7895d15c3b06407dc414} 
+void {\bfseries Q\+Pboundary} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, \hyperlink{class_mongoose_1_1_q_p_delta}{Q\+P\+Delta} $\ast$QP)
+\item 
+\hypertarget{namespace_mongoose_a28c8cb486df6e1cf477805f0876aa720}{}\label{namespace_mongoose_a28c8cb486df6e1cf477805f0876aa720} 
+void {\bfseries bh\+Load} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a5af23d2dc16d30de18bd25382da1a93f}{}\label{namespace_mongoose_a5af23d2dc16d30de18bd25382da1a93f} 
+void {\bfseries bh\+Insert} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, Int vertex)
+\item 
+\hypertarget{namespace_mongoose_aeb42424ac8bff101843b2d1a0137575d}{}\label{namespace_mongoose_aeb42424ac8bff101843b2d1a0137575d} 
+void {\bfseries bh\+Clear} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G)
+\item 
+\hypertarget{namespace_mongoose_ac0c687c0668620e275a62ced7675a951}{}\label{namespace_mongoose_ac0c687c0668620e275a62ced7675a951} 
+void {\bfseries bh\+Remove} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, Int vertex, Weight gain, bool partition, Int bh\+Position)
+\item 
+\hypertarget{namespace_mongoose_a1dc534ca6d5f0e47ec6941fa47f1f124}{}\label{namespace_mongoose_a1dc534ca6d5f0e47ec6941fa47f1f124} 
+void {\bfseries heapify\+Up} (Int $\ast$bh\+Index, Int $\ast$bh\+Heap, Weight $\ast$gains, Int vertex, Int position, Weight gain)
+\item 
+\hypertarget{namespace_mongoose_a93aac21b1cecbc1e70d4a002a1835685}{}\label{namespace_mongoose_a93aac21b1cecbc1e70d4a002a1835685} 
+void {\bfseries heapify\+Down} (Int $\ast$bh\+Index, Int $\ast$bh\+Heap, Int size, Weight $\ast$gains, Int vertex, Int position, Weight gain)
+\item 
+\hypertarget{namespace_mongoose_aff1455ca46f26632064dc5c099197bb8}{}\label{namespace_mongoose_aff1455ca46f26632064dc5c099197bb8} 
+Double {\bfseries Q\+Pgradproj} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, \hyperlink{class_mongoose_1_1_q_p_delta}{Q\+P\+Delta} $\ast$QP)
+\item 
+\hypertarget{namespace_mongoose_abd1a702300e73d1c64a254e35fe6c1c6}{}\label{namespace_mongoose_abd1a702300e73d1c64a254e35fe6c1c6} 
+void {\bfseries Q\+Plinks} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, \hyperlink{class_mongoose_1_1_q_p_delta}{Q\+P\+Delta} $\ast$QP)
+\item 
+\hypertarget{namespace_mongoose_a43dcd62b139a178623d33624dbc994be}{}\label{namespace_mongoose_a43dcd62b139a178623d33624dbc994be} 
+void {\bfseries Q\+Pmaxheap\+\_\+build} (Int $\ast$heap, Int size, Double $\ast$x)
+\item 
+\hypertarget{namespace_mongoose_ac88ec812c9b32e3881de25d7355407ac}{}\label{namespace_mongoose_ac88ec812c9b32e3881de25d7355407ac} 
+Int {\bfseries Q\+Pmaxheap\+\_\+delete} (Int $\ast$heap, Int size, Double $\ast$x)
+\item 
+\hypertarget{namespace_mongoose_ae5d4e76f2b895b0cd57411c90d785c8e}{}\label{namespace_mongoose_ae5d4e76f2b895b0cd57411c90d785c8e} 
+Int {\bfseries Q\+Pmaxheap\+\_\+add} (Int leaf, Int $\ast$heap, Double $\ast$x, Int size)
+\item 
+\hypertarget{namespace_mongoose_a150c22316d183d1376a1f680e9841645}{}\label{namespace_mongoose_a150c22316d183d1376a1f680e9841645} 
+void {\bfseries Q\+Pmaxheapify} (Int p, Int $\ast$heap, Int size, Double $\ast$x)
+\item 
+\hypertarget{namespace_mongoose_a02335fa458806bd2056cc3ae9a05b9d9}{}\label{namespace_mongoose_a02335fa458806bd2056cc3ae9a05b9d9} 
+void {\bfseries Q\+Pminheap\+\_\+build} (Int $\ast$heap, Int size, Double $\ast$x)
+\item 
+\hypertarget{namespace_mongoose_a7faebca8062d2e852634bad3500b1a3c}{}\label{namespace_mongoose_a7faebca8062d2e852634bad3500b1a3c} 
+Int {\bfseries Q\+Pminheap\+\_\+delete} (Int $\ast$heap, Int size, Double $\ast$x)
+\item 
+\hypertarget{namespace_mongoose_a65995cc4204b411034064d3829ca7bf4}{}\label{namespace_mongoose_a65995cc4204b411034064d3829ca7bf4} 
+Int {\bfseries Q\+Pminheap\+\_\+add} (Int leaf, Int $\ast$heap, Double $\ast$x, Int nheap)
+\item 
+\hypertarget{namespace_mongoose_ae2703e4fd40288470eeb09de4bd1d62f}{}\label{namespace_mongoose_ae2703e4fd40288470eeb09de4bd1d62f} 
+void {\bfseries Q\+Pminheapify} (Int p, Int $\ast$heap, Int size, Double $\ast$x)
+\item 
+\hypertarget{namespace_mongoose_a468a4bf76df0ae46d77bee17720143a7}{}\label{namespace_mongoose_a468a4bf76df0ae46d77bee17720143a7} 
+Double {\bfseries Q\+Pnapdown} (Double $\ast$x, Int n, Double lambda, Double $\ast$a, Double b, Double $\ast$breakpts, Int $\ast$bound\+\_\+heap, Int $\ast$free\+\_\+heap)
+\item 
+\hypertarget{namespace_mongoose_a1927999799d3dd3c407e506b8d2e06b1}{}\label{namespace_mongoose_a1927999799d3dd3c407e506b8d2e06b1} 
+Double {\bfseries Q\+Pnapsack} (Double $\ast$x, Int n, Double lo, Double hi, Double $\ast$Gw, Double Lambda, Int $\ast$ix, Double $\ast$w, Int $\ast$heap1, Int $\ast$heap2)
+\item 
+\hypertarget{namespace_mongoose_a21a617476ce666abb7981d0d0772e5fe}{}\label{namespace_mongoose_a21a617476ce666abb7981d0d0772e5fe} 
+void {\bfseries Q\+P\+Napsack\+Pair} (Double $\ast$x, Double $\ast$lambda, Int $\ast$ix, Int n, Int m, Double $\ast$a, Int $\ast$lo, Int $\ast$hi, Double $\ast$wx1, Int $\ast$wi1, Int $\ast$wi2)
+\item 
+\hypertarget{namespace_mongoose_a8d5909c500f409018f6d9811aed16464}{}\label{namespace_mongoose_a8d5909c500f409018f6d9811aed16464} 
+Double {\bfseries Q\+Pnapup} (Double $\ast$x, Int n, Double lambda, Double $\ast$a, Double b, Double $\ast$breakpts, Int $\ast$bound\+\_\+heap, Int $\ast$free\+\_\+heap)
+\item 
+\hypertarget{namespace_mongoose_a9c7b6c5f611ca4e8c3cf16ee9af28c1e}{}\label{namespace_mongoose_a9c7b6c5f611ca4e8c3cf16ee9af28c1e} 
+\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ {\bfseries refine} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_adceb5c6c9c7b4d5507d0bf035afa7c17}{}\label{namespace_mongoose_adceb5c6c9c7b4d5507d0bf035afa7c17} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries sanitize\+Matrix} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$compressed\+\_\+A, bool symmetric\+Triangular)
+\item 
+\hypertarget{namespace_mongoose_aebb04732bf01ac108e1ca9cb71ffb901}{}\label{namespace_mongoose_aebb04732bf01ac108e1ca9cb71ffb901} 
+void {\bfseries remove\+Diagonal} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A)
+\item 
+\hypertarget{namespace_mongoose_aacd398c03bd19cc028404da54e7b865a}{}\label{namespace_mongoose_aacd398c03bd19cc028404da54e7b865a} 
+\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ {\bfseries mirror\+Triangular} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$A)
+\item 
+\hypertarget{namespace_mongoose_a73887a05e38bb29fcc0f509ac026bad5}{}\label{namespace_mongoose_a73887a05e38bb29fcc0f509ac026bad5} 
+void {\bfseries waterdance} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a08c783801d3076b6cfb4527865b30576}{}\label{namespace_mongoose_a08c783801d3076b6cfb4527865b30576} 
+csi {\bfseries cs\+\_\+entry} (\hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$T, csi i, csi j, double x)
+\item 
+\hypertarget{namespace_mongoose_ad923c4193f9dd253f70b113a37a1d46f}{}\label{namespace_mongoose_ad923c4193f9dd253f70b113a37a1d46f} 
+void {\bfseries print} (\hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_afc0be98e4aad95e966f22abca8278011}{}\label{namespace_mongoose_afc0be98e4aad95e966f22abca8278011} 
+void {\bfseries print\+To\+File} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G)
+\item 
+\hypertarget{namespace_mongoose_a37874958f524a8531dc9ab1380333d51}{}\label{namespace_mongoose_a37874958f524a8531dc9ab1380333d51} 
+void {\bfseries print\+To\+File} (\hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_ad31e0452c9750b5c47e8bd1582273229}{}\label{namespace_mongoose_ad31e0452c9750b5c47e8bd1582273229} 
+void {\bfseries bh\+Check\+Heap\+Property} (Int $\ast$bh\+Index, Int $\ast$bh\+Heap, Int bh\+Size, Weight $\ast$gains)
+\item 
+\hypertarget{namespace_mongoose_af2a7b02a45f2c9330e1281d6f1fd9f15}{}\label{namespace_mongoose_af2a7b02a45f2c9330e1281d6f1fd9f15} 
+void {\bfseries check\+Graph} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_ab0cfa9d3c9f5fd7247f45a196803f493}{}\label{namespace_mongoose_ab0cfa9d3c9f5fd7247f45a196803f493} 
+void {\bfseries check\+Boundary} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O)
+\item 
+\hypertarget{namespace_mongoose_a46c6d80baba4e5c9e817c518be8b28c3}{}\label{namespace_mongoose_a46c6d80baba4e5c9e817c518be8b28c3} 
+void {\bfseries find\+All\+Pseudoperipheral\+Nodes} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, Int $\ast$list, Int $\ast$listsize)
+\item 
+\hypertarget{namespace_mongoose_ad249585cd23c3d0b125013e237606f8c}{}\label{namespace_mongoose_ad249585cd23c3d0b125013e237606f8c} 
+\hyperlink{class_mongoose_1_1_logger}{Logger} {\bfseries log} ()
+\item 
+\hypertarget{namespace_mongoose_afceb3c550cb48d1551c00b96a4225fe5}{}\label{namespace_mongoose_afceb3c550cb48d1551c00b96a4225fe5} 
+void {\bfseries Q\+P\+Boundary} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{struct_mongoose_1_1_options}{Options} $\ast$O, \hyperlink{class_mongoose_1_1_q_p_delta}{Q\+P\+Delta} $\ast$QP)
+\item 
+\hypertarget{namespace_mongoose_a984d99519ebb5bc2e6aaf44939db65c2}{}\label{namespace_mongoose_a984d99519ebb5bc2e6aaf44939db65c2} 
+void {\bfseries save\+Context} (\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$G, \hyperlink{class_mongoose_1_1_q_p_delta}{Q\+P\+Delta} $\ast$QP, Int it, Double err, Int nf, Int ib, Double lo, Double hi)
+\item 
+\hypertarget{namespace_mongoose_a4de9f721917e074f053a735709d95239}{}\label{namespace_mongoose_a4de9f721917e074f053a735709d95239} 
+void {\bfseries Q\+Pmaxheap\+\_\+check} (Int $\ast$heap, Double $\ast$x, Int size, Int n, Int p)
+\item 
+\hypertarget{namespace_mongoose_a42a04d910597c6ce87b0b8f6a2fe3833}{}\label{namespace_mongoose_a42a04d910597c6ce87b0b8f6a2fe3833} 
+void {\bfseries Q\+Pminheap\+\_\+check} (Int $\ast$heap, Double $\ast$x, Int size, Int n, Int p)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Centralized debug and timing manager. 
+
+Simplified I/O functions for reading matrices and graphs.
+
+\begin{DoxyAuthor}{Author}
+Scott Kolodziej 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+23 Sep 2016 For debug and timing information to be displayed via stdin. This system allows this information to be displayed (or not) without recompilation. Timing inforation for different $\ast$portions of the library are also managed here with a tic/toc pattern.
+\end{DoxyDate}
+\begin{DoxyAuthor}{Author}
+Scott Kolodziej 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13 Jun 2016 For reading Matrix Market files into \hyperlink{namespace_mongoose}{Mongoose}, read\+\_\+graph and read\+\_\+matrix are provided (depending on if a \hyperlink{class_mongoose_1_1_graph}{Graph} class instance or C\+Sparse matrix instance is needed). The filename can be specified as either a const char$\ast$ (easier for C programmers) or std\+::string (easier from C++). 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\hypertarget{namespace_mongoose_a449a68ce1571bc656fe05abd1fc6bbc8}{}\label{namespace_mongoose_a449a68ce1571bc656fe05abd1fc6bbc8} 
+\index{Mongoose@{Mongoose}!coarsen@{coarsen}}
+\index{coarsen@{coarsen}!Mongoose@{Mongoose}}
+\subsubsection{\texorpdfstring{coarsen()}{coarsen()}}
+{\footnotesize\ttfamily \hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ Mongoose\+::coarsen (\begin{DoxyParamCaption}\item[{\hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$}]{G,  }\item[{\hyperlink{struct_mongoose_1_1_options}{Options} $\ast$}]{O }\end{DoxyParamCaption})}
+
+
+
+Coarsen a \hyperlink{class_mongoose_1_1_graph}{Graph} given a previously calculated matching. 
+
+Given a \hyperlink{class_mongoose_1_1_graph}{Graph} {\ttfamily G}, coarsen returns a new \hyperlink{class_mongoose_1_1_graph}{Graph} that is coarsened according to the matching given by G-\/$>$matching, G-\/$>$matchmap, and G-\/$>$invmatchmap. G-\/$>$matching must be built such that matching\mbox{[}a\mbox{]} = b+1 and matching\mbox{[}b\mbox{]} = a+1 if vertices a and b are matched. G-\/$>$matchmap is a mapping from fine to coarse vertices, so matchmap\mbox{[}a\mbox{]} = matchmap\mbox{[}b\mbox{]} = c if vertices a and b are matched and mapped to vertex c in the coarse graph. Likewise, G-\/$>$invmatchmap is one possible inverse of G-\/$>$matchmap, so invmatchmap\mbox{[}c\mbox{]} = a or invmatchmap\mbox{[}c\mbox{]} = b if a coarsened vertex c represents the matching of vertices a and b in the refined graph.
+
+
+\begin{DoxyCode}
+Graph coarsened\_graph = \hyperlink{namespace_mongoose_a449a68ce1571bc656fe05abd1fc6bbc8}{coarsen}(large\_graph, options);
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em G} & \hyperlink{class_mongoose_1_1_graph}{Graph} to be coarsened \\
+\hline
+{\em O} & Option struct specifying if debug checks should be done \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A coarsened version of G 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Allocates memory for the coarsened graph, but frees on error. 
+\end{DoxyNote}
+\hypertarget{namespace_mongoose_a2153d61eda5ac1e1b70617e8cf8cde33}{}\label{namespace_mongoose_a2153d61eda5ac1e1b70617e8cf8cde33} 
+\index{Mongoose@{Mongoose}!cs\+\_\+add@{cs\+\_\+add}}
+\index{cs\+\_\+add@{cs\+\_\+add}!Mongoose@{Mongoose}}
+\subsubsection{\texorpdfstring{cs\+\_\+add()}{cs\_add()}}
+{\footnotesize\ttfamily \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ Mongoose\+::cs\+\_\+add (\begin{DoxyParamCaption}\item[{const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$}]{A,  }\item[{const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$}]{B,  }\item[{double}]{alpha,  }\item[{double}]{beta }\end{DoxyParamCaption})}
+
+
+
+C = alpha$\ast$A + beta$\ast$B. 
+
+Given two C\+Sparse matrices {\ttfamily A} and {\ttfamily B}, and scaling constants {\ttfamily alpha} and {\ttfamily beta}, cs\+\_\+add returns a new matrix such that C = alpha$\ast$A + beta$\ast$B. In other words, C(i,j) = alpha$\ast$A(i,j) + beta$\ast$B(i,j).
+
+
+\begin{DoxyCode}
+cs *C = \hyperlink{namespace_mongoose_a2153d61eda5ac1e1b70617e8cf8cde33}{cs\_add}(A, B, 1, 1);     \textcolor{comment}{// C = A + B}
+cs *D = \hyperlink{namespace_mongoose_a2153d61eda5ac1e1b70617e8cf8cde33}{cs\_add}(A, B, 0.5, 0.5); \textcolor{comment}{// C = 0.5*A + 0.5*B}
+cs *E = \hyperlink{namespace_mongoose_a2153d61eda5ac1e1b70617e8cf8cde33}{cs\_add}(A, B, 1, 0);     \textcolor{comment}{// C = A}
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Matrix to be added to B. \\
+\hline
+{\em B} & Matrix to be added to A \\
+\hline
+{\em alpha} & Scalar (double) value to scale all elements of A matrix by \\
+\hline
+{\em beta} & Scalar (double) value to scale all elements of B matrix by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A matrix such that C = alpha$\ast$A + beta$\ast$B 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Allocates memory for the returned matrix, but frees on error. 
+\end{DoxyNote}
+\hypertarget{namespace_mongoose_afd7b4530c280c91c43ae695c8d515a42}{}\label{namespace_mongoose_afd7b4530c280c91c43ae695c8d515a42} 
+\index{Mongoose@{Mongoose}!cs\+\_\+transpose@{cs\+\_\+transpose}}
+\index{cs\+\_\+transpose@{cs\+\_\+transpose}!Mongoose@{Mongoose}}
+\subsubsection{\texorpdfstring{cs\+\_\+transpose()}{cs\_transpose()}}
+{\footnotesize\ttfamily \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ Mongoose\+::cs\+\_\+transpose (\begin{DoxyParamCaption}\item[{const \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$}]{A,  }\item[{csi}]{values }\end{DoxyParamCaption})}
+
+
+
+C = A\textquotesingle{}. 
+
+Given a C\+Sparse matrix {\ttfamily A}, cs\+\_\+transpose returns a new matrix that is the transpose of {\ttfamily A}. In other words, C(j,i) = A(i,j). The second parameter, {\ttfamily values}, allows for the copying of the A-\/$>$x array. If {\ttfamily values} = 0, the A-\/$>$x array is ignored, and C-\/$>$x is left N\+U\+LL. If {\ttfamily values} != 0, then the A-\/$>$x array is copied (transposed) to C-\/$>$x.
+
+
+\begin{DoxyCode}
+cs *C = \hyperlink{namespace_mongoose_afd7b4530c280c91c43ae695c8d515a42}{cs\_transpose}(A, 0); \textcolor{comment}{// C is A' but C->x = NULL}
+cs *D = \hyperlink{namespace_mongoose_afd7b4530c280c91c43ae695c8d515a42}{cs\_transpose}(A, 1); \textcolor{comment}{// D is A' and C->x is transpose of A->x}
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Matrix to be transposed \\
+\hline
+{\em values} & 1 to transpose the values A-\/$>$x, 0 to ignore \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A transposed version of A 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Allocates memory for the returned matrix, but frees on error. 
+\end{DoxyNote}
+\hypertarget{namespace_mongoose_a6dba86117ea57ef9d093db03e0e9a08d}{}\label{namespace_mongoose_a6dba86117ea57ef9d093db03e0e9a08d} 
+\index{Mongoose@{Mongoose}!read\+Graph@{read\+Graph}}
+\index{read\+Graph@{read\+Graph}!Mongoose@{Mongoose}}
+\subsubsection{\texorpdfstring{read\+Graph()}{readGraph()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ Mongoose\+::read\+Graph (\begin{DoxyParamCaption}\item[{const std\+::string}]{filename }\end{DoxyParamCaption})}
+
+
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. 
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} class instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & the filename or path to the Matrix Market File. \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespace_mongoose_a13ce6efb0d1b7dc6420eeda564b03511}{}\label{namespace_mongoose_a13ce6efb0d1b7dc6420eeda564b03511} 
+\index{Mongoose@{Mongoose}!read\+Graph@{read\+Graph}}
+\index{read\+Graph@{read\+Graph}!Mongoose@{Mongoose}}
+\subsubsection{\texorpdfstring{read\+Graph()}{readGraph()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{class_mongoose_1_1_graph}{Graph} $\ast$ Mongoose\+::read\+Graph (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} from a Matrix Market file. 
+
+Generate a \hyperlink{class_mongoose_1_1_graph}{Graph} class instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & the filename or path to the Matrix Market File. \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespace_mongoose_a155be3fa8b76110fb4a0a69cd220de4c}{}\label{namespace_mongoose_a155be3fa8b76110fb4a0a69cd220de4c} 
+\index{Mongoose@{Mongoose}!read\+Matrix@{read\+Matrix}}
+\index{read\+Matrix@{read\+Matrix}!Mongoose@{Mongoose}}
+\subsubsection{\texorpdfstring{read\+Matrix()}{readMatrix()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ Mongoose\+::read\+Matrix (\begin{DoxyParamCaption}\item[{const std\+::string}]{filename,  }\item[{M\+M\+\_\+typecode \&}]{matcode }\end{DoxyParamCaption})}
+
+
+
+Generate a C\+Sparse matrix from a Matrix Market file. 
+
+Generate a cs struct instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & the filename or path to the Matrix Market File. \\
+\hline
+{\em matcode} & the four character Matrix Market type code. \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespace_mongoose_a008f29c7dc05d2436f6e82e117d80ab8}{}\label{namespace_mongoose_a008f29c7dc05d2436f6e82e117d80ab8} 
+\index{Mongoose@{Mongoose}!read\+Matrix@{read\+Matrix}}
+\index{read\+Matrix@{read\+Matrix}!Mongoose@{Mongoose}}
+\subsubsection{\texorpdfstring{read\+Matrix()}{readMatrix()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{struct_mongoose_1_1cs__sparse}{cs} $\ast$ Mongoose\+::read\+Matrix (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{M\+M\+\_\+typecode \&}]{matcode }\end{DoxyParamCaption})}
+
+
+
+Generate a C\+Sparse matrix from a Matrix Market file. 
+
+Generate a cs struct instance from a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric with (A+A\textquotesingle{})/2. If the matrix has more than one connected component, the largest will be found and the rest discarded. If a diagonal is present, it will be removed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & the filename or path to the Matrix Market File. \\
+\hline
+{\em matcode} & the four character Matrix Market type code. \\
+\hline
+\end{DoxyParams}

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['options',['Options',['../struct_mongoose_1_1_options.html',1,'Mongoose']]]
+  ['logger',['Logger',['../class_mongoose_1_1_logger.html',1,'Mongoose']]]
 ];

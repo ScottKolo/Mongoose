@@ -1,0 +1,28 @@
+\hypertarget{_mongoose___q_p_grad_proj_8cpp}{}\section{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/\+Mongoose\+\_\+\+Q\+P\+Grad\+Proj.cpp File Reference}
+\label{_mongoose___q_p_grad_proj_8cpp}\index{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/\+Mongoose\+\_\+\+Q\+P\+Grad\+Proj.\+cpp@{/\+Users/scott/\+Documents/\+Research/\+Mongoose/\+Source/\+Mongoose\+\_\+\+Q\+P\+Grad\+Proj.\+cpp}}
+
+
+Gradient projection algorithm.  
+
+
+{\ttfamily \#include \char`\"{}Mongoose\+\_\+\+Q\+P\+Grad\+Proj.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Mongoose\+\_\+\+Q\+P\+Napsack.\+hpp\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{_mongoose___q_p_grad_proj_8cpp_aff1455ca46f26632064dc5c099197bb8}{}\label{_mongoose___q_p_grad_proj_8cpp_aff1455ca46f26632064dc5c099197bb8} 
+Double {\bfseries Mongoose\+::\+Q\+Pgradproj} (Graph $\ast$G, Options $\ast$O, Q\+P\+Delta $\ast$QP)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Gradient projection algorithm. 
+
+\begin{DoxyAuthor}{Author}
+S. Nuri Yeralan
+\end{DoxyAuthor}
+Apply gradient projection algorithm to the quadratic program which arises in graph partitioning\+:
+
+min (1-\/x)\textquotesingle{}(D+A)x subject to lo $<$= b $<$= hi, a\textquotesingle{}x = b, 0 $<$= x $<$= 1
+
+The gradient at the current point is provided as input, and the gradient is updated in each iteration. 

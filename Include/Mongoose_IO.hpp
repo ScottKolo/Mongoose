@@ -1,10 +1,10 @@
 /**
- * @file mongoose_io.hpp
+ * @file Mongoose_IO.hpp
  * @author Scott Kolodziej
  * @date 13 Jun 2016
  * @brief Simplified I/O functions for reading matrices and graphs
  *
- * For reading Matrix Market files into Mongoose, read_graph and read_matrix
+ * @details For reading Matrix Market files into Mongoose, read_graph and read_matrix
  * are provided (depending on if a Graph class instance or CSparse matrix
  * instance is needed). The filename can be specified as either a const char*
  * (easier for C programmers) or std::string (easier from C++).
@@ -33,6 +33,8 @@ namespace Mongoose
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
+ *
+ * @param filename the filename or path to the Matrix Market File.
  */ 
 Graph *readGraph (const std::string filename);
 
@@ -44,6 +46,9 @@ Graph *readGraph (const std::string filename);
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
+ *
+ * @param filename the filename or path to the Matrix Market File.
+ * @param matcode the four character Matrix Market type code.
  */ 
 cs *readMatrix (const std::string filename, MM_typecode &matcode);
 
@@ -55,6 +60,8 @@ cs *readMatrix (const std::string filename, MM_typecode &matcode);
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
+ *
+ * @param filename the filename or path to the Matrix Market File.
  */ 
 Graph *readGraph (const char* filename);
 
@@ -66,6 +73,9 @@ Graph *readGraph (const char* filename);
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
  * more than one connected component, the largest will be found and the rest
  * discarded. If a diagonal is present, it will be removed.
+ *
+ * @param filename the filename or path to the Matrix Market File.
+ * @param matcode the four character Matrix Market type code.
  */ 
 cs *readMatrix (const char* filename, MM_typecode &matcode);
 
