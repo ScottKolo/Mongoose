@@ -22,11 +22,13 @@ matrix:
         - cmake-data
         - gcc-4.8
         - g++-4.8
-        - ggcov
+        - gcovr
     before_script:
       - export CXX=g++-4.8
       - export CC=gcc-4.8
+      - gcovr --version
     after_success:
+      - gcovr --root=../Source --object-directory=CMakeFiles/mongoose_dbg.dir/Source
       - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c
   
   # Valgrind build
