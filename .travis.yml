@@ -20,14 +20,14 @@ matrix:
         packages:
         - cmake
         - cmake-data
-        - gcc-4.8
-        - g++-4.8
+        - gcc-4.6
+        - g++-4.6
         - lcov
     install:
       - pip install --user gcovr
     before_script:
-      - export CXX=g++-4.8
-      - export CC=gcc-4.8
+      - export CXX=g++-4.6
+      - export CC=gcc-4.6
       - gcovr --version
     after_success:
       - ls ../Source
