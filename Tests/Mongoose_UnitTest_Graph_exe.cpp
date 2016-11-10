@@ -47,11 +47,9 @@ int main(int argn, char** argv)
 
     // Test default constructor
     Graph G1;
-    assert(&G1 != NULL);
 
     // Test Graph(n, nz) static constructor
     Graph *G2 = Graph::Create(10, 20);
-    assert(&G2 != NULL);
 
     cs *M1 = GraphToCSparse3(G2, false);
     assert(M1 != NULL);

@@ -30,8 +30,10 @@ matrix:
       - export CC=gcc-4.8
       - gcovr --version
     after_success:
+      - ls ../Source
       - ls ./CMakeFiles/mongoose_dbg.dir/Source
-      - gcovr --root=../Source --object-directory=./CMakeFiles/mongoose_dbg.dir/Source -k
+      - gcov -o ./CMakeFiles/mongoose_dbg.dir/Source ../Source/*.cpp
+      - ls
       - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c -s ./CMakeFiles/mongoose_dbg.dir/Source
   
   # Valgrind build
