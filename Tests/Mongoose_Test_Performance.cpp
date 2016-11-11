@@ -1,6 +1,5 @@
 #include <string>
 #include "Mongoose_IO.hpp"
-#include "Mongoose_Conditioning.hpp"
 #include "Mongoose_EdgeSeparator.hpp"
 #include <cassert>
 #include "Mongoose_Test.hpp"
