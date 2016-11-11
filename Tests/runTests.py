@@ -114,7 +114,7 @@ with open(stats_file, 'rb') as f:
             if (matrix_id >= id_min and 
                 matrix_id <= id_max and 
                 row[2] == row[3] and # Rows = columns (square)
-                row[4] == '1'): # Real
+                row[5] == '1'): # Real
                 if args.ids is None or matrix_id in args.ids:
                     matrix_name = row[0] + '/' + row[1] + '.tar.gz'
                     gzip_path = matrix_dir + row[0] + '_' + row[1] + '.tar.gz'
