@@ -62,10 +62,10 @@ int main(int argn, char** argv)
     M2->i = NULL;
     SuiteSparse_free(M2);
 
-    cs *M4 = cs_spalloc(5, 5, 10, 0, 0);
-    M4->x = NULL;
+    MM_typecode matcode;
+    cs *M4 = readMatrix("../Matrix/bcspwr01.mtx", matcode);
     Graph *G7 = CSparse3ToGraph(M4, 0, 0);
-    assert(G7 == NULL);
+    assert(G7 != NULL);
     SuiteSparse_free(G7);
 
     // Tests to increase coverage
