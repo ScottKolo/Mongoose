@@ -10,6 +10,7 @@ coverage:
   - Tests/.*
   - External/.*
   - SuiteSparse_config/.*
+  - Source/Mongoose_Debug.*
 
 comment:
   layout: "header, diff, changes, sunburst, uncovered"

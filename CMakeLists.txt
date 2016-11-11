@@ -12,7 +12,6 @@ set(MONGOOSE_VERSION "${MONGOOSE_VERSION_MAJOR}.
 
 set(MONGOOSE_FILES
     Include/Mongoose_Coarsening.hpp
-    Include/Mongoose_Conditioning.hpp
     Include/Mongoose_CSparse.hpp
     Include/Mongoose_CutCost.hpp
     Include/Mongoose_Debug.hpp
@@ -31,7 +30,6 @@ set(MONGOOSE_FILES
     Include/Mongoose_Sanitize.hpp
     Include/Mongoose_Waterdance.hpp
     Source/Mongoose_Coarsening.cpp
-    Source/Mongoose_Conditioning.cpp
     Source/Mongoose_CSparse.cpp
     Source/Mongoose_Debug.cpp
     Source/Mongoose_EdgeSeparator.cpp
