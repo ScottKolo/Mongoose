@@ -64,6 +64,7 @@ int main(int argn, char** argv)
 
     MM_typecode matcode;
     cs *M4 = readMatrix("../Matrix/bcspwr01.mtx", matcode);
+    M4->x = NULL;
     Graph *G7 = CSparse3ToGraph(M4, 0, 0);
     assert(G7 != NULL);
     SuiteSparse_free(G7);
