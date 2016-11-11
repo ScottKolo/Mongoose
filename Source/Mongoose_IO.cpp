@@ -42,7 +42,11 @@ Graph *readGraph (const char* filename)
 
     MM_typecode matcode;
     cs* A = readMatrix(filename, matcode);
-    if (!A) return NULL;
+    if (!A)
+    {
+        Logger::log(Error, "Error reading matrix from file");
+        return NULL;
+    }
     cs *sanitized_A = sanitizeMatrix(A, mm_is_symmetric(matcode));
     cs_spfree(A);
     if (!sanitized_A) return NULL;

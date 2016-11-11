@@ -92,7 +92,11 @@ cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
     csi p, j, nz = 0, anz, *Cp, *Ci, *Bp, m, n, bnz, *w, values;
     double *x, *Bx, *Cx;
     cs *C;
-    if (!CS_CSC (A) || !CS_CSC (B)) return (NULL);          /* check inputs */
+    if (!CS_CSC (A) || !CS_CSC (B)) /* check inputs */
+    {
+        Logger::log(Error, "Error: Cannot add uncompressed matrices");
+        return (NULL);
+    }
     if (A->m != B->m || A->n != B->n) return (NULL);
     m = A->m; anz = A->p [A->n];
     n = B->n; Bp = B->p; Bx = B->x; bnz = Bp [n];
