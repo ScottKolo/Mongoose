@@ -62,12 +62,25 @@ int main(int argn, char** argv)
     M2->i = NULL;
     SuiteSparse_free(M2);
 
+    cs *M4 = cs_spalloc(5, 5, 10, 0, 0);
+    M4->x = NULL;
+    Graph *G7 = CSparse3ToGraph(M4, 0, 0);
+    assert(G7 == NULL);
+    SuiteSparse_free(G7);
+
     // Tests to increase coverage
     /* Override SuiteSparse memory management with custom testers. */
     SuiteSparse_config.malloc_func = myMalloc;
     SuiteSparse_config.calloc_func = myCalloc;
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
+
+    // Simulate failure to allocate return arrays
+    AllowedMallocs = 2;
+    cs *M3 = GraphToCSparse3(G2, true);
+    assert(M3 == NULL);
+    SuiteSparse_free(M3);
+    SuiteSparse_free(G2);
 
     AllowedMallocs = 0;
     Graph *G3 = Graph::Create(10, 20);
