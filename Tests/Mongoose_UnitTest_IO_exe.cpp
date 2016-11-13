@@ -16,11 +16,16 @@ int main(int argn, char** argv)
 
     Graph *G;
 
+    // Nonexistent file
+    G = readGraph("../Tests/Matrix/no_such_file.mtx");        
+    assert (G == NULL);
+    SuiteSparse_free(G);
+
     // Bad header 
     G = readGraph("../Tests/Matrix/bad_header.mtx");        
-    assert (G == NULL);       
-    SuiteSparse_free(G);      
-      
+    assert (G == NULL);
+    SuiteSparse_free(G);
+    
     // Bad matrix type
     G = readGraph("../Tests/Matrix/bad_matrix_type.mtx");
     assert (G == NULL);
@@ -35,6 +40,12 @@ int main(int argn, char** argv)
     G = readGraph("../Tests/Matrix/Trec4.mtx");
     assert (G == NULL);
     SuiteSparse_free(G);
+
+    // C-style string filename
+    MM_typecode matcode;
+    std::string filename = "../Matrix/bcspwr01.mtx";
+    cs *M = readMatrix(filename.c_str(), matcode);
+    assert(M != NULL);
 
     SuiteSparse_finish();
 
