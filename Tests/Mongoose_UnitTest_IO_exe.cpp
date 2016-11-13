@@ -44,7 +44,7 @@ int main(int argn, char** argv)
     // C-style string filename
     MM_typecode matcode;
     std::string filename = "../Matrix/bcspwr01.mtx";
-    cs *M = readMatrix(filename.c_str(), matcode);
+    cs *M = readMatrix(filename, matcode);
     assert(M != NULL);
 
     SuiteSparse_finish();
