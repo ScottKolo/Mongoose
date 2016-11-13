@@ -87,6 +87,7 @@ csi cs_entry (cs *T, csi i, csi j, double x) ;
 cs *cs_compress (const cs *T) ;
 
 cs *cs_spalloc (csi m, csi n, csi nzmax, csi values, csi triplet) ;
+csi cs_sprealloc (cs *A, csi nzmax);
 cs *cs_spfree (cs *A) ;
 csd *cs_dfree (csd *D);
 

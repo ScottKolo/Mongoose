@@ -17,7 +17,6 @@ csi *cs_counts (const cs *A, const csi *parent, const csi *post, csi ata);
 double cs_cumsum (csi *p, csi *c, csi n);
 csi cs_scatter (const cs *A, csi j, double beta, csi *w, double *x, csi mark,
                 cs *C, csi nz);
-csi cs_sprealloc (cs *A, csi nzmax);
 cs *cs_done (cs *C, void *w, void *x, csi ok);
 csd *cs_dalloc (csi m, csi n);
 cs *cs_spfree (cs *A);
@@ -243,11 +242,21 @@ csi cs_sprealloc (cs *A, csi nzmax)
     if (!A) return (0);
     if (nzmax <= 0) nzmax = (CS_CSC (A)) ? (A->p [A->n]) : A->nz;
     A->i = (csi*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof (csi), A->i, &oki);
-    if (CS_TRIPLET (A)) A->p = (csi*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof (csi), A->p,
-                                                  &okj);
-    if (A->x) A->x = (double*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof (double), A->x, &okx);
+    if (CS_TRIPLET (A))
+    {
+        A->p = (csi*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof(csi), 
+                                           A->p, &okj);
+    }
+    if (A->x)
+    {
+        A->x = (double*) SuiteSparse_realloc (A->nzmax, nzmax, sizeof(double), 
+                                              A->x, &okx);
+    }
     ok = (oki && okj && okx);
-    if (ok) A->nzmax = nzmax;
+    if (ok)
+    {
+        A->nzmax = nzmax;
+    }
     return (ok);
 }
 
@@ -380,12 +389,16 @@ csd *cs_scc (cs *A)     /* matrix A temporarily modified, then restored */
 
 /* C = A(i1:i2;j1:j2) */
 /* Written by Mohsen Aznaveh */
-cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2)
+cs *cs_submat(const cs *A, const csi i1, const csi i2, 
+    const csi j1,const csi j2)
 {
-    csi pA,pC, j,  anz, *Cp, *Ci,  m, n,  values;
+    csi pA, pC, j, anz, *Cp, *Ci, m, n, values;
     double  *Cx;
     cs *C;
-    if (!CS_CSC (A) ) return (NULL);       /* check inputs */
+    if (!CS_CSC (A)) /* check inputs */
+    {
+        return (NULL);
+    }
     anz = A->p [A->n];
     m = i2-i1+1;
     n = j2-j1+1;
@@ -414,8 +427,6 @@ cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2)
         cs_spfree(C);
         return NULL;
     }
-    if (C->nzmax < 1)
-        C->nzmax = 1;                      /* For MATLAB */
     return (C);
 }
 
