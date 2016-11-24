@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 2.8)
 include(CMake/cmake_colors.cmake)
 
 project(Mongoose)
@@ -92,9 +92,9 @@ include_directories(Include
                     External/mmio/Include
                     )
 
-# Require C++11
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Require C++11... Someday.
+#set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Look for common SuiteSparse_config - otherwise, use our own
 set(SUITESPARSE_CONFIG_INCLUDE_DIRS
@@ -204,7 +204,7 @@ add_executable(mongoose_test_io
 target_link_libraries(mongoose_test_io mongoose_dbg)
 set_target_properties(mongoose_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-add_test(IO_Test ./runTests.py -min 1 -max 15 -t io -k)
+add_test(IO_Test ./runTests -min 1 -max 15 -t io -k)
 
 # Edge Separator Tests
 add_executable(mongoose_test_edgesep 
@@ -213,8 +213,8 @@ add_executable(mongoose_test_edgesep
 target_link_libraries(mongoose_test_edgesep mongoose_dbg)
 set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-add_test(Edge_Separator_Test ./runTests.py -min 1 -max 15 -t edgesep)
-add_test(Edge_Separator_Test_2 ./runTests.py -t edgesep -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533)
+add_test(Edge_Separator_Test ./runTests -min 1 -max 15 -t edgesep)
+add_test(Edge_Separator_Test_2 ./runTests -t edgesep -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533)
 
 # Memory Tests
 add_executable(mongoose_test_memory 
@@ -223,7 +223,7 @@ add_executable(mongoose_test_memory
 target_link_libraries(mongoose_test_memory mongoose_dbg)
 set_target_properties(mongoose_test_memory PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
-add_test(Memory_Test ./runTests.py -min 1 -max 15 -t memory)
+add_test(Memory_Test ./runTests -min 1 -max 15 -t memory)
 
 # Performance Test
 add_executable(mongoose_test_performance
@@ -231,8 +231,8 @@ add_executable(mongoose_test_performance
   Tests/Mongoose_Test_Performance_exe.cpp)
 target_link_libraries(mongoose_test_performance mongoose)
 set_target_properties(mongoose_test_performance PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
-add_test(Performance_Test ./runTests.py -min 1 -max 15 -t performance -p)
-add_test(Performance_Test_2 ./runTests.py -t performance -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533 -p)
+add_test(Performance_Test ./runTests -min 1 -max 15 -t performance -p)
+add_test(Performance_Test_2 ./runTests -t performance -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533 -p)
 
 # Reference Test
 add_executable(mongoose_test_reference
@@ -262,6 +262,10 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" ST
   SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "--coverage -g")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.6")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    message(WARNING "WARNING: Your compiler is quite old. Future versions of Mongoose will require C++11 support. We recommend you upgrade to at least GCC 4.6.")
+  endif()
   SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -W -Wshadow -Wunused-variable -Wunused-parameter -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated -Woverloaded-virtual -Wwrite-strings -fprofile-arcs -ftest-coverage")
   SET(CMAKE_C_FLAGS_DEBUG "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
   SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
@@ -289,8 +293,8 @@ set_target_properties(mongoose_unit_test_graph PROPERTIES LINK_FLAGS "${CMAKE_EX
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1) # Necessary for gcov - prevents file.cpp.gcda instead of file.gcda
 
 # Copy over runTest.py to build folder for ease of use
-file(COPY Tests/runTests.py DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY Tests/runCompare.py DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY Tests/runTests DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY Tests/runCompare DESTINATION ${CMAKE_BINARY_DIR})
 
 add_custom_target(purge
     COMMAND rm -rf ${CMAKE_BINARY_DIR}/*
