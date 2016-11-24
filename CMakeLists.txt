@@ -93,8 +93,8 @@ include_directories(Include
                     )
 
 # Require C++11... Someday.
-#set(CMAKE_CXX_STANDARD 11)
-#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Look for common SuiteSparse_config - otherwise, use our own
 set(SUITESPARSE_CONFIG_INCLUDE_DIRS
