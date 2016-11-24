@@ -12,6 +12,7 @@
 
 #include "Mongoose_Logger.hpp"
 #include <iostream>
+#include <cstdio>
 
 namespace Mongoose
 {
