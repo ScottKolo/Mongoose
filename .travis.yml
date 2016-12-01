@@ -201,6 +201,46 @@ matrix:
       - export CXX=g++-4.6
       - export CC=gcc-4.6
 
+  # Linux GCC 4.5 build
+  - os: linux
+    compiler: gcc
+    env:
+      - CXX=g++-4.5
+      - CC=gcc-4.5
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
+        packages:
+        - cmake
+        - cmake-data
+        - gcc-4.5
+        - g++-4.5
+    before_script:
+      - export CXX=g++-4.5
+      - export CC=gcc-4.5
+
+  # Linux GCC 4.4 build
+  - os: linux
+    compiler: gcc
+    env:
+      - CXX=g++-4.4
+      - CC=gcc-4.4
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
+        packages:
+        - cmake
+        - cmake-data
+        - gcc-4.4
+        - g++-4.4
+    before_script:
+      - export CXX=g++-4.4
+      - export CC=gcc-4.4
+
   # Linux Clang 3.9.0 build - Disabled until Clang-3.9 is whitelisted
   # - os: linux
   #   compiler: clang
