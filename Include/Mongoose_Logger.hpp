@@ -4,7 +4,7 @@
  * @date 23 Sep 2016
  * @brief Centralized debug and timing manager
  *
- * @details For debug and timing information to be displayed via stdin. This system
+ * @details For debug and timing information to be displayed via stdout. This system
  * allows this information to be displayed (or not) without recompilation.
  * Timing inforation for different *portions of the library are also managed 
  * here with a tic/toc pattern.
@@ -48,36 +48,25 @@ class Logger
     static clock_t clocks[6];
     static float times[6];
 
+    static std::ostream* error_;
+    static std::ostream* warn_;
+    static std::ostream* info_;
+    static std::ostream* test_;
+
   public:
-    static inline void log(DebugType debugType, std::string output);
     static inline void tic(TimingType timingType);
     static inline void toc(TimingType timingType);
     static inline float getTime(TimingType timingType);
+    static inline int getDebugLevel();
     static void setDebugLevel(int debugType);
     static void setTimingFlag(bool tFlag);
     static void printTimingInfo();
+    
+    static std::ostream& error() {return *error_;}
+    static std::ostream& warn()  {return *warn_;}
+    static std::ostream& info()  {return *info_;}
+    static std::ostream& test()  {return *test_;}
 };
-
-/** 
- * @brief Log information at a specific log level.
- * 
- * Given a debugType (Error, Warn, Info, or Test), the log function will
- * route the output string to stdin (if the appropriate log level is activated).
- * For performance, this is an inline function, and a single bitwise AND
- * operation is used to determine if the output string should be displayed.
- *
- * @param debugType the logging level this message belongs to (either Error, 
- *    Warn, Info, or Test).
- * @param output the string to be displayed if the appropriate logging level
- *    is enabled.
- */ 
-inline void Logger::log(DebugType debugType, std::string output)
-{
-    if (debugType & debugLevel)
-    {
-        std::cout << output << "\n";
-    }
-}
 
 /** 
  * @brief Start a timer for a given type/part of the code.
@@ -144,6 +133,11 @@ inline void Logger::toc(TimingType timingType)
 inline float Logger::getTime(TimingType timingType)
 {
     return times[timingType];
+}
+
+inline int Logger::getDebugLevel()
+{
+    return debugLevel;
 }
 
 } // end namespace Mongoose

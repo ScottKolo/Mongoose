@@ -56,7 +56,7 @@ void runMemoryTest(const std::string inputFile)
     Options *O = Options::Create();
     if(!O)
     {
-        Logger::log(Test, "Error creating Options struct in Memory Test");
+        Logger::test() << "Error creating Options struct in Memory Test\n";
         SuiteSparse_finish();
         return; // Return early if we failed.
     }
@@ -80,7 +80,7 @@ void RunAllTests (
     Options *O
 )
 {
-    Logger::log(Test, "Running Memory Test on " + inputFile);
+    Logger::test() << "Running Memory Test on " << inputFile << "\n";
 
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
     GuessCutType guessCutStrategies[3] = {Pseudoperipheral_All, Pseudoperipheral_Fast, QP_GradProj};
@@ -104,7 +104,7 @@ void RunAllTests (
                     if (remainingMallocs == -1)
                     {
                         // Error!
-                        Logger::log(Test, "Terminating Memory Test Early");
+                        Logger::test() << "Terminating Memory Test Early\n";
                         return;
                     }
                     m += 1;
@@ -113,7 +113,7 @@ void RunAllTests (
         }
     }
 
-    Logger::log(Test, "Memory Test Completed Successfully");
+    Logger::test() << "Memory Test Completed Successfully\n";
 }
 
 int RunTest (

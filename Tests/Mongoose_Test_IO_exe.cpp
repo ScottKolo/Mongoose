@@ -15,7 +15,7 @@ int main(int argn, char** argv)
     if (argn != 3)
     {
         // Wrong number of arguments - return error
-        Logger::log(Error, "Usage: mongoose_test_io <MM-input-file.mtx> <1 for valid graph, 0 for invalid>");
+        Logger::error() << "Usage: mongoose_test_io <MM-input-file.mtx> <1 for valid graph, 0 for invalid>\n";
         SuiteSparse_finish();
         return 1;
     }

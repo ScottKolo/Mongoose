@@ -18,7 +18,7 @@ int main(int argn, const char **argv)
     if (argn != 2)
     {
         // Wrong number of arguments - return error
-        Logger::log(Error, "Usage: Demo <MM-input-file.mtx>");
+        Logger::error() << "Usage: Demo <MM-input-file.mtx>\n";
         SuiteSparse_finish();
         return 1;
     }
@@ -33,7 +33,7 @@ int main(int argn, const char **argv)
     if (!options)
     {
         // Ran out of memory
-        Logger::log(Error, "Error creating Options struct");
+        Logger::error() << "Error creating Options struct\n";
         SuiteSparse_free(options);
         return 1;
     }
@@ -43,7 +43,7 @@ int main(int argn, const char **argv)
     if (!G)
     {
         // Ran out of memory or problem reading the graph from file
-        Logger::log(Error, "Error reading Graph from file");
+        Logger::error() << "Error reading Graph from file\n";
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         return 1;
@@ -57,7 +57,7 @@ int main(int argn, const char **argv)
     if (error)
     {
         // Error occurred
-        Logger::log(Error, "Error computing edge separator in Performance Test");
+        Logger::error() << "Error computing edge separator in Performance Test\n";
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         return 1;
@@ -71,12 +71,12 @@ int main(int argn, const char **argv)
         }
         cutSize = cutSize / 2;
         double test_time = ((double) t)/CLOCKS_PER_SEC;
-        Logger::log(All, "Total Edge Separator Time: " + std::to_string(test_time) + "s");
+        std::cout << "Total Edge Separator Time: " << test_time << "s\n";
         Logger::printTimingInfo();
-        Logger::log(All, "Cut Properties:");
-        Logger::log(All, " Cut Size:  " + std::to_string(cutSize));
-        Logger::log(All, " Cut Cost:  " + std::to_string(G->cutCost));
-        Logger::log(All, " Imbalance: " + std::to_string(G->imbalance));
+        std::cout << "Cut Properties:\n";
+        std::cout << " Cut Size:  " << cutSize;
+        std::cout << " Cut Cost:  " << G->cutCost;
+        std::cout << " Imbalance: " << G->imbalance;
     }
 
     G->~Graph();

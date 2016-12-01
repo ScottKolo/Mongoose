@@ -20,7 +20,7 @@ void runPerformanceTest(const std::string inputFile, const std::string outputFil
     if (!options)
     {
         // Ran out of memory
-        Logger::log(Test, "Error creating Options struct in Performance Test");
+        Logger::test() << "Error creating Options struct in Performance Test\n";
         SuiteSparse_free(options);
         assert(false);
     }
@@ -30,7 +30,7 @@ void runPerformanceTest(const std::string inputFile, const std::string outputFil
     if (!G)
     {
         // Ran out of memory
-        Logger::log(Test, "Error reading Graph from file in Performance Test");
+        Logger::test() << "Error reading Graph from file in Performance Test\n";
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         assert(false);
@@ -44,7 +44,7 @@ void runPerformanceTest(const std::string inputFile, const std::string outputFil
     if (error)
     {
         // Error occurred
-        Logger::log(Test, "Error computing edge separator in Performance Test");
+        Logger::test() << "Error computing edge separator in Performance Test\n";
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         assert(false);
@@ -52,15 +52,15 @@ void runPerformanceTest(const std::string inputFile, const std::string outputFil
     else
     {
         double test_time = ((double) t)/CLOCKS_PER_SEC;
-        Logger::log(Test, "Total Edge Separator Time: " + std::to_string(test_time) + "s");
+        Logger::test() << "Total Edge Separator Time: " << test_time << "s\n";
         Logger::printTimingInfo();
-        Logger::log(Test, "Cut Properties:");
-        Logger::log(Test, " Cut Cost:  " + std::to_string(G->cutCost));
-        Logger::log(Test, " Imbalance: " + std::to_string(G->imbalance));
+        Logger::test() << "Cut Properties:\n";
+        Logger::test() << " Cut Cost:  " << G->cutCost << "\n";
+        Logger::test() << " Imbalance: " << G->imbalance << "\n";
         
         if (!outputFile.empty())
         {
-            Logger::log(Test, "Writing results to file: " + outputFile);
+            Logger::test() << "Writing results to file: " << outputFile << "\n";
             std::ofstream ofs (outputFile, std::ofstream::out);
             ofs << "{" << std::endl;
             ofs << "  \"InputFile\": \"" << inputFile << "\"," << std::endl;

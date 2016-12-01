@@ -10,7 +10,7 @@ using namespace Mongoose;
 
 void runEdgeSeparatorTest(const std::string inputFile)
 {
-    Logger::log(Test, "Running Edge Separator Test on " + inputFile);
+    Logger::test() << "Running Edge Separator Test on " << inputFile << "\n";
         
     // Given a symmetric matrix...
     Options *options;
@@ -20,7 +20,7 @@ void runEdgeSeparatorTest(const std::string inputFile)
     if (!options)
     {
         // Ran out of memory
-        Logger::log(Test, "Error creating Options struct in Edge Separator Test");
+        Logger::test() << "Error creating Options struct in Edge Separator Test\n";
         SuiteSparse_free(options);
         assert(false);
     }
@@ -31,7 +31,7 @@ void runEdgeSeparatorTest(const std::string inputFile)
     if (!G)
     {
         // Ran out of memory
-        Logger::log(Test, "Error reading Graph from file in Edge Separator Test");
+        Logger::test() << "Error reading Graph from file in Edge Separator Test\n";
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         assert(false);
@@ -43,7 +43,7 @@ void runEdgeSeparatorTest(const std::string inputFile)
     if (error)
     {
         // Error occurred
-        Logger::log(Test, "Error computing edge separator in Edge Separator Test");
+        Logger::test() << "Error computing edge separator in Edge Separator Test\n";
         assert(false);
     }
     else
@@ -58,14 +58,14 @@ void runEdgeSeparatorTest(const std::string inputFile)
         }
 
         Logger::printTimingInfo();
-        Logger::log(Test, "Cut Properties:");
-        Logger::log(Test, "  Cut Cost:  " + std::to_string(G->cutCost));
-        Logger::log(Test, "  Imbalance: " + std::to_string(G->imbalance));
+        Logger::test() << "Cut Properties:\n";
+        Logger::test() << "  Cut Cost:  " + std::to_string(G->cutCost) << "\n";
+        Logger::test() << "  Imbalance: " + std::to_string(G->imbalance) << "\n";
     }
 
     G->~Graph();
     SuiteSparse_free(G);
     SuiteSparse_free(options);
 
-    Logger::log(Test, "Edge Separator Test Completed Successfully");
+    Logger::test() << "Edge Separator Test Completed Successfully\n";
 }

@@ -44,8 +44,6 @@ typedef double Double;  /* Used for floating point other calculations  */
 enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
 
-Logger log();
-
 } // end namespace Mongoose
 
 #endif
