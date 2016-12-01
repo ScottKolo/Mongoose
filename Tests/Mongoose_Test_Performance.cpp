@@ -9,7 +9,7 @@
 
 using namespace Mongoose;
 
-void runPerformanceTest(const std::string inputFile)
+void runPerformanceTest(const std::string inputFile, const std::string outputFile)
 {
     Options *options;
     Graph *G;
@@ -55,8 +55,29 @@ void runPerformanceTest(const std::string inputFile)
         Logger::log(Test, "Total Edge Separator Time: " + std::to_string(test_time) + "s");
         Logger::printTimingInfo();
         Logger::log(Test, "Cut Properties:");
-        Logger::log(Test, "  Cut Cost:  " + std::to_string(G->cutCost));
-        Logger::log(Test, "  Imbalance: " + std::to_string(G->imbalance));
+        Logger::log(Test, " Cut Cost:  " + std::to_string(G->cutCost));
+        Logger::log(Test, " Imbalance: " + std::to_string(G->imbalance));
+        
+        if (!outputFile.empty())
+        {
+            Logger::log(Test, "Writing results to file: " + outputFile);
+            std::ofstream ofs (outputFile, std::ofstream::out);
+            ofs << "{" << std::endl;
+            ofs << "  \"InputFile\": \"" << inputFile << "\"," << std::endl;
+            ofs << "  \"Timing\": {" << std::endl;
+            ofs << "    \"Total\": " << test_time << "," << std::endl;
+            ofs << "    \"Matching\": " << Logger::getTime(MatchingTiming) << "," << std::endl;
+            ofs << "    \"Coarsening\": " << Logger::getTime(CoarseningTiming) << "," << std::endl;
+            ofs << "    \"Refinement\": " << Logger::getTime(RefinementTiming) << "," << std::endl;
+            ofs << "    \"FM\": " << Logger::getTime(FMTiming) << "," << std::endl;
+            ofs << "    \"QP\": " << Logger::getTime(QPTiming) << "," << std::endl;
+            ofs << "    \"IO\": " << Logger::getTime(IOTiming) << std::endl;
+            ofs << "  }," << std::endl;
+            ofs << "  \"CutSize\": " << G->cutCost << "," << std::endl;
+            ofs << "  \"Imbalance\": " << G->imbalance << std::endl;
+            ofs << "}" << std::endl;
+            ofs.close();
+        }
     }
 
     G->~Graph();

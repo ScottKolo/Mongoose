@@ -7,7 +7,7 @@ int main(int argn, const char **argv)
 {
     SuiteSparse_start();
 
-    if (argn != 2)
+    if (argn < 2 || argn > 3)
     {
         // Wrong number of arguments - return error
         SuiteSparse_finish();
@@ -17,6 +17,13 @@ int main(int argn, const char **argv)
     // Read in input file name
     std::string inputFile = std::string(argv[1]);
 
+    // Read in output file name
+    std::string outputFile;
+    if (argn == 3)
+    {
+        outputFile = std::string(argv[2]);
+    }
+
     // Set Logger to report only Test and Error messages
     Logger::setDebugLevel(Test + Error);
     
@@ -24,7 +31,7 @@ int main(int argn, const char **argv)
     Logger::setTimingFlag(true);
 
     // Run the Edge Separator test
-    runPerformanceTest(inputFile);
+    runPerformanceTest(inputFile, outputFile);
 
     SuiteSparse_finish();
     

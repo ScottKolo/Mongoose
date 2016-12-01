@@ -9,6 +9,7 @@ import tarfile  # For un-tar/unzipping matrix files
 import csv      # For reading the UFget index
 import shutil   # For using 'which'
 from distutils.spawn import find_executable # For using find_executable
+import json
 
 def main():
     # Check to make sure we're in the build directory - if not, exit
@@ -17,13 +18,8 @@ def main():
     # Parse the command-line arguments
     args = parseArguments()
 
-    # Run tests if needed
-    if args.tests != "none":
-        runTests(args)
-
-    # If the coverage flag is on, run gcov (or similar)
-    if args.coverage or args.html_coverage:
-        runCoverageUtility(args)
+    # Run tests
+    runTests(args)
 
 def runTests(args):
     # Create or locate matrix temporary storage directory
@@ -32,6 +28,9 @@ def runTests(args):
     # Download the matrix stats csv file
     stats_file = downloadStatsFile(matrix_dir)
     
+    # Use a dictionary to store the mean times for each matrix 
+    meanTime = {}
+
     with open(stats_file, 'rb') as f:
         reader = csv.reader(f)
 
@@ -67,28 +66,36 @@ def runTests(args):
                             tar.extractall(path=matrix_dir) # Extract the matrix from the tar.gz file
                             tar.close()
 
-                        # Determine which test executables to run
-                        if args.tests == 'all':
-                            print("Calling ALL Tests...")
-                        if args.tests == 'memory' or args.tests == 'all':
-                            print("Calling Memory Test...")
-                            call(["./tests/mongoose_test_memory", matrix_path])
-                        if args.tests == 'valgrind' or args.tests == 'all':
-                            print("Calling Valgrind Test...")
-                            valgrind = find_executable('valgrind')
-                            if valgrind:
-                                call([valgrind + " --leak-check=full ./tests/mongoose_test_memory", matrix_path])
-                            else:
-                                print("\033[91mERROR!\033[0m Unable to find Valgrind. Skipping Valgrind Test...")
-                        if args.tests == 'io' or args.tests == 'all':
-                            print("Calling I/O Test...")
-                            call(["./tests/mongoose_test_io", matrix_path, "1"])
-                        if args.tests == 'edgesep' or args.tests == 'all':
-                            print("Calling Edge Separator Test...")
-                            call(["./tests/mongoose_test_edgesep", matrix_path])
-                        if args.tests == 'performance' or args.tests == 'all':
-                            print("Calling Performance Test...")
-                            call(["./tests/mongoose_test_performance", matrix_path, row[0] + '_' + row[1] + '_performance.txt'])
+                        times = {"Total": [], 
+                                 "Matching": [], 
+                                 "Coarsening": [], 
+                                 "Refinement": [], 
+                                 "FM": [], 
+                                 "QP": [], 
+                                 "IO": []}
+                        meanTime[matrix_id] = {}
+                        for i in range(0, args.n):
+                            outputFile = row[0] + '_' + row[1] + '_performance.txt'
+                            call(["./tests/mongoose_test_performance", matrix_path, outputFile])
+                            with open(outputFile, 'rb') as f:
+                                runData = json.load(f)
+                                times["Total"].append(runData["Timing"]["Total"])
+                                times["Matching"].append(runData["Timing"]["Matching"])
+                                times["Coarsening"].append(runData["Timing"]["Coarsening"])
+                                times["Refinement"].append(runData["Timing"]["Refinement"])
+                                times["FM"].append(runData["Timing"]["FM"])
+                                times["QP"].append(runData["Timing"]["QP"])
+                                times["IO"].append(runData["Timing"]["IO"])
+
+                        meanTime[matrix_id]["Name"] = row[1]
+                        meanTime[matrix_id]["Group"] = row[0]
+                        meanTime[matrix_id]["Total"] = trimmedMean(times["Total"], args.trimmed_percentage)
+                        meanTime[matrix_id]["Matching"] = trimmedMean(times["Matching"], args.trimmed_percentage)
+                        meanTime[matrix_id]["Coarsening"] = trimmedMean(times["Coarsening"], args.trimmed_percentage)
+                        meanTime[matrix_id]["Refinement"] = trimmedMean(times["Refinement"], args.trimmed_percentage)
+                        meanTime[matrix_id]["FM"] = trimmedMean(times["FM"], args.trimmed_percentage)
+                        meanTime[matrix_id]["QP"] = trimmedMean(times["QP"], args.trimmed_percentage)
+                        meanTime[matrix_id]["IO"] = trimmedMean(times["IO"], args.trimmed_percentage)
 
                         # Delete the matrix only if we downloaded it and the keep
                         # flag is off
@@ -101,6 +108,41 @@ def runTests(args):
 
     # Delete the UFstats.csv file now that we're done
     os.remove(stats_file)
+
+    # Print the statistics to stdout
+    printStats(meanTime)
+    
+    # If an output file was provided, write the statistics to file as JSON
+    if args.output_file:
+        with open(args.output_file, 'w') as f:
+            f.write(json.dumps(meanTime, indent=4))
+
+def printStats(meanTime):
+    for id, times in meanTime.items():
+        print("Matrix ID: " + str(id) + ", " + times["Group"] + "/" + times["Name"])
+        print("  Total Time:   %.6fs" % times["Total"])
+        print("    Matching:   %.6fs" % times["Matching"])
+        print("    Coarsening: %.6fs" % times["Coarsening"])
+        print("    Refinement: %.6fs" % times["Refinement"])
+        print("    FM:         %.6fs" % times["FM"])
+        print("    QP:         %.6fs" % times["QP"])
+        print("    IO:         %.6fs" % times["IO"])
+        print()
+
+def trimmedMean(times, percentage):
+    trimmedTimes = trim(times, percentage)
+    trimmedMean = mean(trimmedTimes)
+    return trimmedMean
+
+def trim(times, percentage):
+    numToTrim = int(round(len(times) * percentage/100))
+    for i in range(0, numToTrim):
+        times.remove(min(times))
+        times.remove(max(times))
+    return times
+
+def mean(times):
+    return sum(times)/len(times)
 
 def getMatrixDirectory(args):
     # Check if the supplied matrix download directory exists - if not, create it
@@ -123,40 +165,9 @@ def downloadStatsFile(matrix_dir):
     stats_file = matrix_dir + "/UFstats.csv"
     return stats_file
 
-def runCoverageUtility(args):
-    if args.gcov:
-        gcov = args.gcov
-    else:
-        gcov = find_executable('gcov')
-
-    if gcov:
-        # Determine if we are using GCC gcov or LLVM gcov
-        gcov_version = check_output([gcov, "--version"])
-        if gcov_version.find('LLVM') == -1:
-            call([gcov + " -o ./CMakeFiles/mongoose_dbg.dir/Source ../Source/*.cpp"], shell=True)
-        else:
-            call(gcov + " -o=./CMakeFiles/mongoose_dbg.dir/Source ../Source/*.cpp", shell=True)
-    
-    gcovr = find_executable('gcovr')
-    if gcovr:
-        if args.html_coverage:
-            print("Running gcovr with HTML generation")
-            call([gcovr, 
-                  "--html",
-                  "--html-details", 
-                  "--output=coverage.html",
-                  "--gcov-executable=" + gcov, 
-                  "--object-directory=CMakeFiles/mongoose_dbg.dir/Source", 
-                  "--root=../Source/"])
-        else:
-            print("Running gcovr without HTML generation")
-            call([gcovr, "--gcov-executable=" + gcov, "--object-directory=CMakeFiles/mongoose_dbg.dir/Source", "--root=../Source/"])
-    else:
-        print("\033[91mERROR!\033[0m Cannot generate HTML coverage report, gcovr not found!")
-
 def parseArguments():
     parser = argparse.ArgumentParser(
-                        description='Run tests on the Mongoose library.')
+                        description='Calculate performance statistics for the Mongoose library.')
     parser.add_argument('-k', '--keep', 
                         action='store_true', 
                         help='do not remove downloaded files when test is complete')
@@ -183,25 +194,25 @@ def parseArguments():
                         metavar='matrix_ID', 
                         type=int,
                         help='list of matrix IDs to run tests on')
-    parser.add_argument('-t', '--tests',
-                        choices=['all', 'memory', 'io', 'edgesep', 'performance', 'valgrind', 'none'],
-                        default='none',
-                        help='choice of which tests to run')
     parser.add_argument('-d', '--matrix-directory', 
                         action='store', 
                         metavar='matrix_dir',
                         default='../Matrix',
                         help='download directory for Matrix Market data files')
-    parser.add_argument('-c', '--coverage', 
-                        action='store_true',
-                        help='generate coverage information')
-    parser.add_argument('--html-coverage',
-                        action='store_true',
-                        help='generate html coverage pages if gcovr is available')
-    parser.add_argument('--gcov', 
+    parser.add_argument('-n', 
+                        action='store', 
+                        type=int, 
+                        default=5,
+                        help='number of trials to run per matrix [default: 5]')
+    parser.add_argument('-t', '--trimmed-percentage',
+                        action='store', 
+                        type=int, 
+                        default=20,
+                        help='Percent by which the mean is trimmed [default: 20]')
+    parser.add_argument('-o', '--output-file',
                         action='store',
-                        metavar='gcov_path',
-                        help='path to gcov tool')
+                        default='',
+                        help='output performance statistics in JSON to the given file')
 
     return parser.parse_args()
 
