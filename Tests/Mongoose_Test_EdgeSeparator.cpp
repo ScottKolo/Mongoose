@@ -59,8 +59,8 @@ void runEdgeSeparatorTest(const std::string inputFile)
 
         Logger::printTimingInfo();
         Logger::test() << "Cut Properties:\n";
-        Logger::test() << "  Cut Cost:  " + std::to_string(G->cutCost) << "\n";
-        Logger::test() << "  Imbalance: " + std::to_string(G->imbalance) << "\n";
+        Logger::test() << "  Cut Cost:  " << G->cutCost << "\n";
+        Logger::test() << "  Imbalance: " << G->imbalance << "\n";
     }
 
     G->~Graph();
