@@ -61,7 +61,7 @@ void runPerformanceTest(const std::string inputFile, const std::string outputFil
         if (!outputFile.empty())
         {
             Logger::test() << "Writing results to file: " << outputFile << "\n";
-            std::ofstream ofs (outputFile, std::ofstream::out);
+            std::ofstream ofs (outputFile.c_str(), std::ofstream::out);
             ofs << "{" << std::endl;
             ofs << "  \"InputFile\": \"" << inputFile << "\"," << std::endl;
             ofs << "  \"Timing\": {" << std::endl;
