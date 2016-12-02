@@ -46,7 +46,7 @@ void runReferenceTest(const std::string inputFile)
     }
     else
     {
-        std::ofstream ofs (inputFile + "_result.txt", std::ofstream::out);
+        std::ofstream ofs ((inputFile + "_result.txt").c_str(), std::ofstream::out);
         ofs << "InputFile: " << inputFile << std::endl;
         ofs << "TotalTime: " << ((double) t)/CLOCKS_PER_SEC << std::endl;
         ofs << "CutSize: " << G->cutCost << std::endl;
