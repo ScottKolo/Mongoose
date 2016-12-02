@@ -5,6 +5,7 @@
 #include "Mongoose_Test.hpp"
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 
 using namespace Mongoose;
@@ -78,7 +79,7 @@ void runReferenceTest(const std::string inputFile)
         // Read Total Time
         ifs.ignore(200, ' ');
         ifs >> input;
-        double ref_time = std::stod(input);
+        double ref_time = strtod(input, NULL);
         double test_time = ((double) t)/CLOCKS_PER_SEC;
         std::cout << "Test Time:      " << test_time << std::endl;
         std::cout << "Reference Time: " <<  ref_time << std::endl;
@@ -87,7 +88,7 @@ void runReferenceTest(const std::string inputFile)
         // Read Cut Size
         ifs.ignore(200, ' ');
         ifs >> input;
-        double ref_cut_size = std::stod(input);
+        double ref_cut_size = strtod(input, NULL);
         std::cout << "Test Cut Size: "      << G->cutCost    << std::endl;
         std::cout << "Reference Cut Size: " <<  ref_cut_size << std::endl;
 
