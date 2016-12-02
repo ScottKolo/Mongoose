@@ -67,7 +67,7 @@ void runReferenceTest(const std::string inputFile)
         ofs.close();
 
         
-        std::ifstream ifs ("../Tests/Results/" + inputFile + "_result.txt");
+        std::ifstream ifs (("../Tests/Results/" + inputFile + "_result.txt").c_str());
         std::string input;
 
         // Read file name
