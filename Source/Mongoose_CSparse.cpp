@@ -148,7 +148,7 @@ cs *cs_compress (const cs *T)
     for (k = 0; k < nz; k++)
     {
         Ci [p = w [Tj [k]]++] = Ti [k];     /* A(i,j) is the pth entry in C */
-        if (Cx && Tx) Cx [p] = Tx [k];
+        if (Cx) Cx [p] = Tx [k];
     }
     return (cs_done (C, w, NULL, 1));       /* success; release w and return C */
 }
