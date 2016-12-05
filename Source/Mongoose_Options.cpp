@@ -7,7 +7,7 @@ namespace Mongoose
 /* Constructor & Destructor */
 Options* Options::Create()
 {
-    Options *ret = (Options*) SuiteSparse_calloc(1, sizeof(Options));
+    Options *ret = static_cast<Options*>(SuiteSparse_calloc(1, sizeof(Options)));
     
     if(ret != NULL)
     {

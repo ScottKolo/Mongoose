@@ -47,7 +47,7 @@ Graph* Graph::Create (
     const Int _nz
 )
 {
-    Graph *ret = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
+    Graph *ret = static_cast<Graph*>(SuiteSparse_calloc(1, sizeof(Graph)));
     if(!ret) return NULL;
 
     int n =
@@ -119,7 +119,7 @@ Graph* Graph::Create (
     Graph *_parent
 )
 {
-    Graph *ret = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
+    Graph *ret = static_cast<Graph*>(SuiteSparse_calloc(1, sizeof(Graph)));
     if(!ret) return NULL;
     //new (ret) Graph();
 

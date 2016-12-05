@@ -54,7 +54,7 @@ cs *GraphToCSparse3(Graph *G, bool copy)
 /* Create a new Mongoose Graph from an existing CSparse3 matrix. */
 Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
 {
-    Graph *returner = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
+    Graph *returner = static_cast<Graph*>(SuiteSparse_calloc(1, sizeof(Graph)));
     if (!returner) return NULL;
 
     /* Brain-transplant the graph to the new representation. */
