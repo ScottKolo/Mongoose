@@ -9,7 +9,7 @@
 
 using namespace Mongoose;
 
-void runPerformanceTest(const std::string inputFile, const std::string outputFile)
+void runPerformanceTest(const std::string &inputFile, const std::string &outputFile)
 {
     Options *options;
     Graph *G;

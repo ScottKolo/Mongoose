@@ -8,7 +8,7 @@
 
 using namespace Mongoose;
 
-void runEdgeSeparatorTest(const std::string inputFile)
+void runEdgeSeparatorTest(const std::string &inputFile)
 {
     Logger::test() << "Running Edge Separator Test on " << inputFile << "\n";
         

@@ -31,10 +31,10 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
     }
     int largest_size = 0;
     int largest_scc = 0;
-    int scc_size = 0;
+    
     for (int i = 0; i < dmperm->nb; i++)
     {
-        scc_size = dmperm->r[i+1]-1 - dmperm->r[i] ;
+        int scc_size = dmperm->r[i+1]-1 - dmperm->r[i] ;
         if (scc_size > largest_size)
         {
             largest_size = scc_size;

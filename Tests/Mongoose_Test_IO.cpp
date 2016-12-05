@@ -6,7 +6,7 @@
 
 using namespace Mongoose;
 
-void runIOTest(const std::string inputFile, bool validGraph)
+void runIOTest(const std::string &inputFile, bool validGraph)
 {
     Logger::test() << "Running I/O Test on " << inputFile << "\n";
 

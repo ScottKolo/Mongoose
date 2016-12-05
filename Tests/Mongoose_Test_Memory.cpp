@@ -51,7 +51,7 @@ void myFree(void *ptr)
     if(ptr != NULL) free(ptr);
 }
 
-void runMemoryTest(const std::string inputFile)
+void runMemoryTest(const std::string &inputFile)
 {
     Options *O = Options::Create();
     if(!O)

@@ -25,12 +25,12 @@ using namespace std;
 namespace Mongoose
 {
 
-Graph *readGraph (const std::string filename)
+Graph *readGraph (const std::string &filename)
 {
     return readGraph(filename.c_str());
 }
 
-cs *readMatrix (const std::string filename, MM_typecode &matcode)
+cs *readMatrix (const std::string &filename, MM_typecode &matcode)
 {
     return readMatrix(filename.c_str(), matcode);
 }

@@ -36,7 +36,7 @@ namespace Mongoose
  *
  * @param filename the filename or path to the Matrix Market File.
  */ 
-Graph *readGraph (const std::string filename);
+Graph *readGraph (const std::string &filename);
 
 /** 
  * @brief Generate a CSparse matrix from a Matrix Market file.
@@ -50,7 +50,7 @@ Graph *readGraph (const std::string filename);
  * @param filename the filename or path to the Matrix Market File.
  * @param matcode the four character Matrix Market type code.
  */ 
-cs *readMatrix (const std::string filename, MM_typecode &matcode);
+cs *readMatrix (const std::string &filename, MM_typecode &matcode);
 
 /** 
  * @brief Generate a Graph from a Matrix Market file.

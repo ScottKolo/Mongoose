@@ -10,7 +10,7 @@
 
 using namespace Mongoose;
 
-void runReferenceTest(const std::string inputFile)
+void runReferenceTest(const std::string &inputFile)
 {
     // Given a symmetric matrix
     Options *options;
