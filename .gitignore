@@ -4,3 +4,5 @@ Matrix/*.s
 .DS_Store
 MATLAB/plots/*
 MATLAB/*.png
+.idea/*
+cmake-build-debug*

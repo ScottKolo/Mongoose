@@ -50,12 +50,12 @@ Graph* Graph::Create (
     Graph *ret = static_cast<Graph*>(SuiteSparse_calloc(1, sizeof(Graph)));
     if(!ret) return NULL;
 
-    int n =
+    size_t n = static_cast<size_t>(_n);
     ret->n = 
     ret->cs_n = 
     ret->cs_m = _n;
 
-    int nz =
+    size_t nz = static_cast<size_t>(_nz);
     ret->nz = 
     ret->cs_nzmax = _nz;
 
@@ -126,11 +126,11 @@ Graph* Graph::Create (
     ret->n = 
     ret->cs_n = 
     ret->cs_m = _parent->cn;
-    int n = ret->n;
+    size_t n = static_cast<size_t>(ret->n);
 
     ret->nz = 
     ret->cs_nzmax = _parent->nz;
-    int nz = ret->nz;
+    size_t nz = static_cast<size_t>(ret->nz);
 
     ret->cs_nz = -1; /* Compressed Column Format */
     ret->p = (Int*) SuiteSparse_malloc((n+1), sizeof(Int));
