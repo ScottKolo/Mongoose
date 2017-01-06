@@ -1,9 +1,7 @@
 /**
- * @file Mongoose_Matching.cpp
- * @author S. Nuri Yeralan
- * @brief For computing vertex matchings
+ * For computing vertex matchings
  *
- * @details During coarsening, a matching of vertices is computed to determine
+ * During coarsening, a matching of vertices is computed to determine
  * which vertices are combined together into supernodes. This can be done using
  * a number of different strategies, including Heavy Edge Matching and 
  * Community/Brotherly (similar to 2-hop) Matching.

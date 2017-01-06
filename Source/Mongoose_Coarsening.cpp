@@ -1,9 +1,7 @@
 /**
- * @file Mongoose_Coarsening.cpp
- * @author Nuri Yeralan, Scott Kolodziej
- * @brief Coarsening of a graph given a previously determined matching
+ * Coarsening of a graph given a previously determined matching
  *
- * @details In order to operate on extremely large graphs, a pre-processing is 
+ * In order to operate on extremely large graphs, a pre-processing is
  * done to reduce the size of the graph while maintaining its overall structure.
  * Given a matching of vertices with other vertices (e.g. heavy edge matching, 
  * random, etc.), coarsening constructs the new, coarsened graph.
@@ -20,18 +18,18 @@ namespace Mongoose
  *
  * Given a Graph @p G, coarsen returns a new Graph that is coarsened according
  * to the matching given by G->matching, G->matchmap, and G->invmatchmap.
- * G->matching must be built such that matching[a] = b+1 and matching[b] = a+1 
+ * G->matching must be built such that matching[a] = b+1 and matching[b] = a+1
  * if vertices a and b are matched. G->matchmap is a mapping from fine to coarse
- * vertices, so matchmap[a] = matchmap[b] = c if vertices a and b are matched 
- * and mapped to vertex c in the coarse graph. Likewise, G->invmatchmap is 
- * one possible inverse of G->matchmap, so invmatchmap[c] = a or 
- * invmatchmap[c] = b if a coarsened vertex c represents the matching of 
+ * vertices, so matchmap[a] = matchmap[b] = c if vertices a and b are matched
+ * and mapped to vertex c in the coarse graph. Likewise, G->invmatchmap is
+ * one possible inverse of G->matchmap, so invmatchmap[c] = a or
+ * invmatchmap[c] = b if a coarsened vertex c represents the matching of
  * vertices a and b in the refined graph.
- * 
+ *
  * @code
  * Graph coarsened_graph = coarsen(large_graph, options);
  * @endcode
- * 
+ *
  * @param G Graph to be coarsened
  * @param O Option struct specifying if debug checks should be done
  * @return A coarsened version of G

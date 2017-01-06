@@ -1,10 +1,7 @@
 /**
- * @file Mongoose_IO.cpp
- * @author Scott Kolodziej
- * @date 13 Jun 2016
- * @brief Simplified I/O functions for reading matrices and graphs
+ * Simplified I/O functions for reading matrices and graphs
  *
- * @details For reading Matrix Market files into Mongoose, read_graph and read_matrix
+ * For reading Matrix Market files into Mongoose, read_graph and read_matrix
  * are provided (depending on if a Graph class instance or CSparse matrix
  * instance is needed). The filename can be specified as either a const char*
  * (easier for C programmers) or std::string (easier from C++).

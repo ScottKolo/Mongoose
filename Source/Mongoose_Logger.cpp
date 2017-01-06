@@ -1,10 +1,7 @@
 /**
- * @file Mongoose_Logger.cpp
- * @author Scott Kolodziej
- * @date 23 Sep 2016
- * @brief Centralized debug and timing manager
+ * Centralized debug and timing manager
  *
- * @details For debug and timing information to be displayed via stdout. This system
+ * For debug and timing information to be displayed via stdout. This system
  * allows this information to be displayed (or not) without recompilation.
  * Timing inforation for different *portions of the library are also managed 
  * here with a tic/toc pattern.
