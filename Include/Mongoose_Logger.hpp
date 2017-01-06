@@ -1,10 +1,7 @@
 /**
- * @file Mongoose_Logger.hpp
- * @author Scott Kolodziej
- * @date 23 Sep 2016
- * @brief Centralized debug and timing manager
+ * Centralized debug and timing manager
  *
- * @details For debug and timing information to be displayed via stdout. This system
+ * For debug and timing information to be displayed via stdout. This system
  * allows this information to be displayed (or not) without recompilation.
  * Timing inforation for different *portions of the library are also managed 
  * here with a tic/toc pattern.
@@ -69,7 +66,7 @@ class Logger
 };
 
 /** 
- * @brief Start a timer for a given type/part of the code.
+ * Start a timer for a given type/part of the code.
  * 
  * Given a timingType (MatchingTiming, CoarseningTiming, RefinementTiming, 
  * FMTiming, QPTiming, or IOTiming), a clock is started for that computation.
@@ -81,9 +78,6 @@ class Logger
  *
  * @param timingType The portion of the library being timed (MatchingTiming, 
  *   CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
- *
- * @see toc()
- * @see getTime()
  */ 
 inline void Logger::tic(TimingType timingType)
 {
@@ -94,7 +88,7 @@ inline void Logger::tic(TimingType timingType)
 }
 
 /** 
- * @brief Stop a timer for a given type/part of the code.
+ * Stop a timer for a given type/part of the code.
  * 
  * Given a timingType (MatchingTiming, CoarseningTiming, RefinementTiming, 
  * FMTiming, QPTiming, or IOTiming), a clock is stopped for that computation.
@@ -106,9 +100,6 @@ inline void Logger::tic(TimingType timingType)
  *
  * @param timingType The portion of the library being timed (MatchingTiming, 
  *   CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
- *
- * @see tic()
- * @see getTime()
  */ 
 inline void Logger::toc(TimingType timingType)
 {
@@ -119,16 +110,13 @@ inline void Logger::toc(TimingType timingType)
 }
 
 /** 
- * @brief Get the time recorded for a given timing type.
+ * Get the time recorded for a given timing type.
  * 
  * Retreive the total clock time for a given timing type (MatchingTiming, 
  * CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
  *
  * @param timingType The portion of the library being timed (MatchingTiming, 
  *   CoarseningTiming, RefinementTiming, FMTiming, QPTiming, or IOTiming).
- *
- * @see tic()
- * @see toc()
  */ 
 inline float Logger::getTime(TimingType timingType)
 {

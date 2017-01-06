@@ -1,9 +1,7 @@
 /**
- * @file Mongoose_CSparse.cpp
- * @author Tim Davis, Nuri Yeralan, Scott Kolodziej
- * @brief Fundamental sparse matrix operations.
+ * Fundamental sparse matrix operations.
  *
- * @details A subset of the CSparse library is used for its sparse matrix data
+ * A subset of the CSparse library is used for its sparse matrix data
  * structure and efficient fundamental matrix operations, such as adding, 
  * permuting, and finding strongly connected components.
  */

@@ -1,9 +1,7 @@
 /**
- * @file Mongoose_CSparse.cpp
- * @author Timothy Davis, Nuri Yeralan, Scott Kolodziej
- * @brief Fundamental sparse matrix operations.
+ * Fundamental sparse matrix operations.
  *
- * @details A subset of the CSparse library is used for its sparse matrix data
+ * A subset of the CSparse library is used for its sparse matrix data
  * structure and efficient fundamental matrix operations, such as adding, 
  * permuting, and finding strongly connected components.
  */
@@ -24,7 +22,7 @@ csd *cs_ddone (csd *D, cs *C, void *w, csi ok);
 csi cs_dfs (csi j, cs *G, csi top, csi *xi, csi *pstack, const csi *pinv);
 
 /**
- * @brief C = A'
+ * C = A'
  *
  * @details Given a CSparse matrix @p A, cs_transpose returns a new matrix that 
  * is the transpose of @p A. In other words, C(j,i) = A(i,j).
@@ -67,7 +65,7 @@ cs *cs_transpose (const cs *A, csi values)
 }
 
 /**
- * @brief C = alpha*A + beta*B
+ * C = alpha*A + beta*B
  *
  * @details Given two CSparse matrices @p A and @p B, and scaling constants 
  * @p alpha and @p beta, cs_add returns a new matrix such that 
@@ -117,9 +115,9 @@ cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
 }
 
 /**
- * @brief C = compressed-column form of a triplet matrix T
+ * C = compressed-column form of a triplet matrix T
  *
- * @details Given a CSparse matrix @p T in triplet form, cs_compress returns 
+ * Given a CSparse matrix @p T in triplet form, cs_compress returns
  * the same matrix in compressed sparse column (CSC) format.
  * 
  * A triplet form matrix is a simple listing of the nonzeros in the matrix and
@@ -154,7 +152,7 @@ cs *cs_compress (const cs *T)
 }
 
 /**
- * @brief p [0..n] = cumulative sum of c [0..n-1], and then copy p [0..n-1] 
+ * p [0..n] = cumulative sum of c [0..n-1], and then copy p [0..n-1]
  * into c
  * 
  * @param p A vector of size @p n to be summed. On return, p is overwritten such
@@ -224,9 +222,9 @@ cs *cs_spalloc (csi m, csi n, csi nzmax, csi values, csi triplet)
 }
 
 /**
- * @brief Change the max number of entries in a sparse matrix
+ * Change the max number of entries in a sparse matrix
  *
- * @details Given a CSparse matrix @p A in compressed sparse column format,
+ * Given a CSparse matrix @p A in compressed sparse column format,
  * cs_sprealloc (i.e. Sparse Matrix Reallocation) will modify the matrix data
  * structure to allow for a new maximum capacity.
  * 

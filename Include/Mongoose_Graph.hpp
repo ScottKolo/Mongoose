@@ -1,9 +1,7 @@
 /**
- * @file Mongoose_Graph.hpp
- * @author S. Nuri Yeralan
- * @brief Graph data structure.
+ * Graph data structure.
  *
- * @details Stores graph adjacency and weight information. Also used as a container for 
+ * Stores graph adjacency and weight information. Also used as a container for
  * storing information about matching, coarsening, and partitioning.
  */
 

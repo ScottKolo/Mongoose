@@ -1,10 +1,7 @@
 /**
- * @file Mongoose_IO.hpp
- * @author Scott Kolodziej
- * @date 13 Jun 2016
- * @brief Simplified I/O functions for reading matrices and graphs
+ * Simplified I/O functions for reading matrices and graphs
  *
- * @details For reading Matrix Market files into Mongoose, read_graph and read_matrix
+ * For reading Matrix Market files into Mongoose, read_graph and read_matrix
  * are provided (depending on if a Graph class instance or CSparse matrix
  * instance is needed). The filename can be specified as either a const char*
  * (easier for C programmers) or std::string (easier from C++).
@@ -26,7 +23,7 @@ namespace Mongoose
 {
 
 /** 
- * @brief Generate a Graph from a Matrix Market file.
+ * Generate a Graph from a Matrix Market file.
  * 
  * Generate a Graph class instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
@@ -39,7 +36,7 @@ namespace Mongoose
 Graph *readGraph (const std::string &filename);
 
 /** 
- * @brief Generate a CSparse matrix from a Matrix Market file.
+ * Generate a CSparse matrix from a Matrix Market file.
  * 
  * Generate a cs struct instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
@@ -53,7 +50,7 @@ Graph *readGraph (const std::string &filename);
 cs *readMatrix (const std::string &filename, MM_typecode &matcode);
 
 /** 
- * @brief Generate a Graph from a Matrix Market file.
+ * Generate a Graph from a Matrix Market file.
  * 
  * Generate a Graph class instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
@@ -66,7 +63,7 @@ cs *readMatrix (const std::string &filename, MM_typecode &matcode);
 Graph *readGraph (const char* filename);
 
 /** 
- * @brief Generate a CSparse matrix from a Matrix Market file.
+ * Generate a CSparse matrix from a Matrix Market file.
  * 
  * Generate a cs struct instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
