@@ -22,7 +22,7 @@ void runReferenceTest(const std::string &inputFile)
     if (!options)
     {
         // Ran out of memory
-        Logger::test() << "Error creating Options struct in Performance Test\n";
+        LogTest("Error creating Options struct in Performance Test");
         SuiteSparse_free(options);
         assert(false);
     }

@@ -24,8 +24,7 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
     csd* dmperm = cs_scc(temp);
     if (!dmperm)
     {
-        Logger::error() <<  
-            "Error: Ran out of memory in Mongoose::sanitizeMatrix\n";
+        LogError("Error: Ran out of memory in Mongoose::sanitizeMatrix");
         cs_spfree(temp);
         return NULL;
     }
@@ -46,8 +45,7 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
     csi *pinv = cs_pinv(dmperm->p, temp->n);
     if (!pinv)
     {
-        Logger::error() << 
-            "Error: Ran out of memory in Mongoose::sanitizeMatrix\n";
+        LogError("Error: Ran out of memory in Mongoose::sanitizeMatrix");
         SuiteSparse_free(pinv);
         cs_spfree(temp);
         cs_dfree(dmperm);
@@ -60,8 +58,7 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
 
     if (!C)
     {
-        Logger::error() << 
-            "Error: Ran out of memory in Mongoose::sanitizeMatrix\n";
+        LogError("Error: Ran out of memory in Mongoose::sanitizeMatrix");
         cs_dfree(dmperm);
         return NULL;
     }

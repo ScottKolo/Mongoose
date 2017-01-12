@@ -8,6 +8,7 @@
  */
 
 #include "Mongoose_Matching.hpp"
+#include <map>
 
 namespace Mongoose
 {
@@ -41,6 +42,12 @@ void match(Graph *G, Options *O)
           matching_DavisPA(G,O);
           matching_Cleanup(G,O);
           break;
+
+//      case LabelPropagation:
+//          matching_LabelProp(G,O);
+//          matching_Cleanup(G,O);
+//          break;
+
     }
     Logger::toc(MatchingTiming);
 }
@@ -347,7 +354,7 @@ void matching_HEM(Graph *G, Options *O)
 
         Int heaviestNeighbor = -1;
         Weight heaviestWeight = -1.0;
-        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
             Int neighbor = Gi[p];
 
@@ -385,7 +392,7 @@ void matching_HEM(Graph *G, Options *O)
             if (matching[k]) continue;
 
             /* Check condition 2 */
-            for (Int p = Gp[k]; p < Gp[k+1]; p++)
+            for (Int p = Gp[k]; p < Gp[k + 1]; p++)
             {
                 assert(matching[Gi[p]]);
             }
@@ -393,4 +400,83 @@ void matching_HEM(Graph *G, Options *O)
     }
 }
 
+//-----------------------------------------------------------------------------
+// This is a label propagation strategy
+//-----------------------------------------------------------------------------
+/*
+void matching_LabelProp(Graph *G, Options *O)
+{
+    Int n = G->n;
+    Int cn = G->cn;
+    Int *Gp = G->p;
+    Int *Gi = G->i;
+    Int *matching = G->matching;
+    Int *matchmap = G->matchmap;
+    Int *invmatchmap = G->invmatchmap;
+    Int *matchtype = G->matchtype;
+
+    Int *label;
+    label = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+
+    for (Int k = 0; k < n; k++)
+    {
+        label[k] = k;
+    }
+
+    Int numMatched = 0;
+    while (numMatched < n)
+    {
+        for (Int k = 0; k < n; k++)
+        {
+            // Consider only unmatched nodes
+            if (MONGOOSE_IS_MATCHED(k)) continue;
+
+            std::map<Int, Int> count;
+            Int max = 0;
+            Int mostFrequentLabel = -1;
+
+            for (Int p = Gp[k]; p < Gp[k + 1]; p++) {
+                // Compute most frequent label
+                Int currentCount = count[label[Gi[p]]] + 1;
+                count[label[Gi[p]]] = currentCount;
+                if (currentCount > max) {
+                    max = currentCount;
+                    mostFrequentLabel = label[Gi[p]];
+                }
+            }
+
+            if (label[k] == mostFrequentLabel) {
+                MONGOOSE_MATCH(k, mostFrequentLabel, MatchType_Community);
+                numMatched += 1;
+            } else {
+                label[k] = mostFrequentLabel;
+            }
+        }
+    }
+
+    SuiteSparse_free(label);
+
+    // Save the # of coarse nodes.
+    G->cn = cn;
+
+    //  If we want to do expensive checks, make sure that every node is either:
+    //     1) matched
+    //     2) has no unmatched neighbors
+
+    if (O->doExpensiveChecks)
+    {
+        for (Int k = 0; k < n; k++)
+        {
+            // Check condition 1
+            if (matching[k]) continue;
+
+            // Check condition 2
+            for (Int p = Gp[k]; p < Gp[k+1]; p++)
+            {
+                assert(matching[Gi[p]]);
+            }
+        }
+    }
+}
+*/
 } // end namespace Mongoose

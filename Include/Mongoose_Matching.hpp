@@ -22,6 +22,7 @@ void matching_Random(Graph *G, Options *O);
 void matching_HEM(Graph *G, Options *O);
 void matching_PA(Graph *G, Options *O);
 void matching_DavisPA(Graph *G, Options *O);
+void matching_LabelProp(Graph *G, Options *O);
 void matching_Cleanup(Graph *G, Options *O);
 
 } // end namespace Mongoose

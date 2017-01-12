@@ -5,6 +5,11 @@
 
 using namespace Mongoose;
 
+#define LOG_ERROR 1
+#define LOG_WARN 1
+#define LOG_INFO 0
+#define LOG_TEST 1
+
 int main(int argn, char** argv)
 {
     SuiteSparse_start();
@@ -15,7 +20,7 @@ int main(int argn, char** argv)
     if (argn != 3)
     {
         // Wrong number of arguments - return error
-        Logger::error() << "Usage: mongoose_test_io <MM-input-file.mtx> <1 for valid graph, 0 for invalid>\n";
+        LogError("Usage: mongoose_test_io <MM-input-file.mtx> <1 for valid graph, 0 for invalid>");
         SuiteSparse_finish();
         return 1;
     }

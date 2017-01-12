@@ -35,13 +35,13 @@ cs *readMatrix (const std::string &filename, MM_typecode &matcode)
 Graph *readGraph (const char* filename)
 {
     Logger::tic(IOTiming);
-    Logger::info() << "Reading graph from file " << filename << "\n";
+    LogInfo("Reading graph from file " << filename);
 
     MM_typecode matcode;
     cs* A = readMatrix(filename, matcode);
     if (!A)
     {
-        Logger::error() << "Error reading matrix from file\n";
+        LogError("Error reading matrix from file");
         return NULL;
     }
     cs *sanitized_A = sanitizeMatrix(A, mm_is_symmetric(matcode));
@@ -50,7 +50,7 @@ Graph *readGraph (const char* filename)
     Graph *G = CSparse3ToGraph(sanitized_A);
     if (!G)
     {
-        Logger::error() << "Ran out of memory in Mongoose::readGraph\n";
+        LogError("Ran out of memory in Mongoose::readGraph");
         cs_spfree(sanitized_A);
         Logger::toc(IOTiming);
         return NULL;
@@ -67,26 +67,25 @@ Graph *readGraph (const char* filename)
 
 cs *readMatrix (const char* filename, MM_typecode &matcode)
 {
-    Logger::info() << "Reading Matrix from " << filename << "\n";
+    LogInfo("Reading Matrix from " << filename);
     FILE *file = fopen(filename, "r");
     if (!file)
     {
-        Logger::error() << "Error: Cannot read file " << filename << "\n";
+        LogError("Error: Cannot read file " << filename);
         return NULL;
     }
 
-    Logger::info() << "Reading Matrix Market banner...\n";
+    LogInfo("Reading Matrix Market banner...");
     if (mm_read_banner(file, &matcode) != 0)
     {
-        Logger::error() << "Error: Could not process Matrix Market banner\n";
+        LogError("Error: Could not process Matrix Market banner");
         fclose(file);
         return NULL;
     }
     if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode) || 
         mm_is_complex(matcode))
     {
-        Logger::error() << 
-            "Error: Unsupported matrix format - Must be real and sparse\n";
+        LogError("Error: Unsupported matrix format - Must be real and sparse");
         fclose(file);
         return NULL;
     }
@@ -95,27 +94,25 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     int ret_code;
     if ((ret_code = mm_read_mtx_crd_size(file, &M, &N, &nz)) !=0)
     {
-        Logger::error() << 
-            "Error: Could not parse matrix dimension and size.\n";
+        LogError("Error: Could not parse matrix dimension and size.");
         fclose(file);
         return NULL;
     }
     if (M != N)
     {
-        Logger::error() << "Error: Matrix must be square.\n";
+        LogError("Error: Matrix must be square.");
         fclose(file);
         return NULL;
     }
     
-    Logger::info() << "Reading matrix data...\n";
+    LogInfo("Reading matrix data...");
     Int *I = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Int *J = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Weight *val = (Weight *) SuiteSparse_malloc(nz, sizeof(Weight));
 
     if (!I || !J || !val)
     {
-        Logger::error() <<  
-            "Error: Ran out of memory in Mongoose::readMatrix\n";
+        LogError("Error: Ran out of memory in Mongoose::readMatrix");
         SuiteSparse_free(I);
         SuiteSparse_free(J);
         SuiteSparse_free(val);
@@ -136,8 +133,7 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     cs *A = (cs *) SuiteSparse_malloc(1, sizeof(cs));
     if (!A)
     {
-        Logger::error() << 
-            "Error: Ran out of memory in Mongoose::readMatrix\n";
+        LogError("Error: Ran out of memory in Mongoose::readMatrix");
         SuiteSparse_free(I);
         SuiteSparse_free(J);
         SuiteSparse_free(val);
@@ -152,13 +148,12 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     A->x = val;
     A->nz = nz;
     
-    Logger::info() << "Compressing matrix from triplet to CSC format...\n";
+    LogInfo("Compressing matrix from triplet to CSC format...");
     cs* compressed_A = cs_compress(A);
     cs_spfree(A);
     if (!compressed_A)
     {
-        Logger::error() << 
-            "Error: Ran out of memory in Mongoose::readMatrix\n";
+        LogError("Error: Ran out of memory in Mongoose::readMatrix");
         return NULL;
     }
     

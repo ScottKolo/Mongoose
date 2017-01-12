@@ -41,7 +41,7 @@ typedef double Weight;  /* Used for floating point edge & node weights */
 typedef double Double;  /* Used for floating point other calculations  */
 
 /* Enumerations */
-enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
+enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA, LabelPropagation };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
 
 } // end namespace Mongoose

@@ -14,6 +14,99 @@
 #include <time.h> 
 #include <iostream>
 
+// Default Logging Levels
+#ifndef LOG_ERROR
+#define LOG_ERROR 1
+#endif
+
+#ifndef LOG_WARN
+#define LOG_WARN 0
+#endif
+
+#ifndef LOG_INFO
+#define LOG_INFO 0
+#endif
+
+#ifndef LOG_TEST
+#define LOG_TEST 0
+#endif
+
+struct NoneType { };
+
+template<typename List>
+struct LogData {
+    List list;
+};
+
+// Main Logging Macros
+// Courtesy of http://stackoverflow.com/questions/19415845
+#define LogError(msg) \
+    do { if (LOG_ERROR) (Log(__FILE__, __LINE__, LogData<NoneType>() << msg)); } while (0)
+#define LogWarn(msg) \
+    do { if (LOG_WARN) (Log(__FILE__, __LINE__, LogData<NoneType>() << msg)); } while (0)
+#define LogInfo(msg) \
+    do { if (LOG_INFO) (Log(LogData<NoneType>() << msg)); } while (0)
+#define LogTest(msg) \
+    do { if (LOG_TEST) (Log(LogData<NoneType>() << msg)); } while (0)
+
+// Workaround GCC 4.7.2 not recognizing noinline attribute
+#ifndef NOINLINE_ATTRIBUTE
+#ifdef __ICC
+#define NOINLINE_ATTRIBUTE __attribute__(( noinline ))
+#else
+#define NOINLINE_ATTRIBUTE
+#endif // __ICC
+#endif // NOINLINE_ATTRIBUTE
+
+template<typename List>
+void Log(const char* file, int line,
+         LogData<List>&& data) NOINLINE_ATTRIBUTE
+{
+    std::cout << file << ":" << line << ": ";
+    output(std::cout, std::move(data.list));
+    std::cout << std::endl;
+}
+
+template<typename List>
+void Log(LogData<List>&& data) NOINLINE_ATTRIBUTE
+{
+    output(std::cout, std::move(data.list));
+    std::cout << std::endl;
+}
+
+template<typename Begin, typename Value>
+constexpr LogData<std::pair<Begin&&, Value&&>> operator<<(LogData<Begin>&& begin,
+                                                          Value&& value) noexcept
+{
+    return {{ std::forward<Begin>(begin.list), std::forward<Value>(value) }};
+}
+
+template<typename Begin, size_t n>
+constexpr LogData<std::pair<Begin&&, const char*>> operator<<(LogData<Begin>&& begin,
+                                                              const char (&value)[n]) noexcept
+{
+    return {{ std::forward<Begin>(begin.list), value }};
+}
+
+typedef std::ostream& (*PfnManipulator)(std::ostream&);
+
+template<typename Begin>
+constexpr LogData<std::pair<Begin&&, PfnManipulator>> operator<<(LogData<Begin>&& begin,
+                                                                 PfnManipulator value) noexcept
+{
+    return {{ std::forward<Begin>(begin.list), value }};
+}
+
+template <typename Begin, typename Last>
+void output(std::ostream& os, std::pair<Begin, Last>&& data)
+{
+    output(os, std::move(data.first));
+    os << data.second;
+}
+
+inline void output(std::ostream& os, NoneType nType)
+{ }
+
 namespace Mongoose
 {
 
@@ -45,11 +138,6 @@ class Logger
     static clock_t clocks[6];
     static float times[6];
 
-    static std::ostream* error_;
-    static std::ostream* warn_;
-    static std::ostream* info_;
-    static std::ostream* test_;
-
   public:
     static inline void tic(TimingType timingType);
     static inline void toc(TimingType timingType);
@@ -58,11 +146,6 @@ class Logger
     static void setDebugLevel(int debugType);
     static void setTimingFlag(bool tFlag);
     static void printTimingInfo();
-    
-    static std::ostream& error() {return *error_;}
-    static std::ostream& warn()  {return *warn_;}
-    static std::ostream& info()  {return *info_;}
-    static std::ostream& test()  {return *test_;}
 };
 
 /** 

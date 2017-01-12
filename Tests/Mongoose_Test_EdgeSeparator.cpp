@@ -10,7 +10,7 @@ using namespace Mongoose;
 
 void runEdgeSeparatorTest(const std::string &inputFile)
 {
-    Logger::test() << "Running Edge Separator Test on " << inputFile << "\n";
+    LogTest("Running Edge Separator Test on " << inputFile);
         
     // Given a symmetric matrix...
     Options *options;
@@ -20,7 +20,7 @@ void runEdgeSeparatorTest(const std::string &inputFile)
     if (!options)
     {
         // Ran out of memory
-        Logger::test() << "Error creating Options struct in Edge Separator Test\n";
+        LogTest("Error creating Options struct in Edge Separator Test");
         SuiteSparse_free(options);
         assert(false);
     }
@@ -31,7 +31,7 @@ void runEdgeSeparatorTest(const std::string &inputFile)
     if (!G)
     {
         // Ran out of memory
-        Logger::test() << "Error reading Graph from file in Edge Separator Test\n";
+        LogTest("Error reading Graph from file in Edge Separator Test");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         assert(false);
@@ -43,7 +43,7 @@ void runEdgeSeparatorTest(const std::string &inputFile)
     if (error)
     {
         // Error occurred
-        Logger::test() << "Error computing edge separator in Edge Separator Test\n";
+        LogTest("Error computing edge separator in Edge Separator Test");
         assert(false);
     }
     else
@@ -58,14 +58,14 @@ void runEdgeSeparatorTest(const std::string &inputFile)
         }
 
         Logger::printTimingInfo();
-        Logger::test() << "Cut Properties:\n";
-        Logger::test() << "  Cut Cost:  " << G->cutCost << "\n";
-        Logger::test() << "  Imbalance: " << G->imbalance << "\n";
+        LogTest("Cut Properties:");
+        LogTest("  Cut Cost:  " << G->cutCost);
+        LogTest("  Imbalance: " << G->imbalance);
     }
 
     G->~Graph();
     SuiteSparse_free(G);
     SuiteSparse_free(options);
 
-    Logger::test() << "Edge Separator Test Completed Successfully\n";
+    LogTest("Edge Separator Test Completed Successfully");
 }

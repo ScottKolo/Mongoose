@@ -3,6 +3,11 @@
 
 using namespace Mongoose;
 
+#define LOG_ERROR 1
+#define LOG_WARN 1
+#define LOG_INFO 0
+#define LOG_TEST 1
+
 int main(int argn, char** argv)
 {
     SuiteSparse_start();

@@ -8,7 +8,7 @@ using namespace Mongoose;
 
 void runIOTest(const std::string &inputFile, bool validGraph)
 {
-    Logger::test() << "Running I/O Test on " << inputFile << "\n";
+    LogTest("Running I/O Test on " << inputFile);
 
     Graph *G = readGraph(inputFile);
 
@@ -45,5 +45,5 @@ void runIOTest(const std::string &inputFile, bool validGraph)
         assert(G2 == NULL);
     }
     
-    Logger::test() << "I/O Test Completed Successfully\n";
+    LogTest("I/O Test Completed Successfully");
 }

@@ -14,31 +14,14 @@
 namespace Mongoose
 {
 
-class NullBuffer : public std::streambuf
-{
-};
-
-NullBuffer nullBuffer;
-std::ostream nullStream(&nullBuffer);
-
 int Logger::debugLevel = None;
 bool Logger::timingOn = false;
 clock_t Logger::clocks[6];
 float Logger::times[6];
 
-std::ostream* Logger::error_ = &nullStream;
-std::ostream* Logger::warn_  = &nullStream;
-std::ostream* Logger::info_  = &nullStream;
-std::ostream* Logger::test_  = &nullStream;
-
 void Logger::setDebugLevel(int debugType)
 {
     debugLevel = debugType;
-
-    Logger::error_ = (debugLevel & Error) ? &std::cerr : &nullStream;
-    Logger::warn_ =  (debugLevel & Warn)  ? &std::cout : &nullStream;
-    Logger::info_ =  (debugLevel & Info)  ? &std::cout : &nullStream;
-    Logger::test_ =  (debugLevel & Test)  ? &std::cout : &nullStream;
 }
 
 void Logger::setTimingFlag(bool tFlag)

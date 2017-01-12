@@ -20,7 +20,7 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
     if (!options)
     {
         // Ran out of memory
-        Logger::test() << "Error creating Options struct in Performance Test\n";
+        LogTest("Error creating Options struct in Performance Test");
         SuiteSparse_free(options);
         assert(false);
     }
@@ -30,7 +30,7 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
     if (!G)
     {
         // Ran out of memory
-        Logger::test() << "Error reading Graph from file in Performance Test\n";
+        LogTest("Error reading Graph from file in Performance Test");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         assert(false);
@@ -44,7 +44,7 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
     if (error)
     {
         // Error occurred
-        Logger::test() << "Error computing edge separator in Performance Test\n";
+        LogTest("Error computing edge separator in Performance Test");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         assert(false);
@@ -52,15 +52,15 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
     else
     {
         double test_time = ((double) t)/CLOCKS_PER_SEC;
-        Logger::test() << "Total Edge Separator Time: " << test_time << "s\n";
+        LogTest("Total Edge Separator Time: " << test_time << "s");
         Logger::printTimingInfo();
-        Logger::test() << "Cut Properties:\n";
-        Logger::test() << " Cut Cost:  " << G->cutCost << "\n";
-        Logger::test() << " Imbalance: " << G->imbalance << "\n";
+        LogTest("Cut Properties:");
+        LogTest(" Cut Cost:  " << G->cutCost);
+        LogTest(" Imbalance: " << G->imbalance);
         
         if (!outputFile.empty())
         {
-            Logger::test() << "Writing results to file: " << outputFile << "\n";
+            LogTest("Writing results to file: " << outputFile);
             std::ofstream ofs (outputFile.c_str(), std::ofstream::out);
             ofs << "{" << std::endl;
             ofs << "  \"InputFile\": \"" << inputFile << "\"," << std::endl;

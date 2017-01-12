@@ -18,7 +18,7 @@ int main(int argn, const char **argv)
     if (argn != 2)
     {
         // Wrong number of arguments - return error
-        Logger::error() << "Usage: Demo <MM-input-file.mtx>\n";
+        LogError("Usage: Demo <MM-input-file.mtx>");
         SuiteSparse_finish();
         return 1;
     }
@@ -33,17 +33,18 @@ int main(int argn, const char **argv)
     if (!options)
     {
         // Ran out of memory
-        Logger::error() << "Error creating Options struct\n";
+        LogError("Error creating Options struct");
         SuiteSparse_free(options);
         return 1;
     }
+    //options->matchingStrategy = LabelPropagation;
 
     Graph *G = readGraph(inputFile);
 
     if (!G)
     {
         // Ran out of memory or problem reading the graph from file
-        Logger::error() << "Error reading Graph from file\n";
+        LogError("Error reading Graph from file");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         return 1;
@@ -57,7 +58,7 @@ int main(int argn, const char **argv)
     if (error)
     {
         // Error occurred
-        Logger::error() << "Error computing edge separator in Performance Test\n";
+        LogError("Error computing edge separator in Performance Test");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         return 1;
@@ -74,9 +75,9 @@ int main(int argn, const char **argv)
         std::cout << "Total Edge Separator Time: " << test_time << "s\n";
         Logger::printTimingInfo();
         std::cout << "Cut Properties:\n";
-        std::cout << " Cut Size:  " << cutSize;
-        std::cout << " Cut Cost:  " << G->cutCost;
-        std::cout << " Imbalance: " << G->imbalance;
+        std::cout << " Cut Size:  " << cutSize << "\n";
+        std::cout << " Cut Cost:  " << G->cutCost << "\n";
+        std::cout << " Imbalance: " << G->imbalance << "\n";
     }
 
     G->~Graph();

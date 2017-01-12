@@ -8,6 +8,11 @@
 
 using namespace Mongoose;
 
+#define LOG_ERROR 1
+#define LOG_WARN 1
+#define LOG_INFO 0
+#define LOG_TEST 1
+
 /* Custom memory management functions allow for memory testing. */
 int AllowedMallocs;
 

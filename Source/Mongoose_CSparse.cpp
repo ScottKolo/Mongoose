@@ -91,7 +91,7 @@ cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
     cs *C;
     if (!CS_CSC (A) || !CS_CSC (B)) /* check inputs */
     {
-        Logger::error() << "Error: Cannot add uncompressed matrices\n";
+        LogError("Error: Cannot add uncompressed matrices");
         return (NULL);
     }
     if (A->m != B->m || A->n != B->n) return (NULL);
