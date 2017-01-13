@@ -1,6 +1,6 @@
 
 #include "mongoose_mex.hpp"
-#include "mongoose_sanitize.hpp"
+#include "Mongoose_Sanitize.hpp"
 
 using namespace Mongoose;
 
