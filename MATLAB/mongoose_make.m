@@ -25,9 +25,16 @@ include = [include ' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE'] ;
 include = [include ' -DGP_MEX_FUNCTION'] ;
 
 lib = '-L../Lib' ;
-if (isunix && ~ismac)
-    % Mac doesn't need librt
-    lib = [lib ' -lrt'];
+if (isunix)
+    % Check for ICC - use that if possible
+    [no_icc_found, icc_path] = system('which icc');
+    if(~no_icc_found)
+        d = [d ' -GCC=' icc_path];
+    end
+    if(~ismac)
+        % Mac doesn't need librt
+        lib = [lib ' -lrt'];
+    end
 end
 
 % Fix the include & library path.
