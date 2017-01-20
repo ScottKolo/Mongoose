@@ -25,11 +25,12 @@ include = [include ' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE'] ;
 include = [include ' -DGP_MEX_FUNCTION'] ;
 
 lib = '-L../Lib' ;
+cpp_flags = '' ;
 if (isunix)
     % Check for ICC - use that if possible
     [no_icc_found, icc_path] = system('which icc');
     if(~no_icc_found)
-        d = [d ' -v GCC=''' icc_path ''''];
+        cpp_flags = [cpp_flags ' -v GCC=''' strtrim(icc_path) ''''];
     end
     if(~ismac)
         % Mac doesn't need librt
@@ -102,7 +103,7 @@ for f = config_src
     end
     o = ff (slash:end) ;
     obj = [obj ' ' o obj_extension] ;
-    s = sprintf ('mex %s -DDLONG -O -silent %s -c %s.c', d, include, ff) ;
+    s = sprintf ('mex %s %s -DDLONG -O -silent %s -c %s.c', cpp_flags, d, include, ff) ;
     kk = do_cmd (s, kk, details) ;
 end
 
