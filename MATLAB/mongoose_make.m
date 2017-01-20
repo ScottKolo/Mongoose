@@ -29,7 +29,7 @@ if (isunix)
     % Check for ICC - use that if possible
     [no_icc_found, icc_path] = system('which icc');
     if(~no_icc_found)
-        d = [d ' -v GCC=' icc_path];
+        d = [d ' -v GCC=''' icc_path ''''];
     end
     if(~ismac)
         % Mac doesn't need librt
