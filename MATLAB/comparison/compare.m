@@ -57,6 +57,7 @@ function [rel_mongoose_times, rel_metis_times, avg_mongoose_times, avg_metis_tim
     hold off;
 
     [error, commit] = system('git rev-parse --short HEAD');
+    commit = strtrim(commit);
     filename = ['PerfComparison' date];
     if(~error)
         title(['Commit ' commit]);
