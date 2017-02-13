@@ -46,13 +46,13 @@ void QPboundary
     /* ---------------------------------------------------------------------- */
 
     /* input and output */
-    Int nf = QP->nf;
+    Int nf = QP->numFreeVars;
     if (nf == 0) return;
 
     Double pert0 = 0.5 - 1e-10; // QP->Parm->boundary_pert0;
     Double pert1 = 0.5 + 1e-10; // QP->Parm->boundary_pert1;
     Double *x = QP->x;          /* current estimate of solution */
-    Double *grad = QP->g;       /* gradient at current x */
+    Double *grad = QP->gradient;       /* gradient at current x */
     Int ib = QP->ib;            /* ib = +1, -1, or 0 
                                    if b = hi, lo, or lo < b < hi */
     Int *ix = QP->ix;           /* ix_i = +1, -1, or 0 
@@ -196,7 +196,7 @@ void QPboundary
 
     if (nf == 0)
     {
-        QP->nf = nf;
+        QP->numFreeVars = nf;
         QP->b = b;
         QP->ib = ib;
         return;
@@ -419,7 +419,7 @@ void QPboundary
         }
         nf--;
     }
-    // TODO: nf could be decremented twice - nf = -1?
+    // TODO: numFreeVars could be decremented twice - numFreeVars = -1?
     if (nf == 1) /* j is free, optimize over x [j] */
     {
         Int bind1 = 0;
@@ -512,7 +512,7 @@ void QPboundary
         }
     }
 
-    QP->nf = nf;
+    QP->numFreeVars = nf;
     QP->b = b;
     QP->ib = ib;
 

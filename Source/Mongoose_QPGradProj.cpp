@@ -37,11 +37,11 @@ Double QPgradproj
 
     /* Output and Input */
     Double *x = QP->x;             /* current estimate of solution            */
-    Int nf = QP->nf;               /* number of i such that 0 < x_i < 1       */
+    Int nf = QP->numFreeVars;               /* number of i such that 0 < x_i < 1       */
     Int *ix = QP->ix;              /* ix_i = +1,-1, or 0 if x_i = 1,0, or 0 < x_i < 1 */
     Int *LinkUp = QP->LinkUp;      /* linked list for free indices            */
     Int *LinkDn = QP->LinkDn;      /* linked list, LinkDn [LinkUp [i]] = i    */
-    Double *grad = QP->g;          /* gradient at current x                   */
+    Double *grad = QP->gradient;          /* gradient at current x                   */
 
     /* Unpack the problem's parameters. */
     Int n = G->n;                  /* problem dimension */

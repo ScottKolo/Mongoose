@@ -26,7 +26,7 @@ void QPlinks
     Int *ix = QP->ix;
     Int *LinkUp = QP->LinkUp;
     Int *LinkDn = QP->LinkDn;
-    Double *grad = QP->g;  /* gradient at current x */
+    Double *grad = QP->gradient;  /* gradient at current x */
 
     Int lastl = n;
     Int nf = 0;
@@ -56,7 +56,7 @@ void QPlinks
 
     LinkUp[lastl] = n;
     LinkDn[n] = lastl;
-    QP->nf = nf;
+    QP->numFreeVars = nf;
     QP->b = s;
 
     Double lo = G->W *
