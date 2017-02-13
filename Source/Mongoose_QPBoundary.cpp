@@ -81,7 +81,6 @@ void QPboundary
     /* Step 1. if lo < b < hi, then for each free j,                          */
     /*         see if x_j can be pushed to 0 or 1                             */
     /* ---------------------------------------------------------------------- */
-
     for (Int k = LinkUp[n]; (k < n) && (ib == 0) && (LinkUp[LinkDn[k]] != k);
          k = LinkUp[k])
     {
@@ -133,6 +132,7 @@ void QPboundary
         {
             grad[Ei[p]] += s * Ex[p];
         }
+
         grad[k] += s * D[k];
     }
 
@@ -205,14 +205,14 @@ void QPboundary
     /* ---------------------------------------------------------------------- */
     /* Step 3. Search for a_{ij} = 0 in the free index set */
     /* ---------------------------------------------------------------------- */
-
-    for (Int j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j])
+    for (Int j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j) && (nf > 1); j = LinkUp[j])
     {
         Int m = 1;
         for (Int p = Ep[j]; p < Ep[j+1]; p++)
         {
             if (ix[Ei[p]] == 0) m++;
         }
+
         if (m == nf) continue;
 
         /* -------------------------------------------------------------- */
@@ -340,7 +340,6 @@ void QPboundary
     /* ---------------------------------------------------------------------- */
 
     /* free variables:0 < x_j < 1 */
-
     Int j;
     for (j = LinkUp[n]; j < n && (LinkUp[LinkDn[j]] != j); j = LinkUp[j])
     {
@@ -420,7 +419,7 @@ void QPboundary
         }
         nf--;
     }
-
+    // TODO: nf could be decremented twice - nf = -1?
     if (nf == 1) /* j is free, optimize over x [j] */
     {
         Int bind1 = 0;
@@ -512,6 +511,7 @@ void QPboundary
             ix[j] = -1;
         }
     }
+
     QP->nf = nf;
     QP->b = b;
     QP->ib = ib;
