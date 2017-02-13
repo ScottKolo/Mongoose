@@ -205,7 +205,7 @@ Double QPgradproj
                 {
                     if (yj == 1.0)
                     {
-                        ix[j] = 1.0;
+                        ix[j] = 1;
                     }
                     else
                     {
@@ -217,12 +217,12 @@ Double QPgradproj
                     if (yj == 1.0) /* x_j hits upper bound */
                     {
                         bind = 1;
-                        ix[j] = 1.0;
+                        ix[j] = 1;
                     }
                     else if (yj == MONGOOSE_ZERO) /* x_j hits lower bound */
                     {
                         bind = 1;
-                        ix[j] = -1.0;
+                        ix[j] = -1;
                     }
                     /* else x_j is free before and after step */
                 }
