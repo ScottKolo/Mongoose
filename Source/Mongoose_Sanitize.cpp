@@ -93,7 +93,8 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
 
     for (Int p = 0; p < submatrix->p[submatrix->n]; p++)
     {
-        submatrix->x[p] = fabs(submatrix->x[p]);
+        submatrix->x[p] = 1;
+        //submatrix->x[p] = fabs(submatrix->x[p]);
     }
 
     return submatrix;
