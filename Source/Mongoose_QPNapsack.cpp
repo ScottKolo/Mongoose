@@ -74,10 +74,11 @@
 
     If we have a guess for which components of x will be free at the optimal
     solution, then we can obtain a good guess for the starting lambda by
-    setting the slope of the dual function to zero and solving for lambda.
-    If FreeSet_status is not NULL, then the FreeSet_status array is used to compute a starting guess for
-    lambda based on the estimated free indices. Note that FreeSet_status is an INPUT array,
-    it is not computed within the routine.
+    setting the slope of the dual function to zero and solving for lambda.  If
+    FreeSet_status is not NULL, then the FreeSet_status array is used to
+    compute a starting guess for lambda based on the estimated free indices.
+    Note that FreeSet_status is an INPUT array, it is not modified by this
+    routine.
    ========================================================================== */
 
 #include "Mongoose_QPNapsack.hpp"

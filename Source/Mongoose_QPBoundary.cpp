@@ -459,13 +459,33 @@ void QPboundary
     }
 
     /* ---------------------------------------------------------------------- */
+    // assert that the nodes in the FreeSet form a single clique
+    /* ---------------------------------------------------------------------- */
+
+    assert (nFreeSet >= 1) ;    // we can have 1 or more nodes still in FreeSet
+
+    // TODO: only run this test in debug mode:
+    for (Int j = LinkUp[n]; (j < n) ; j = LinkUp[j])
+    {
+        // j must be adjacent to all other nodes in the FreeSet
+        Int nfree_neighbors = 0 ;
+        for (Int p = Ep[j]; p < Ep[j+1]; p++)
+        {
+            Int i = Ei[p] ;
+            assert (i != j) ;
+            if (FreeSet_status [i] == 0) nfree_neighbors++ ;
+        }
+        assert (nfree_neighbors == nFreeSet - 1) ;
+    }
+
+    /* ---------------------------------------------------------------------- */
     /* Step 4. dxj = s/aj, dxi = -s/ai, choose s with g_j dxj + g_i dxi <= 0 */
     /* ---------------------------------------------------------------------- */
 
     FreeSet_dump ("step 4", n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 1) ;
 
     // for each j in the FreeSet:
-    for (Int j = LinkUp[n]; j < n ; /* see below for next j */ )
+    for (Int j = LinkUp [n] ; j < n ; /* see below for next j */ )
     {
         /* free variables: 0 < x_j < 1 */
         /* choose s so that first derivative terms decrease */

@@ -28,7 +28,8 @@ void QPNapsackPair
     Double *lambda,    /* initial guess (input) final value (output) multiplier
                           lambda [0], lambda [1] */
     Int *FreeSet_status, /* FreeSet_status = +1, -1, or 0 on input,
-                            x_i =1, 0, or 0 < x_i < 1.  Not modified */
+                            x_i =1, 0, or 0 < x_i < 1.  Not modified.
+                            Ignored if NULL. */
     Int n,             /* # cols ? */
     Int m,             /* # rows ? */
     Double *a,         /* edge weights ? */
@@ -44,12 +45,12 @@ void QPNapsackPair
 
     if (FreeSet_status != NULL)
     {
-        FreeSet_status0 = FreeSet_status ;          // size m
-        FreeSet_status1 = FreeSet_status0 + m ;     // size n-m, but only if n-m>0
+        FreeSet_status0 = FreeSet_status ;        // size m
+        FreeSet_status1 = FreeSet_status0 + m ;   // size n-m, but only if n-m>0
     }
     else
     {
-        FreeSet_status0 = NULL ;                    // not present
+        FreeSet_status0 = NULL ;                  // not present
         FreeSet_status1 = NULL ;
     }
 
@@ -71,6 +72,8 @@ void QPNapsackPair
         FreeSet_status0, wx1, wi1, wi2);
 
     if (m >= n) return;
+
+    // TODO should lambda[1] be set to some default value of n-m <= 0?
 
     lambda[1] = QPnapsack(x1, n-m, lo[1], hi[1], a1, lambda[1], 
         FreeSet_status1, wx1, wi1, wi2);
