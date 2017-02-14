@@ -35,13 +35,13 @@ cs *readMatrix (const std::string &filename, MM_typecode &matcode)
 Graph *readGraph (const char* filename)
 {
     Logger::tic(IOTiming);
-    LogInfo("Reading graph from file " << filename);
+    LogInfo("Reading graph from file " << filename << "\n");
 
     MM_typecode matcode;
     cs* A = readMatrix(filename, matcode);
     if (!A)
     {
-        LogError("Error reading matrix from file");
+        LogError("Error reading matrix from file\n");
         return NULL;
     }
     cs *sanitized_A = sanitizeMatrix(A, mm_is_symmetric(matcode));
@@ -50,7 +50,7 @@ Graph *readGraph (const char* filename)
     Graph *G = CSparse3ToGraph(sanitized_A);
     if (!G)
     {
-        LogError("Ran out of memory in Mongoose::readGraph");
+        LogError("Ran out of memory in Mongoose::readGraph\n");
         cs_spfree(sanitized_A);
         Logger::toc(IOTiming);
         return NULL;
@@ -67,25 +67,25 @@ Graph *readGraph (const char* filename)
 
 cs *readMatrix (const char* filename, MM_typecode &matcode)
 {
-    LogInfo("Reading Matrix from " << filename);
+    LogInfo("Reading Matrix from " << filename << "\n");
     FILE *file = fopen(filename, "r");
     if (!file)
     {
-        LogError("Error: Cannot read file " << filename);
+        LogError("Error: Cannot read file " << filename << "\n");
         return NULL;
     }
 
     LogInfo("Reading Matrix Market banner...");
     if (mm_read_banner(file, &matcode) != 0)
     {
-        LogError("Error: Could not process Matrix Market banner");
+        LogError("Error: Could not process Matrix Market banner\n");
         fclose(file);
         return NULL;
     }
     if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode) || 
         mm_is_complex(matcode))
     {
-        LogError("Error: Unsupported matrix format - Must be real and sparse");
+        LogError("Error: Unsupported matrix format - Must be real and sparse\n");
         fclose(file);
         return NULL;
     }
@@ -94,25 +94,25 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     int ret_code;
     if ((ret_code = mm_read_mtx_crd_size(file, &M, &N, &nz)) !=0)
     {
-        LogError("Error: Could not parse matrix dimension and size.");
+        LogError("Error: Could not parse matrix dimension and size.\n");
         fclose(file);
         return NULL;
     }
     if (M != N)
     {
-        LogError("Error: Matrix must be square.");
+        LogError("Error: Matrix must be square.\n");
         fclose(file);
         return NULL;
     }
     
-    LogInfo("Reading matrix data...");
+    LogInfo("Reading matrix data...\n");
     Int *I = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Int *J = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Weight *val = (Weight *) SuiteSparse_malloc(nz, sizeof(Weight));
 
     if (!I || !J || !val)
     {
-        LogError("Error: Ran out of memory in Mongoose::readMatrix");
+        LogError("Error: Ran out of memory in Mongoose::readMatrix\n");
         SuiteSparse_free(I);
         SuiteSparse_free(J);
         SuiteSparse_free(val);
@@ -133,7 +133,7 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     cs *A = (cs *) SuiteSparse_malloc(1, sizeof(cs));
     if (!A)
     {
-        LogError("Error: Ran out of memory in Mongoose::readMatrix");
+        LogError("Error: Ran out of memory in Mongoose::readMatrix\n");
         SuiteSparse_free(I);
         SuiteSparse_free(J);
         SuiteSparse_free(val);
@@ -148,12 +148,12 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     A->x = val;
     A->nz = nz;
     
-    LogInfo("Compressing matrix from triplet to CSC format...");
+    LogInfo("Compressing matrix from triplet to CSC format...\n");
     cs* compressed_A = cs_compress(A);
     cs_spfree(A);
     if (!compressed_A)
     {
-        LogError("Error: Ran out of memory in Mongoose::readMatrix");
+        LogError("Error: Ran out of memory in Mongoose::readMatrix\n");
         return NULL;
     }
     
