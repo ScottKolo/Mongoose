@@ -66,7 +66,7 @@ void improveCutUsingQP
         D[k] = maxWeight;
     }
 
-    /* Build the linked lists. */
+    /* Build the FreeSet */
     QPlinks(G, O, QP);
 
     /* Do one run of gradient projection. */
@@ -123,7 +123,10 @@ void improveCutUsingQP
             if (externalDegree[k] > 0) bhInsert(G, k);
         }
     }
-    G->markValue = markValue + 1;
+
+    // clear the marks from all the nodes
+    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    G->markValue = markValue ;
 
     /* Free the QP structure */
     QP->~QPDelta();

@@ -44,7 +44,7 @@ inline void saveContext
 {
     QP->its = it;
     QP->err = err;
-    QP->numFreeVars = nf;
+    QP->nFreeSet = nf;
     
     Double b = 0.0;
     if(ib != 0)

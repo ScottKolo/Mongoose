@@ -163,7 +163,7 @@ void fmRefine_worker(Graph *G, Options *O)
         Int bhVertexPosition = MONGOOSE_GET_BHINDEX(vertex);
 
         /* Unmark this vertex. */
-        mark[vertex] = markValue-1;
+        mark[vertex] = markValue-1;     // TODO better to set to zero
 
         /* It is possible, although rare, that a vertex may have gone
          * from not in the boundary to an undo state that places it in
@@ -188,8 +188,8 @@ void fmRefine_worker(Graph *G, Options *O)
         if (externalDegree[vertex] > 0) bhInsert(G, vertex);
     }
 
-    /* Clear the moved mark in constant time. */
-    markValue++;
+    // clear the marks from all the nodes
+    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
 
     /* Re-add any vertices that were moved that are still on the boundary. */
     for (Int i = 0; i < head; i++)
@@ -201,8 +201,9 @@ void fmRefine_worker(Graph *G, Options *O)
         }
     }
 
-    /* Clear the mark in constant time. */
-    G->markValue = markValue+1;
+    // clear the marks from all the nodes
+    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    G->markValue = markValue ;
 
     /* Save the best cost back into the graph. */
     G->heuCost   = bestCost.heuCost;

@@ -10,7 +10,7 @@ QPDelta* QPDelta::Create(Int n)
     if(!ret) return NULL;
 
     ret->x = (Double*) SuiteSparse_malloc(n, sizeof(Double));
-    ret->ix = (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    ret->FreeSet_status = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->LinkUp = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
     ret->LinkDn = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
     ret->gradient = (Double*) SuiteSparse_malloc(n, sizeof(Double));
@@ -21,7 +21,7 @@ QPDelta* QPDelta::Create(Int n)
     ret->wx[1] = (Double*) SuiteSparse_malloc(n, sizeof(Double));
     ret->wx[2] = (Double*) SuiteSparse_malloc(n, sizeof(Double));
 
-    if(!ret->x || !ret->ix || !ret->LinkUp || !ret->LinkDn 
+    if(!ret->x || !ret->FreeSet_status || !ret->LinkUp || !ret->LinkDn 
     || !ret->gradient || !ret->D || !ret->wi[0] || !ret->wi[1]
     || !ret->wx[0] || !ret->wx[1] || !ret->wx[2])        
     {
@@ -35,7 +35,7 @@ QPDelta* QPDelta::Create(Int n)
 QPDelta::~QPDelta()
 {
     x = (Double*) SuiteSparse_free(x);
-    ix = (Int*) SuiteSparse_free(ix);
+    FreeSet_status = (Int*) SuiteSparse_free(FreeSet_status);
     LinkUp = (Int*) SuiteSparse_free(LinkUp);
     LinkDn = (Int*) SuiteSparse_free(LinkDn);
     gradient = (Double*) SuiteSparse_free(gradient);

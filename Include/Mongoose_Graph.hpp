@@ -91,4 +91,8 @@ public:
 #define MONGOOSE_MARK(a)     (mark[(a)] = markValue);
 #endif
 
+#ifndef MONGOOSE_CLEAR_ALL_MARKS
+#define MONGOOSE_CLEAR_ALL_MARKS    (markValue++) ;
+#endif
+
 #endif

@@ -11,7 +11,8 @@ void QPNapsackPair
     Double *x,         /* holds y on input, and the solution x on output */
     Double *lambda,    /* initial guess (input) final value (output) multiplier
                           lambda [0], lambda [1] */
-    Int *ix,           /* ix_i = +1, -1, or 0 on input, x_i =1, 0, or 0 < x_i < 1 */
+    Int *FreeSet_status,    /* FreeSet_status[i] = +1,-1, or 0 on input, for 3 cases:
+                               x_i = 1, 0, or 0< x_i< 1 */
     Int n,             /* # cols ? */
     Int m,             /* # rows ? */
     Double *a,         /* edge weights ? */

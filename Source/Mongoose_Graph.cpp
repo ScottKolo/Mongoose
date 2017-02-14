@@ -218,7 +218,7 @@ Graph::~Graph()
     matchtype = (Int*) SuiteSparse_free(matchtype);
 
     mark = (Int*) SuiteSparse_free(mark);
-    markValue = 0;
+    markValue = 1;
 }
 
 } // end namespace Mongoose

@@ -212,7 +212,10 @@ void partBFS
             }
         }
     }
-    G->markValue = markValue + 1;
+
+    // clear the marks from all the nodes
+    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    G->markValue = markValue ;
 }
 
 //-----------------------------------------------------------------------------
@@ -247,11 +250,17 @@ void findAllPseudoperipheralNodes
     {
         if (i++ > guessSearchDepth) break;
 
+        // TODO make sure markValue + (n+1) does not overflow
+        // and reset if it does, BEFORE using the markValue
+
         Int start = list[head++];
         diameter = diagBFS(G, O, stack, mark, markValue, &start);
-        markValue += diameter + 1;
 
-        /* Go backwards through the last level and add new vertices to the list of pseudoperipheral nodes that we're finding. */
+        // clear all marks
+        markValue += diameter + 1;      // TODO: reset if int overflow
+
+        /* Go backwards through the last level and add new vertices to the list
+         * of pseudoperipheral nodes that we're finding. */
         for (Int s = n-1; s >= 0; s--)
         {
             Int v = stack[s];
@@ -264,9 +273,12 @@ void findAllPseudoperipheralNodes
             }
         }
 
-        markValue++;
+        MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
     }
-    G->markValue = markValue + 1;
+
+    // clear the marks from all the nodes
+    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    G->markValue = markValue ;
 
     *listsize = tail;
 }
@@ -296,11 +308,20 @@ void pseudoperipheralGuess
     Int guessSearchDepth = O->guessSearchDepth;
     for (Int i = 0; i < guessSearchDepth || diameter < newDiameter; i++)
     {
+
+        // TODO make sure markValue + (n+1) does not overflow
+        // and reset if it does, BEFORE using the markValue
+
         diameter = newDiameter;
         newDiameter = diagBFS(G, O, stack, mark, markValue, &start);
-        markValue += newDiameter + 2;
+
+        // clear all marks
+        markValue += newDiameter + 2;       // TODO reset if int overflow
     }
-    G->markValue = markValue + 1;
+
+    // clear the marks from all the nodes
+    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    G->markValue = markValue ;
 
     /* Load the boundary heap. */
     bhLoad(G, O);

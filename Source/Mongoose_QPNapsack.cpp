@@ -75,8 +75,8 @@
     If we have a guess for which components of x will be free at the optimal
     solution, then we can obtain a good guess for the starting lambda by
     setting the slope of the dual function to zero and solving for lambda.
-    If ix is not NULL, then the ix array is used to compute a starting guess for
-    lambda based on the estimated free indices. Note that ix is an INPUT array,
+    If FreeSet_status is not NULL, then the FreeSet_status array is used to compute a starting guess for
+    lambda based on the estimated free indices. Note that FreeSet_status is an INPUT array,
     it is not computed within the routine.
    ========================================================================== */
 
@@ -95,7 +95,8 @@ Double QPnapsack        /* return the final lambda */
     Double hi,      /* partition upper bound */
     Double *Gw,     /* vector of nodal weights */
     Double Lambda,  /* initial guess for lambda */
-    Int *ix,        /* ix_i = +1,-1, or 0 on input, x_i =1,0, or 0< x_i< 1*/
+    Int *FreeSet_status, /* FreeSet_status [i] = +1,-1, or 0 on input,
+                       for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
     Double *w,      /* work array of size n   */
     Int *heap1,     /* work array of size n+1 */
     Int *heap2      /* work array of size n+1 */
@@ -104,21 +105,21 @@ Double QPnapsack        /* return the final lambda */
     Double lambda = Lambda;
 
     /* ---------------------------------------------------------------------- */
-    /* compute the starting guess if ix is provided and lambda != 0 */
+    /* compute starting guess if FreeSet_status is provided and lambda != 0 */
     /* ---------------------------------------------------------------------- */
 
-    if ((ix != NULL) && (lambda != 0))
+    if ((FreeSet_status != NULL) && (lambda != 0))
     {
         Double asum = (lambda > 0 ? -hi : -lo);
         Double a2sum = MONGOOSE_ZERO;
 
         for (Int k = 0; k < n; k++)
         {
-            if (ix[k] == 1)
+            if (FreeSet_status[k] == 1)
             {
                 asum += Gw[k];
             }
-            else if (ix[k] == 0)
+            else if (FreeSet_status[k] == 0)
             {
                 Weight ai = Gw[k];
                 asum += x[k] * ai;

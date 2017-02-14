@@ -14,7 +14,8 @@ Double QPnapsack            /* return the final lambda */
     Double hi,              /* partition upper bound */
     Double *a,              /* vector of nodal weights */
     Double Lambda,          /* initial guess for lambda */
-    Int *ix,                /* ix_i = +1,-1, or 0 on input, x_i =1,0, or 0< x_i< 1*/
+    Int *FreeSet_status,    /* FreeSet_status[i] = +1,-1, or 0 on input, for 3 cases:
+                               x_i = 1, 0, or 0< x_i< 1 */
     Double *w,              /* work array of size n */
     Int *heap1,             /* work array of size n+1 */
     Int *heap2              /* work array of size n+1 */
