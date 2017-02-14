@@ -84,31 +84,41 @@ Double QPgradproj
     // Or does this not change the FreeSet ??
     for (Int k = 0; k < n; k++)
     {
+#if FREESET_DEBUG
         printf ("x [%ld] =  %g  FreeSet_status %ld ", k, x [k],
             FreeSet_status [k]) ;
+#endif
 
         if (x [k] >= MONGOOSE_ONE)
         {
+#if FREESET_DEBUG
             if (FreeSet_status [k] != +1) printf ("CHANGE to +1") ;
             assert (FreeSet_status [k] != 0) ;  // ???
+#endif
             FreeSet_status [k] = +1 ;
         }
         else if (x [k] <= MONGOOSE_ZERO)
         {
+#if FREESET_DEBUG
             if (FreeSet_status [k] != -1) printf ("CHANGE to -1") ;
             assert (FreeSet_status [k] != 0) ;  // ???
+#endif
             FreeSet_status [k] = -1 ;
         }
         else
         {
+#if FREESET_DEBUG
             if (FreeSet_status [k] !=  0)
             {
                 printf ("CHANGE to  0") ;
             }
+#endif
             assert (FreeSet_status [k] == 0) ;  // ???
             FreeSet_status [k] = 0 ;
         }
+#if FREESET_DEBUG
         printf ("\n") ;
+#endif
     }
 
     while (err > tol)
@@ -185,7 +195,9 @@ Double QPgradproj
             {
                 d[j] = t;
                 s += t * grad[j]; /* derivative in the direction y - x */
+#if FREESET_DEBUG
                 printf ("C: we shall consider j %ld t %g\n", j, t) ;
+#endif
                 C[nc] = j;
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
@@ -276,7 +288,9 @@ Double QPgradproj
                 if (bind == 0)
                 {
                     // add j to the FreeSet
+#if FREESET_DEBUG
                     printf ("(3):add j = %ld to the FreeSet\n", j) ;
+#endif
                     FreeSet_dump ("QPGradProj:3 before", n, LinkUp,
                         LinkDn, nFreeSet, FreeSet_status, 1) ;
                     assert (FreeSet_status [j] != 0) ;
@@ -294,7 +308,9 @@ Double QPgradproj
                 else if (bind == 1)
                 {
                     // remove j from the FreeSet
+#if FREESET_DEBUG
                     printf ("(4):remove j = %ld from the FreeSet\n", j) ;
+#endif
                     FreeSet_dump ("QPGradProj:4 before", n,
                         LinkUp, LinkDn, nFreeSet, FreeSet_status, 1) ;
                     assert (FreeSet_status [j] == 0) ;
@@ -329,7 +345,9 @@ Double QPgradproj
                 if (FreeSet_status[j] != 0) /* x_j became free */
                 {
                     // add j to the FreeSet
+#if FREESET_DEBUG
                     printf ("(5):add j = %ld to the FreeSet\n", j) ;
+#endif
                     FreeSet_dump ("QPGradProj:5 before", n, LinkUp, LinkDn,
                         nFreeSet, FreeSet_status, 1) ;
                     assert (FreeSet_status [j] != 0) ;

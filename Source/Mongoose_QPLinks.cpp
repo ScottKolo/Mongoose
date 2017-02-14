@@ -64,7 +64,9 @@ void QPlinks
         else
         {
             // add k to the FreeSet
+#if FREESET_DEBUG
             printf ("Links: add k = %ld to the FreeSet\n", k) ;
+#endif
             FreeSet_status[k] = 0;
             LinkUp[lastl] = k;
             LinkDn[k] = lastl;

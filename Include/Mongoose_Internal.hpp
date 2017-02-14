@@ -17,7 +17,7 @@
 #define MONGOOSE_MAX2(x,y) ((x)>(y) ? (x) : (y))
 #endif
 
-#define MONGOOSE_EMPTY (-1)
+#define FREESET_DEBUG 0
 
 #include <climits>
 #include <cstdlib>
