@@ -182,7 +182,9 @@ void QPboundary
 #if FREESET_DEBUG
             printf ("(b0):remove k = %ld to the FreeSet\n", k) ;
             assert (FreeSet_status [k] == 0) ;
+#endif
             FreeSet_status[k] = new_FreeSet_status_k ;
+#if FREESET_DEBUG
             assert (FreeSet_status [k] != 0) ;
 #endif
             nFreeSet--;
