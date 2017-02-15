@@ -151,6 +151,8 @@ void QPboundary
                 ib = -1;
                 b = lo;
                 x[k] -= s;
+                assert (x [k] > 0.) ;        // TODO this could fail
+                // TODO if x[k] goes to zero here, we should do the 'else' part instead
             }
             else          /* lo not reached */
             {
@@ -173,6 +175,7 @@ void QPboundary
                 ib = +1;
                 b = hi;
                 x[k] -= s;
+                assert (x [k] < 1.) ;        // TODO this could fail
             }
         }
 
@@ -230,7 +233,7 @@ void QPboundary
                 {
                     b -= ak;
                     ib = (b == lo ? -1 : 0);
-                    x[k] = MONGOOSE_ZERO;
+                    x[k] = 0.0 ;
                     FreeSet_status[k] = -1;
                 }
             }
@@ -243,7 +246,7 @@ void QPboundary
                 {
                     b += ak;
                     ib = (b == hi ? 1 : 0);
-                    x[k] = MONGOOSE_ONE;
+                    x[k] = 1.0 ;
                     FreeSet_status[k] = +1;
                 }
             }
@@ -474,9 +477,10 @@ void QPboundary
     // assert that the nodes in the FreeSet form a single clique
     /* ---------------------------------------------------------------------- */
 
+#if FREESET_DEBUG
     assert (nFreeSet >= 1) ;    // we can have 1 or more nodes still in FreeSet
 
-    // TODO: only run this test in debug mode:
+    // this test is for debug mode only
     for (Int j = LinkUp[n]; (j < n) ; j = LinkUp[j])
     {
         // j must be adjacent to all other nodes in the FreeSet
@@ -487,10 +491,9 @@ void QPboundary
             assert (i != j) ;
             if (FreeSet_status [i] == 0) nfree_neighbors++ ;
         }
-#if FREESET_DEBUG
         assert (nfree_neighbors == nFreeSet - 1) ;
-#endif
     }
+#endif
 
     /* ---------------------------------------------------------------------- */
     /* Step 4. dxj = s/aj, dxi = -s/ai, choose s with g_j dxj + g_i dxi <= 0 */

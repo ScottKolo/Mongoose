@@ -79,6 +79,8 @@ Double QPgradproj
     FreeSet_dump ("QPGradProj:0", n, LinkUp, LinkDn, nFreeSet,
         FreeSet_status, 1) ;
 
+    // printf ("\nFunky: n %ld  nFreeSet: %ld\n", n, nFreeSet) ;
+
     // TODO: how does this work?  Doesn't it change the FreeSet ??? 
     // Is the free set guaranteed to be empty at this point ??
     // Or does this not change the FreeSet ??
@@ -88,21 +90,20 @@ Double QPgradproj
         printf ("x [%ld] =  %g  FreeSet_status %ld ", k, x [k],
             FreeSet_status [k]) ;
 #endif
-
         if (x [k] >= MONGOOSE_ONE)
         {
 #if FREESET_DEBUG
-            if (FreeSet_status [k] != +1) printf ("CHANGE to +1") ;
-            assert (FreeSet_status [k] != 0) ;  // ???
+            if (FreeSet_status [k] != +1) printf ("\n%e : CHANGE %ld to +1\n", x [k], FreeSet_status [k]) ;
 #endif
+            assert (FreeSet_status [k] == +1 || FreeSet_status [k] == -1) ;
             FreeSet_status [k] = +1 ;
         }
         else if (x [k] <= MONGOOSE_ZERO)
         {
 #if FREESET_DEBUG
-            if (FreeSet_status [k] != -1) printf ("CHANGE to -1") ;
-            assert (FreeSet_status [k] != 0) ;  // ???
+            if (FreeSet_status [k] != -1) printf ("\n%e : CHANGE %ld to -1\n", x [k], FreeSet_status [k]) ;
 #endif
+            assert (FreeSet_status [k] == +1 || FreeSet_status [k] == -1) ;
             FreeSet_status [k] = -1 ;
         }
         else
@@ -110,7 +111,7 @@ Double QPgradproj
 #if FREESET_DEBUG
             if (FreeSet_status [k] !=  0)
             {
-                printf ("CHANGE to  0") ;
+                printf ("\nCHANGE to 0\n") ;
             }
 #endif
             assert (FreeSet_status [k] == 0) ;  // ???

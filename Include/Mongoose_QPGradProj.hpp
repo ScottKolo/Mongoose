@@ -36,7 +36,7 @@ inline void saveContext
     QPDelta *QP, 
     Int it,
     Double err,
-    Int nf,
+    Int nFreeSet,
     Int ib,
     Double lo,
     Double hi
@@ -44,7 +44,7 @@ inline void saveContext
 {
     QP->its = it;
     QP->err = err;
-    QP->nFreeSet = nf;
+    QP->nFreeSet = nFreeSet;
     
     Double b = 0.0;
     if(ib != 0)
