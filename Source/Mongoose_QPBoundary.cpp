@@ -39,7 +39,7 @@ void FreeSet_dump (const char *where,
     Int n, Int *LinkUp, Int *LinkDn, Int nFreeSet, Int *FreeSet_status,
     Int ix_sanity)
 {
-#if FREESET_DEBUG
+#ifndef NDEBUG
     Int j ;
     Int death = 0 ;
     printf ("\ndump FreeSet (%s): nFreeSet %ld n %ld jfirst %ld\n",
@@ -50,10 +50,10 @@ void FreeSet_dump (const char *where,
 //          j, LinkUp [j], LinkDn [j]) ;
 //      printf (" FreeSet_status %3ld\n", FreeSet_status [j]) ;
         death++ ;
-        if (death > (nFreeSet+5)) assert (0) ;
+        if (death > (nFreeSet+5)) ASSERT(0) ;
     }
     printf ("    in FreeSet: %ld %ld\n", death, nFreeSet) ;
-    assert (death == nFreeSet) ;
+    ASSERT(death == nFreeSet) ;
 
     Int nFree2 = 0 ;
     Int nHi = 0 ;
@@ -63,7 +63,7 @@ void FreeSet_dump (const char *where,
         if (FreeSet_status [j] == 0)  nFree2++ ;
         else if (FreeSet_status [j] == 1)  nHi++ ;
         else if (FreeSet_status [j] == -1) nLo++ ;
-        else assert (0) ;
+        else ASSERT(0) ;
     }
     printf ("    # that have FreeSet_status of zero: %ld\n", nFree2) ;
     printf ("    # that have FreeSet_status of one:  %ld\n", nHi) ;
@@ -73,7 +73,7 @@ void FreeSet_dump (const char *where,
         printf ("note nFree2 (%ld) and FreeSet_status[..]==0 ", nFree2) ;
         printf ("count (%ld) do not match.  sanity: %ld\n",
             nFreeSet, ix_sanity) ;
-        if (ix_sanity) assert (nFreeSet == nFree2) ;
+        if (ix_sanity) ASSERT(nFreeSet == nFree2) ;
     }
 #endif
 }
@@ -150,7 +150,7 @@ void QPboundary
                 ib = -1;
                 b = lo;
                 x[k] -= s;
-                assert (x [k] > 0.) ;        // TODO this could fail
+                ASSERT(x [k] > 0.) ;        // TODO this could fail
                 // TODO if x[k] goes to zero here, we should do the 'else' part instead
             }
             else          /* lo not reached */
@@ -174,21 +174,19 @@ void QPboundary
                 ib = +1;
                 b = hi;
                 x[k] -= s;
-                assert (x [k] < 1.) ;        // TODO this could fail
+                ASSERT(x [k] < 1.) ;        // TODO this could fail
             }
         }
 
         if (ib == 0) /* x_k hits boundary */
         {
             //--- remove k from FreeSet and update its status
-#if FREESET_DEBUG
+#ifndef NDEBUG
             printf ("(b0):remove k = %ld to the FreeSet\n", k) ;
-            assert (FreeSet_status [k] == 0) ;
 #endif
+            ASSERT(FreeSet_status [k] == 0) ;
             FreeSet_status[k] = new_FreeSet_status_k ;
-#if FREESET_DEBUG
-            assert (FreeSet_status [k] != 0) ;
-#endif
+            ASSERT(FreeSet_status [k] != 0) ;
             nFreeSet--;
             Int h = LinkUp[k];
             Int g = LinkDn[k];
@@ -296,7 +294,7 @@ void QPboundary
     // for each j in FreeSet, and while |FreeSet| > 1:
     for (Int j = LinkUp[n]; (j < n) && (nFreeSet > 1) ; j = LinkUp[j])
     {
-#if FREESET_DEBUG
+#ifndef NDEBUG
         printf ("j %g nFreeSet %g\n", (double) j, (double) nFreeSet) ;
 #endif
 
@@ -306,7 +304,7 @@ void QPboundary
         for (Int p = Ep[j]; p < Ep[j+1]; p++)
         {
             Int i = Ei[p] ;
-            assert (i != j) ;                       // graph has no self edges
+            ASSERT(i != j) ;                       // graph has no self edges
             if (FreeSet_status[i] == 0) m++;
         }
         // do not consider j if all its neighbors are in the FreeSet
@@ -320,7 +318,7 @@ void QPboundary
         for (Int p = Ep[j]; p < Ep[j+1]; p++)
         {
             Int i = Ei[p] ;
-            assert (i != j) ;                       // graph has no self edges
+            ASSERT(i != j) ;                       // graph has no self edges
             MONGOOSE_MARK(i);
         }
         MONGOOSE_MARK(j);
@@ -426,14 +424,14 @@ void QPboundary
                 if (bind1)
                 {
                     // remove j from the FreeSet
-#if FREESET_DEBUG
+#ifndef NDEBUG
                     printf ("(b1):remove j = %ld from the FreeSet\n", j) ;
 #endif
                     FreeSet_dump ("QPBoundary:1 before", n, LinkUp, LinkDn,
                         nFreeSet, FreeSet_status, 1) ;
-                    assert (FreeSet_status [j] == 0) ;
+                    ASSERT(FreeSet_status [j] == 0) ;
                     FreeSet_status [j] = new_FreeSet_status ;
-                    assert (FreeSet_status [j] != 0) ;
+                    ASSERT(FreeSet_status [j] != 0) ;
                     nFreeSet--;
                     Int h = LinkUp[j];
                     Int g = LinkDn[j];
@@ -447,14 +445,14 @@ void QPboundary
                 else
                 {
                     // remove i from the FreeSet
-#if FREESET_DEBUG
+#ifndef NDEBUG
                     printf ("(b2):remove i = %ld from the FreeSet\n", i) ;
 #endif
                     FreeSet_dump ("QPBoundary:2 before", n, LinkUp, LinkDn,
                         nFreeSet, FreeSet_status, 1) ;
-                    assert (FreeSet_status [i] == 0) ;
+                    ASSERT(FreeSet_status [i] == 0) ;
                     FreeSet_status [i] = new_FreeSet_status ;
-                    assert (FreeSet_status [i] != 0) ;
+                    ASSERT(FreeSet_status [i] != 0) ;
                     nFreeSet--;
                     Int h = LinkUp[i];
                     Int g = LinkDn[i];
@@ -476,9 +474,8 @@ void QPboundary
     // assert that the nodes in the FreeSet form a single clique
     /* ---------------------------------------------------------------------- */
 
-#if FREESET_DEBUG
-    assert (nFreeSet >= 1) ;    // we can have 1 or more nodes still in FreeSet
-
+    ASSERT(nFreeSet >= 1) ;    // we can have 1 or more nodes still in FreeSet
+#ifndef NDEBUG
     // this test is for debug mode only
     for (Int j = LinkUp[n]; (j < n) ; j = LinkUp[j])
     {
@@ -487,10 +484,10 @@ void QPboundary
         for (Int p = Ep[j]; p < Ep[j+1]; p++)
         {
             Int i = Ei[p] ;
-            assert (i != j) ;
+            ASSERT(i != j) ;
             if (FreeSet_status [i] == 0) nfree_neighbors++ ;
         }
-        assert (nfree_neighbors == nFreeSet - 1) ;
+        ASSERT(nfree_neighbors == nFreeSet - 1) ;
     }
 #endif
 
@@ -580,14 +577,14 @@ void QPboundary
         if (bind1) /* j is bound */
         {
             // remove j from the FreeSet
-#if FREESET_DEBUG
+#ifndef NDEBUG
             printf ("(b3):remove j = %ld from the FreeSet\n", j) ;
 #endif
             FreeSet_dump ("QPBoundary:3 before", n, LinkUp, LinkDn,
                 nFreeSet, FreeSet_status, 1) ;
-            assert (FreeSet_status [j] == 0) ;
+            ASSERT(FreeSet_status [j] == 0) ;
             FreeSet_status [j] = new_FreeSet_status ;
-            assert (FreeSet_status [j] != 0) ;
+            ASSERT(FreeSet_status [j] != 0) ;
             nFreeSet--;
             Int h = LinkUp[j];
             Int g = LinkDn[j];
@@ -604,12 +601,12 @@ void QPboundary
             // remove i from the FreeSet
             FreeSet_dump ("QPBoundary:4 before", n, LinkUp, LinkDn,
                 nFreeSet, FreeSet_status, 1) ;
-#if FREESET_DEBUG
+#ifndef NDEBUG
             printf ("(b4):remove i = %ld from the FreeSet\n", i) ;
 #endif
-            assert (FreeSet_status [i] == 0) ;
+            ASSERT(FreeSet_status [i] == 0) ;
             FreeSet_status [i] = new_FreeSet_status ;
-            assert (FreeSet_status [i] != 0) ;
+            ASSERT(FreeSet_status [i] != 0) ;
             nFreeSet--;
             Int h = LinkUp[i];
             Int g = LinkDn[i];
@@ -633,7 +630,7 @@ void QPboundary
     {
         // j is the first and only item in the FreeSet
         Int j = LinkUp [n] ;
-#if FREESET_DEBUG
+#ifndef NDEBUG
         printf ("ONE AND ONLY!! j = %ld\n", j) ;
 #endif
         Int bind1 = 0;
@@ -672,20 +669,20 @@ void QPboundary
             else
             {
                 /// remove j from the FreeSet, which is now empty
-#if FREESET_DEBUG
+#ifndef NDEBUG
                 printf ("(b5):remove j = %ld from FreeSet, now empty\n", j) ;
 #endif
                 FreeSet_dump ("QPBoundary:5 before", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
-                assert (FreeSet_status [j] == 0) ;
+                ASSERT(FreeSet_status [j] == 0) ;
                 FreeSet_status[j] = 1;
-                assert (FreeSet_status [j] != 0) ;
+                ASSERT(FreeSet_status [j] != 0) ;
                 nFreeSet--;
                 LinkUp[n] = n;
                 LinkDn[n] = n;
                 FreeSet_dump ("QPBoundary:5", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
-                assert (nFreeSet == 0) ;
+                ASSERT(nFreeSet == 0) ;
                 //--- 
                 x[j] = 1.;
                 b += dxj * aj;
@@ -708,15 +705,15 @@ void QPboundary
 #endif
                 FreeSet_dump ("QPBoundary:6 before", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
-                assert (FreeSet_status [j] == 0) ;
+                ASSERT(FreeSet_status [j] == 0) ;
                 FreeSet_status[j] = -1;
-                assert (FreeSet_status [j] != 0) ;
+                ASSERT(FreeSet_status [j] != 0) ;
                 nFreeSet--;
                 LinkUp[n] = n;
                 LinkDn[n] = n;
                 FreeSet_dump ("QPBoundary:6", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
-                assert (nFreeSet == 0) ;
+                ASSERT(nFreeSet == 0) ;
                 //---
                 x[j] = 0.;
                 b += dxj * aj;
@@ -742,17 +739,17 @@ void QPboundary
             if ((x[j] >= pert1) || ((aj == MONGOOSE_ONE) && (x[j] > 0.5)))
             {
                 // remove j from the FreeSet, which is now empty
-#if FREESET_DEBUG
+#ifndef NDEBUG
                 printf ("(b7):remove j = %ld from FreeSet, now empty\n", j) ;
 #endif
                 FreeSet_dump ("QPBoundary:7 before", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
-                assert (FreeSet_status [j] == 0) ;
+                ASSERT(FreeSet_status [j] == 0) ;
                 FreeSet_status[j] = +1;
                 nFreeSet--;
                 LinkUp[n] = n;
                 LinkDn[n] = n;
-                assert (nFreeSet == 0) ;
+                ASSERT(nFreeSet == 0) ;
                 FreeSet_dump ("QPBoundary:7", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
                 //---
@@ -767,12 +764,12 @@ void QPboundary
 #endif
                 FreeSet_dump ("QPBoundary:8 before", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
-                assert (FreeSet_status [j] == 0) ;
+                ASSERT(FreeSet_status [j] == 0) ;
                 FreeSet_status[j] = -1;
                 nFreeSet--;
                 LinkUp[n] = n;
                 LinkDn[n] = n;
-                assert (nFreeSet == 0) ;
+                ASSERT(nFreeSet == 0) ;
                 FreeSet_dump ("QPBoundary:8", n, LinkUp, LinkDn,
                     nFreeSet, FreeSet_status, 1) ;
                 //---

@@ -23,16 +23,12 @@
 #include <cstdlib>
 
 /* Dependencies */
-#include "assert.h"
 #include "stddef.h"
 #include "stdlib.h"
 #include "math.h"
 
 /* Memory Management */
 #include "SuiteSparse_config.h"
-
-/* Debug and Timing Management */
-#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -43,9 +39,13 @@ typedef double Weight;  /* Used for floating point edge & node weights */
 typedef double Double;  /* Used for floating point other calculations  */
 
 /* Enumerations */
-enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA, LabelPropagation };
+enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
 
 } // end namespace Mongoose
+
+/* Debug and Timing Management */
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 #endif

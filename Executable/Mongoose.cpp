@@ -1,8 +1,6 @@
 
 #include "Mongoose_EdgeSeparator.hpp"
-#include "Mongoose_CSparse.hpp"
 #include "Mongoose_IO.hpp"
-#include <ctime>
 
 using namespace Mongoose;
 

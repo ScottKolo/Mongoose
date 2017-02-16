@@ -8,7 +8,6 @@
 #ifndef Mongoose_Graph_hpp
 #define Mongoose_Graph_hpp
 
-#include "stdio.h"
 #include "Mongoose_Internal.hpp"
 
 namespace Mongoose

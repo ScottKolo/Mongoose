@@ -1,5 +1,6 @@
 
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_Interop.hpp"
 
 namespace Mongoose
 {
