@@ -30,7 +30,6 @@
 /* ========================================================================== */
 
 #include "Mongoose_QPBoundary.hpp"
-#include "Mongoose_source_internal.hpp"
 
 namespace Mongoose
 {
