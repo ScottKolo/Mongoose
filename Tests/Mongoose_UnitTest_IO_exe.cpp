@@ -4,6 +4,10 @@
 
 using namespace Mongoose;
 
+#undef LOG_ERROR
+#undef LOG_WARN
+#undef LOG_INFO
+#undef LOG_TEST
 #define LOG_ERROR 1
 #define LOG_WARN 1
 #define LOG_INFO 0
