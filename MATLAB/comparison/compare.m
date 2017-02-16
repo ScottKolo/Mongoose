@@ -17,11 +17,16 @@ function comparisonData = compare
                             'problem_name', [], ...
                             'problem_nnz', [], ...
                             'problem_n', []);
-    for i = 1:300%length(index.nrows)
-        if (index.isReal(i) && index.numerical_symmetry(i) && index.nnz(i) < 1E7)
+    for i = 1:length(index.nrows)
+        if (index.isReal(i))% && index.numerical_symmetry(i) && index.nnz(i) < 1E7)
+            
             Prob = UFget(i);
             fprintf('Computing separator for %d: %s\n', i, Prob.name);
             A = Prob.A;
+            if (index.numerical_symmetry(i) ~= 1)
+                [m, n] = size(A);
+                A = [sparse(m,m) A; A' sparse(n,n)];
+            end
             
             comparisonData(j).problem_id = Prob.id;
             comparisonData(j).problem_name = Prob.name;
