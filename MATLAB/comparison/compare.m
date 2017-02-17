@@ -38,17 +38,10 @@ function comparisonData = compare
 
             % Sanitize the matrix: remove diagonal elements, check for positive edge
             % weights, and make sure it is symmetric.
-            if Prob.id == 56
-                spy(A);
-                pause;
-            end
             
             [~, n] = size(A);
             % Run Mongoose to partition the graph.
             for k = 1:5
-                if Prob.id == 56
-                    spy(A);
-                end
                 tic;
                 partition = mongoose_computeEdgeSeparator(A);
                 t = toc;
@@ -61,12 +54,6 @@ function comparisonData = compare
                 A_perm = A(perm, perm);
                 mongoose_cut_size(j,k) = sum(sum(A_perm(p:n, 1:p)));
                 mongoose_imbalance(j,k) = abs(0.5-sum(partition)/length(partition));
-                if mongoose_imbalance(j,k) > 0.4
-                    spy(A);
-                    partition
-                    %spy(A_perm);
-                    pause;
-                end
             end
             
             for k = 1:5
