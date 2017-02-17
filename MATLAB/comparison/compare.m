@@ -19,14 +19,17 @@ function comparisonData = compare
                             'problem_n', []);
     for i = 1:length(index.nrows)
         if (index.isReal(i))% && index.numerical_symmetry(i) && index.nnz(i) < 1E7)
-            
             Prob = UFget(i);
-            fprintf('Computing separator for %d: %s\n', i, Prob.name);
             A = Prob.A;
-            if (index.numerical_symmetry(i) ~= 1)
+            if (index.numerical_symmetry(i) < 1)
                 [m, n] = size(A);
                 A = [sparse(m,m) A; A' sparse(n,n)];
             end
+            A = mongoose_sanitizeMatrix(A);
+            if nnz(A) < 2
+                continue
+            end
+            fprintf('Computing separator for %d: %s\n', i, Prob.name);
             
             comparisonData(j).problem_id = Prob.id;
             comparisonData(j).problem_name = Prob.name;
@@ -35,10 +38,17 @@ function comparisonData = compare
 
             % Sanitize the matrix: remove diagonal elements, check for positive edge
             % weights, and make sure it is symmetric.
-            A = mongoose_sanitizeMatrix(A);
+            if Prob.id == 56
+                spy(A);
+                pause;
+            end
+            
             [~, n] = size(A);
             % Run Mongoose to partition the graph.
             for k = 1:5
+                if Prob.id == 56
+                    spy(A);
+                end
                 tic;
                 partition = mongoose_computeEdgeSeparator(A);
                 t = toc;
@@ -51,6 +61,12 @@ function comparisonData = compare
                 A_perm = A(perm, perm);
                 mongoose_cut_size(j,k) = sum(sum(A_perm(p:n, 1:p)));
                 mongoose_imbalance(j,k) = abs(0.5-sum(partition)/length(partition));
+                if mongoose_imbalance(j,k) > 0.4
+                    spy(A);
+                    partition
+                    %spy(A_perm);
+                    pause;
+                end
             end
             
             for k = 1:5
@@ -92,6 +108,7 @@ function comparisonData = compare
         comparisonData(i).rel_metis_imbalance = (comparisonData(i).avg_metis_imbalance / min_imbalance);
         
         comparisonData(i).rel_mongoose_times2 = (comparisonData(i).avg_mongoose_times / comparisonData(i).avg_metis_times);
+        comparisonData(i).rel_mongoose_cut_size2 = (comparisonData(i).avg_mongoose_cut_size / comparisonData(i).avg_metis_cut_size);
         
         if (comparisonData(i).rel_mongoose_times > 2)
             disp('outlier! Mongoose significantly worse.')
@@ -149,29 +166,33 @@ function comparisonData = compare
     sorted_avg_metis_imbalance = sort([comparisonData.avg_metis_imbalance]);
     
     sorted_rel_mongoose_times2 = sort([comparisonData.rel_mongoose_times2]);
+    sorted_rel_mongoose_cut_size2 = sort([comparisonData.rel_mongoose_cut_size2]);
     
     % Get the Git commit hash for labeling purposes
     [error, commit] = system('git rev-parse --short HEAD');
     commit = strtrim(commit);
     
     % Plot timing profiles
-    figure;
-    plot(sorted_rel_mongoose_times, 1:n, 'Color', 'b');
-    hold on;
-    plot(sorted_rel_metis_times, 1:n, 'Color','r');
-    hold off;
+%     figure;
+%     plot(sorted_rel_mongoose_times, 1:n, 'Color', 'b');
+%     hold on;
+%     plot(sorted_rel_metis_times, 1:n, 'Color','r');
+%     hold off;
     
     filename = ['Timing' date];
     if(~error)
         title(['Timing Profile - Commit ' commit]);
         filename = ['Timing-' commit];
     end
-    print(filename,'-dpng');
+    %print(filename,'-dpng');
     
     figure;
     plot(1:n, sorted_rel_mongoose_times2, 'Color', 'b');
     hold on;
     plot(1:n, ones(1,n), 'Color','r');
+    axis([1 n min(sorted_rel_mongoose_times2) max(sorted_rel_mongoose_times2)]);
+    xlabel('Matrix');
+    ylabel('Wall Time Relative to METIS');
     hold off;
     
     filename = ['Timing2' date];
@@ -182,28 +203,51 @@ function comparisonData = compare
     print(filename,'-dpng');
     
     plt = Plot();
-    %plt.export('plotSimple1.png');
-    setPlotProp(opt)
+    plt.LineStyle = {'-', '--'};
+    plt.Legend = {'Mongoose', 'METIS'};
+    plt.BoxDim = [6, 5];
+    
+    plt.export([filename '.png']);
     
     % Plot cut size profiles
-    figure;
-    plot(sorted_rel_mongoose_cut_size, 1:n, 'Color', 'b');
-    hold on;
-    plot(sorted_rel_metis_cut_size, 1:n, 'Color','r');
-    axis([0 100 0 n]);
-    hold off;
+%     figure;
+%     plot(sorted_rel_mongoose_cut_size, 1:n, 'Color', 'b');
+%     hold on;
+%     plot(sorted_rel_metis_cut_size, 1:n, 'Color','r');
+%     axis([0 100 1 n]);
+%     hold off;
     
     filename = ['SeparatorSize' date];
     if(~error)
         title(['Separator Size Profile - Commit ' commit]);
         filename = ['SeparatorSize-' commit];
     end
-    print(filename,'-dpng');
+    %print(filename,'-dpng');
     
     figure;
-    plot(sorted_avg_mongoose_imbalance, 1:n, 'Color', 'b');
+    semilogy(1:n, sorted_rel_mongoose_cut_size2, 'Color', 'b');
     hold on;
-    plot(sorted_avg_metis_imbalance, 1:n, 'Color','r');
+    semilogy(1:n, ones(1,n), 'Color','r');
+    axis([1 n min(sorted_rel_mongoose_cut_size2) max(sorted_rel_mongoose_cut_size2)]);
+    xlabel('Matrix');
+    ylabel('Cut Size Relative to METIS');
+    hold off;
+    
+    plt = Plot();
+    plt.LineStyle = {'-', '--'};
+    plt.Legend = {'Mongoose', 'METIS'};
+    plt.BoxDim = [6, 5];
+    
+    plt.export([filename '.png']);
+    
+    % Plot imbalance profiles
+    figure;
+    plot(1:n, sorted_avg_mongoose_imbalance, 'Color', 'b');
+    hold on;
+    plot(1:n, sorted_avg_metis_imbalance, 'Color','r');
+    axis([1 n 0 0.3]);
+    xlabel('Matrix');
+    ylabel('Imbalance');
     hold off;
     
     filename = ['Imbalance' date];
@@ -212,6 +256,13 @@ function comparisonData = compare
         filename = ['Imbalance-' commit];
     end
     print(filename,'-dpng');
+    
+    plt = Plot();
+    plt.LineStyle = {'-', '--'};
+    plt.Legend = {'Mongoose', 'METIS'};
+    plt.BoxDim = [6, 5];
+    
+    plt.export([filename '.png']);
     
     max(comparisonData(i).rel_mongoose_times)
     max(comparisonData(i).rel_metis_times)
