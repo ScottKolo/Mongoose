@@ -113,6 +113,10 @@ function comparisonData = compare
             comparisonData(i).problem_name
             Prob = UFget(comparisonData(i).problem_id);
             A = Prob.A;
+            if (index.numerical_symmetry(i) < 1)
+                [m, n] = size(A);
+                A = [sparse(m,m) A; A' sparse(n,n)];
+            end
             A = mongoose_sanitizeMatrix(A);
             partition = mongoose_computeEdgeSeparator(A);
             part_A = find(partition);
@@ -134,7 +138,6 @@ function comparisonData = compare
                 partition(j,1) = sum(sign(find(j == perm)));
             end
             mongoose_separator_plot(A, partition, 1-partition, ['metis_' num2str(comparisonData(i).problem_id)]);
-            %pause;
         end
         if (comparisonData(i).rel_metis_cut_size > 100)
             disp('outlier! METIS cut size significantly worse.')
