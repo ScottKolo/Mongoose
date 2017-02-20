@@ -17,7 +17,7 @@ function comparisonData = compare
                             'problem_name', [], ...
                             'problem_nnz', [], ...
                             'problem_n', []);
-    for i = 1:100%length(index.nrows)
+    for i = 1:length(index.nrows)
         if (index.isReal(i))% && index.numerical_symmetry(i) && index.nnz(i) < 1E7)
             Prob = UFget(i);
             A = Prob.A;
