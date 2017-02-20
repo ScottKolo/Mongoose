@@ -17,7 +17,7 @@ function comparisonData = compare
                             'problem_name', [], ...
                             'problem_nnz', [], ...
                             'problem_n', []);
-    for i = 1:length(index.nrows)
+    for i = 1:100%length(index.nrows)
         if (index.isReal(i))% && index.numerical_symmetry(i) && index.nnz(i) < 1E7)
             Prob = UFget(i);
             A = Prob.A;
@@ -111,9 +111,10 @@ function comparisonData = compare
             comparisonData(i).avg_mongoose_cut_size
             comparisonData(i).avg_metis_cut_size
             comparisonData(i).problem_name
-            Prob = UFget(comparisonData(i).problem_id);
+            prob_id = comparisonData(i).problem_id;
+            Prob = UFget(prob_id);
             A = Prob.A;
-            if (index.numerical_symmetry(i) < 1)
+            if (index.numerical_symmetry(prob_id) < 1)
                 [m, n] = size(A);
                 A = [sparse(m,m) A; A' sparse(n,n)];
             end
