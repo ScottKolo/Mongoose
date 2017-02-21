@@ -115,8 +115,8 @@ function comparisonData = compare
             Prob = UFget(prob_id);
             A = Prob.A;
             if (index.numerical_symmetry(prob_id) < 1)
-                [m, n] = size(A);
-                A = [sparse(m,m) A; A' sparse(n,n)];
+                [m_rows, n_cols] = size(A);
+                A = [sparse(m_rows,m_rows) A; A' sparse(n_cols,n_cols)];
             end
             A = mongoose_sanitizeMatrix(A);
             partition = mongoose_computeEdgeSeparator(A);
