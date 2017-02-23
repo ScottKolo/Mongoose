@@ -57,7 +57,6 @@ set(NAPHEAP_FILES
     Include/Mongoose_QPMinHeap.hpp
     Include/Mongoose_QPNapDown.hpp
     Include/Mongoose_QPNapsack.hpp
-    Include/Mongoose_QPNapsackPair.hpp
     Include/Mongoose_QPNapUp.hpp
     Source/Mongoose_QPBoundary.cpp
     Source/Mongoose_QPBoundaryHeap.cpp
@@ -68,7 +67,6 @@ set(NAPHEAP_FILES
     Source/Mongoose_QPMinHeap.cpp
     Source/Mongoose_QPNapDown.cpp
     Source/Mongoose_QPNapsack.cpp
-    Source/Mongoose_QPNapsackPair.cpp
     Source/Mongoose_QPNapUp.cpp
   )
 
