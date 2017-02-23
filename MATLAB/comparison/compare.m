@@ -1,4 +1,7 @@
 function comparisonData = compare(plot_outliers)
+    if (nargin < 1)
+        plot_outliers = 0;
+    end
     index = UFget;
     j = 1;
     O = mongoose_getDefaultOptions();
@@ -19,7 +22,7 @@ function comparisonData = compare(plot_outliers)
                             'problem_name', [], ...
                             'problem_nnz', [], ...
                             'problem_n', []);
-    for i = 1:1000%length(index.nrows)
+    for i = 1:length(index.nrows)
         if (index.isReal(i))
             Prob = UFget(i);
             A = Prob.A;
@@ -59,20 +62,20 @@ function comparisonData = compare(plot_outliers)
                 p = length(partition);
                 A_perm = A(perm, perm);
                 mongoose_cut_size(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
-                mongoose_imbalance(j,k) = abs(0.5-sum(partition)/length(partition));
+                mongoose_imbalance(j,k) = abs(0.5-(length(part_A)/(length(part_A) + length(part_B))));
             end
             
             % Run METIS to partition the graph.
             for k = 1:5
                 tic;
-                [perm,iperm] = metispart(A, 0, 123456789);
+                [part_A,part_B] = metispart(A, 0, 123456789);
                 t = toc;
                 fprintf('METIS:    %0.2f\n', t);
                 metis_times(j,k) = t;
-                perm = [perm iperm];
+                perm = [part_A part_B];
                 A_perm = A(perm, perm);
                 metis_cut_size(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
-                metis_imbalance(j,k) = abs(0.5-length(perm)/(length(perm)+length(iperm)));
+                metis_imbalance(j,k) = abs(0.5-(length(part_A)/(length(part_A) + length(part_B))));
             end
             j = j + 1;
         end
@@ -98,39 +101,39 @@ function comparisonData = compare(plot_outliers)
         
         % Check for outliers
         prob_id = comparisonData(i).problem_id;
-        outlier = false;
+        outlier = 0;
         
         if (comparisonData(i).rel_mongoose_times > 2)
             disp(['Outlier! Mongoose time significantly worse. ID: ', num2str(prob_id)]);
-            outlier = true;
+            outlier = 1;
             comparisonData(i).outlier.time = 1;
         end
         if (comparisonData(i).rel_metis_times > 2)
             disp(['Outlier! METIS time significantly worse. ID: ', num2str(prob_id)]);
-            outlier = true;
+            outlier = 1;
             comparisonData(i).outlier.time = -1;
         end
         
-        if (comparisonData(i).rel_mongoose_cut_size > 100)
+        if (comparisonData(i).rel_mongoose_cut_size > 2)
             disp(['Outlier! Mongoose cut size significantly worse. ID: ', num2str(prob_id)]);
-            outlier = true;
+            outlier = 1;
             comparisonData(i).outlier.cut_size = 1;
         end
-        if (comparisonData(i).rel_metis_cut_size > 100)
+        if (comparisonData(i).rel_metis_cut_size > 2)
             disp(['Outlier! METIS cut size significantly worse. ID: ', num2str(prob_id)]);
-            outlier = true;
+            outlier = 1;
             comparisonData(i).outlier.cut_size = -1;
         end
         
         if (comparisonData(i).avg_mongoose_imbalance > 2*comparisonData(i).avg_metis_imbalance)
             disp(['Outlier! Mongoose imbalance significantly worse. ID: ', num2str(prob_id)]);
             comparisonData(i).outlier.imbalance = 1;
-            outlier = true;
+            outlier = 1;
         end
         if (comparisonData(i).avg_metis_imbalance > 2*comparisonData(i).avg_mongoose_imbalance)
             disp(['Outlier! METIS imbalance significantly worse. ID: ', num2str(prob_id)]);
             comparisonData(i).outlier.imbalance = -1;
-            outlier = true;
+            outlier = 1;
         end
         
         if (outlier && plot_outliers)
@@ -203,7 +206,7 @@ function comparisonData = compare(plot_outliers)
     plot(1:n, sorted_avg_mongoose_imbalance, 'Color', 'b');
     hold on;
     plot(1:n, sorted_avg_metis_imbalance, 'Color','r');
-    axis([1 n 0 0.3]);
+    axis([1 n 0 max([sorted_avg_metis_imbalance sorted_avg_mongoose_imbalance])]);
     xlabel('Matrix');
     ylabel('Imbalance');
     hold off;
@@ -211,6 +214,7 @@ function comparisonData = compare(plot_outliers)
     plt = Plot();
     plt.LineStyle = {'-', '--'};
     plt.Legend = {'Mongoose', 'METIS'};
+    plt.LegendLoc = 'NorthWest';
     plt.BoxDim = [6, 5];
     
     filename = ['Imbalance' date];
@@ -221,7 +225,11 @@ function comparisonData = compare(plot_outliers)
     
     plt.export([filename '.png']);
     
-    % Write data to file for future comparisons
+    %% Plot only big matrices to compare
+    
+    
+    
+    %% Write data to file for future comparisons
     if(git_found)
         writetable(struct2table(comparisonData), [commit '.txt']);
     end
