@@ -34,7 +34,7 @@ Options* Options::Create()
         ret->gradprojIterationLimit = 50;
 
         ret->targetSplit = 0.5;
-        ret->tolerance = 0.167;//0.01;
+        ret->tolerance = 0.01;
 
         ret->doExpensiveChecks = false;
     }
