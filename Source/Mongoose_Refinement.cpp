@@ -1,8 +1,7 @@
 
 #include "Mongoose_Refinement.hpp"
 #include "Mongoose_Matching.hpp"
-#include "Mongoose_QPBoundaryHeap.hpp"
-#include "Mongoose_ImproveQP.hpp"
+#include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_ImproveFM.hpp"
 
 namespace Mongoose

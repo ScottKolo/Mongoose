@@ -5,7 +5,7 @@
 #include "Mongoose_Graph.hpp"
 #include "Mongoose_Options.hpp"
 #include "Mongoose_CutCost.hpp"
-#include "Mongoose_QPBoundaryHeap.hpp"
+#include "Mongoose_BoundaryHeap.hpp"
 
 namespace Mongoose
 {

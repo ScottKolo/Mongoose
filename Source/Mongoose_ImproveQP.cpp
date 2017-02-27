@@ -1,6 +1,6 @@
 
 #include "Mongoose_ImproveQP.hpp"
-#include "Mongoose_QPBoundaryHeap.hpp"
+#include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_ImproveFM.hpp"
 #include "Mongoose_Internal.hpp"
 

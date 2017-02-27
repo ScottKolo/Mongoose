@@ -1,6 +1,6 @@
 
 #include "Mongoose_ImproveFM.hpp"
-#include "Mongoose_QPBoundaryHeap.hpp"
+#include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_Interop.hpp"
 
 // TODO why doesn't this code use O->targetSplit ???
