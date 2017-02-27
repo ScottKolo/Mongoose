@@ -1,6 +1,8 @@
 _build/*
 *.mexmaci64
 Matrix/*.s
+Matrix/*.tar.gz
+Matrix/*.csv
 .DS_Store
 MATLAB/plots/*
 MATLAB/*.png
