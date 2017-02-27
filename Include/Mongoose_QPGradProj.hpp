@@ -57,6 +57,9 @@ inline void saveContext
     }
     QP->ib = ib;
     QP->b = b;
+
+    printf ("save context: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
+                ib, lo, b, hi, b-lo, hi-b) ;
 }
 
 } // end namespace Mongoose

@@ -89,6 +89,7 @@ bool guessCut(Graph *G, Options *O)
 
       case QP_GradProj:
       {
+          // TODO will this work?  Or will it break lo <= a'*x <= hi?
           for (Int k = 0; k < G->n; k++) G->partition[k] = false;
           G->W0 = G->W;
           G->W1 = 0.0;

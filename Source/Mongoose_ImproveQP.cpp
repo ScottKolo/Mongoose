@@ -66,7 +66,30 @@ void improveCutUsingQP
         D[k] = maxWeight;
     }
 
-    /* Build the FreeSet */
+    // set the QP parameters, and fix if out of range
+    Double tol = O->tolerance ;
+    Double targetSplit = O->targetSplit ;
+    if (tol < 0)
+    {
+        // ensure tolerance is positive
+        O->tolerance = tol = 0. ;
+    }
+    if (targetSplit <= 0 || targetSplit >= 1)
+    {
+        // targetSplit is out range.  default is a 50/50 cut
+        O->targetSplit = targetSplit = 0.5 ;
+    }
+    if (targetSplit > 0.5)
+    {
+        // ensure targetSplit is in the range 0 to 0.5, but only to
+        // compute lo and hi.  Do not update O->targetSplit.
+        targetSplit = 1. - targetSplit ;
+    }
+    QP->lo = G->W * (targetSplit - tol) ;
+    QP->hi = G->W * ((1. - targetSplit) + tol) ;
+    ASSERT (QP->lo <= QP->hi) ;
+
+    // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi
     QPlinks(G, O, QP);
 
     /* Do one run of gradient projection. */

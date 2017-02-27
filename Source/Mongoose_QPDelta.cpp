@@ -21,6 +21,8 @@ QPDelta* QPDelta::Create(Int n)
     ret->wx[1] = (Double*) SuiteSparse_malloc(n, sizeof(Double));
     ret->wx[2] = (Double*) SuiteSparse_malloc(n, sizeof(Double));
 
+    ret->check_cost = INFINITY ;
+
     if(!ret->x || !ret->FreeSet_status || !ret->LinkUp || !ret->LinkDn 
     || !ret->gradient || !ret->D || !ret->wi[0] || !ret->wi[1]
     || !ret->wx[0] || !ret->wx[1] || !ret->wx[2])        

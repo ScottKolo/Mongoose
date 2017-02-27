@@ -3,6 +3,10 @@
 #include "Mongoose_QPBoundaryHeap.hpp"
 #include "Mongoose_Interop.hpp"
 
+// TODO why doesn't this code use O->targetSplit ???
+// TODO how is tolerance define?  if target balance is .5 and
+// tolerance is 0.1, is the allowed range [0.4,0.6]?  Or [0.45,0.55]?
+
 namespace Mongoose
 {
 
@@ -60,6 +64,13 @@ void fmRefine_worker(Graph *G, Options *O)
     Weight tol = O->tolerance;
     Weight H = G->H;
 
+    // fix tolerance if out of range
+    if (tol < 0)
+    {
+        O->tolerance = tol = 0. ;
+    }
+    printf ("FM tol %g\n", tol) ;
+
     Int fmSearchDepth = O->fmSearchDepth;
     Int fmConsiderCount = O->fmConsiderCount;
     Int i = 0;
@@ -88,8 +99,7 @@ void fmRefine_worker(Graph *G, Options *O)
                 Weight imbalance = workingCost.imbalance + (h ? -1.0 : 1.0) *
                                    (nodeWeight / W);
                 Weight absImbalance = fabs(imbalance);
-                Weight imbalanceDelta = absImbalance - fabs(
-                    workingCost.imbalance);
+                Weight imbalanceDelta = absImbalance - fabs(workingCost.imbalance);
 
                 /* If the move hurts the balance past tol, add a penalty. */
                 Weight balPenalty = 0.0;

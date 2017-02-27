@@ -7,11 +7,11 @@
 #include <cassert>
 
 // Mongoose Logic Macros
-#ifndef MONGOOSE_IMPLIES
-#define MONGOOSE_IMPLIES(p,q)    (!(p) || ((p) && (q)))
+#ifndef IMPLIES
+#define IMPLIES(p,q)    (!(p) || ((p) && (q)))
 #endif
-#ifndef MONGOOSE_IFF
-#define MONGOOSE_IFF(p,q)        (IMPLIES(p,q) && IMPLIES(q,p))
+#ifndef IFF
+#define IFF(p,q)        (IMPLIES(p,q) && IMPLIES(q,p))
 #endif
 
 // turn off debugging
@@ -20,7 +20,7 @@
 #endif
 
 // Uncomment this line to enable debugging.  Mongoose will be very slow.
-// #undef NDEBUG
+#undef NDEBUG
 
 #undef ASSERT
 #ifndef NDEBUG

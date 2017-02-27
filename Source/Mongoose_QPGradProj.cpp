@@ -26,6 +26,10 @@ Double QPgradproj
     QPDelta *QP
 )
 {
+
+    printf ("QPGradProj:\n") ;
+    QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999) ;        // do not check b
+
     /* ---------------------------------------------------------------------- */
     /* Unpack the relevant structures                                         */
     /* ---------------------------------------------------------------------- */
@@ -53,10 +57,13 @@ Double QPgradproj
     Int *Ei = G->i;                /* adjacent vertices for each node */
     Weight *Ex = G->x;             /* edge weights */
     Weight *Ew = G->w;             /* node weights; a'x = b, lo <= b <= hi */
-    Double lo = G->W *
-                (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-    Double hi = G->W *
-                (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+
+    Double lo = QP->lo ;
+    Double hi = QP->hi ;
+//  Double lo = G->W *
+//              (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+//  Double hi = G->W *
+//              (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
 
     Double *D = QP->D; /* diagonal of quadratic */
 
@@ -87,13 +94,13 @@ Double QPgradproj
     for (Int k = 0; k < n; k++)
     {
 #ifndef NDEBUG
-        printf ("x [%ld] =  %g  FreeSet_status %ld ", k, x [k],
-            FreeSet_status [k]) ;
+//      printf ("x [%ld] =  %g  FreeSet_status %ld ", k, x [k],
+//          FreeSet_status [k]) ;
 #endif
         if (x [k] >= MONGOOSE_ONE)
         {
 #ifndef NDEBUG
-            if (FreeSet_status [k] != +1) printf ("\n%e : CHANGE %ld to +1\n", x [k], FreeSet_status [k]) ;
+//          if (FreeSet_status [k] != +1) printf ("\n%e : CHANGE %ld to +1\n", x [k], FreeSet_status [k]) ;
 #endif
             ASSERT(FreeSet_status [k] == +1 || FreeSet_status [k] == -1) ;
             FreeSet_status [k] = +1 ;
@@ -101,7 +108,7 @@ Double QPgradproj
         else if (x [k] <= MONGOOSE_ZERO)
         {
 #ifndef NDEBUG
-            if (FreeSet_status [k] != -1) printf ("\n%e : CHANGE %ld to -1\n", x [k], FreeSet_status [k]) ;
+//          if (FreeSet_status [k] != -1) printf ("\n%e : CHANGE %ld to -1\n", x [k], FreeSet_status [k]) ;
 #endif
             assert (FreeSet_status [k] == +1 || FreeSet_status [k] == -1) ;
             FreeSet_status [k] = -1 ;
@@ -111,19 +118,55 @@ Double QPgradproj
 #ifndef NDEBUG
             if (FreeSet_status [k] !=  0)
             {
-                printf ("\nCHANGE to 0\n") ;
+//              printf ("\nCHANGE to 0\n") ;
             }
 #endif
             ASSERT(FreeSet_status [k] == 0) ;  // ???
             FreeSet_status [k] = 0 ;
         }
 #ifndef NDEBUG
-        printf ("\n") ;
+//      printf ("\n") ;
 #endif
     }
 
+    FreeSet_dump ("QPGradProj:1", n, LinkUp, LinkDn, nFreeSet,
+        FreeSet_status, 1) ;
+
     while (err > tol)
     {
+
+
+        // check grad
+        {
+            Double s = 0. ;
+            Double *mygrad = (Double *) SuiteSparse_malloc (n,sizeof(Double)) ;
+            for (Int k = 0; k < n; k++)
+            {
+                mygrad[k] = (0.5-x[k]) * D[k];
+            }
+            for (Int k = 0; k < n; k++)
+            {
+                Double xk = x[k];
+                s += Ew[k] * xk;
+                Weight r = 0.5 - xk;
+                for (Int p = Ep[k]; p < Ep[k+1]; p++)
+                {
+                    mygrad[Ei[p]] += r * Ex[p];
+                }
+            }
+            Double maxerr = 0. ;
+            for (Int k = 0; k < n; k++)
+            {
+                Double err = fabs (grad [k]-mygrad [k]) ;
+                maxerr = MONGOOSE_MAX2 (maxerr, err) ;
+            }
+            printf ("check grad %g\n", maxerr) ;
+            ASSERT (maxerr < tol) ;
+            SuiteSparse_free (mygrad) ;
+        }
+
+
+
         /* Moving in the gradient direction. */
         for (Int k = 0; k < n; k++) y[k] = x[k] - grad[k];
 
@@ -139,7 +182,9 @@ Double QPgradproj
         /* If we converged or got exhausted, save context and exit. */
         if ((err <= tol) || (it >= limit))
         {
+            printf ("QPGradProj exhausted:") ;
             saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
+            QPcheckCom (G, O, QP, 1, QP->nFreeSet, QP->b) ; // check b
             return err;
         }
 
@@ -159,7 +204,7 @@ Double QPgradproj
             Double s = grad[i];
             for (Int p = Ep[i]; p < Ep[i+1]; p++)
             {
-                Dgrad[Ei[p]] -= s * Ex[p];
+                Dgrad[Ei[p]] -= s * Ex[p];      // TODO all Ex NULL (all 1s)
             }
             Dgrad[i] -= s * D[i];
         }
@@ -176,9 +221,12 @@ Double QPgradproj
             st_den += grad[j] * Dgrad[j];
         }
 
+        printf ("ST_DEN %g\n", st_den) ;
+
         /* st = g_F'g_F/-g_F'(A+D)g_F unless the denominator <= 0 */
         if (st_den > MONGOOSE_ZERO)
         {
+            printf ("change y\n") ;
             Double st = MONGOOSE_MAX2 (st_num / st_den, 0.001);
             for (Int j = 0; j < n; j++) y[j] = x[j] - st * grad[j];
             lambda = QPnapsack(y, n, lo, hi, Ew, lambda,
@@ -194,26 +242,44 @@ Double QPgradproj
             Double t = y[j] - x[j];
             if (t != MONGOOSE_ZERO)
             {
+                printf ("j %ld x[j] %g y[j] %g\n", j, x[j], y[j]) ;
                 d[j] = t;
                 s += t * grad[j]; /* derivative in the direction y - x */
 #ifndef NDEBUG
-                printf ("C: we shall consider j %ld t %g\n", j, t) ;
+//              printf ("C: we shall consider j %ld t %g\n", j, t) ;
 #endif
                 C[nc] = j;
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
-                    Dgrad[Ei[p]] -= Ex[p] * t;
+                    Dgrad[Ei[p]] -= Ex[p] * t;      // TODO all Ex NULL (all 1s)
                 }
                 Dgrad[j] -= D[j] * t;
             }
         }
 
+        printf ("directional derivative s = %g\n", s) ;
+
         /* If directional derivative has wrong sign, save context and exit. */
         if (s >= MONGOOSE_ZERO)
         {
+            printf ("QPGradProj directional derivative has wrong sign\n") ;
             saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
             return err;
+        }
+
+        // HERE, lo <= a'y <= hi should hold
+        {
+            Double aty = 0. ;
+            for (Int j = 0 ; j < n ; j++)
+            {
+                aty += Ew [j] * y [j] ;
+            }
+            printf ("CHECK ATY: lo %g a'y %g hi %g tol %g\n",
+                lo, aty, hi, tol) ;
+            fflush (stdout) ; fflush (stderr) ;
+            ASSERT (lo-tol <= aty) ;
+            ASSERT (aty <= hi+tol) ;
         }
 
         Double t = MONGOOSE_ZERO;
@@ -223,13 +289,17 @@ Double QPgradproj
             t += Dgrad[j] * d[j]; /* -dg'd */
         }
 
+        printf ("MIN ATTAINED AT Y? s %g t %g s+t %g\n", s, t, s+t) ;
+
         if (s+t <= 0) /* min attained at y, slope at y <= 0 */
         {
+            printf ("YES MIN ATTAINED\n") ;
             ib = (lambda > 0 ? 1 : lambda < 0 ? -1 : 0);
             for (Int k = 0; k < nc; k++)
             {
                 Int j = C[k];
                 Double yj = y[j];
+                printf ("change j from %g to %g\n", x [j], y [j]) ;
                 x[j] = yj;
 
                 Int bind ; /* -1 = no change, 0 = free, +1 = bind */
@@ -267,6 +337,7 @@ Double QPgradproj
                 }
                 else /* x_j currently free, but it may become bound */
                 {
+                    printf ("YJ is %g\n", yj) ;
                     if (yj == 1.0) /* x_j hits upper bound */
                     {
                         // j changes from 0 to 1,  remove from FreeSet
@@ -290,7 +361,7 @@ Double QPgradproj
                 {
                     // add j to the FreeSet
 #if FREESET_DEBUG
-                    printf ("(3):add j = %ld to the FreeSet\n", j) ;
+                    // printf ("(3):add j = %ld to the FreeSet\n", j) ;
 #endif
                     FreeSet_dump ("QPGradProj:3 before", n, LinkUp,
                         LinkDn, nFreeSet, FreeSet_status, 1) ;
@@ -310,7 +381,7 @@ Double QPgradproj
                 {
                     // remove j from the FreeSet
 #ifndef NDEBUG
-                    printf ("(4):remove j = %ld from the FreeSet\n", j) ;
+                    // printf ("(4):remove j = %ld from the FreeSet\n", j) ;
 #endif
                     FreeSet_dump ("QPGradProj:4 before", n,
                         LinkUp, LinkDn, nFreeSet, FreeSet_status, 1) ;
@@ -334,6 +405,7 @@ Double QPgradproj
         }
         else /* partial step towards y, st < 1 */
         {
+            printf ("NO MIN ATTAINED\n") ;
             if ((ib > 0 && lambda <= 0) || (ib < 0 && lambda >= 0))
             {
                 ib = 0;
@@ -347,7 +419,7 @@ Double QPgradproj
                 {
                     // add j to the FreeSet
 #ifndef NDEBUG
-                    printf ("(5):add j = %ld to the FreeSet\n", j) ;
+                    // printf ("(5):add j = %ld to the FreeSet\n", j) ;
 #endif
                     FreeSet_dump ("QPGradProj:5 before", n, LinkUp, LinkDn,
                         nFreeSet, FreeSet_status, 1) ;
@@ -373,7 +445,17 @@ Double QPgradproj
                 grad[k] += st * Dgrad[k];
             }
         }
+
+        FreeSet_dump ("QPGradProj:6", n, LinkUp, LinkDn, nFreeSet,
+            FreeSet_status, 1) ;
+
+        // do not check b
+        printf ("QPGradProj continues:\n") ;
+        QP->nFreeSet = nFreeSet ;
+        QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999) ;
     }
+
+    printf ("QPGradProj normal return:\n") ;
     return err;
 }
 

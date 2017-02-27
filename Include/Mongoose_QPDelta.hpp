@@ -21,14 +21,21 @@ public:
     Double *gradient;      /* gradient at current x                           */
     Double *D;             /* max value along the column.                     */
 
+    Double lo ;             // lo <= a'*x <= hi must always hold
+    Double hi ;
+
     // workspace
     Int *wi[2];
     Double *wx[3];
 
     Int its;
     Double err;
-    Int ib;
-    Double b;
+    Int ib;                 // ib =  0 means lo < b < hi
+                            // ib = +1 means b == hi
+                            // ib = -1 means b == lo
+    Double b;               // b = a'*x
+
+    Double check_cost ;     // for debugging only
 
     static QPDelta *Create(Int n);
     ~QPDelta();

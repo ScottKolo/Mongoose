@@ -19,8 +19,8 @@ void QPlinks
     Int n = G->n;
     Int *Ep = G->p;
     Int *Ei = G->i;
-    Weight *Ex = G->x;
-    Weight *a = G->w;
+    Weight *Ex = G->x;      // TODO allow Ex NULL (means all 1s)
+    Weight *a = G->w;       // TODO allow a NULL (means all 1s)
 
     /* working array */
     Double *D = QP->D;
@@ -46,13 +46,18 @@ void QPlinks
     for (Int k = 0; k < n; k++)
     {
         Double xk = x[k];
+        // TODO:
+        if (xk < 0. || xk > 1.)
+        {
+            // return an error condition here
+        }
+        // TODO do we also check a [k] > 0 ?
         s += a[k] * xk;
         Weight r = 0.5 - xk;
         for (Int p = Ep[k]; p < Ep[k+1]; p++)
         {
-            grad[Ei[p]] += r * Ex[p];
+            grad[Ei[p]] += r * Ex[p];   // TODO allow Ex NULL (all 1s)
         }
-
         if (xk >= MONGOOSE_ONE)
         {
             FreeSet_status[k] = 1 ;
@@ -65,7 +70,7 @@ void QPlinks
         {
             // add k to the FreeSet
 #ifndef NDEBUG
-            printf ("Links: add k = %ld to the FreeSet\n", k) ;
+            // printf ("Links: add k = %ld to the FreeSet\n", k) ;
 #endif
             FreeSet_status[k] = 0;
             LinkUp[lastl] = k;
@@ -84,11 +89,50 @@ void QPlinks
     FreeSet_dump ("QPLinks:done", n, LinkUp, LinkDn, nFreeSet,
         FreeSet_status, 1) ;
 
-    Double lo = G->W *
-                (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-    Double hi = G->W *
-                (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-    QP->ib = (s <= lo ? -1 : s < hi ? 0 : 1);
+    // make sure lo <= b <= hi holds, where b = a'*x and x is the input guess
+    if (QP->b >= QP->hi)
+    {
+        // b starts at the upper bound.
+        // adjust upper bound to ensure x is feasible
+        printf ("adjust hi from %g to b = %g\n", QP->hi, QP->b) ;
+        QP->hi = QP->b ;
+        QP->ib = +1 ;
+    }
+    else if (QP->b <= QP->lo)
+    {
+        // b starts at the lower bound.
+        // adjust lower bound to ensure x is feasible
+        printf ("adjust lo from %g to b = %g\n", QP->lo, QP->b) ;
+        QP->lo = QP->b ;
+        QP->ib = -1 ;
+    }
+    else
+    {
+        // b starts between: lo < b < hi
+        QP->ib = 0 ;
+    }
+
+//  Double lo = G->W *
+//              (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+//  Double hi = G->W *
+//              (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
+//  QP->ib = (s <= lo ? -1 : s < hi ? 0 : 1);
+
+    // for debugging only
+    QP->check_cost = INFINITY ;
+
+    // ib is shorthand for these tests:
+    Int ib = QP->ib ;
+    printf ("QPlinks: target "
+        "%g GW %g ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
+        O->targetSplit, G->W, ib, QP->lo, QP->b, QP->hi,
+        (QP->b)-(QP->lo), (QP->hi)-(QP->b)) ;
+    fflush (stdout) ;
+    fflush (stderr) ;
+    ASSERT (IMPLIES ((ib == -1), (QP->b == QP->lo))) ;          // b = lo
+    ASSERT ((ib == 0) == (QP->lo < QP->b && QP->b < QP->hi)) ;  // lo < b <hi
+    ASSERT (IMPLIES ((ib == +1), (QP->b == QP->hi))) ;          // b = hi
+    ASSERT ((QP->lo <= QP->b && QP->b <= QP->hi)) ;             // x feasible
 }
 
 } // end namespace Mongoose
