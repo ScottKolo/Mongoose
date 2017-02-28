@@ -1,5 +1,5 @@
 
-#include "Mongoose_QPBoundaryHeap.hpp"
+#include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_CutCost.hpp"
 #include "Mongoose_CSparse.hpp"
 

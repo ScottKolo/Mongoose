@@ -11,6 +11,7 @@ set(MONGOOSE_VERSION "${MONGOOSE_VERSION_MAJOR}.
                       ${MONGOOSE_VERSION_PATCH}")
 
 set(MONGOOSE_FILES
+    Include/Mongoose_BoundaryHeap.hpp
     Include/Mongoose_Coarsening.hpp
     Include/Mongoose_CSparse.hpp
     Include/Mongoose_CutCost.hpp
@@ -29,6 +30,7 @@ set(MONGOOSE_FILES
     Include/Mongoose_Refinement.hpp
     Include/Mongoose_Sanitize.hpp
     Include/Mongoose_Waterdance.hpp
+    Source/Mongoose_BoundaryHeap.cpp
     Source/Mongoose_Coarsening.cpp
     Source/Mongoose_CSparse.cpp
     Source/Mongoose_Debug.cpp
@@ -49,7 +51,6 @@ set(MONGOOSE_FILES
 
 set(NAPHEAP_FILES
     Include/Mongoose_QPBoundary.hpp
-    Include/Mongoose_QPBoundaryHeap.hpp
     Include/Mongoose_QPDelta.hpp
     Include/Mongoose_QPGradProj.hpp
     Include/Mongoose_QPLinks.hpp
@@ -59,7 +60,6 @@ set(NAPHEAP_FILES
     Include/Mongoose_QPNapsack.hpp
     Include/Mongoose_QPNapUp.hpp
     Source/Mongoose_QPBoundary.cpp
-    Source/Mongoose_QPBoundaryHeap.cpp
     Source/Mongoose_QPDelta.cpp
     Source/Mongoose_QPGradProj.cpp
     Source/Mongoose_QPLinks.cpp

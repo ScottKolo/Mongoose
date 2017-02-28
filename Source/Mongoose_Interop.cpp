@@ -1,10 +1,5 @@
 
 #include "Mongoose_Interop.hpp"
-#include "Mongoose_Matching.hpp"
-#include "Mongoose_QPBoundaryHeap.hpp"
-#include "Mongoose_CSparse.hpp"
-#include "stdio.h"
-#include "string.h"
 
 namespace Mongoose
 {
