@@ -45,7 +45,8 @@ inline void saveContext
     QP->its = it;
     QP->err = err;
     QP->nFreeSet = nFreeSet;
-    
+
+    // TODO fix ib?
     Double b = 0.0;
     if(ib != 0)
     {

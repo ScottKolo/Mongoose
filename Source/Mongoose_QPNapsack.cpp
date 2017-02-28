@@ -88,6 +88,27 @@
 namespace Mongoose
 {
 
+void checkatx (Double *x, Double *a, Int n, Double lo, Double hi)
+{
+    Double atx = 0. ; 
+    int ok = 1 ;
+    for (Int k = 0 ; k < n ; k++)
+    {
+        if (x [k] < 0.) { ok = 0 ; printf ("x [%ld] = %g < 0!\n", k, x [k]) ; }
+        if (x [k] > 1.) { ok = 0 ; printf ("x [%ld] = %g > 1!\n", k, x [k]) ; }
+        atx += ((a == NULL) ? 1 : a [k]) * x [k] ;
+    }
+    if (atx < lo - 0.001) { ok = 0 ; }
+    if (atx > hi + 0.001) { ok = 0 ; }
+    if (!ok)
+    {
+        printf ("napsack error! lo %g a'x %g hi %g\n", lo, atx, hi) ;
+        fflush (stdout) ;
+        fflush (stderr) ;
+        ASSERT (0) ;
+    }
+}
+
 Double QPnapsack        /* return the final lambda */
 (
     Double *x,      /* holds y on input, and the solution x on output */
@@ -104,6 +125,7 @@ Double QPnapsack        /* return the final lambda */
 )
 {
     Double lambda = Lambda;
+    printf ("QPNapsack start [\n") ;
 
     /* ---------------------------------------------------------------------- */
     /* compute starting guess if FreeSet_status is provided and lambda != 0 */
@@ -135,7 +157,7 @@ Double QPnapsack        /* return the final lambda */
     /* compute the initial slope */
     /* ---------------------------------------------------------------------- */
 
-    Int slope = 0;
+    Double slope = 0;
     for (Int k = 0; k < n; k++)
     {
         Double xi = x[k] - Gw[k] * lambda;
@@ -148,6 +170,7 @@ Double QPnapsack        /* return the final lambda */
             slope += Gw[k] * xi;
         }
     }
+    printf ("slope %g lo %g hi %g\n", slope, lo, hi) ;
 
     /* remember: must still adjust slope by "-hi" or "-lo" for its final value */
 
@@ -155,16 +178,26 @@ Double QPnapsack        /* return the final lambda */
     {
         if (slope > hi)
         {
+            printf ("napsack case 1 up\n") ;
             lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
             lambda = MONGOOSE_MAX2(MONGOOSE_ZERO, lambda);
+        }
+        else
+        {
+            printf ("napsack case 1 nothing\n") ;
         }
     }
     else if ((lambda <= MONGOOSE_ZERO) && (slope <= lo)) /* case 2 */
     {
         if (slope < lo)
         {
+            printf ("napsack case 2 down\n") ;
             lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
             lambda = MONGOOSE_MIN2(lambda, MONGOOSE_ZERO);
+        }
+        else
+        {
+            printf ("napsack case 2 nothing\n") ;
         }
     }
     else /* case 3 or 4 */
@@ -189,17 +222,20 @@ Double QPnapsack        /* return the final lambda */
             {
                 if (slope0 < lo)
                 {
+                    printf ("napsack case 3a down\n") ;
                     lambda = MONGOOSE_ZERO;
                     lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
                     if (lambda > MONGOOSE_ZERO) lambda = MONGOOSE_ZERO;
                 }
                 else if (slope0 > hi)
                 {
+                    printf ("napsack case 3b down\n") ;
                     lambda = QPnapdown(x, n, lambda, Gw, hi, w, heap1, heap2);
                     if (lambda < MONGOOSE_ZERO) lambda = MONGOOSE_ZERO;
                 }
                 else
                 {
+                    printf ("napsack case 3c nothing\n") ;
                     lambda = MONGOOSE_ZERO;
                 }
             }
@@ -207,17 +243,20 @@ Double QPnapsack        /* return the final lambda */
             {
                 if (slope0 > hi)
                 {
+                    printf ("napsack case 4a up\n") ;
                     lambda = MONGOOSE_ZERO;
                     lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
                     lambda = MONGOOSE_MAX2(lambda, MONGOOSE_ZERO);
                 }
                 else if (slope0 < lo)
                 {
+                    printf ("napsack case 4b up\n") ;
                     lambda = QPnapup(x, n, lambda, Gw, lo, w, heap1, heap2);
                     lambda = MONGOOSE_MIN2(MONGOOSE_ZERO, lambda);
                 }
                 else
                 {
+                    printf ("napsack case 4c nothing\n") ;
                     lambda = MONGOOSE_ZERO;
                 }
             }
@@ -228,16 +267,26 @@ Double QPnapsack        /* return the final lambda */
             {
                 if (slope < lo)
                 {
+                    printf ("napsack case 3d down\n") ;
                     lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
                     lambda = MONGOOSE_MIN2(MONGOOSE_ZERO, lambda);
+                }
+                else
+                {
+                    printf ("napsack case 3e nothing\n") ;
                 }
             }
             else /* ( slope > lo )                    case 4 */
             {
                 if (slope > hi)
                 {
+                    printf ("napsack case 4d up\n") ;
                     lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
                     lambda = MONGOOSE_MAX2(lambda, MONGOOSE_ZERO);
+                }
+                else
+                {
+                    printf ("napsack case 4e nothing\n") ;
                 }
             }
         }
@@ -247,6 +296,7 @@ Double QPnapsack        /* return the final lambda */
     /* replace x by x (lambda) */
     /* ---------------------------------------------------------------------- */
 
+    printf ("lambda %g\n", lambda) ;
     if (lambda == MONGOOSE_ZERO)
     {
         for (Int k = 0; k < n; k++)
@@ -257,6 +307,7 @@ Double QPnapsack        /* return the final lambda */
                 (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ?
                  MONGOOSE_ONE : xi);
         }
+        checkatx (x, Gw, n, lo, hi) ;
     }
     else
     {
@@ -268,7 +319,9 @@ Double QPnapsack        /* return the final lambda */
                 (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ?
                  MONGOOSE_ONE : xi);
         }
+        checkatx (x, Gw, n, lo, hi) ;
     }
+    printf ("QPNapsack done ]\n") ;
 
     return lambda;
 }

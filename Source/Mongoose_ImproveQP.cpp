@@ -81,6 +81,9 @@ void improveCutUsingQP
     }
     if (targetSplit > 0.5)
     {
+        // TODO this is wrong ... !
+        // targetSplit can be 0.7 for example, and this is not the
+        // same as 0.3.
         // ensure targetSplit is in the range 0 to 0.5, but only to
         // compute lo and hi.  Do not update O->targetSplit.
         targetSplit = 1. - targetSplit ;

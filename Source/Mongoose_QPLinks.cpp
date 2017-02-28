@@ -69,9 +69,6 @@ void QPlinks
         else
         {
             // add k to the FreeSet
-#ifndef NDEBUG
-            // printf ("Links: add k = %ld to the FreeSet\n", k) ;
-#endif
             FreeSet_status[k] = 0;
             LinkUp[lastl] = k;
             LinkDn[k] = lastl;
@@ -86,8 +83,7 @@ void QPlinks
     QP->nFreeSet = nFreeSet;
     QP->b = s;
 
-    FreeSet_dump ("QPLinks:done", n, LinkUp, LinkDn, nFreeSet,
-        FreeSet_status, 1) ;
+    FreeSet_dump ("QPLinks:done", n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 1, x) ;
 
     // make sure lo <= b <= hi holds, where b = a'*x and x is the input guess
     if (QP->b >= QP->hi)

@@ -69,7 +69,6 @@ void fmRefine_worker(Graph *G, Options *O)
     {
         O->tolerance = tol = 0. ;
     }
-    printf ("FM tol %g\n", tol) ;
 
     Int fmSearchDepth = O->fmSearchDepth;
     Int fmConsiderCount = O->fmConsiderCount;
