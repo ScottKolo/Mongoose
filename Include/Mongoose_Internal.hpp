@@ -1,14 +1,6 @@
 #ifndef Mongoose_Internal_hpp
 #define Mongoose_Internal_hpp
 
-#ifndef MONGOOSE_ONE
-#define MONGOOSE_ONE 1.0
-#endif
-
-#ifndef MONGOOSE_ZERO
-#define MONGOOSE_ZERO 0.0
-#endif
-
 #ifndef MONGOOSE_MIN2
 #define MONGOOSE_MIN2(x,y) ((x)<(y) ? (x) : (y))
 #endif
@@ -43,9 +35,5 @@ enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
 
 } // end namespace Mongoose
-
-/* Debug and Timing Management */
-#include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
 
 #endif

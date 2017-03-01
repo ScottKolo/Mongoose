@@ -5,6 +5,7 @@
 #include "Mongoose_Test.hpp"
 #include <iostream>
 #include <fstream>
+#include "Mongoose_Logger.hpp"
 
 using namespace Mongoose;
 

@@ -1,8 +1,10 @@
-
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Refinement.hpp"
 #include "Mongoose_Matching.hpp"
 #include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_ImproveFM.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {

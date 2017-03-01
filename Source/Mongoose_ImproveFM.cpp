@@ -1,7 +1,10 @@
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_ImproveFM.hpp"
 #include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_Interop.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 // TODO why doesn't this code use O->targetSplit ???
 // TODO how is tolerance define?  if target balance is .5 and
@@ -308,7 +311,7 @@ void fmSwap
         {
             if (!MONGOOSE_MARKED(neighbor))
             {
-                assert(!MONGOOSE_IN_BOUNDARY(neighbor));
+                ASSERT (!MONGOOSE_IN_BOUNDARY(neighbor));
                 bhInsert(G, neighbor);
             }
         }

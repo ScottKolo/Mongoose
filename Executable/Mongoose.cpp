@@ -1,6 +1,8 @@
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_EdgeSeparator.hpp"
 #include "Mongoose_IO.hpp"
+#include "Mongoose_Logger.hpp"
 
 using namespace Mongoose;
 

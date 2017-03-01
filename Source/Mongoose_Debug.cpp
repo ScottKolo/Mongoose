@@ -1,27 +1,384 @@
 
-#include "Mongoose_Debug.hpp"
 #include "Mongoose_Interop.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
 
-/* debug_Print */
-void print(cs *G)
-{
-    Int *Gp = G->p; Int *Gi = G->i; double *Gx = G->x;
+#ifndef NDEBUG
 
+// print a CSparse matrix
+void print (cs *G)
+{
+    ASSERT (G) ;
+    Int *Gp = G->p; Int *Gi = G->i; double *Gx = G->x;
     for(Int j = 0; j < G->n; j++)
     {
         for(int p = Gp[j]; p < Gp[j+1]; p++)
         {
-            printf("G(%ld,%ld) = %f\n", Gi[p], j, Gx[p]);
+            PR (("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p])) ;
         }
     }
 }
 
-void print(Graph *G)
+// print a Mongoose graph
+void print (Graph *G)
 {
-    print(GraphToCSparse3(G, false));
+    cs *A ;
+    ASSERT (G) ;
+    A = GraphToCSparse3 (G, false) ;
+    print (A) ;
+    cs_spfree (A) ;
 }
+
+//------------------------------------------------------------------------------
+// QPcheckCom
+//------------------------------------------------------------------------------
+
+// Check that the QPcom data structure is consistent and cost decreases
+
+#define ERROR { FFLUSH ; ASSERT (0) ; }
+
+void QPcheckCom
+(
+    Graph *G,
+    Options *O,
+    QPDelta *QP,
+    bool check_b,
+    Int nFreeSet,       // use this instead of QP->nFreeSet
+    Double b            // use this instead of QP->b
+)
+{
+    Int i, j, k, l ;
+    Double s, t ;
+
+    ASSERT (G) ;
+    ASSERT (O) ;
+    ASSERT (QP) ;
+
+    //--- FreeSet
+//  Int nFreeSet = QP->nFreeSet ;  /* number of i such that 0 < x_i < 1 */
+    Int *LinkUp = QP->LinkUp ; /* linked list for free indices */
+    Int *LinkDn = QP->LinkDn ; /* linked list, LinkDn [LinkUp [i] = i*/
+    Int *FreeSet_status = QP->FreeSet_status ; 
+        /* FreeSet_status [i] = +1, -1, or 0 if x_i = 1, 0, or 0 < x_i < 1*/
+    //---
+
+    Double *x = QP->x ;/* current estimate of solution */
+
+    /* problem specification */
+    Int n  = G->n ;  /* problem dimension */
+    Double *Ex = G->x ; /* numerical values for edge weights */
+    Int *Ei = G->i ; /* adjacent vertices for each node */
+    Int *Ep = G->p ; /* points into Ex or Ei */
+    Double *a  = G->w ;   /* a'x = b, lo <= b <= hi */
+
+    Double lo = QP->lo ;
+    Double hi = QP->hi ;
+    Int *mark = G->mark;
+    Int markValue = G->markValue;
+    Double *D  = QP->D ;   /* diagonal of quadratic */
+    Double *grad  = QP->gradient ;   /* gradient at current x */
+    Double tol = 1e-8 ;
+
+    // get workspace
+    Int *w0 = (Int *) calloc (n+1, sizeof (Int)) ;    // [
+    Double *gtemp = (Double *) malloc ((n+1) * sizeof (Double)) ;    // [
+
+    ASSERT (w0) ;
+    ASSERT (gtemp) ;
+
+    /* check that lo <= hi */
+    if ( lo > hi )
+    {
+        PR (("lo %e > hi %e\n", lo, hi)) ;
+        ERROR ;
+    }
+
+    /* check feasibility */
+    if ( a == NULL )
+    {
+        // a is implicitly all 1's
+        s = (Double) n ;
+        t = 0. ;
+    }
+    else
+    {
+        s = 0. ;
+        t = 0. ;
+        for (j = 0; j < n; j++)
+        {
+            if ( a [j] > 0 ) s += a [j] ;
+            else             t += a [j] ;
+        }
+    }
+
+    if ( s < lo )
+    {
+        PR (("lo %e > largest possible value %e\n", lo, s)) ;
+        ERROR ;
+    }
+    if ( t > hi )
+    {
+        PR (("hi %e < smallest possible value %e\n", hi, t)) ;
+        ERROR ;
+    }
+
+    Int *ix = FreeSet_status ;
+
+    /* check that nFreeSet = number of zeroes in ix, and ix agrees with x */
+    i = 0 ;
+    for (j = 0; j < n; j++)
+    {
+        if ( ix [j] > 1 )
+        {
+            PR (("ix [%ld] = %ld (> 1)\n", j, ix [j])) ;
+            ERROR ;
+        }
+        else if (ix [j] < -1)
+        {
+            PR (("ix [%ld] = %ld (< -1)\n", j, ix [j])) ;
+            ERROR ;
+        }
+        else if ( ix [j] == 0 ) i++ ;
+        k = 0 ;
+        if ( ix [j] == 1 )
+        {
+            if ( x [j] != 1. ) k = 1 ;
+        }
+        else if ( ix [j] == -1 )
+        {
+            if ( x [j] != 0. ) k = 1 ;
+        }
+        if ( k )
+        {
+            PR (("ix [%ld] = %ld while x = %e\n", j, ix [j], x [j])) ;
+            ERROR ;
+        }
+        if ( (x [j] > 1+tol) || (x [j] < -tol) )
+        {
+            PR (("x [%ld] = %e outside range [0, 1]", j, x [j])) ;
+            ERROR ;
+        }
+    }
+    if ( i != nFreeSet )
+    {
+        PR (("free indices in ix is %ld, nFreeSet = %ld\n", i, nFreeSet)) ;
+        ERROR ;
+    }
+
+    /* check that LinkUp is valid */
+
+    l = 0 ;
+    for (i = LinkUp [n]; i < n; i = LinkUp [j])
+    {
+        if ( (i < 0) || (i > n) )
+        {
+            PR (("LinkUp [%ld] = %ld, out of range [0, %ld]\n", j, i, n)) ;
+            ERROR ;
+        }
+        if ( w0 [i] != 0 )
+        {
+            PR (("LinkUp [%ld] = %ld, repeats\n", j, i)) ;
+            ERROR ;
+        }
+        if ( ix [i] != 0 )
+        {
+            PR (("LinkUp [%ld] = %ld, however it is not free\n", j, i)) ;
+            ERROR ;
+        }
+        w0 [i] = 1 ;
+        j = i ;
+        l++ ;
+    }
+
+    if ( l != nFreeSet )
+    {
+        PR (("free indices in LinkUp is %ld, nFreeSet = %ld\n", i, nFreeSet)) ;
+        ERROR ;
+    }
+
+    if ( i != n )
+    {
+        PR (("LinkUp [%ld] = %ld, out of range [0, %ld]\n", j, i, n)) ;
+        ERROR ;
+    }
+
+    for (j = LinkUp [n]; j < n; j = LinkUp [j]) w0 [j] = 0 ;
+
+    /* check that LinkDn is valid */
+
+    j = n ;
+    for (i = LinkUp [n]; i < n; i = LinkUp [j])
+    {
+        if ( LinkDn [i] != j )
+        {
+            PR (("LinkDn [%ld] = %ld (!= %ld)\n", i, LinkDn [i], j)) ;
+            ERROR ;
+        }
+        j = i ;
+    }
+
+    /* check that b is correct */
+
+    s = 0. ;
+    if ( a == NULL ) for (j = 0; j < n; j++) s += x [j] ;
+    else             for (j = 0; j < n; j++) s += x [j]*a [j] ;
+    // PR (("CHECK BOUNDS: lo %g s=a'x %g hi %g\n", lo, s, hi)) ;
+    if ( check_b )
+    {
+        if ( fabs (b-s) > tol )
+        {
+            PR (("QP->b = %e while a'x = %e\n", b, s)) ;
+            ERROR ;
+        }
+    }
+    if ( s < lo - tol )
+    {
+        PR (("a'x TOO LO: a'x = %e < lo = %e\n", s, lo)) ;
+        ERROR ;
+    }
+    if ( s > hi + tol )
+    {
+        PR (("a'x TOO HI: a'x = %e > hi = %e\n", s, hi)) ;
+        ERROR ;
+    }
+
+    /* check that grad is correct */
+
+    for (j = 0; j < n; j++) gtemp [j] = (.5-x [j])*D [j] ;
+    Double newcost = 0. ;
+    if ( Ex == NULL )
+    {
+        for (j = 0; j < n; j++)
+        {
+            s = .5 - x [j] ;
+            t = 0. ;
+            for (k = Ep [j]; k < Ep [j+1]; k++)
+            {
+                gtemp [Ei [k]] += s ;
+                t += x [Ei [k]] ;
+            }
+            newcost += (t + x [j]*D [j])*(1.-x[j]) ;
+        }
+    }
+    else
+    {
+        for (j = 0; j < n; j++)
+        {
+            s = .5 - x [j] ;
+            t = 0. ;
+            for (k = Ep [j]; k < Ep [j+1]; k++)
+            {
+                gtemp [Ei [k]] += s*Ex [k] ;
+                t += Ex [k]*x [Ei [k]] ;
+            }
+            newcost += (t + x [j]*D [j])*(1.-x[j]) ;
+        }
+    }
+    s = 0. ;
+    for (j = 0; j < n; j++) s = MONGOOSE_MAX2 (s, fabs (gtemp [j]-grad [j])) ;
+    if ( s > tol )
+    {
+        PR (("error (%e) in grad: current grad, true grad, x:\n", s)) ;
+        for (j = 0; j < n; j++)
+        {
+            double ack = fabs (gtemp [j] - grad [j]) ;
+            PR (("j: %5ld grad: %15.6e gtemp: %15.6e err: %15.6e "
+                "x: %15.6e", j, grad [j], gtemp [j], ack, x [j])) ;
+            if (ack > tol) PR ((" ACK!")) ;
+            PR (("\n")) ;
+        }
+        ERROR ;
+    }
+
+    /* check that cost decreases */
+
+    if ( newcost > tol + QP->check_cost )
+    {
+        PR (("cost increases, old %30.15e new %30.15e\n",
+            QP->check_cost, newcost)) ;
+        ERROR ;
+    }
+    QP->check_cost = newcost ;
+    PR (("cost: %30.15e\n", newcost)) ;
+
+    free (gtemp) ;  // ]
+    free (w0) ;  // ]
+}
+
+//------------------------------------------------------------------------------
+// FreeSet_dump
+//------------------------------------------------------------------------------
+
+void FreeSet_dump (const char *where,
+    Int n, Int *LinkUp, Int *LinkDn, Int nFreeSet, Int *FreeSet_status,
+    Int verbose, Double *x)
+{
+    Int j ;
+    Int death = 0 ;
+    if (verbose)
+    {
+        PR (("\ndump FreeSet (%s): nFreeSet %ld n %ld jfirst %ld\n",
+        where, nFreeSet, n, LinkUp [n])) ;
+    }
+    for (Int j = LinkUp[n]; j < n ; j = LinkUp[j])
+    {
+        if (verbose)
+        {
+            PR (("    j %3ld LinkUp[j] %3ld  LinkDn[j] %3ld ",
+            j, LinkUp [j], LinkDn [j])) ;
+            PR ((" FreeSet_status %3ld", FreeSet_status [j])) ;
+            if (x != NULL) PR ((" x: %g", x [j])) ;
+            PR (("\n")) ;
+        }
+        death++ ;
+        if (death > (nFreeSet+5)) ASSERT(0) ;
+    }
+    if (verbose) PR (("    in FreeSet: %ld %ld\n", death, nFreeSet)) ;
+    ASSERT(death == nFreeSet) ;
+
+    Int nFree2 = 0 ;
+    Int nHi = 0 ;
+    Int nLo = 0 ;
+    for (j = 0 ; j < n ; j++)
+    {
+        FFLUSH ;
+        if (FreeSet_status [j] == 0)
+        {
+            // note that in rare cases, x[j] can be 0 or 1 yet
+            // still be in the FreeSet.
+            if (x != NULL) ASSERT (0 <= x [j] && x [j] <= 1.) ;
+            nFree2++ ;
+        }
+        else if (FreeSet_status [j] == 1)
+        {
+            if (x != NULL) ASSERT (x [j] >= 1.) ;
+            nHi++ ;
+        }
+        else if (FreeSet_status [j] == -1)
+        {
+            if (x != NULL) ASSERT (x [j] <= 0.) ;
+            nLo++ ;
+        }
+        else
+        {
+            ASSERT(0) ;
+        }
+    }
+    if (verbose)
+    {
+        PR (("    # that have FreeSet_status of zero: %ld\n", nFree2)) ;
+        PR (("    # that have FreeSet_status of one:  %ld\n", nHi)) ;
+        PR (("    # that have FreeSet_status of -1    %ld\n", nLo)) ;
+    }
+    if (nFreeSet != nFree2)
+    {
+        PR (("ERROR nFree2 (%ld) nFreeSet %ld\n", nFree2, nFreeSet)) ;
+        ASSERT (0) ;
+    }
+}
+#endif
 
 } // end namespace Mongoose

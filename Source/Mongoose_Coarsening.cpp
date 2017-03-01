@@ -7,8 +7,10 @@
  * random, etc.), coarsening constructs the new, coarsened graph.
  */
 
-#include "Mongoose_Coarsening.hpp"
 #include "Mongoose_Internal.hpp"
+#include "Mongoose_Coarsening.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -141,6 +143,7 @@ Graph *coarsen(Graph *G, Options *O)
     /* Cleanup resources */
     SuiteSparse_free(htable);
 
+#ifndef NDEBUG
     /* If we want to do expensive checks, make sure we didn't break
      * the problem into multiple connected components. */
     if (O->doExpensiveChecks)
@@ -149,12 +152,12 @@ Graph *coarsen(Graph *G, Options *O)
         for (Int k = 0; k < cn; k++)
         {
             Int degree = Cp[k+1] - Cp[k];
-            assert(degree > 0);
-
+            ASSERT (degree > 0) ;
             W += Cw[k];
         }
-        assert(W == C->W);
+        ASSERT (W == C->W) ;
     }
+#endif
 
     Logger::toc(CoarseningTiming);
 

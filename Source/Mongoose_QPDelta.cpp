@@ -1,5 +1,8 @@
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_QPDelta.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {

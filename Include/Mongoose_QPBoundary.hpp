@@ -9,20 +9,6 @@
 namespace Mongoose
 {
 
-void QPcheckCom
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP,
-    bool check_b,
-    Int nFreeSet,
-    Double b
-) ;
-
-void FreeSet_dump (const char *where,
-    Int n, Int *LinkUp, Int *LinkDn, Int nFreeSet, Int *FreeSet_status,
-    Int verbose, Double *x) ;
-
 void QPBoundary
 (
     Graph *G,

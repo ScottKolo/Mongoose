@@ -6,7 +6,10 @@
  * permuting, and finding strongly connected components.
  */
 #include "Mongoose_Internal.hpp"
+#include "Mongoose_Options.hpp"
 #include "Mongoose_CSparse.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {

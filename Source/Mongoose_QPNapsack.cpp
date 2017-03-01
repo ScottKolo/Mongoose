@@ -81,9 +81,12 @@
     routine.
    ========================================================================== */
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_QPNapsack.hpp"
 #include "Mongoose_QPNapDown.hpp"
 #include "Mongoose_QPNapUp.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -94,17 +97,16 @@ void checkatx (Double *x, Double *a, Int n, Double lo, Double hi)
     int ok = 1 ;
     for (Int k = 0 ; k < n ; k++)
     {
-        if (x [k] < 0.) { ok = 0 ; printf ("x [%ld] = %g < 0!\n", k, x [k]) ; }
-        if (x [k] > 1.) { ok = 0 ; printf ("x [%ld] = %g > 1!\n", k, x [k]) ; }
+        if (x [k] < 0.) { ok = 0 ; PR (("x [%ld] = %g < 0!\n", k, x [k])) ; }
+        if (x [k] > 1.) { ok = 0 ; PR (("x [%ld] = %g > 1!\n", k, x [k])) ; }
         atx += ((a == NULL) ? 1 : a [k]) * x [k] ;
     }
     if (atx < lo - 0.001) { ok = 0 ; }
     if (atx > hi + 0.001) { ok = 0 ; }
     if (!ok)
     {
-        printf ("napsack error! lo %g a'x %g hi %g\n", lo, atx, hi) ;
-        fflush (stdout) ;
-        fflush (stderr) ;
+        PR (("napsack error! lo %g a'x %g hi %g\n", lo, atx, hi)) ;
+        FFLUSH ;
         ASSERT (0) ;
     }
 }
@@ -125,7 +127,7 @@ Double QPnapsack        /* return the final lambda */
 )
 {
     Double lambda = Lambda;
-    printf ("QPNapsack start [\n") ;
+    PR (("QPNapsack start [\n")) ;
 
     /* ---------------------------------------------------------------------- */
     /* compute starting guess if FreeSet_status is provided and lambda != 0 */
@@ -134,7 +136,7 @@ Double QPnapsack        /* return the final lambda */
     if ((FreeSet_status != NULL) && (lambda != 0))
     {
         Double asum = (lambda > 0 ? -hi : -lo);
-        Double a2sum = MONGOOSE_ZERO;
+        Double a2sum = 0.;
 
         for (Int k = 0; k < n; k++)
         {
@@ -150,7 +152,7 @@ Double QPnapsack        /* return the final lambda */
             }
         }
 
-        if (a2sum != MONGOOSE_ZERO) lambda = asum / a2sum;
+        if (a2sum != 0.) lambda = asum / a2sum;
     }
 
     /* ---------------------------------------------------------------------- */
@@ -161,58 +163,58 @@ Double QPnapsack        /* return the final lambda */
     for (Int k = 0; k < n; k++)
     {
         Double xi = x[k] - Gw[k] * lambda;
-        if (xi >= MONGOOSE_ONE)
+        if (xi >= 1.)
         {
             slope += Gw[k];
         }
-        else if (xi > MONGOOSE_ZERO)
+        else if (xi > 0.)
         {
             slope += Gw[k] * xi;
         }
     }
-    printf ("slope %g lo %g hi %g\n", slope, lo, hi) ;
+    PR (("slope %g lo %g hi %g\n", slope, lo, hi)) ;
 
     /* remember: must still adjust slope by "-hi" or "-lo" for its final value */
 
-    if ((lambda >= MONGOOSE_ZERO) && (slope >= hi)) /* case 1 */
+    if ((lambda >= 0.) && (slope >= hi)) /* case 1 */
     {
         if (slope > hi)
         {
-            printf ("napsack case 1 up\n") ;
+            PR (("napsack case 1 up\n")) ;
             lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
-            lambda = MONGOOSE_MAX2(MONGOOSE_ZERO, lambda);
+            lambda = MONGOOSE_MAX2(0., lambda);
         }
         else
         {
-            printf ("napsack case 1 nothing\n") ;
+            PR (("napsack case 1 nothing\n")) ;
         }
     }
-    else if ((lambda <= MONGOOSE_ZERO) && (slope <= lo)) /* case 2 */
+    else if ((lambda <= 0.) && (slope <= lo)) /* case 2 */
     {
         if (slope < lo)
         {
-            printf ("napsack case 2 down\n") ;
+            PR (("napsack case 2 down\n")) ;
             lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
-            lambda = MONGOOSE_MIN2(lambda, MONGOOSE_ZERO);
+            lambda = MONGOOSE_MIN2(lambda, 0.);
         }
         else
         {
-            printf ("napsack case 2 nothing\n") ;
+            PR (("napsack case 2 nothing\n")) ;
         }
     }
     else /* case 3 or 4 */
     {
-        if (lambda != MONGOOSE_ZERO)
+        if (lambda != 0.)
         {
-            Double slope0 = MONGOOSE_ZERO;
+            Double slope0 = 0.;
             for (Int k = 0; k < n; k++)
             {
                 Double xi = x[k];
-                if (xi >= MONGOOSE_ONE)
+                if (xi >= 1.)
                 {
                     slope0 += Gw[k];
                 }
-                else if (xi > MONGOOSE_ZERO)
+                else if (xi > 0.)
                 {
                     slope0 += Gw[k] * xi;
                 }
@@ -222,42 +224,42 @@ Double QPnapsack        /* return the final lambda */
             {
                 if (slope0 < lo)
                 {
-                    printf ("napsack case 3a down\n") ;
-                    lambda = MONGOOSE_ZERO;
+                    PR (("napsack case 3a down\n")) ;
+                    lambda = 0.;
                     lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
-                    if (lambda > MONGOOSE_ZERO) lambda = MONGOOSE_ZERO;
+                    if (lambda > 0.) lambda = 0.;
                 }
                 else if (slope0 > hi)
                 {
-                    printf ("napsack case 3b down\n") ;
+                    PR (("napsack case 3b down\n")) ;
                     lambda = QPnapdown(x, n, lambda, Gw, hi, w, heap1, heap2);
-                    if (lambda < MONGOOSE_ZERO) lambda = MONGOOSE_ZERO;
+                    if (lambda < 0.) lambda = 0.;
                 }
                 else
                 {
-                    printf ("napsack case 3c nothing\n") ;
-                    lambda = MONGOOSE_ZERO;
+                    PR (("napsack case 3c nothing\n")) ;
+                    lambda = 0.;
                 }
             }
             else /* ( (lambda <= 0) && (slope > lo) )  case 4 */
             {
                 if (slope0 > hi)
                 {
-                    printf ("napsack case 4a up\n") ;
-                    lambda = MONGOOSE_ZERO;
+                    PR (("napsack case 4a up\n")) ;
+                    lambda = 0.;
                     lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
-                    lambda = MONGOOSE_MAX2(lambda, MONGOOSE_ZERO);
+                    lambda = MONGOOSE_MAX2(lambda, 0.);
                 }
                 else if (slope0 < lo)
                 {
-                    printf ("napsack case 4b up\n") ;
+                    PR (("napsack case 4b up\n")) ;
                     lambda = QPnapup(x, n, lambda, Gw, lo, w, heap1, heap2);
-                    lambda = MONGOOSE_MIN2(MONGOOSE_ZERO, lambda);
+                    lambda = MONGOOSE_MIN2(0., lambda);
                 }
                 else
                 {
-                    printf ("napsack case 4c nothing\n") ;
-                    lambda = MONGOOSE_ZERO;
+                    PR (("napsack case 4c nothing\n")) ;
+                    lambda = 0.;
                 }
             }
         }
@@ -267,26 +269,26 @@ Double QPnapsack        /* return the final lambda */
             {
                 if (slope < lo)
                 {
-                    printf ("napsack case 3d down\n") ;
+                    PR (("napsack case 3d down\n")) ;
                     lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
-                    lambda = MONGOOSE_MIN2(MONGOOSE_ZERO, lambda);
+                    lambda = MONGOOSE_MIN2(0., lambda);
                 }
                 else
                 {
-                    printf ("napsack case 3e nothing\n") ;
+                    PR (("napsack case 3e nothing\n")) ;
                 }
             }
             else /* ( slope > lo )                    case 4 */
             {
                 if (slope > hi)
                 {
-                    printf ("napsack case 4d up\n") ;
+                    PR (("napsack case 4d up\n")) ;
                     lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
-                    lambda = MONGOOSE_MAX2(lambda, MONGOOSE_ZERO);
+                    lambda = MONGOOSE_MAX2(lambda, 0.);
                 }
                 else
                 {
-                    printf ("napsack case 4e nothing\n") ;
+                    PR (("napsack case 4e nothing\n")) ;
                 }
             }
         }
@@ -296,16 +298,14 @@ Double QPnapsack        /* return the final lambda */
     /* replace x by x (lambda) */
     /* ---------------------------------------------------------------------- */
 
-    printf ("lambda %g\n", lambda) ;
-    if (lambda == MONGOOSE_ZERO)
+    PR (("lambda %g\n", lambda)) ;
+    if (lambda == 0.)
     {
         for (Int k = 0; k < n; k++)
         {
             Double xi = x[k];
             // TODO: Rewrite nested ternary operator
-            x[k] =
-                (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ?
-                 MONGOOSE_ONE : xi);
+            x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
         }
         checkatx (x, Gw, n, lo, hi) ;
     }
@@ -315,13 +315,11 @@ Double QPnapsack        /* return the final lambda */
         {
             Double xi = x[k] - Gw[k] * lambda;
             // TODO: Rewrite nested ternary operator
-            x[k] =
-                (xi < MONGOOSE_ZERO ? MONGOOSE_ZERO : xi > MONGOOSE_ONE ?
-                 MONGOOSE_ONE : xi);
+            x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
         }
         checkatx (x, Gw, n, lo, hi) ;
     }
-    printf ("QPNapsack done ]\n") ;
+    PR (("QPNapsack done ]\n")) ;
 
     return lambda;
 }

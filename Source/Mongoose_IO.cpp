@@ -7,15 +7,17 @@
  * (easier for C programmers) or std::string (easier from C++).
  */
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Interop.hpp"
-#include "Mongoose_Debug.hpp"
 #include "Mongoose_Sanitize.hpp"
 #include <cstdio>
 #include <iostream>
 extern "C" {
 #include "mmio.h"
 }
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 using namespace std;
 

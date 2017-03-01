@@ -7,7 +7,10 @@
  * Community/Brotherly (similar to 2-hop) Matching.
  */
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Matching.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 #include <map>
 
 namespace Mongoose
@@ -110,6 +113,7 @@ void matching_Random(Graph *G, Options *O)
     /* Save the # of coarse nodes. */
     G->cn = cn;
 
+#ifndef NDEBUG
     /* If we want to do expensive checks, make sure that every node is either:
      *     1) matched
      *     2) has no unmatched neighbors
@@ -120,14 +124,15 @@ void matching_Random(Graph *G, Options *O)
         {
             /* Check condition 1 */
             if (matching[k]) continue;
-
             /* Check condition 2 */
             for (Int p = Gp[k]; p < Gp[k+1]; p++)
             {
-                assert(matching[Gi[p]]);
+                ASSERT (matching[Gi[p]]);
             }
         }
     }
+#endif
+
 }
 
 //-----------------------------------------------------------------------------
@@ -154,7 +159,7 @@ void matching_PA(Graph *G, Options *O)
             if (MONGOOSE_IS_MATCHED(k)) continue;
             for (Int p = Gp[k]; p < Gp[k+1]; p++)
             {
-                assert(MONGOOSE_IS_MATCHED(Gi[p]));
+                ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
             }
         }
     }
@@ -226,8 +231,8 @@ void matching_PA(Graph *G, Options *O)
         {
             if (O->doCommunityMatching)
             {
-                if (!MONGOOSE_IS_MATCHED(k)) printf("%ld is unmatched\n", k);
-                assert(MONGOOSE_IS_MATCHED(k));
+                if (!MONGOOSE_IS_MATCHED(k)) PR (("%ld is unmatched\n", k)) ;
+                ASSERT (MONGOOSE_IS_MATCHED(k));
             }
 
             /* Load matching. */
@@ -243,13 +248,13 @@ void matching_PA(Graph *G, Options *O)
 
             if (O->doCommunityMatching)
             {
-                if (v[2] != -1) { assert(MONGOOSE_GETMATCH(v[2]) == v[0]); }
-                else            { assert(MONGOOSE_GETMATCH(v[1]) == v[0]); }
+                if (v[2] != -1) { ASSERT (MONGOOSE_GETMATCH(v[2]) == v[0]); }
+                else            { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
             }
             else
             {
-                if (v[1] != -1) { assert(MONGOOSE_GETMATCH(v[1]) == v[0]); }
-                else            { assert(MONGOOSE_GETMATCH(v[0]) == v[0]); }
+                if (v[1] != -1) { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
+                else            { ASSERT (MONGOOSE_GETMATCH(v[0]) == v[0]); }
             }
         }
     }
@@ -282,7 +287,7 @@ void matching_DavisPA(Graph *G, Options *O)
             if (MONGOOSE_IS_MATCHED(k)) continue;
             for (Int p = Gp[k]; p < Gp[k+1]; p++)
             {
-                assert(MONGOOSE_IS_MATCHED(Gi[p]));
+                ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
             }
         }
     }
@@ -329,7 +334,7 @@ void matching_DavisPA(Graph *G, Options *O)
 
     /* Save the # of coarse nodes. */
     G->cn = cn;
-    assert(cn < n);
+    ASSERT (cn < n);
 }
 
 //-----------------------------------------------------------------------------
@@ -394,7 +399,7 @@ void matching_HEM(Graph *G, Options *O)
             /* Check condition 2 */
             for (Int p = Gp[k]; p < Gp[k + 1]; p++)
             {
-                assert(matching[Gi[p]]);
+                ASSERT (matching[Gi[p]]);
             }
         }
     }
@@ -403,7 +408,8 @@ void matching_HEM(Graph *G, Options *O)
 //-----------------------------------------------------------------------------
 // This is a label propagation strategy
 //-----------------------------------------------------------------------------
-/*
+
+#if 0
 void matching_LabelProp(Graph *G, Options *O)
 {
     Int n = G->n;
@@ -473,10 +479,11 @@ void matching_LabelProp(Graph *G, Options *O)
             // Check condition 2
             for (Int p = Gp[k]; p < Gp[k+1]; p++)
             {
-                assert(matching[Gi[p]]);
+                ASSERT (matching[Gi[p]]);
             }
         }
     }
 }
-*/
+#endif
+
 } // end namespace Mongoose

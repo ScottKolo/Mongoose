@@ -12,8 +12,11 @@
    x_i (lambda) increases. Hence, the only bound variables that can become
    free are those with x_i (lambda) <= 0 */
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_QPNapDown.hpp"
 #include "Mongoose_QPMaxHeap.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -42,14 +45,14 @@ Double QPnapdown            /* return lambda */
 
     n_bound = 0;
     n_free = 0;
-    asum = MONGOOSE_ZERO;
-    a2sum = MONGOOSE_ZERO;
+    asum = 0.;
+    a2sum = 0.;
     if (a == NULL)
     {
         for (i = 0; i < n; i++)
         {
             xi = x[i] - lambda;
-            if (xi < MONGOOSE_ZERO)
+            if (xi < 0.)
             {
                 n_bound++;
                 bound_heap[n_bound] = i;
@@ -57,11 +60,11 @@ Double QPnapdown            /* return lambda */
                 maxbound = MONGOOSE_MAX2(maxbound, t);
                 breakpts[i] = t;
             }
-            else if (xi < MONGOOSE_ONE)
+            else if (xi < 1.)
             {
                 n_free++;
                 free_heap[n_free] = i;
-                t = x[i] - MONGOOSE_ONE;
+                t = x[i] - 1.;
                 asum += x[i];
                 a2sum++;
                 maxfree = MONGOOSE_MAX2(maxfree, t);
@@ -77,7 +80,7 @@ Double QPnapdown            /* return lambda */
         {
             ai = a[i];
             xi = x[i] - ai * lambda;
-            if (xi < MONGOOSE_ZERO)
+            if (xi < 0.)
             {
                 n_bound++;
                 bound_heap[n_bound] = i;
@@ -85,11 +88,11 @@ Double QPnapdown            /* return lambda */
                 maxbound = MONGOOSE_MAX2(maxbound, t);
                 breakpts[i] = t;
             }
-            else if (xi < MONGOOSE_ONE)
+            else if (xi < 1.)
             {
                 n_free++;
                 free_heap[n_free] = i;
-                t = (x[i] - MONGOOSE_ONE) / ai;
+                t = (x[i] - 1.) / ai;
                 asum += x[i] * ai;
                 a2sum += ai * ai;
                 maxfree = MONGOOSE_MAX2(maxfree, t);
@@ -112,7 +115,7 @@ Double QPnapdown            /* return lambda */
         s = asum - new_break * a2sum;
         if ((s >= b) || (new_break == -INFINITY)) /* done */
         {
-            if (a2sum != MONGOOSE_ZERO) lambda = (asum - b) / a2sum;
+            if (a2sum != 0.) lambda = (asum - b) / a2sum;
             return lambda;
         }
         lambda = new_break;
@@ -134,7 +137,7 @@ Double QPnapdown            /* return lambda */
                 while (breakpts[e = free_heap[1]] >= lambda)
                 {
                     a2sum--;
-                    asum = asum + (MONGOOSE_ONE - x[e]);
+                    asum = asum + (1. - x[e]);
 
                     n_free = QPmaxheap_delete(free_heap, n_free, breakpts);
                     if (n_free == 0)
@@ -147,12 +150,12 @@ Double QPnapdown            /* return lambda */
                 {
                     ai = a[e];
                     a2sum -= ai * ai;
-                    asum = asum + ai * (MONGOOSE_ONE - x[e]);
+                    asum = asum + ai * (1. - x[e]);
 
                     n_free = QPmaxheap_delete(free_heap, n_free, breakpts);
                     if (n_free == 0)
                     {
-                        a2sum = MONGOOSE_ZERO;
+                        a2sum = 0.;
                         break;
                     }
                 }
@@ -168,7 +171,7 @@ Double QPnapdown            /* return lambda */
                     n_bound = QPmaxheap_delete(bound_heap, n_bound, breakpts);
                     a2sum++;
                     asum = asum + x[e];
-                    t = x[e] - MONGOOSE_ONE;
+                    t = x[e] - 1.;
                     breakpts[e] = t;
                     n_free = QPmaxheap_add(e, free_heap, breakpts, n_free);
                     if (n_bound == 0)
@@ -183,7 +186,7 @@ Double QPnapdown            /* return lambda */
                     ai = a[e];
                     a2sum += ai * ai;
                     asum = asum + ai * x[e];
-                    t = (x[e] - MONGOOSE_ONE) / ai;
+                    t = (x[e] - 1.) / ai;
                     breakpts[e] = t;
                     n_free = QPmaxheap_add(e, free_heap, breakpts, n_free);
                     if (n_bound == 0)
@@ -201,8 +204,8 @@ Double QPnapdown            /* return lambda */
     }
 
     /* This should never happen */
-    assert(false);
-    lambda = MONGOOSE_ZERO;
+    ASSERT (false) ;
+    lambda = 0.;
     return lambda;
 }
 

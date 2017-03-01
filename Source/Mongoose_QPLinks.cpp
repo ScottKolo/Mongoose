@@ -1,6 +1,9 @@
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_QPLinks.hpp"
 #include "Mongoose_QPBoundary.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -36,7 +39,7 @@ void QPlinks
     LinkUp[n] = n;
     LinkDn[n] = n;
 
-    Double s = MONGOOSE_ZERO;
+    Double s = 0.;
 
     for (Int k = 0; k < n; k++)
     {
@@ -46,10 +49,9 @@ void QPlinks
     for (Int k = 0; k < n; k++)
     {
         Double xk = x[k];
-        // TODO:
         if (xk < 0. || xk > 1.)
         {
-            // return an error condition here
+            // TODO return an error condition here
         }
         // TODO do we also check a [k] > 0 ?
         s += a[k] * xk;
@@ -58,11 +60,11 @@ void QPlinks
         {
             grad[Ei[p]] += r * Ex[p];   // TODO allow Ex NULL (all 1s)
         }
-        if (xk >= MONGOOSE_ONE)
+        if (xk >= 1.)
         {
             FreeSet_status[k] = 1 ;
         }
-        else if (xk <= MONGOOSE_ZERO)
+        else if (xk <= 0.)
         {
             FreeSet_status[k] = -1 ;
         }
@@ -83,14 +85,15 @@ void QPlinks
     QP->nFreeSet = nFreeSet;
     QP->b = s;
 
-    FreeSet_dump ("QPLinks:done", n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 1, x) ;
+    DEBUG (FreeSet_dump ("QPLinks:done",
+        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 1, x)) ;
 
     // make sure lo <= b <= hi holds, where b = a'*x and x is the input guess
     if (QP->b >= QP->hi)
     {
         // b starts at the upper bound.
         // adjust upper bound to ensure x is feasible
-        printf ("adjust hi from %g to b = %g\n", QP->hi, QP->b) ;
+        PR (("adjust hi from %g to b = %g\n", QP->hi, QP->b)) ;
         QP->hi = QP->b ;
         QP->ib = +1 ;
     }
@@ -98,7 +101,7 @@ void QPlinks
     {
         // b starts at the lower bound.
         // adjust lower bound to ensure x is feasible
-        printf ("adjust lo from %g to b = %g\n", QP->lo, QP->b) ;
+        PR (("adjust lo from %g to b = %g\n", QP->lo, QP->b)) ;
         QP->lo = QP->b ;
         QP->ib = -1 ;
     }
@@ -119,10 +122,10 @@ void QPlinks
 
     // ib is shorthand for these tests:
     Int ib = QP->ib ;
-    printf ("QPlinks: target "
+    PR (("QPlinks: target "
         "%g GW %g ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
         O->targetSplit, G->W, ib, QP->lo, QP->b, QP->hi,
-        (QP->b)-(QP->lo), (QP->hi)-(QP->b)) ;
+        (QP->b)-(QP->lo), (QP->hi)-(QP->b))) ;
     fflush (stdout) ;
     fflush (stderr) ;
     ASSERT (IMPLIES ((ib == -1), (QP->b == QP->lo))) ;          // b = lo

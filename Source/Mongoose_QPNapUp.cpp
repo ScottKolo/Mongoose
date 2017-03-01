@@ -12,8 +12,11 @@
    x_i (lambda) decreases. Hence, the only bound variables that can become
    free are those with x_i (lambda) >= 1 */
 
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_QPNapUp.hpp"
 #include "Mongoose_QPMinHeap.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -194,8 +197,8 @@ Double QPnapup      /* return lambda */
     }
 
     /* this should not happen */
-    assert(false);
-    lambda = MONGOOSE_ZERO;
+    ASSERT (false) ;
+    lambda = 0.;
     return lambda;
 }
 

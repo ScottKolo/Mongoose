@@ -1,6 +1,9 @@
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Sanitize.hpp"
 #include "Mongoose_Interop.hpp"
 #include <iostream>
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_Logger.hpp"
 
 using namespace std;
 
