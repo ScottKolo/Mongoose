@@ -261,7 +261,8 @@ Double QPgradproj
             return err;
         }
 
-        // HERE, lo <= a'y <= hi should hold
+#ifndef NDEBUG
+        // lo <= a'y <= hi should hold
         {
             Double aty = 0., atx = 0. ;
             for (Int j = 0 ; j < n ; j++)
@@ -290,6 +291,7 @@ Double QPgradproj
             ASSERT (lo-tol <= atx) ;
             ASSERT (atx <= hi+tol) ;
         }
+#endif
 
         Double t = 0.;
         for (Int k = 0; k < nc; k++)
