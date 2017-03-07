@@ -217,7 +217,7 @@ void partBFS
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
     G->markValue = markValue ;
 }
 
@@ -276,11 +276,11 @@ void findAllPseudoperipheralNodes
             }
         }
 
-        MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+        MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
     G->markValue = markValue ;
 
     *listsize = tail;
@@ -323,7 +323,7 @@ void pseudoperipheralGuess
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
     G->markValue = markValue ;
 
     /* Load the boundary heap. */

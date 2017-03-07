@@ -27,6 +27,10 @@ namespace Mongoose
 
 /* Type definitions */
 typedef long Int;
+#ifndef MAX_INT
+#define MAX_INT LONG_MAX
+#endif
+
 typedef double Weight;  /* Used for floating point edge & node weights */
 typedef double Double;  /* Used for floating point other calculations  */
 

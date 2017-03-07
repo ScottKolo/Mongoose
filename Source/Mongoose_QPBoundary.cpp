@@ -438,7 +438,7 @@ void QPboundary
         }
 
         // clear the marks from all the nodes
-        MONGOOSE_CLEAR_ALL_MARKS ;
+        MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
 
         DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
     }
@@ -725,7 +725,7 @@ void QPboundary
     QP->ib = ib;
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
     G->markValue = markValue ;
 
     DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b

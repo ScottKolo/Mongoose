@@ -223,4 +223,12 @@ Graph::~Graph()
     markValue = 1;
 }
 
+void resetMarkArray(Int *mark, Int n)
+{
+    for (Int i = 0; i < n; i++)
+    {
+        mark[i] = 0;
+    }
+}
+
 } // end namespace Mongoose

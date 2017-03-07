@@ -57,6 +57,13 @@ int main(int argn, char** argv)
     // Test Graph(n, nz) static constructor
     Graph *G2 = Graph::Create(10, 20);
 
+    Int *mark = G2->mark;
+    G2->markValue = LONG_MAX;
+    Int markValue = G2->markValue;
+    MONGOOSE_CLEAR_ALL_MARKS(G2->n);
+    G2->markValue = markValue ;
+    assert(G2->markValue == 1);
+
     cs *M1 = GraphToCSparse3(G2, false);
     assert(M1 != NULL);
     cs *M2 = GraphToCSparse3(G2, true);

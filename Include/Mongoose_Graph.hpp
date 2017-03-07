@@ -79,6 +79,8 @@ public:
     ~Graph();
 };
 
+void resetMarkArray(Int *mark, Int n);
+
 } // end namespace Mongoose
 
 /* Mongoose graph-related macros */
@@ -91,7 +93,7 @@ public:
 #endif
 
 #ifndef MONGOOSE_CLEAR_ALL_MARKS
-#define MONGOOSE_CLEAR_ALL_MARKS    (markValue++) ;
+#define MONGOOSE_CLEAR_ALL_MARKS(n)    if (++markValue < 0) { markValue = 1; resetMarkArray(mark, (n)); }
 #endif
 
 #endif

@@ -72,11 +72,13 @@ void improveCutUsingQP
     Double targetSplit = O->targetSplit ;
     if (tol < 0)
     {
+        // TODO SPK: Should this not return an error?
         // ensure tolerance is positive
         O->tolerance = tol = 0. ;
     }
     if (targetSplit <= 0 || targetSplit >= 1)
     {
+        // TODO SPK: Should this not return an error?
         // targetSplit is out range.  default is a 50/50 cut
         O->targetSplit = targetSplit = 0.5 ;
     }
@@ -152,7 +154,7 @@ void improveCutUsingQP
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(n) ;      // TODO: reset if int overflow
     G->markValue = markValue ;
 
     /* Free the QP structure */

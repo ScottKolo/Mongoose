@@ -201,7 +201,7 @@ void fmRefine_worker(Graph *G, Options *O)
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
 
     /* Re-add any vertices that were moved that are still on the boundary. */
     for (Int i = 0; i < head; i++)
@@ -214,7 +214,7 @@ void fmRefine_worker(Graph *G, Options *O)
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
     G->markValue = markValue ;
 
     /* Save the best cost back into the graph. */
