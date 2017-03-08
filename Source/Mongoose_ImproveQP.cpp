@@ -116,7 +116,8 @@ void improveCutUsingQP
             cost.cutCost -= 2 * gains[k];
             cost.W[oldPartition] -= Gw[k];
             cost.W[newPartition] += Gw[k];
-            cost.imbalance = O->targetSplit - cost.W[0] / G->W;
+            cost.imbalance = O->targetSplit -
+                MONGOOSE_MIN2 (cost.W[0], cost.W[1]) / G->W;
 
             Int bhVertexPosition = MONGOOSE_GET_BHINDEX(k);
 
