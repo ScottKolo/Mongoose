@@ -15,8 +15,22 @@ bool optionsAreValid(Options *options);
 /* The input must be a single connected component. */
 int ComputeEdgeSeparator(Graph *G, Options *O)
 {
-    /* Check inputs */
-    if (!G || !O) return EXIT_FAILURE;
+
+    // Check inputs
+    Options Odefault ;
+    if (!O)
+    {
+        return (EXIT_FAILURE) ;  // TODO remove this
+        // TODO:
+        // O = &Odefault ;
+        // set the default options in O
+    }
+    else
+    {
+        if (!optionsAreValid(O)) return (EXIT_FAILURE) ;
+    }
+
+    if (!G) return EXIT_FAILURE;
 
     /* Finish initialization */
     if (!initialize(G, O)) return EXIT_FAILURE;
@@ -142,12 +156,31 @@ bool initialize(Graph *graph, Options *options)
 
 bool optionsAreValid(Options *options)
 {
+    if (!options)
+    {
+        // TODO create a default set of options instead
+        // Error!
+        return (false) ;
+    }
     if (options->targetSplit < 0 || options->targetSplit > 1)
     {
         // Error!
+        return (false) ;
+    }
+    if (options->tolerance < 0)
+    {
+        // Error!
+        return (false) ;
     }
 
-    return true;
+    // TODO nuance: do this when reading options, but leave options as-is
+    if (options->targetSplit > 0.5)
+    {
+        // ensure target split is in the range 0 to 0.5
+        options->targetSplit = 1. - options->targetSplit ;
+    }
+
+    return (true) ;
 }
 
 } // end namespace Mongoose

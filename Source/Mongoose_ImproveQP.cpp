@@ -22,8 +22,8 @@ void improveCutUsingQP
     /* Unpack structure fields */
     Int n = G->n;
     Int *Gp = G->p;
-    Weight *Gx = G->x;
-    Weight *Gw = G->w;
+    Weight *Gx = G->x;              // edge weights
+    Weight *Gw = G->w;              // node weights
     Weight *gains = G->vertexGains;
     Int *externalDegree = G->externalDegree;
     Int *bhIndex = G->bhIndex;
@@ -36,16 +36,31 @@ void improveCutUsingQP
         return;
     }
 
-    Weight *D = QP->D;
+    // set the QP parameters
+    Double tol = O->tolerance ;
+    Double targetSplit = O->targetSplit ;
+
+    // ensure targetSplit and tolerance are valid.  These conditions were
+    // already checked on input to Mongoose, in optionsAreValid.
+    ASSERT (tol >= 0) ;
+    ASSERT (targetSplit >= 0 && targetSplit <= 0.5) ;
+
+    // QP upper and lower bounds.  targetSplit +/- tol is in the range 0 to 1,
+    // and then this factor is multiplied by the sum of all node weights (G->W)
+    // to get the QP lo and hi.
+    QP->lo = G->W * MONGOOSE_MAX2 (0., targetSplit - tol) ;
+    QP->hi = G->W * MONGOOSE_MIN2 (1., targetSplit + tol) ;
+    ASSERT (QP->lo <= QP->hi) ;
 
     /* Convert the guess from discrete to continuous. */
+    Weight *D = QP->D;
     Double *guess = QP->x;
     bool *partition = G->partition;
     for (Int k = 0; k < n; k++)
     {
         if (isInitial)
         {
-            guess[k] = 0.5;
+            guess[k] = targetSplit ;
         }
         else
         {
@@ -58,7 +73,6 @@ void improveCutUsingQP
                 guess[k] = MONGOOSE_IN_BOUNDARY(k) ? 0.25 : 0.0;
             }
         }
-
         Weight maxWeight = -INFINITY;
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
@@ -67,36 +81,12 @@ void improveCutUsingQP
         D[k] = maxWeight;
     }
 
-    // set the QP parameters, and fix if out of range
-    Double tol = O->tolerance ;
-    Double targetSplit = O->targetSplit ;
-    if (tol < 0)
-    {
-        // TODO SPK: Should this not return an error?
-        // ensure tolerance is positive
-        O->tolerance = tol = 0. ;
-    }
-    if (targetSplit <= 0 || targetSplit >= 1)
-    {
-        // TODO SPK: Should this not return an error?
-        // targetSplit is out range.  default is a 50/50 cut
-        O->targetSplit = targetSplit = 0.5 ;
-    }
-    if (targetSplit > 0.5)
-    {
-        // TODO this is wrong ... !
-        // targetSplit can be 0.7 for example, and this is not the
-        // same as 0.3.
-        // ensure targetSplit is in the range 0 to 0.5, but only to
-        // compute lo and hi.  Do not update O->targetSplit.
-        targetSplit = 1. - targetSplit ;
-    }
-    QP->lo = G->W * (targetSplit - tol) ;
-    QP->hi = G->W * ((1. - targetSplit) + tol) ;
-    ASSERT (QP->lo <= QP->hi) ;
+    // lo <= a'x <= hi might not hold here
 
     // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi
     QPlinks(G, O, QP);
+
+    // lo <= a'x <= hi now holds (lo and hi are modified as needed in QPLinks)
 
     /* Do one run of gradient projection. */
     QPgradproj(G, O, QP);

@@ -89,6 +89,7 @@ void QPlinks
         n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 1, x)) ;
 
     // make sure lo <= b <= hi holds, where b = a'*x and x is the input guess
+    // TODO call napsack instead?
     if (QP->b >= QP->hi)
     {
         // b starts at the upper bound.
@@ -110,12 +111,6 @@ void QPlinks
         // b starts between: lo < b < hi
         QP->ib = 0 ;
     }
-
-//  Double lo = G->W *
-//              (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-//  Double hi = G->W *
-//              (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-//  QP->ib = (s <= lo ? -1 : s < hi ? 0 : 1);
 
     // for debugging only
     QP->check_cost = INFINITY ;

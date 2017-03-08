@@ -63,6 +63,7 @@ void bhLoad
     G->cutCost = cost.cutCost;
     G->W0 = cost.W[0];
     G->W1 = cost.W[1];
+    ASSERT (G->W0 <= G->W1) ;
     G->imbalance = O->targetSplit - G->W0 / G->W;
     G->heuCost = (G->cutCost + (fabs(G->imbalance) > O->tolerance
                                 ? fabs(G->imbalance) * G->H
