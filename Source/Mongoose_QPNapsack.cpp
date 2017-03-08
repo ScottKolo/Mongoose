@@ -305,7 +305,19 @@ Double QPnapsack        /* return the final lambda */
         {
             Double xi = x[k];
             // TODO: Rewrite nested ternary operator
-            x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
+            if (xi < 0)
+            {
+                x[k] = 0;
+            }
+            else if (xi > 1)
+            {
+                x[k] = 1;
+            }
+            else
+            {
+                x[k] = xi;
+            }
+            //x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
         }
         checkatx (x, Gw, n, lo, hi) ;
     }
@@ -315,7 +327,19 @@ Double QPnapsack        /* return the final lambda */
         {
             Double xi = x[k] - Gw[k] * lambda;
             // TODO: Rewrite nested ternary operator
-            x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
+            if (xi < 0)
+            {
+                x[k] = 0;
+            }
+            else if (xi > 1)
+            {
+                x[k] = 1;
+            }
+            else
+            {
+                x[k] = xi;
+            }
+            //x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
         }
         checkatx (x, Gw, n, lo, hi) ;
     }
