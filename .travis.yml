@@ -81,6 +81,28 @@ matrix:
     after_success:
       - cppcheck --enable=all --error-exitcode=1 --project=compile_commands.json
 
+  # Debug Assertion build
+  - os: linux
+    compiler: gcc
+    env:
+      - CXX=g++-6
+      - CC=gcc-6
+      - SPECIAL=assertions
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - george-edison55-precise-backports
+        packages:
+        - cmake
+        - cmake-data
+        - gcc-6
+        - g++-6
+    before_script:
+      - export CXX=g++-6
+      - export CC=gcc-6
+      - sed 's:// #undef NDEBUG:#undef NDEBUG:' <./Include/Mongoose_Debug.hpp >./Include/Mongoose_Debug.hpp
+
   # Linux GCC 6 build
   - os: linux
     compiler: gcc
