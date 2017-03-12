@@ -23,7 +23,7 @@ function comparisonData = compare(plot_outliers)
                             'problem_nnz', [], ...
                             'problem_n', []);
     for i = 1:length(index.nrows)
-        if (index.isReal(i))
+        if (index.isReal(i) && index.nnz(i) < 7E8)
             Prob = UFget(i);
             A = Prob.A;
             
