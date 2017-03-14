@@ -90,6 +90,7 @@ void QPlinks
 
     // make sure lo <= b <= hi holds, where b = a'*x and x is the input guess
     // TODO call napsack instead?
+    /*
     if (QP->b >= QP->hi)
     {
         // b starts at the upper bound.
@@ -111,6 +112,10 @@ void QPlinks
         // b starts between: lo < b < hi
         QP->ib = 0 ;
     }
+     */
+    // b starts between: lo < b < hi
+    QP->ib = (s <= QP->lo ? -1 : s < QP->hi ? 0 : 1);
+
 
     // for debugging only
     QP->check_cost = INFINITY ;
@@ -123,10 +128,10 @@ void QPlinks
         (QP->b)-(QP->lo), (QP->hi)-(QP->b))) ;
     fflush (stdout) ;
     fflush (stderr) ;
-    ASSERT (IMPLIES ((ib == -1), (QP->b == QP->lo))) ;          // b = lo
-    ASSERT ((ib == 0) == (QP->lo < QP->b && QP->b < QP->hi)) ;  // lo < b <hi
-    ASSERT (IMPLIES ((ib == +1), (QP->b == QP->hi))) ;          // b = hi
-    ASSERT ((QP->lo <= QP->b && QP->b <= QP->hi)) ;             // x feasible
+    //ASSERT (IMPLIES ((ib == -1), (QP->b == QP->lo))) ;          // b = lo
+    //ASSERT ((ib == 0) == (QP->lo < QP->b && QP->b < QP->hi)) ;  // lo < b <hi
+    //ASSERT (IMPLIES ((ib == +1), (QP->b == QP->hi))) ;          // b = hi
+    //ASSERT ((QP->lo <= QP->b && QP->b <= QP->hi)) ;             // x feasible
 }
 
 } // end namespace Mongoose
