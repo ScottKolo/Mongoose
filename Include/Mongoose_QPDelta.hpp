@@ -36,6 +36,7 @@ public:
     Double b;               // b = a'*x
 
     Double check_cost ;     // for debugging only
+    Double lambda;
 
     static QPDelta *Create(Int n);
     ~QPDelta();

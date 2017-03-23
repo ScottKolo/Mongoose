@@ -31,8 +31,8 @@ Options* Options::Create()
         ret->fmConsiderCount = 3;
         ret->fmMaxNumRefinements = 20;
 
-        ret->useQPGradProj = false;//true;
-        ret->useQPBallOpt = false;//true;
+        ret->useQPGradProj = true;
+        ret->useQPBallOpt = true;
         ret->gradprojTol = 0.001;
         ret->gradprojIterationLimit = 50;
 

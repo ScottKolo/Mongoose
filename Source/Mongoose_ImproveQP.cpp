@@ -4,6 +4,7 @@
 #include "Mongoose_ImproveFM.hpp"
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
+#include "Mongoose_QPNapsack.hpp"
 
 namespace Mongoose
 {
@@ -37,20 +38,20 @@ void improveCutUsingQP
     }
 
     // set the QP parameters
-    Double tol = O->tolerance ;
-    Double targetSplit = O->targetSplit ;
+    Double tol = O->tolerance;
+    Double targetSplit = O->targetSplit;
 
     // ensure targetSplit and tolerance are valid.  These conditions were
     // already checked on input to Mongoose, in optionsAreValid.
-    ASSERT (tol >= 0) ;
-    ASSERT (targetSplit >= 0 && targetSplit <= 0.5) ;
+    ASSERT (tol >= 0);
+    ASSERT (targetSplit >= 0 && targetSplit <= 0.5);
 
     // QP upper and lower bounds.  targetSplit +/- tol is in the range 0 to 1,
     // and then this factor is multiplied by the sum of all node weights (G->W)
     // to get the QP lo and hi.
-    QP->lo = G->W * MONGOOSE_MAX2 (0., targetSplit - tol) ;
-    QP->hi = G->W * MONGOOSE_MIN2 (1., targetSplit + tol) ;
-    ASSERT (QP->lo <= QP->hi) ;
+    QP->lo = G->W * MONGOOSE_MAX2 (0., targetSplit - tol);
+    QP->hi = G->W * MONGOOSE_MIN2 (1., targetSplit + tol);
+    ASSERT (QP->lo <= QP->hi);
 
     /* Convert the guess from discrete to continuous. */
     Weight *D = QP->D;
@@ -60,7 +61,7 @@ void improveCutUsingQP
     {
         if (isInitial)
         {
-            guess[k] = targetSplit ;
+            guess[k] = targetSplit;
         }
         else
         {
@@ -82,6 +83,14 @@ void improveCutUsingQP
     }
 
     // lo <= a'x <= hi might not hold here
+
+    QP->lambda = 0;
+    if (QP->b < QP->lo || QP->b > QP->hi)
+    {
+        QP->lambda = QPnapsack(guess, n, QP->lo, QP->hi, G->w, QP->lambda,
+                               QP->FreeSet_status,
+                               QP->wx[1], QP->wi[0], QP->wi[1]);
+    }
 
     // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi
     QPlinks(G, O, QP);

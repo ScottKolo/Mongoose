@@ -111,7 +111,8 @@ Double QPgradproj
 
     /* compute error, take step along projected gradient */
     Int ib = 0;             /* initialize ib so that lo < b < hi */
-    Double lambda = 0.;
+    //Double lambda = 0.;
+    Double lambda = QP->lambda;
     Int it = 0;
     Double err = INFINITY;
 
