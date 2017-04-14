@@ -128,10 +128,11 @@ void QPlinks
         (QP->b)-(QP->lo), (QP->hi)-(QP->b))) ;
     fflush (stdout) ;
     fflush (stderr) ;
-    //ASSERT (IMPLIES ((ib == -1), (QP->b == QP->lo))) ;          // b = lo
-    //ASSERT ((ib == 0) == (QP->lo < QP->b && QP->b < QP->hi)) ;  // lo < b <hi
-    //ASSERT (IMPLIES ((ib == +1), (QP->b == QP->hi))) ;          // b = hi
-    //ASSERT ((QP->lo <= QP->b && QP->b <= QP->hi)) ;             // x feasible
+    double eps = 1E-8;
+    ASSERT (IMPLIES ((ib == -1), ( fabs(QP->b - QP->lo) < eps ))) ;  // b = lo
+    ASSERT (IMPLIES ((ib ==  0), ( (QP->lo < (QP->b + eps)) && (QP->b < (QP->hi + eps))))) ; // lo < b <hi
+    ASSERT (IMPLIES ((ib == +1), ( fabs(QP->b - QP->hi) < eps ))) ;  // b = hi
+    ASSERT ((QP->lo <= (QP->b + eps) && QP->b <= (QP->hi + eps) )) ; // x feasible
 }
 
 } // end namespace Mongoose
