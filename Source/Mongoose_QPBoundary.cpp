@@ -34,6 +34,8 @@
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 
+#define EMPTY (-1)
+
 namespace Mongoose
 {
 
@@ -53,12 +55,13 @@ void QPboundary
 
     //--- FreeSet
     Int nFreeSet = QP->nFreeSet;
-    Int *LinkUp = QP->LinkUp;   /* linked list for free indices */
-    Int *LinkDn = QP->LinkDn;   /* linked list, LinkDn [LinkUp [i] = i */
+    Int *FreeSet_list = QP->FreeSet_list;   /* list for free indices */
     Int *FreeSet_status = QP->FreeSet_status; 
         /* FreeSet_status [i] = +1, -1, or 0 
            if x_i = 1, 0, or 0 < x_i < 1 */
     //---
+
+    PR (("Mongoose_QPBoundary nFreeSet %ld\n", nFreeSet)) ;
 
     if (nFreeSet == 0)
     {
@@ -101,81 +104,105 @@ void QPboundary
     /* ---------------------------------------------------------------------- */
 
     DEBUG (FreeSet_dump ("QPBoundary start",
-        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+        n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
     PR (("Boundary 1 start: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
         ib, lo, b, hi, b-lo, hi-b)) ;
 
-    // for each k in the FreeSet, but exit the loop when ib becomes nonzero:
-    for (Int k = LinkUp[n]; (k < n) && (ib == 0) ; k = LinkUp[k])
+    Int kfree2 = 0 ;
+    for (Int kfree = 0 ; kfree < nFreeSet ; kfree++)
     {
-        Double s, ak = a[k];
-        Int new_FreeSet_status_k = 0 ;
-        if (grad[k] > 0.0) /* decrease x_k */
-        {
-            s = (b - lo) / ak;
-            if (s < x[k])  /* lo is reached */
-            {
-                ib = -1 ;
-                b = lo ;
-                x[k] -= s ;
-            }
-            else          /* lo not reached */
-            {
-                s = x[k] ;
-                x[k] = 0. ;
-                new_FreeSet_status_k = -1 ;
-            }
-        }
-        else /* increase x_k */
-        {
-            s = (b - hi) / ak;
-            if (s < x[k] - 1.) /* hi not reached */
-            {
-                s = x[k] - 1. ;
-                x[k] = 1. ;
-                new_FreeSet_status_k = +1 ;
-            }
-            else /* hi is reached */
-            {
-                ib = +1 ;
-                b = hi ;
-                x[k] -= s ;
-            }
-        }
+        // Once b becomes bounded, the remainder of the FreeSet is unchanged,
+        // and no further changes are made to x.  However, this loop must still
+        // continue, so as to compact the FreeSet from deletions made by earlier
+        // iterations.
 
-        if (ib == 0) /* x_k hits boundary */
+        // get the next k from the FreeSet
+        Int k = FreeSet_list [kfree] ;
+
+        PR (("Step 1: k %ld  x[k] %g  ib %ld b %g\n", k, x [k], ib, b)) ;
+
+        // only modify x[k] if ib == 0 (which means lo < b < hi)
+        if (ib == 0)
         {
-            //--- remove k from FreeSet and update its status
-            ASSERT(FreeSet_status [k] == 0) ;
-            FreeSet_status[k] = new_FreeSet_status_k ;
-            ASSERT(FreeSet_status [k] != 0) ;
-            nFreeSet--;
-            Int h = LinkUp[k];
-            Int g = LinkDn[k];
-            LinkUp[g] = h;
-            LinkDn[h] = g;
-            DEBUG (FreeSet_dump ("QPBoundary:0", n, LinkUp, LinkDn,
-                nFreeSet, FreeSet_status, 0, x)) ;
-            //---
-            b -= s * ak ;
+            Double delta_xk ;
+            Double ak = a [k] ;
+            if (grad [k] > 0.0)
+            {
+                // decrease x [k]
+                delta_xk = (b - lo) / ak ;      // note that delta_xk > 0
+                if (delta_xk < x [k])
+                {
+                    // x [k] decreases by delta_xk but does not hit zero
+                    // b hits the lower bound, lo
+                    ib = -1 ;
+                    b = lo ;
+                    x [k] -= delta_xk ;
+                    //--- keep k in the FreeSet
+                    FreeSet_list [kfree2++] = k ;
+                }
+                else 
+                {
+                    // x [k] hits lower bound of zero
+                    // b does not hit lo; still between lower and upper bound 
+                    delta_xk = x [k] ;
+                    x [k] = 0. ;
+                    FreeSet_status [k] = -1 ;
+                    b -= delta_xk * ak ;
+                    //--- remove k from the FreeSet by not incrementing kfree2
+                }
+            }
+            else
+            {
+                // increase x [k]
+                delta_xk = (b - hi) / ak;       // note that delta_xk < 0
+                if (delta_xk < x [k] - 1.)
+                {
+                    // x [k] hits upper bound of one
+                    // b does not reach hi; still between lower and upper bound 
+                    delta_xk = x [k] - 1. ;
+                    x [k] = 1. ;
+                    FreeSet_status [k] = +1 ;
+                    b -= delta_xk * ak ;
+                    //--- remove k from the FreeSet by not incrementing kfree2
+                }
+                else
+                {
+                    // x [k] increases by -delta_xk but does not hit one
+                    // b hits the upper bound, hi.
+                    ib = +1 ;
+                    b = hi ;
+                    x [k] -= delta_xk ;
+                    //--- keep k in the FreeSet
+                    FreeSet_list [kfree2++] = k ;
+                }
+            }
+            // x [k] has dropped by delta_xk, so update the gradient
+            for (Int p = Ep [k] ; p < Ep [k+1] ; p++)
+            {
+                grad [Ei [p]] += delta_xk * Ex [p] ;
+            }
+            grad [k] += delta_xk * D [k] ;
         }
-
-        for (Int p = Ep[k]; p < Ep[k+1]; p++)
+        else
         {
-            grad[Ei[p]] += s * Ex[p]; // TODO allow Ex NULL (means all 1's)
+            // b is at lo or hi and thus x [k] is not changed.
+            // Once this happens, the remainder of this loop does this next
+            // step only, and no further changes are made to x and the FreeSet.
+            //--- keep k in the FreeSet
+            FreeSet_list [kfree2++] = k ;
         }
-
-        grad[k] += s * D[k];
-
-        PR (("Boundary 1: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
-            ib, lo, b, hi, b-lo, hi-b)) ;
-        DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
     }
+
+    // update the size of the FreeSet, after pruning
+    nFreeSet = kfree2 ;
 
     /* ---------------------------------------------------------------------- */
     /* Step 2. Examine flips of x_k from 0 to 1 or from 1 to 0 */
     /* ---------------------------------------------------------------------- */
+
+    // TODO: can we keep a list of the bound values of x [k]?
+    // If so, then this next loop would take O(nbound) time.
 
     PR (("Boundary step 2:\n")) ;
 
@@ -188,12 +215,11 @@ void QPboundary
             continue;
         }
 
-        // k not in FreeSet, so no changes here to LinkUp, LinkDn, or nFreeSet
+        // k not in FreeSet, so no changes here to FreeSet
 
         Double ak = a[k];
         if (FreeSet_status_k > 0) /* try changing x_k from 1 to 0 */
         {
-            ASSERT (x [k] == 1.) ;
             if (b - ak >= lo)
             {
                 if (0.5 * D[k] + grad[k] >= 0) /* flip lowers cost */
@@ -207,7 +233,6 @@ void QPboundary
         }
         else /* try changing x_k from 0 to 1 */
         {
-            ASSERT (x [k] == 0.) ;
             if (b + ak <= hi)
             {
                 if (grad[k] - 0.5 * D[k] <= 0) /* flip lowers cost */
@@ -264,12 +289,22 @@ void QPboundary
     // look for where both i and j are in the FreeSet,
     // but i and j are not adjacent in the graph G.
 
-    DEBUG (FreeSet_dump ("step 3", n, LinkUp, LinkDn, nFreeSet,
-        FreeSet_status, 0, x)) ;
+    DEBUG (FreeSet_dump ("step 3",
+        n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
-    // for each j in FreeSet, and while |FreeSet| > 1:
-    for (Int j = LinkUp[n]; (j < n) && (nFreeSet > 1) ; j = LinkUp[j])
+    // for each j in FreeSet, except for the last one
+    for (Int jfree = 0 ; jfree < nFreeSet - 1 ; jfree++)
     {
+
+        // get j from the FreeSet
+        Int j = FreeSet_list [jfree] ;
+        if (j == EMPTY)
+        {
+            // j has already been deleted, skip it
+            continue ;
+        }
+
+#if 0
         // TODO merge this loop with the next one.  Clear marks if continue.
         // count how many neighbors of j are free
         Int m = 1;                                  // (including j itself)
@@ -281,9 +316,10 @@ void QPboundary
         }
         // do not consider j if all its neighbors are in the FreeSet
         if (m == nFreeSet) continue;
+#endif
 
         /* -------------------------------------------------------------- */
-        /* otherwise there exist i and j free with a_{ij} = 0, scatter Ei */
+        /* find i and j both free and where a_{ij} = 0 */
         /* -------------------------------------------------------------- */
 
         // mark all nodes i adjacent to j in the FreeSet
@@ -295,9 +331,18 @@ void QPboundary
         }
         MONGOOSE_MARK(j);
 
-        // for each i in FreeSet:
-        for (Int i = LinkUp[n]; i < n ; i = LinkUp[i])
+        // for each i that follows after j in the FreeSet
+        for (Int ifree = jfree + 1 ; ifree < nFreeSet ; ifree++)
         {
+
+            // get i from the FreeSet
+            Int i = FreeSet_list [ifree] ;
+            if (i == EMPTY)
+            {
+                // i has already been deleted it; skip it
+                continue ;
+            }
+
             if (!MONGOOSE_MARKED(i))
             {
                 // node i is not adjacent to j in the graph G 
@@ -400,39 +445,29 @@ void QPboundary
 
                 if (bind1)
                 {
-                    // remove j from the FreeSet
-                    DEBUG (FreeSet_dump ("QPBoundary:1 before",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, NULL)) ;
-                    ASSERT(FreeSet_status [j] == 0) ;
+                    // remove j from the FreeSet by setting its place to EMPTY
+                    PR (("(b1):remove j = %ld from the FreeSet\n", j)) ;
+                    ASSERT (j == FreeSet_list [jfree]) ;
+                    ASSERT (FreeSet_status [j] == 0) ;
+                    FreeSet_list [jfree] = EMPTY ;
                     FreeSet_status [j] = new_FreeSet_status ;
-                    ASSERT(FreeSet_status [j] != 0) ;
-                    nFreeSet--;
-                    Int h = LinkUp[j];
-                    Int g = LinkDn[j];
-                    LinkUp[g] = h;
-                    LinkDn[h] = g;
-                    DEBUG (FreeSet_dump ("QPBoundary:1", n, LinkUp, LinkDn,
-                        nFreeSet, FreeSet_status, 0, x)) ;
+                    ASSERT (FreeSet_status [j] != 0) ;
                     //---
-                    break;
+                    // no longer consider j, so skip all of remainder of i loop
+                    break ;
                 }
                 else
                 {
-                    // remove i from the FreeSet
-                    DEBUG (FreeSet_dump ("QPBoundary:2 before",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, NULL)) ;
-                    ASSERT(FreeSet_status [i] == 0) ;
+                    // remove i from the FreeSet by setting its place to EMPTY
+                    PR (("(b2):remove i = %ld from the FreeSet\n", i)) ;
+                    ASSERT (i == FreeSet_list [ifree]) ;
+                    ASSERT (FreeSet_status [i] == 0) ;
+                    FreeSet_list [ifree] = EMPTY ;
                     FreeSet_status [i] = new_FreeSet_status ;
-                    ASSERT(FreeSet_status [i] != 0) ;
-                    nFreeSet--;
-                    Int h = LinkUp[i];
-                    Int g = LinkDn[i];
-                    LinkUp[g] = h;
-                    LinkDn[h] = g;
-                    DEBUG (FreeSet_dump ("QPBoundary:2", n, LinkUp, LinkDn,
-                        nFreeSet, FreeSet_status, 0, x)) ;
+                    ASSERT (FreeSet_status [i] != 0) ;
                     //---
-                    continue;
+                    // keep j, and consider it with the next i
+                    continue ;
                 }
             }
         }
@@ -440,26 +475,44 @@ void QPboundary
         // clear the marks from all the nodes
         MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
 
-        DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
     }
+
+    // remove deleted nodes from the FreeSet
+    kfree2 = 0 ;
+    for (Int kfree = 0 ; kfree < nFreeSet ; kfree++)
+    {
+        Int k = FreeSet_list [kfree] ;
+        if (k != EMPTY)
+        {
+            // keep k in the FreeSet
+            FreeSet_list [kfree2++] = k ;
+            ASSERT (0 <= k && k < n) ;
+            ASSERT (FreeSet_status [k] == 0) ;
+        }
+    }
+    nFreeSet = kfree2 ;
+
+    DEBUG (FreeSet_dump ("step 3 done",
+        n, FreeSet_list, nFreeSet, FreeSet_status, 1, x)) ;
+
+    DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
 
 #ifndef NDEBUG
     // the nodes in the FreeSet now form a single clique.  Check this.
-
-    ASSERT(nFreeSet >= 1) ;    // we can have 1 or more nodes still in FreeSet
-
     // this test is for debug mode only
-    for (Int j = LinkUp[n]; (j < n) ; j = LinkUp[j])
+    ASSERT(nFreeSet >= 1) ;    // we can have 1 or more nodes still in FreeSet
+    for (Int kfree = 0 ; kfree < nFreeSet ; kfree++)
     {
         // j must be adjacent to all other nodes in the FreeSet
+        Int j = FreeSet_list [kfree] ;
         Int nfree_neighbors = 0 ;
         for (Int p = Ep[j]; p < Ep[j+1]; p++)
         {
             Int i = Ei[p] ;
-            ASSERT(i != j) ;
+            ASSERT (i != j) ;
             if (FreeSet_status [i] == 0) nfree_neighbors++ ;
         }
-        ASSERT(nfree_neighbors == nFreeSet - 1) ;
+        ASSERT (nfree_neighbors == nFreeSet - 1) ;
     }
 #endif
 
@@ -467,18 +520,23 @@ void QPboundary
     /* Step 4. dxj = s/aj, dxi = -s/ai, choose s with g_j dxj + g_i dxi <= 0 */
     /* ---------------------------------------------------------------------- */
 
-    DEBUG (FreeSet_dump ("step 4", n, LinkUp, LinkDn, nFreeSet,
-        FreeSet_status, 0, x)) ;
+    DEBUG (FreeSet_dump ("step 4 starts",
+        n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
-    // for each j in the FreeSet:
-    for (Int j = LinkUp [n] ; j < n ; /* see below for next j */ )
+    // consider pairs of nodes in the FreeSet, until only one is left 
+    while (nFreeSet > 1)
     {
         /* free variables: 0 < x_j < 1 */
         /* choose s so that first derivative terms decrease */
 
-        // i is the next variable after j in the FreeSet
-        Int i = LinkUp[j];
-        if (i == n) break;  // TODO: if (i == EMPTY) break ;
+        // i and j are the last two nodes in the FreeSet_list, as in:
+        // FreeSet_list = [ .... i j ]
+        // at the end of this iteration, one will be deleted, thus becoming
+        // FreeSet_list = [ .... j ]
+        // or
+        // FreeSet_list = [ .... i ]
+        Int j = FreeSet_list [nFreeSet-1] ; ASSERT (FreeSet_status [j] == 0) ;
+        Int i = FreeSet_list [nFreeSet-2] ; ASSERT (FreeSet_status [i] == 0) ;
 
         Double ai = a[i];
         Double aj = a[j];
@@ -551,53 +609,43 @@ void QPboundary
         // both x[i] and x[j] to reach their bounds at the same time.  Only one
         // is removed from the FreeSet; the other will be removed later.
 
-        if (bind1) /* j is bound */
+        if (bind1)
         {
-            // remove j from the FreeSet
-            DEBUG (FreeSet_dump ("QPBoundary:3 before", n, LinkUp, LinkDn,
-                nFreeSet, FreeSet_status, 0, NULL)) ;
-            ASSERT(FreeSet_status [j] == 0) ;
+            // j is bound.
+            // remove j from the FreeSet, and keep i.  The FreeSet_list was
+            // FreeSet_list = [ .... i j ] becomes FreeSet_list = [ .... i ]
+            PR (("(b3):remove j = %ld from the FreeSet\n", j)) ;
+            ASSERT (FreeSet_status [j] == 0) ;
             FreeSet_status [j] = new_FreeSet_status ;
-            ASSERT(FreeSet_status [j] != 0) ;
-            nFreeSet--;
-            Int h = LinkUp[j];
-            Int g = LinkDn[j];
-            LinkUp[g] = h;
-            LinkDn[h] = g;
-            DEBUG (FreeSet_dump ("QPBoundary:3", n, LinkUp, LinkDn,
-                nFreeSet, FreeSet_status, 0, x)) ;
-            //---
-            // go to next j in the list
-            j = LinkUp [j] ;
+            ASSERT (FreeSet_status [j] != 0) ;
         }
-        else /* i is bound */
+        else
         {
-            // remove i from the FreeSet
-            DEBUG (FreeSet_dump ("QPBoundary:4 before", n, LinkUp, LinkDn,
-                nFreeSet, FreeSet_status, 0, NULL)) ;
-            ASSERT(FreeSet_status [i] == 0) ;
+            // i is bound.
+            // remove i from the FreeSet, and keep j.  The FreeSet_list was
+            // FreeSet_list = [ .... i j ] becomes FreeSet_list = [ .... j ]
+            PR (("(b4):remove i = %ld from the FreeSet\n", i)) ;
+            ASSERT (FreeSet_status [i] == 0) ;
             FreeSet_status [i] = new_FreeSet_status ;
-            ASSERT(FreeSet_status [i] != 0) ;
-            nFreeSet--;
-            Int h = LinkUp[i];
-            Int g = LinkDn[i];
-            LinkUp[g] = h;
-            LinkDn[h] = g;
-            DEBUG (FreeSet_dump ("QPBoundary:4", n, LinkUp, LinkDn,
-                nFreeSet, FreeSet_status, 0, x)) ;
-            //---
-            // j is still in the list and remains the same;
-            // do not advance to the next in the list
+            ASSERT (FreeSet_status [i] != 0) ;
+            // shift j down by one in the list, thus discarding j.
+            ASSERT (FreeSet_list [nFreeSet-2] == i) ;
+            FreeSet_list [nFreeSet-2] = j ;
         }
 
+        // one fewer node in the FreeSet (i or j removed)
+        nFreeSet--;
+
+        DEBUG (FreeSet_dump ("step 4", n, FreeSet_list, nFreeSet,
+            FreeSet_status, 0, x)) ;
         DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
     }
 
-    DEBUG (FreeSet_dump ("wrapup", n, LinkUp, LinkDn, nFreeSet,
+    DEBUG (FreeSet_dump ("wrapup", n, FreeSet_list, nFreeSet,
         FreeSet_status, 0, x)) ;
 
     /* ---------------------------------------------------------------------- */
-    /* step 5: single free variable remaining */
+    /* step 5: at most one free variable remaining */
     /* ---------------------------------------------------------------------- */
 
     ASSERT (nFreeSet == 0 || nFreeSet == 1) ;
@@ -608,8 +656,9 @@ void QPboundary
     if (nFreeSet == 1) /* j is free, optimize over x [j] */
     {
         // j is the first and only item in the FreeSet
-        Int j = LinkUp [n] ;
+        Int j = FreeSet_list [0] ;
         PR (("ONE AND ONLY!! j = %ld x[j] %g\n", j, x [j])) ;
+
         Int bind1 = 0;
         Double aj = a[j];
         Double dxj = (hi - b) / aj;
@@ -653,18 +702,11 @@ void QPboundary
                 b += dxj * aj ;
                 /// remove j from the FreeSet, which is now empty
                 PR (("(b5):remove j = %ld from FreeSet, now empty\n", j)) ;
-                DEBUG (FreeSet_dump ("QPBoundary:5 before", n, LinkUp, LinkDn,
-                    nFreeSet, FreeSet_status, 0, NULL)) ;
                 ASSERT(FreeSet_status [j] == 0) ;
                 FreeSet_status[j] = 1;
                 ASSERT(FreeSet_status [j] != 0) ;
                 nFreeSet--;
-                LinkUp[n] = n;
-                LinkDn[n] = n;
-                DEBUG (FreeSet_dump ("QPBoundary:5", n, LinkUp, LinkDn,
-                    nFreeSet, FreeSet_status, 0, x)) ;
                 ASSERT(nFreeSet == 0) ;
-                //--- 
             }
         }
         else /* x [j] += dxi */
@@ -684,18 +726,11 @@ void QPboundary
                 b += dxj * aj ;
                 /// remove j from the FreeSet, which is now empty
                 PR (("(b6):remove j = %ld from FreeSet, now empty\n", j)) ;
-                DEBUG (FreeSet_dump ("QPBoundary:6 before", n, LinkUp, LinkDn,
-                    nFreeSet, FreeSet_status, 0, NULL)) ;
                 ASSERT(FreeSet_status [j] == 0) ;
                 FreeSet_status[j] = -1;
                 ASSERT(FreeSet_status [j] != 0) ;
                 nFreeSet--;
-                LinkUp[n] = n;
-                LinkDn[n] = n;
-                DEBUG (FreeSet_dump ("QPBoundary:6", n, LinkUp, LinkDn,
-                    nFreeSet, FreeSet_status, 0, x)) ;
                 ASSERT(nFreeSet == 0) ;
-                //---
             }
         }
 
@@ -714,7 +749,7 @@ void QPboundary
     /* ---------------------------------------------------------------------- */
 
     PR (("QBboundary, done:\n")) ;
-    DEBUG (FreeSet_dump ("QPBoundary: done ", n, LinkUp, LinkDn,
+    DEBUG (FreeSet_dump ("QPBoundary: done ", n, FreeSet_list,
         nFreeSet, FreeSet_status, 0, x)) ;
     ASSERT (nFreeSet == 0 || nFreeSet == 1) ;
     PR (("Boundary done: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
@@ -725,7 +760,7 @@ void QPboundary
     QP->ib = ib;
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
     G->markValue = markValue ;
 
     DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b

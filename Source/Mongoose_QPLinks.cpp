@@ -28,16 +28,13 @@ void QPlinks
     /* working array */
     Double *D = QP->D;
     Int *FreeSet_status = QP->FreeSet_status;
-    Int *LinkUp = QP->LinkUp;
-    Int *LinkDn = QP->LinkDn;
+    Int *FreeSet_list = QP->FreeSet_list;
     Double *grad = QP->gradient;  /* gradient at current x */
 
     Int lastl = n;
 
     // FreeSet is empty
     Int nFreeSet = 0;
-    LinkUp[n] = n;
-    LinkDn[n] = n;
 
     Double s = 0.;
 
@@ -72,21 +69,16 @@ void QPlinks
         {
             // add k to the FreeSet
             FreeSet_status[k] = 0;
-            LinkUp[lastl] = k;
-            LinkDn[k] = lastl;
-            lastl = k;
-            nFreeSet++;
+            FreeSet_list [nFreeSet++] = k ;
             //---
         }
     }
 
-    LinkUp[lastl] = n;
-    LinkDn[n] = lastl;
     QP->nFreeSet = nFreeSet;
     QP->b = s;
 
     DEBUG (FreeSet_dump ("QPLinks:done",
-        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 1, x)) ;
+        n, FreeSet_list, nFreeSet, FreeSet_status, 1, x)) ;
 
     // make sure lo <= b <= hi holds, where b = a'*x and x is the input guess
     // TODO call napsack instead?

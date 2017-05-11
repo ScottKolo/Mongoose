@@ -14,8 +14,7 @@ public:
     // FreeSet:
     Int nFreeSet;          /* number of i such that 0 < x_i < 1               */
     Int *FreeSet_status;   /* ix_i = +1,-1, or 0 if x_i = 1,0, or 0 < x_i < 1 */
-    Int *LinkUp;           /* linked list for free indices                    */
-    Int *LinkDn;           /* linked list, LinkDn [LinkUp [i]] = i            */
+    Int *FreeSet_list;     /* list for free indices                    */
     //---
 
     Double *gradient;      /* gradient at current x                           */
@@ -25,6 +24,7 @@ public:
     Double hi ;
 
     // workspace
+    Int *Change_location ;
     Int *wi[2];
     Double *wx[3];
 

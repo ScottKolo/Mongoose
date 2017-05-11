@@ -86,7 +86,7 @@ void QPcheckCom
 ) ;
 
 void FreeSet_dump (const char *where,
-    Int n, Int *LinkUp, Int *LinkDn, Int nFreeSet, Int *FreeSet_status,
+    Int n, Int *FreeSet_list, Int nFreeSet, Int *FreeSet_status,
     Int verbose, Double *x) ;
 
 } // end namespace Mongoose

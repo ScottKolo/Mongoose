@@ -59,10 +59,9 @@ void QPcheckCom
 
     //--- FreeSet
 //  Int nFreeSet = QP->nFreeSet ;  /* number of i such that 0 < x_i < 1 */
-    Int *LinkUp = QP->LinkUp ; /* linked list for free indices */
-    Int *LinkDn = QP->LinkDn ; /* linked list, LinkDn [LinkUp [i] = i*/
+    Int *FreeSet_list = QP->FreeSet_list ; /* list for free indices */
     Int *FreeSet_status = QP->FreeSet_status ; 
-        /* FreeSet_status [i] = +1, -1, or 0 if x_i = 1, 0, or 0 < x_i < 1*/
+    /* FreeSet_status [i] = +1, -1, or 0 if x_i = 1, 0, or 0 < x_i < 1*/
     //---
 
     Double *x = QP->x ;/* current estimate of solution */
@@ -162,63 +161,44 @@ void QPcheckCom
             ERROR ;
         }
     }
+
+    PR (("i %ld nFreeSet %ld\n", i, nFreeSet)) ;
+
     if ( i != nFreeSet )
     {
         PR (("free indices in ix is %ld, nFreeSet = %ld\n", i, nFreeSet)) ;
         ERROR ;
     }
 
-    /* check that LinkUp is valid */
-
-    l = 0 ;
-    for (i = LinkUp [n]; i < n; i = LinkUp [j])
+    /* check that FreeSet is valid */
+    for (Int ifree = 0 ; ifree < nFreeSet ; ifree++)
     {
+        i = FreeSet_list [ifree] ;
         if ( (i < 0) || (i > n) )
         {
-            PR (("LinkUp [%ld] = %ld, out of range [0, %ld]\n", j, i, n)) ;
+            PR (("FreeSet_list [%ld] = %ld, out of range [0, %ld]\n",
+                ifree, i, n)) ;
             ERROR ;
         }
         if ( w0 [i] != 0 )
         {
-            PR (("LinkUp [%ld] = %ld, repeats\n", j, i)) ;
+            PR (("FreeSet_list [%ld] = %ld, repeats\n", ifree, i)) ;
             ERROR ;
         }
         if ( ix [i] != 0 )
         {
-            PR (("LinkUp [%ld] = %ld, however it is not free\n", j, i)) ;
+            PR (("FreeSet_list [%ld] = %ld, is not free\n", ifree, i)) ;
             ERROR ;
         }
         w0 [i] = 1 ;
-        j = i ;
-        l++ ;
     }
 
-    if ( l != nFreeSet )
+    for (Int ifree = 0 ; ifree < nFreeSet ; ifree++)
     {
-        PR (("free indices in LinkUp is %ld, nFreeSet = %ld\n", i, nFreeSet)) ;
-        ERROR ;
+        i = FreeSet_list [ifree] ;
+        w0 [i] = 0 ;
     }
 
-    if ( i != n )
-    {
-        PR (("LinkUp [%ld] = %ld, out of range [0, %ld]\n", j, i, n)) ;
-        ERROR ;
-    }
-
-    for (j = LinkUp [n]; j < n; j = LinkUp [j]) w0 [j] = 0 ;
-
-    /* check that LinkDn is valid */
-
-    j = n ;
-    for (i = LinkUp [n]; i < n; i = LinkUp [j])
-    {
-        if ( LinkDn [i] != j )
-        {
-            PR (("LinkDn [%ld] = %ld (!= %ld)\n", i, LinkDn [i], j)) ;
-            ERROR ;
-        }
-        j = i ;
-    }
 
     /* check that b is correct */
 
@@ -313,36 +293,35 @@ void QPcheckCom
 //------------------------------------------------------------------------------
 
 void FreeSet_dump (const char *where,
-    Int n, Int *LinkUp, Int *LinkDn, Int nFreeSet, Int *FreeSet_status,
+    Int n, Int *FreeSet_list, Int nFreeSet, Int *FreeSet_status,
     Int verbose, Double *x)
 {
-    Int j ;
     Int death = 0 ;
+
     if (verbose)
     {
         PR (("\ndump FreeSet (%s): nFreeSet %ld n %ld jfirst %ld\n",
-        where, nFreeSet, n, LinkUp [n])) ;
+        where, nFreeSet, n, (nFreeSet == 0) ? -1 : FreeSet_list [0])) ;
     }
-    for (Int j = LinkUp[n]; j < n ; j = LinkUp[j])
+
+    for (Int kfree = 0 ; kfree < nFreeSet ; kfree++)
     {
+        Int k = FreeSet_list [kfree] ;
         if (verbose)
         {
-            PR (("    j %3ld LinkUp[j] %3ld  LinkDn[j] %3ld ",
-            j, LinkUp [j], LinkDn [j])) ;
-            PR ((" FreeSet_status %3ld", FreeSet_status [j])) ;
-            if (x != NULL) PR ((" x: %g", x [j])) ;
+            PR (("    k %ld \n", k)) ;
+            ASSERT (k >= 0 && k < n) ;
+            PR ((" FreeSet_status %ld\n", FreeSet_status [k])) ;
+            ASSERT (FreeSet_status [k] == 0) ;
+            if (x != NULL) { PR ((" x: %g\n", x [k])) ; }
             PR (("\n")) ;
         }
-        death++ ;
-        if (death > (nFreeSet+5)) ASSERT(0) ;
     }
-    if (verbose) PR (("    in FreeSet: %ld %ld\n", death, nFreeSet)) ;
-    ASSERT(death == nFreeSet) ;
 
     Int nFree2 = 0 ;
     Int nHi = 0 ;
     Int nLo = 0 ;
-    for (j = 0 ; j < n ; j++)
+    for (Int j = 0 ; j < n ; j++)
     {
         FFLUSH ;
         if (FreeSet_status [j] == 0)
@@ -378,6 +357,7 @@ void FreeSet_dump (const char *where,
         PR (("ERROR nFree2 (%ld) nFreeSet %ld\n", nFree2, nFreeSet)) ;
         ASSERT (0) ;
     }
+    PR (("bye\n")) ;
 }
 #endif
 

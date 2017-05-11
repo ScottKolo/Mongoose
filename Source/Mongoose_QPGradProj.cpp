@@ -19,6 +19,8 @@
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 
+#define EMPTY (-1)
+
 namespace Mongoose
 {
 
@@ -65,12 +67,14 @@ Double QPgradproj
     /* ---------------------------------------------------------------------- */
     /* Unpack the relevant structures                                         */
     /* ---------------------------------------------------------------------- */
+
     Double tol = O->gradprojTol;
-    Double *wx1 = QP->wx[0];    /* Double work array, used in napsack and main program     */
-    Double *wx2 = QP->wx[1];    /* Double work array, used in napsack and as Dgrad in main */
-    Double *wx3 = QP->wx[2];    /* Double work array, used in main for y - x               */
-    Int *wi1 = QP->wi[0];       /* Integer work array, used in napsack and as C in main    */
-    Int *wi2 = QP->wi[1];       /* Integer work array, used in napsack                     */
+    Double *wx1 = QP->wx[0];    /* work array for napsack and here as y */
+    Double *wx2 = QP->wx[1];    /* work array for napsack and here as Dgrad */
+    Double *wx3 = QP->wx[2];    /* work array used here for d=y-x */
+    Int *wi1 = QP->wi[0];       /* work array for napsack
+                                   and here as Change_list */
+    Int *wi2 = QP->wi[1];       /* work array only for napsack */
 
     /* Output and Input */
     Double *x = QP->x;             /* current estimate of solution            */
@@ -78,10 +82,9 @@ Double QPgradproj
         /* FreeSet_status [i] = +1,-1, or 0 if x_i = 1,0, or 0 < x_i < 1 */
 
     Int nFreeSet = QP->nFreeSet;    /* number of i such that 0 < x_i < 1 */
-    Int *LinkUp = QP->LinkUp;      /* linked list for free indices            */
-    Int *LinkDn = QP->LinkDn;      /* linked list, LinkDn [LinkUp [i]] = i    */
+    Int *FreeSet_list = QP->FreeSet_list;     /* list of free indices */
 
-    Double *grad = QP->gradient;          /* gradient at current x                   */
+    Double *grad = QP->gradient;          /* gradient at current x */
 
     /* Unpack the problem's parameters. */
     Int n = G->n;                  /* problem dimension */
@@ -92,10 +95,6 @@ Double QPgradproj
 
     Double lo = QP->lo ;
     Double hi = QP->hi ;
-//  Double lo = G->W *
-//              (O->targetSplit <= 0.5 ? O->targetSplit : 1 - O->targetSplit);
-//  Double hi = G->W *
-//              (O->targetSplit >= 0.5 ? O->targetSplit : 1 - O->targetSplit);
 
     Double *D = QP->D; /* diagonal of quadratic */
 
@@ -107,7 +106,12 @@ Double QPgradproj
     Double *wx = wx2;
     Double *d = wx3;
     Double *Dgrad = wx;     /* gradient change       ; used in napsack as wx  */
-    Int *C = wi1;           /* components of x change; used in napsack as wi1 */
+
+    /* components of x change; used in napsack as wi1 */
+    Int *Change_list = wi1;
+
+    // TODO can Change_location use wi2?  I think so.
+    Int *Change_location = QP->Change_location ;
 
     /* compute error, take step along projected gradient */
     Int ib = 0;             /* initialize ib so that lo < b < hi */
@@ -117,14 +121,14 @@ Double QPgradproj
     Double err = INFINITY;
 
     DEBUG (FreeSet_dump ("QPGradProj: start",
-        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+        n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
     while (err > tol)
     {
 
         PR (("top of QPgrad while loop\n")) ;
         DEBUG (FreeSet_dump ("QPGradProj:0",
-            n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+            n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
         DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ;
 
         // check grad
@@ -176,7 +180,7 @@ Double QPgradproj
             saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
             DEBUG (QPcheckCom (G, O, QP, 1, QP->nFreeSet, QP->b)) ;
             DEBUG (FreeSet_dump ("QPGradProj exhausted",
-                n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+                n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
             PR (("------- QPGradProj end ]\n")) ;
             return err;
         }
@@ -188,12 +192,13 @@ Double QPgradproj
         for (Int k = 0; k < n; k++) Dgrad[k] = 0.;
 
         DEBUG (FreeSet_dump ("QPGradProj:1",
-            n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+            n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         // for each i in the FreeSet:
-        for (Int i = LinkUp[n]; i < n ; i = LinkUp[i])
+        for (Int ifree = 0 ; ifree < nFreeSet ; ifree++)
         {
             /* compute -(A+D)g_F */
+            Int i = FreeSet_list [ifree] ;
             Double s = grad[i];
             for (Int p = Ep[i]; p < Ep[i+1]; p++)
             {
@@ -206,15 +211,14 @@ Double QPgradproj
         Double st_den = 0.;
 
         DEBUG (FreeSet_dump ("QPGradProj:2",
-            n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+            n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
-        for (Int j = LinkUp[n]; j < n ; j = LinkUp[j])
+        for (Int jfree = 0 ; jfree < nFreeSet ; jfree++)
         {
+            Int j = FreeSet_list [jfree] ;
             st_num += grad[j] * grad[j];
             st_den += grad[j] * Dgrad[j];
         }
-
-        // PR (("ST_DEN %g\n", st_den)) ;
 
         /* st = g_F'g_F/-g_F'(A+D)g_F unless the denominator <= 0 */
         if (st_den > 0.)
@@ -230,16 +234,48 @@ Double QPgradproj
         Int nc = 0; /* number of changes (number of j for which y_j != x_j) */
         Weight s = 0.;
         for (Int j = 0; j < n; j++) Dgrad[j] = 0.;
-        for (Int j = 0; j < n; j++)
+
+        // consider nodes j in the FreeSet_list
+        for (Int jfree = 0 ; jfree < nFreeSet ; jfree++)
         {
+            Int j = FreeSet_list [jfree] ;
+            ASSERT (FreeSet_status [j] == 0) ;
             Double t = y[j] - x[j];
             if (t != 0.)
             {
-                // PR (("j %ld x[j] %g y[j] %g\n", j, x[j], y[j])) ;
+                // PR (("Change_list: we shall consider j %ld t %g\n", j, t)) ;
                 d[j] = t;
                 s += t * grad[j]; /* derivative in the direction y - x */
-                // PR (("C: we shall consider j %ld t %g\n", j, t)) ;
-                C[nc] = j;
+                // add j to the Change_list and keep track of its position
+                // in the FreeSet_list, in case we need to remove it from
+                // the FreeSet.
+                Change_list[nc] = j;
+                Change_location[j] = jfree ;
+                nc++;
+                for (Int p = Ep[j]; p < Ep[j+1]; p++)
+                {
+                    Dgrad[Ei[p]] -= Ex[p] * t;      // TODO all Ex NULL (all 1s)
+                }
+                Dgrad[j] -= D[j] * t;
+            }
+        }
+
+        // now consider nodes j not in the FreeSet_list
+        for (Int j = 0 ; j < n ; j++)
+        {
+            if (FreeSet_status [j] == 0)
+            {
+                // j is in the FreeSet, so skip it (already done above)
+                continue ;
+            }
+            Double t = y[j] - x[j];
+            if (t != 0.)
+            {
+                // PR (("Change_list: we shall consider j %ld t %g\n", j, t)) ;
+                d[j] = t;
+                s += t * grad[j]; /* derivative in the direction y - x */
+                Change_list[nc] = j;
+                Change_location[j] = EMPTY ;        // j not in FreeSet
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
@@ -257,7 +293,7 @@ Double QPgradproj
             PR (("QPGradProj directional derivative has wrong sign\n")) ;
             saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
             DEBUG (FreeSet_dump ("QPGradProj wrong sign",
-                n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+                n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
             PR (("------- QPGradProj end ]\n")) ;
             return err;
         }
@@ -297,7 +333,7 @@ Double QPgradproj
         Double t = 0.;
         for (Int k = 0; k < nc; k++)
         {
-            Int j = C[k];
+            Int j = Change_list[k];
             t += Dgrad[j] * d[j]; /* -dg'd */
         }
 
@@ -309,7 +345,7 @@ Double QPgradproj
             ib = (lambda > 0 ? 1 : lambda < 0 ? -1 : 0);
             for (Int k = 0; k < nc; k++)
             {
-                Int j = C[k];
+                Int j = Change_list[k];
                 Double yj = y[j];
                 x[j] = yj;
 
@@ -320,13 +356,13 @@ Double QPgradproj
                 {
                     if (yj == 0.)
                     {
-                        // status of j changes from +1 to -1.  no change to FreeSet
+                        // j changes from +1 to -1.  no change to FreeSet
                         FreeSet_status_j = -1;
                         bind = -1 ;
                     }
                     else
                     {
-                        // status of j changes from +1 to 0.  add j to FreeSet
+                        // j changes from +1 to 0.  add j to FreeSet
                         FreeSet_status_j = 0;
                         bind = 0 ;
                     }
@@ -335,13 +371,13 @@ Double QPgradproj
                 {
                     if (yj == 1.0)
                     {
-                        // status of j changes from -1 to 1.  no change to FreeSet
+                        // j changes from -1 to 1.  no change to FreeSet
                         FreeSet_status_j = 1;
                         bind = -1 ;
                     }
                     else
                     {
-                        // status of j changes from -1 to 0.  add j to FreeSet
+                        // j changes from -1 to 0.  add j to FreeSet
                         FreeSet_status_j = 0;
                         bind = 0;
                     }
@@ -350,19 +386,19 @@ Double QPgradproj
                 {
                     if (yj == 1.0) /* x_j hits upper bound */
                     {
-                        // status of j changes from 0 to 1,  remove from FreeSet
+                        // j changes from 0 to 1,  remove from FreeSet
                         FreeSet_status_j = 1;
                         bind = 1;
                     }
                     else if (yj == 0.) /* x_j hits lower bound */
                     {
-                        // status of j changes from 0 to -1,  remove from FreeSet
+                        // j changes from 0 to -1,  remove from FreeSet
                         FreeSet_status_j = -1;
                         bind = 1;
                     }
                     else
                     {
-                        // status of j remains 0.  no change to FreeSet
+                        // j remains 0.  no change to FreeSet
                         FreeSet_status_j = 0 ;
                         bind = -1 ;
                     }
@@ -371,35 +407,22 @@ Double QPgradproj
                 if (bind == 0)
                 {
                     // add j to the FreeSet
-                    DEBUG (FreeSet_dump ("QPGradProj:3 before",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, NULL)) ;
                     ASSERT (FreeSet_status [j] != 0) ;
+                    ASSERT (Change_location [j] == EMPTY) ;
                     FreeSet_status[j] = 0;
-                    nFreeSet++;
-                    Int m = LinkUp[n];
-                    LinkUp[j] = m;
-                    LinkUp[n] = j;
-                    LinkDn[m] = j;
-                    LinkDn[j] = n;
-                    DEBUG (FreeSet_dump ("QPGradProj:3 after",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+                    FreeSet_list [nFreeSet++] = j ;
                     //---
                 }
                 else if (bind == 1)
                 {
                     // remove j from the FreeSet
-                    DEBUG (FreeSet_dump ("QPGradProj:4 before",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, NULL)) ;
                     ASSERT (FreeSet_status [j] == 0) ;
                     FreeSet_status [j] = FreeSet_status_j ;
                     ASSERT (FreeSet_status [j] != 0) ;
-                    nFreeSet--;
-                    Int h = LinkUp[j];
-                    Int g = LinkDn[j];
-                    LinkUp[g] = h;
-                    LinkDn[h] = g;
-                    DEBUG (FreeSet_dump ("QPGradProj:4",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+                    Int jfree = Change_location [j] ;
+                    ASSERT (0 <= jfree && jfree < nFreeSet) ;
+                    ASSERT (FreeSet_list [jfree] == j) ;
+                    FreeSet_list [jfree] = EMPTY ;
                     //---
                 }
                 else // bind == -1, no change to the FreeSet
@@ -423,22 +446,14 @@ Double QPgradproj
             // PR (("partial step towards y, st %g\n", st)) ;
             for (Int k = 0; k < nc; k++)
             {
-                Int j = C[k];
+                Int j = Change_list[k];
                 if (FreeSet_status[j] != 0) /* x_j became free */
                 {
                     // add j to the FreeSet
-                    DEBUG (FreeSet_dump ("QPGradProj:5 before",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, NULL)) ;
                     ASSERT (FreeSet_status [j] != 0) ;
+                    ASSERT (Change_location [j] == EMPTY) ;
                     FreeSet_status[j] = 0;
-                    nFreeSet++;
-                    Int m = LinkUp[n];
-                    LinkUp[j] = m;
-                    LinkUp[n] = j;
-                    LinkDn[m] = j;
-                    LinkDn[j] = n;
-                    DEBUG (FreeSet_dump ("QPGradProj:5",
-                        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+                    FreeSet_list [nFreeSet++] = j ;
                     //---
                 }
 
@@ -452,8 +467,21 @@ Double QPgradproj
             }
         }
 
+        // prune any EMPTY entries from the FreeSet
+        Int jfree2 = 0 ;
+        for (Int jfree = 0 ; jfree < nFreeSet ; jfree++)
+        {
+            Int j = FreeSet_list [jfree] ;
+            if (j != EMPTY)
+            {
+                ASSERT (FreeSet_status [j] == 0) ;
+                FreeSet_list [jfree2++] = j ;
+            }
+        }
+        nFreeSet = jfree2 ;
+
         DEBUG (FreeSet_dump ("QPGradProj:6",
-            n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+            n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         // do not check b
         PR (("QPGradProj continues:\n")) ;
@@ -462,7 +490,7 @@ Double QPgradproj
     }
 
     DEBUG (FreeSet_dump ("QPGradProj end",
-        n, LinkUp, LinkDn, nFreeSet, FreeSet_status, 0, x)) ;
+        n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
     PR (("------- QPGradProj end ]\n")) ;
     return err;
