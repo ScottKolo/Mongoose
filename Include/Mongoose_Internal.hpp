@@ -32,7 +32,6 @@ typedef long Int;
 #endif
 
 typedef double Weight;  /* Used for floating point edge & node weights */
-typedef double Double;  /* Used for floating point other calculations  */
 
 /* Enumerations */
 enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };

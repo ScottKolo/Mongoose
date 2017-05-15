@@ -92,7 +92,7 @@ double *gp_mex_get_double (Int n, const mxArray *X)
     return (mxGetPr (X)) ;
 }
 
-/* return a Double vector to MATLAB */
+/* return a double vector to MATLAB */
 double *gp_mex_put_double (Int n, const double *b, mxArray **X)
 {
     double *x ;

@@ -69,31 +69,31 @@ void QPboundary
         return ;
     }
 
-    Double *x = QP->x;          /* current estimate of solution */
-    Double *grad = QP->gradient;       /* gradient at current x */
+    double *x = QP->x;          /* current estimate of solution */
+    double *grad = QP->gradient;       /* gradient at current x */
     Int ib = QP->ib;            /* ib = +1, -1, or 0 ,
         if b = hi, lo, or lo < b < hi, respectively.  Note there are cases
         where roundoff occurs, and ib can be zero even though b == lo or
         b == hi.  The value of be can even be < lo or > hi, but only by a tiny
         amount of roundoff error.  This is OK. */
 
-    Double b = QP->b;           /* current value for a'x */
+    double b = QP->b;           /* current value for a'x */
 
     /* problem specification for the graph G */
     Int n  = G->n;              /* problem dimension */
-    Double *Ex = G->x;          /* numerical values for edge weights */
+    double *Ex = G->x;          /* numerical values for edge weights */
     Int *Ei = G->i;             /* adjacent vertices for each node */
     Int *Ep = G->p;             /* points into Ex or Ei */
-    Double *a  = G->w;          /* a'x = b, lo <= b <= hi */
+    double *a  = G->w;          /* a'x = b, lo <= b <= hi */
 
-    Double lo = QP->lo ;
-    Double hi = QP->hi ;
+    double lo = QP->lo ;
+    double hi = QP->hi ;
 
     Int *mark = G->mark;
     Int markValue = G->markValue;
 
     /* work array */
-    Double *D  = QP->D;    /* diagonal of quadratic */
+    double *D  = QP->D;    /* diagonal of quadratic */
 
     PR (("\n----- QPboundary start: [\n")) ;
     DEBUG (QPcheckCom (G, O, QP, 1, QP->nFreeSet, QP->b)) ;      // check b
@@ -125,8 +125,8 @@ void QPboundary
         // only modify x[k] if ib == 0 (which means lo < b < hi)
         if (ib == 0)
         {
-            Double delta_xk ;
-            Double ak = a [k] ;
+            double delta_xk ;
+            double ak = a [k] ;
             if (grad [k] > 0.0)
             {
                 // decrease x [k]
@@ -217,7 +217,7 @@ void QPboundary
 
         // k not in FreeSet, so no changes here to FreeSet
 
-        Double ak = a[k];
+        double ak = a[k];
         if (FreeSet_status_k > 0) /* try changing x_k from 1 to 0 */
         {
             if (b - ak >= lo)
@@ -346,13 +346,13 @@ void QPboundary
             if (!MONGOOSE_MARKED(i))
             {
                 // node i is not adjacent to j in the graph G 
-                Double aj = a[j];
-                Double ai = a[i];
-                Double xi = x[i];
-                Double xj = x[j];
+                double aj = a[j];
+                double ai = a[i];
+                double xi = x[i];
+                double xj = x[j];
 
                 /* cost change if x_j increases dx_j = s/a_j, dx_i = s/a_i */
-                Double s;
+                double s;
                 Int bind1, bind2;
                 if (aj * (1. - xj) < ai * xi) // x_j hits upper bound
                 {
@@ -364,9 +364,9 @@ void QPboundary
                     s = ai * xi;
                     bind1 = 0;
                 }
-                Double dxj = s / aj;
-                Double dxi = -s / ai;
-                Double c1 = (grad[j] - .5 * D[j] * dxj) * dxj +
+                double dxj = s / aj;
+                double dxi = -s / ai;
+                double c1 = (grad[j] - .5 * D[j] * dxj) * dxj +
                             (grad[i] - .5 * D[i] * dxi) * dxi;
 
                 /* cost change if x_j decreases dx_j = s/a_j, dx_i = s/a_i */
@@ -382,7 +382,7 @@ void QPboundary
                 }
                 dxj = s / aj;
                 dxi = -s / ai;
-                Double c2 = (grad[j] - 0.5 * D[j] * dxj) * dxj +
+                double c2 = (grad[j] - 0.5 * D[j] * dxj) * dxj +
                             (grad[i] - 0.5 * D[i] * dxi) * dxi;
 
                 Int new_FreeSet_status ;
@@ -538,14 +538,14 @@ void QPboundary
         Int j = FreeSet_list [nFreeSet-1] ; ASSERT (FreeSet_status [j] == 0) ;
         Int i = FreeSet_list [nFreeSet-2] ; ASSERT (FreeSet_status [i] == 0) ;
 
-        Double ai = a[i];
-        Double aj = a[j];
-        Double xi = x[i];
-        Double xj = x[j];
+        double ai = a[i];
+        double aj = a[j];
+        double xi = x[i];
+        double xj = x[j];
 
         Int new_FreeSet_status ;
         Int bind1;
-        Double dxj, dxi, s = grad[j] / aj - grad[i] / ai;
+        double dxj, dxi, s = grad[j] / aj - grad[i] / ai;
 
         if (s < 0.) /* increase x_j */
         {
@@ -660,8 +660,8 @@ void QPboundary
         PR (("ONE AND ONLY!! j = %ld x[j] %g\n", j, x [j])) ;
 
         Int bind1 = 0;
-        Double aj = a[j];
-        Double dxj = (hi - b) / aj;
+        double aj = a[j];
+        double dxj = (hi - b) / aj;
         PR (("dxj %g  x[j] %g  (1-x[j]): %g\n", dxj, x [j], 1-x[j])) ;
         if (dxj < 1. - x[j])
         {
@@ -673,7 +673,7 @@ void QPboundary
         }
 
         Int bind2 = 0;
-        Double dxi = (lo - b) / aj;
+        double dxi = (lo - b) / aj;
         PR (("dxi %g  x[j] %g  (-x[j]): %g\n", dxi, x [j], -x[j])) ;
         if (dxi > -x[j])
         {
@@ -684,8 +684,8 @@ void QPboundary
             dxi = -x[j];
         }
 
-        Double c1 = (grad[j] - 0.5 * D[j] * dxj) * dxj;
-        Double c2 = (grad[j] - 0.5 * D[j] * dxi) * dxi;
+        double c1 = (grad[j] - 0.5 * D[j] * dxj) * dxj;
+        double c2 = (grad[j] - 0.5 * D[j] * dxi) * dxi;
         if (c1 <= c2) /* x [j] += dxj */
         {
             if (bind1)

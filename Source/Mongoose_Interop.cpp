@@ -27,7 +27,7 @@ cs *GraphToCSparse3(Graph *G, bool copy)
         Int nz = G->nz;
         A->p = (ptrdiff_t*) SuiteSparse_malloc((n+1), sizeof(ptrdiff_t));
         A->i = (ptrdiff_t*) SuiteSparse_malloc(nz, sizeof(ptrdiff_t));
-        A->x = (Double*) SuiteSparse_malloc(nz, sizeof(Double));
+        A->x = (double*) SuiteSparse_malloc(nz, sizeof(double));
         if (!A->p || !A->i || !A->x)
         {
             cs_spfree(A);

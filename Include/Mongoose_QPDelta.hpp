@@ -9,7 +9,7 @@ namespace Mongoose
 class QPDelta
 {
 public:
-    Double *x;             /* current estimate of solution                    */
+    double *x;             /* current estimate of solution                    */
 
     // FreeSet:
     Int nFreeSet;          /* number of i such that 0 < x_i < 1               */
@@ -17,26 +17,26 @@ public:
     Int *FreeSet_list;     /* list for free indices                    */
     //---
 
-    Double *gradient;      /* gradient at current x                           */
-    Double *D;             /* max value along the column.                     */
+    double *gradient;      /* gradient at current x                           */
+    double *D;             /* max value along the column.                     */
 
-    Double lo ;             // lo <= a'*x <= hi must always hold
-    Double hi ;
+    double lo ;             // lo <= a'*x <= hi must always hold
+    double hi ;
 
     // workspace
     Int *Change_location ;
     Int *wi[2];
-    Double *wx[3];
+    double *wx[3];
 
     Int its;
-    Double err;
+    double err;
     Int ib;                 // ib =  0 means lo < b < hi
                             // ib = +1 means b == hi
                             // ib = -1 means b == lo
-    Double b;               // b = a'*x
+    double b;               // b = a'*x
 
-    Double check_cost ;     // for debugging only
-    Double lambda;
+    double check_cost ;     // for debugging only
+    double lambda;
 
     static QPDelta *Create(Int n);
     ~QPDelta();

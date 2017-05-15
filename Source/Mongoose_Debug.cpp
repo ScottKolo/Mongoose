@@ -47,11 +47,11 @@ void QPcheckCom
     QPDelta *QP,
     bool check_b,
     Int nFreeSet,       // use this instead of QP->nFreeSet
-    Double b            // use this instead of QP->b
+    double b            // use this instead of QP->b
 )
 {
     Int i, j, k, l ;
-    Double s, t ;
+    double s, t ;
 
     ASSERT (G) ;
     ASSERT (O) ;
@@ -64,26 +64,26 @@ void QPcheckCom
     /* FreeSet_status [i] = +1, -1, or 0 if x_i = 1, 0, or 0 < x_i < 1*/
     //---
 
-    Double *x = QP->x ;/* current estimate of solution */
+    double *x = QP->x ;/* current estimate of solution */
 
     /* problem specification */
     Int n  = G->n ;  /* problem dimension */
-    Double *Ex = G->x ; /* numerical values for edge weights */
+    double *Ex = G->x ; /* numerical values for edge weights */
     Int *Ei = G->i ; /* adjacent vertices for each node */
     Int *Ep = G->p ; /* points into Ex or Ei */
-    Double *a  = G->w ;   /* a'x = b, lo <= b <= hi */
+    double *a  = G->w ;   /* a'x = b, lo <= b <= hi */
 
-    Double lo = QP->lo ;
-    Double hi = QP->hi ;
+    double lo = QP->lo ;
+    double hi = QP->hi ;
     Int *mark = G->mark;
     Int markValue = G->markValue;
-    Double *D  = QP->D ;   /* diagonal of quadratic */
-    Double *grad  = QP->gradient ;   /* gradient at current x */
-    Double tol = 1e-8 ;
+    double *D  = QP->D ;   /* diagonal of quadratic */
+    double *grad  = QP->gradient ;   /* gradient at current x */
+    double tol = 1e-8 ;
 
     // get workspace
     Int *w0 = (Int *) calloc (n+1, sizeof (Int)) ;    // [
-    Double *gtemp = (Double *) malloc ((n+1) * sizeof (Double)) ;    // [
+    double *gtemp = (double *) malloc ((n+1) * sizeof (double)) ;    // [
 
     ASSERT (w0) ;
     ASSERT (gtemp) ;
@@ -99,7 +99,7 @@ void QPcheckCom
     if ( a == NULL )
     {
         // a is implicitly all 1's
-        s = (Double) n ;
+        s = (double) n ;
         t = 0. ;
     }
     else
@@ -228,7 +228,7 @@ void QPcheckCom
     /* check that grad is correct */
 
     for (j = 0; j < n; j++) gtemp [j] = (.5-x [j])*D [j] ;
-    Double newcost = 0. ;
+    double newcost = 0. ;
     if ( Ex == NULL )
     {
         for (j = 0; j < n; j++)
@@ -294,7 +294,7 @@ void QPcheckCom
 
 void FreeSet_dump (const char *where,
     Int n, Int *FreeSet_list, Int nFreeSet, Int *FreeSet_status,
-    Int verbose, Double *x)
+    Int verbose, double *x)
 {
     Int death = 0 ;
 

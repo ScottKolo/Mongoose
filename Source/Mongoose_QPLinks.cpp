@@ -16,7 +16,7 @@ void QPlinks
 )
 {
     /* Inputs */
-    Double *x = QP->x;
+    double *x = QP->x;
 
     /* Unpack structures. */
     Int n = G->n;
@@ -26,17 +26,17 @@ void QPlinks
     Weight *a = G->w;       // TODO allow a NULL (means all 1s)
 
     /* working array */
-    Double *D = QP->D;
+    double *D = QP->D;
     Int *FreeSet_status = QP->FreeSet_status;
     Int *FreeSet_list = QP->FreeSet_list;
-    Double *grad = QP->gradient;  /* gradient at current x */
+    double *grad = QP->gradient;  /* gradient at current x */
 
     Int lastl = n;
 
     // FreeSet is empty
     Int nFreeSet = 0;
 
-    Double s = 0.;
+    double s = 0.;
 
     for (Int k = 0; k < n; k++)
     {
@@ -45,7 +45,7 @@ void QPlinks
 
     for (Int k = 0; k < n; k++)
     {
-        Double xk = x[k];
+        double xk = x[k];
         if (xk < 0. || xk > 1.)
         {
             // TODO return an error condition here

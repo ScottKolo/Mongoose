@@ -16,7 +16,7 @@ void QPlinks
     QPDelta *QP          /* pointer to QPDelta structure  */
 );
 
-Double QPgradproj
+double QPgradproj
 (
     Graph *G,
     Options *O,

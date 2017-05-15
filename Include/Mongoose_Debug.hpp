@@ -83,12 +83,12 @@ void QPcheckCom
     QPDelta *QP,
     bool check_b,
     Int nFreeSet,
-    Double b
+    double b
 ) ;
 
 void FreeSet_dump (const char *where,
     Int n, Int *FreeSet_list, Int nFreeSet, Int *FreeSet_status,
-    Int verbose, Double *x) ;
+    Int verbose, double *x) ;
 
 } // end namespace Mongoose
 

@@ -30,17 +30,17 @@ inline void saveContext
     Graph *G,
     QPDelta *QP, 
     Int it,
-    Double err,
+    double err,
     Int nFreeSet,
     Int ib,
-    Double lo,
-    Double hi
+    double lo,
+    double hi
 )
 {
     QP->its = it;
     QP->err = err;
     QP->nFreeSet = nFreeSet;
-    Double b = 0.0;
+    double b = 0.0;
     if(ib != 0)
     {
         b = (ib > 0 ? hi : lo);
@@ -53,7 +53,7 @@ inline void saveContext
     QP->b = b;
 }
 
-Double QPgradproj
+double QPgradproj
 (
     Graph *G,
     Options *O,
@@ -68,23 +68,23 @@ Double QPgradproj
     /* Unpack the relevant structures                                         */
     /* ---------------------------------------------------------------------- */
 
-    Double tol = O->gradprojTol;
-    Double *wx1 = QP->wx[0];    /* work array for napsack and here as y */
-    Double *wx2 = QP->wx[1];    /* work array for napsack and here as Dgrad */
-    Double *wx3 = QP->wx[2];    /* work array used here for d=y-x */
+    double tol = O->gradprojTol;
+    double *wx1 = QP->wx[0];    /* work array for napsack and here as y */
+    double *wx2 = QP->wx[1];    /* work array for napsack and here as Dgrad */
+    double *wx3 = QP->wx[2];    /* work array used here for d=y-x */
     Int *wi1 = QP->wi[0];       /* work array for napsack
                                    and here as Change_list */
     Int *wi2 = QP->wi[1];       /* work array only for napsack */
 
     /* Output and Input */
-    Double *x = QP->x;             /* current estimate of solution            */
+    double *x = QP->x;             /* current estimate of solution            */
     Int *FreeSet_status = QP->FreeSet_status;
         /* FreeSet_status [i] = +1,-1, or 0 if x_i = 1,0, or 0 < x_i < 1 */
 
     Int nFreeSet = QP->nFreeSet;    /* number of i such that 0 < x_i < 1 */
     Int *FreeSet_list = QP->FreeSet_list;     /* list of free indices */
 
-    Double *grad = QP->gradient;          /* gradient at current x */
+    double *grad = QP->gradient;          /* gradient at current x */
 
     /* Unpack the problem's parameters. */
     Int n = G->n;                  /* problem dimension */
@@ -93,19 +93,19 @@ Double QPgradproj
     Weight *Ex = G->x;             /* edge weights */
     Weight *Ew = G->w;             /* node weights; a'x = b, lo <= b <= hi */
 
-    Double lo = QP->lo ;
-    Double hi = QP->hi ;
+    double lo = QP->lo ;
+    double hi = QP->hi ;
 
-    Double *D = QP->D; /* diagonal of quadratic */
+    double *D = QP->D; /* diagonal of quadratic */
 
     /* gradient projection parameters */
     Int limit = O->gradprojIterationLimit; /* max number of iterations */
 
     /* work arrays */
-    Double *y = wx1;
-    Double *wx = wx2;
-    Double *d = wx3;
-    Double *Dgrad = wx;     /* gradient change       ; used in napsack as wx  */
+    double *y = wx1;
+    double *wx = wx2;
+    double *d = wx3;
+    double *Dgrad = wx;     /* gradient change       ; used in napsack as wx  */
 
     /* components of x change; used in napsack as wi1 */
     Int *Change_list = wi1;
@@ -115,10 +115,10 @@ Double QPgradproj
 
     /* compute error, take step along projected gradient */
     Int ib = 0;             /* initialize ib so that lo < b < hi */
-    //Double lambda = 0.;
-    Double lambda = QP->lambda;
+    //double lambda = 0.;
+    double lambda = QP->lambda;
     Int it = 0;
-    Double err = INFINITY;
+    double err = INFINITY;
 
     DEBUG (FreeSet_dump ("QPGradProj: start",
         n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
@@ -134,15 +134,15 @@ Double QPgradproj
         // check grad
         {
             // for debugging, just use malloc
-            Double s = 0. ;
-            Double *mygrad = (Double *) malloc ((n+1)*sizeof(Double)) ;
+            double s = 0. ;
+            double *mygrad = (double *) malloc ((n+1)*sizeof(double)) ;
             for (Int k = 0; k < n; k++)
             {
                 mygrad[k] = (0.5-x[k]) * D[k];
             }
             for (Int k = 0; k < n; k++)
             {
-                Double xk = x[k];
+                double xk = x[k];
                 s += Ew[k] * xk;
                 Weight r = 0.5 - xk;
                 for (Int p = Ep[k]; p < Ep[k+1]; p++)
@@ -150,10 +150,10 @@ Double QPgradproj
                     mygrad[Ei[p]] += r * Ex[p];
                 }
             }
-            Double maxerr = 0. ;
+            double maxerr = 0. ;
             for (Int k = 0; k < n; k++)
             {
-                Double err = fabs (grad [k]-mygrad [k]) ;
+                double err = fabs (grad [k]-mygrad [k]) ;
                 maxerr = MONGOOSE_MAX2 (maxerr, err) ;
             }
             // PR (("check grad %g\n", maxerr)) ;
@@ -199,7 +199,7 @@ Double QPgradproj
         {
             /* compute -(A+D)g_F */
             Int i = FreeSet_list [ifree] ;
-            Double s = grad[i];
+            double s = grad[i];
             for (Int p = Ep[i]; p < Ep[i+1]; p++)
             {
                 Dgrad[Ei[p]] -= s * Ex[p];      // TODO all Ex NULL (all 1s)
@@ -207,8 +207,8 @@ Double QPgradproj
             Dgrad[i] -= s * D[i];
         }
 
-        Double st_num = 0.;
-        Double st_den = 0.;
+        double st_num = 0.;
+        double st_den = 0.;
 
         DEBUG (FreeSet_dump ("QPGradProj:2",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
@@ -224,7 +224,7 @@ Double QPgradproj
         if (st_den > 0.)
         {
             // PR (("change y\n")) ;
-            Double st = MONGOOSE_MAX2 (st_num / st_den, 0.001);
+            double st = MONGOOSE_MAX2 (st_num / st_den, 0.001);
             for (Int j = 0; j < n; j++) y[j] = x[j] - st * grad[j];
             lambda = QPnapsack(y, n, lo, hi, Ew, lambda,
                 FreeSet_status, wx, wi1, wi2);
@@ -240,7 +240,7 @@ Double QPgradproj
         {
             Int j = FreeSet_list [jfree] ;
             ASSERT (FreeSet_status [j] == 0) ;
-            Double t = y[j] - x[j];
+            double t = y[j] - x[j];
             if (t != 0.)
             {
                 // PR (("Change_list: we shall consider j %ld t %g\n", j, t)) ;
@@ -268,7 +268,7 @@ Double QPgradproj
                 // j is in the FreeSet, so skip it (already done above)
                 continue ;
             }
-            Double t = y[j] - x[j];
+            double t = y[j] - x[j];
             if (t != 0.)
             {
                 // PR (("Change_list: we shall consider j %ld t %g\n", j, t)) ;
@@ -301,7 +301,7 @@ Double QPgradproj
 #ifndef NDEBUG
         // lo <= a'y <= hi should hold
         {
-            Double aty = 0., atx = 0. ;
+            double aty = 0., atx = 0. ;
             for (Int j = 0 ; j < n ; j++)
             {
                 aty += Ew [j] * y [j] ;
@@ -330,7 +330,7 @@ Double QPgradproj
         }
 #endif
 
-        Double t = 0.;
+        double t = 0.;
         for (Int k = 0; k < nc; k++)
         {
             Int j = Change_list[k];
@@ -346,7 +346,7 @@ Double QPgradproj
             for (Int k = 0; k < nc; k++)
             {
                 Int j = Change_list[k];
-                Double yj = y[j];
+                double yj = y[j];
                 x[j] = yj;
 
                 Int bind ; /* -1 = no change, 0 = free, +1 = bind */
@@ -442,7 +442,7 @@ Double QPgradproj
                 ib = 0;
             }
 
-            Double st = -s / t;
+            double st = -s / t;
             // PR (("partial step towards y, st %g\n", st)) ;
             for (Int k = 0; k < nc; k++)
             {

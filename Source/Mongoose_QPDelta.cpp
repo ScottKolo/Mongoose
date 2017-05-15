@@ -12,18 +12,18 @@ QPDelta* QPDelta::Create(Int n)
     QPDelta *ret = (QPDelta*) SuiteSparse_calloc(1, sizeof(QPDelta));
     if(!ret) return NULL;
 
-    ret->x = (Double*) SuiteSparse_malloc(n, sizeof(Double));
+    ret->x = (double*) SuiteSparse_malloc(n, sizeof(double));
     ret->FreeSet_status = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->FreeSet_list = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
-    ret->gradient = (Double*) SuiteSparse_malloc(n, sizeof(Double));
-    ret->D = (Double*) SuiteSparse_malloc(n, sizeof(Double));
+    ret->gradient = (double*) SuiteSparse_malloc(n, sizeof(double));
+    ret->D = (double*) SuiteSparse_malloc(n, sizeof(double));
 
     // TODO use WISIZE and WXSIZE here:
     ret->wi[0] = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
     ret->wi[1] = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
-    ret->wx[0] = (Double*) SuiteSparse_malloc(n, sizeof(Double));
-    ret->wx[1] = (Double*) SuiteSparse_malloc(n, sizeof(Double));
-    ret->wx[2] = (Double*) SuiteSparse_malloc(n, sizeof(Double));
+    ret->wx[0] = (double*) SuiteSparse_malloc(n, sizeof(double));
+    ret->wx[1] = (double*) SuiteSparse_malloc(n, sizeof(double));
+    ret->wx[2] = (double*) SuiteSparse_malloc(n, sizeof(double));
 
     // TODO: can this use wi[1] instead?  I think so.
     ret->Change_location = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
@@ -44,11 +44,11 @@ QPDelta* QPDelta::Create(Int n)
 
 QPDelta::~QPDelta()
 {
-    x = (Double*) SuiteSparse_free(x);
+    x = (double*) SuiteSparse_free(x);
     FreeSet_status = (Int*) SuiteSparse_free(FreeSet_status);
     FreeSet_list = (Int*) SuiteSparse_free(FreeSet_list);
-    gradient = (Double*) SuiteSparse_free(gradient);
-    D = (Double*) SuiteSparse_free(D);
+    gradient = (double*) SuiteSparse_free(gradient);
+    D = (double*) SuiteSparse_free(D);
     Change_location = (Int*) SuiteSparse_free(Change_location);
 
     // TODO use WISIZE and WXSIZE here:
@@ -56,7 +56,7 @@ QPDelta::~QPDelta()
         wi[i] = (Int*) SuiteSparse_free(wi[i]);
 
     for(Int i=0; i<3; i++)
-        wx[i] = (Double*) SuiteSparse_free(wx[i]);
+        wx[i] = (double*) SuiteSparse_free(wx[i]);
 }
 
 } // end namespace Mongoose

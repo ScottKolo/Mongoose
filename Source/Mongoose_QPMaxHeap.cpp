@@ -20,7 +20,7 @@ void QPmaxheap_build
 (
     Int *heap,  /* on input, an unsorted set of elements */
     Int size,   /* number of elements to build into the heap */
-    Double *x
+    double *x
 )
 {
     for (Int p = size/2; p >= 1; p--) QPmaxheapify(p, heap, size, x);
@@ -36,7 +36,7 @@ Int QPmaxheap_delete    /* return new size of heap */
 (
     Int *heap,   /* containing indices into x, 1..n on input */
     Int size,    /* number of items in heap */
-    Double *x    /* not modified */
+    double *x    /* not modified */
 )
 {
     if (size <= 1) return 0;
@@ -58,12 +58,12 @@ Int QPmaxheap_add
 (
     Int leaf,    /* the new leaf */
     Int *heap,   /* size n, containing indices into x */
-    Double *x,   /* not modified */
+    double *x,   /* not modified */
     Int size     /* number of elements in heap not counting new one */
 )
 {
     Int l, lnew, lold;
-    Double xold, xnew;
+    double xold, xnew;
 
     size++;
     lold = size;
@@ -105,11 +105,11 @@ void QPmaxheapify
     Int p,                       /* start at node p in the heap */
     Int *heap,                   /* size n, containing indices into x */
     Int size,                    /* heap [ ... nheap] is in use */
-    Double *x                    /* not modified */
+    double *x                    /* not modified */
 )
 {
     Int left, right, e, hleft, hright;
-    Double xe, xleft, xright;
+    double xe, xleft, xright;
 
     e = heap[p];
     xe = x[e];

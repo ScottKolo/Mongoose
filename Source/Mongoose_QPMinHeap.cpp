@@ -20,7 +20,7 @@ void QPminheap_build
 (
     Int *heap,      /* on input, an unsorted set of elements */
     Int size,       /* number of elements to build into the heap */
-    Double *x
+    double *x
 )
 {
     Int p;
@@ -41,7 +41,7 @@ Int QPminheap_delete    /* return new size of heap */
 (
     Int *heap,  /* containing indices into x, 1..n on input */
     Int size,   /* number of items in heap */
-    Double *x   /* not modified */
+    double *x   /* not modified */
 )
 {
     if (size <= 1)
@@ -67,12 +67,12 @@ Int QPminheap_add
 (
     Int leaf,   /* the new leaf */
     Int *heap,  /* size n, containing indices into x */
-    Double *x,  /* not modified */
+    double *x,  /* not modified */
     Int nheap   /* number of elements in heap not counting new one */
 )
 {
     Int l, lnew, lold;
-    Double xold, xnew;
+    double xold, xnew;
 
     nheap++;
     lold = nheap;
@@ -113,11 +113,11 @@ void QPminheapify
     Int p,      /* start at node p in the heap */
     Int *heap,  /* size n, containing indices into x */
     Int size,   /* heap [ ... nheap] is in use */
-    Double *x   /* not modified */
+    double *x   /* not modified */
 )
 {
     Int left, right, e, hleft, hright;
-    Double xe, xleft, xright;
+    double xe, xleft, xright;
 
     e = heap[p];
     xe = x[e];

@@ -91,9 +91,9 @@
 namespace Mongoose
 {
 
-void checkatx (Double *x, Double *a, Int n, Double lo, Double hi)
+void checkatx (double *x, double *a, Int n, double lo, double hi)
 {
-    Double atx = 0. ; 
+    double atx = 0. ; 
     int ok = 1 ;
     for (Int k = 0 ; k < n ; k++)
     {
@@ -111,22 +111,22 @@ void checkatx (Double *x, Double *a, Int n, Double lo, Double hi)
     }
 }
 
-Double QPnapsack        /* return the final lambda */
+double QPnapsack        /* return the final lambda */
 (
-    Double *x,      /* holds y on input, and the solution x on output */
+    double *x,      /* holds y on input, and the solution x on output */
     Int n,          /* size of x, constraint lo <= a'x <= hi */
-    Double lo,      /* partition lower bound */
-    Double hi,      /* partition upper bound */
-    Double *Gw,     /* vector of nodal weights */
-    Double Lambda,  /* initial guess for lambda */
+    double lo,      /* partition lower bound */
+    double hi,      /* partition upper bound */
+    double *Gw,     /* vector of nodal weights */
+    double Lambda,  /* initial guess for lambda */
     Int *FreeSet_status, /* FreeSet_status [i] = +1,-1, or 0 on input,
                        for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
-    Double *w,      /* work array of size n   */
+    double *w,      /* work array of size n   */
     Int *heap1,     /* work array of size n+1 */
     Int *heap2      /* work array of size n+1 */
 )
 {
-    Double lambda = Lambda;
+    double lambda = Lambda;
     PR (("QPNapsack start [\n")) ;
 
     /* ---------------------------------------------------------------------- */
@@ -135,8 +135,8 @@ Double QPnapsack        /* return the final lambda */
 
     if ((FreeSet_status != NULL) && (lambda != 0))
     {
-        Double asum = (lambda > 0 ? -hi : -lo);
-        Double a2sum = 0.;
+        double asum = (lambda > 0 ? -hi : -lo);
+        double a2sum = 0.;
 
         for (Int k = 0; k < n; k++)
         {
@@ -159,10 +159,10 @@ Double QPnapsack        /* return the final lambda */
     /* compute the initial slope */
     /* ---------------------------------------------------------------------- */
 
-    Double slope = 0;
+    double slope = 0;
     for (Int k = 0; k < n; k++)
     {
-        Double xi = x[k] - Gw[k] * lambda;
+        double xi = x[k] - Gw[k] * lambda;
         if (xi >= 1.)
         {
             slope += Gw[k];
@@ -206,10 +206,10 @@ Double QPnapsack        /* return the final lambda */
     {
         if (lambda != 0.)
         {
-            Double slope0 = 0.;
+            double slope0 = 0.;
             for (Int k = 0; k < n; k++)
             {
-                Double xi = x[k];
+                double xi = x[k];
                 if (xi >= 1.)
                 {
                     slope0 += Gw[k];
@@ -303,7 +303,7 @@ Double QPnapsack        /* return the final lambda */
     {
         for (Int k = 0; k < n; k++)
         {
-            Double xi = x[k];
+            double xi = x[k];
             // TODO: Rewrite nested ternary operator
             if (xi < 0)
             {
@@ -325,7 +325,7 @@ Double QPnapsack        /* return the final lambda */
     {
         for (Int k = 0; k < n; k++)
         {
-            Double xi = x[k] - Gw[k] * lambda;
+            double xi = x[k] - Gw[k] * lambda;
             // TODO: Rewrite nested ternary operator
             if (xi < 0)
             {

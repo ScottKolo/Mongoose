@@ -21,20 +21,20 @@
 namespace Mongoose
 {
 
-Double QPnapup      /* return lambda */
+double QPnapup      /* return lambda */
 (
-    Double *x,              /* holds y on input, not modified */
+    double *x,              /* holds y on input, not modified */
     Int n,                  /* size of x */
-    Double lambda,          /* initial guess for the shift */
-    Double *a,              /* input constraint vector */
-    Double b,               /* input constraint scalar */
-    Double *breakpts,       /* break points */
+    double lambda,          /* initial guess for the shift */
+    double *a,              /* input constraint vector */
+    double b,               /* input constraint scalar */
+    double *breakpts,       /* break points */
     Int *bound_heap,        /* work array */
     Int *free_heap          /* work array */
 )
 {
     Int i, k, e, maxsteps, n_bound, n_free;
-    Double ai, asum, a2sum, minbound, minfree, new_break, s, t, xi;
+    double ai, asum, a2sum, minbound, minfree, new_break, s, t, xi;
 
     minbound = INFINITY;
     minfree = INFINITY;

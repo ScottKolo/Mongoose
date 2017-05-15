@@ -3,7 +3,7 @@
 namespace Mongoose
 {
 
-#define MEX_STRUCT_PUT(F)        addFieldWithValue(returner, #F, (Double) O->F);
+#define MEX_STRUCT_PUT(F)        addFieldWithValue(returner, #F, (double) O->F);
 
 mxArray *mex_put_options
 (

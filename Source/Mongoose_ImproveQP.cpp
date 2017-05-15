@@ -38,8 +38,8 @@ void improveCutUsingQP
     }
 
     // set the QP parameters
-    Double tol = O->tolerance;
-    Double targetSplit = O->targetSplit ;
+    double tol = O->tolerance;
+    double targetSplit = O->targetSplit ;
     if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
 
     // ensure targetSplit and tolerance are valid.  These conditions were
@@ -56,7 +56,7 @@ void improveCutUsingQP
 
     /* Convert the guess from discrete to continuous. */
     Weight *D = QP->D;
-    Double *guess = QP->x;
+    double *guess = QP->x;
     bool *partition = G->partition;
     for (Int k = 0; k < n; k++)
     {
