@@ -32,7 +32,10 @@ function comparisonData = compare(plot_outliers)
                 [m_rows, n_cols] = size(A);
                 A = [sparse(m_rows,m_rows) A; A' sparse(n_cols,n_cols)];
             end
-            
+
+            % Make matrix binary - matrix values are not necessarily edge weights
+            A = sign(abs(A));
+
             % Sanitize the matrix (remove diagonal, take largest scc)
             A = mongoose_sanitizeMatrix(A);
             
