@@ -39,7 +39,8 @@ void improveCutUsingQP
 
     // set the QP parameters
     Double tol = O->tolerance;
-    Double targetSplit = O->targetSplit;
+    Double targetSplit = O->targetSplit ;
+    if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
 
     // ensure targetSplit and tolerance are valid.  These conditions were
     // already checked on input to Mongoose, in optionsAreValid.
@@ -125,7 +126,7 @@ void improveCutUsingQP
             cost.cutCost -= 2 * gains[k];
             cost.W[oldPartition] -= Gw[k];
             cost.W[newPartition] += Gw[k];
-            cost.imbalance = O->targetSplit -
+            cost.imbalance = targetSplit -
                 MONGOOSE_MIN2 (cost.W[0], cost.W[1]) / G->W;
 
             Int bhVertexPosition = MONGOOSE_GET_BHINDEX(k);

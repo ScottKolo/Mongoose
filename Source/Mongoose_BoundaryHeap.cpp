@@ -63,7 +63,11 @@ void bhLoad
     G->cutCost = cost.cutCost;
     G->W0 = cost.W[0];
     G->W1 = cost.W[1];
-    G->imbalance = O->targetSplit - MONGOOSE_MIN2 (G->W0, G->W1) / G->W;
+
+    double targetSplit = O->targetSplit ;
+    if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
+
+    G->imbalance = targetSplit - MONGOOSE_MIN2 (G->W0, G->W1) / G->W;
     G->heuCost = (G->cutCost + (fabs(G->imbalance) > O->tolerance
                                 ? fabs(G->imbalance) * G->H
                                 : 0.0));

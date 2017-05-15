@@ -6,10 +6,6 @@
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 
-// TODO why doesn't this code use O->targetSplit ???
-// TODO how is tolerance define?  if target balance is .5 and
-// tolerance is 0.1, is the allowed range [0.4,0.6]?  Or [0.45,0.55]?
-
 namespace Mongoose
 {
 

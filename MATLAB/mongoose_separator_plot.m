@@ -383,7 +383,6 @@ for minsize = minsizes
 
         elseif (colorkind == 1)
             % colorkinds 1: alpha based on frequency
-            % TODO: this does not require edgelen; do sfpd only once
             for k = 1:nz
                 cedge = c (x (k), :) ;
                 % cedge (4) = alf256 (edgelen (k)) ;
@@ -405,7 +404,6 @@ for minsize = minsizes
 
         elseif (colorkind == 4 || colorkind == -1)
             % color based on frequency, no alpha
-            % TODO: this does not require edgelen; do sfpd only once
             for k = 1:nz
                 cedge = c (x (k), :) ;
                 if (x (k) ~= 89)
@@ -417,7 +415,6 @@ for minsize = minsizes
 
         elseif (colorkind == 5)
             % color and alpha based on frequency
-            % TODO: this does not require edgelen; do sfpd only once
             for k = 1:nz
                 cedge = c (x (k), :) ;
                 fprintf (f, '%d--%d [color="#%02x%02x%02x%02x"];\n', ...

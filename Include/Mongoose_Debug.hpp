@@ -2,7 +2,8 @@
 // Mongoose_Debug.hpp
 //------------------------------------------------------------------------------
 
-// TODO this file should not be included into any user program.
+// TODO: this file should not be included into any user program.
+// TODO: optional: move this file to ../Mongoose/Source
 
 #ifndef Mongoose_Debug_hpp
 #define Mongoose_Debug_hpp

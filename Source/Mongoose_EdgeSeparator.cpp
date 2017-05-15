@@ -13,22 +13,21 @@ namespace Mongoose
 bool optionsAreValid(Options *options);
 
 /* The input must be a single connected component. */
+int ComputeEdgeSeparator(Graph *G)
+{
+    // use default options if not present
+    Options *O = Options::Create ( ) ;
+    if (!O) return (EXIT_FAILURE) ;
+    int result = ComputeEdgeSeparator(Graph *G, O) ;
+    SuiteSparse_free (O) ;
+    return (result) ;
+}
+
 int ComputeEdgeSeparator(Graph *G, Options *O)
 {
 
     // Check inputs
-    Options Odefault ;
-    if (!O)
-    {
-        return (EXIT_FAILURE) ;  // TODO remove this
-        // TODO:
-        // O = &Odefault ;
-        // set the default options in O
-    }
-    else
-    {
-        if (!optionsAreValid(O)) return (EXIT_FAILURE) ;
-    }
+    if (!optionsAreValid(O)) return (EXIT_FAILURE) ;
 
     if (!G) return EXIT_FAILURE;
 
@@ -158,7 +157,6 @@ bool optionsAreValid(Options *options)
 {
     if (!options)
     {
-        // TODO create a default set of options instead
         // Error!
         return (false) ;
     }
@@ -172,14 +170,6 @@ bool optionsAreValid(Options *options)
         // Error!
         return (false) ;
     }
-
-    // TODO nuance: do this when reading options, but leave options as-is
-    if (options->targetSplit > 0.5)
-    {
-        // ensure target split is in the range 0 to 0.5
-        options->targetSplit = 1. - options->targetSplit ;
-    }
-
     return (true) ;
 }
 
