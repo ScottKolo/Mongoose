@@ -74,12 +74,18 @@ matrix:
         - cmake-data
         - gcc-6
         - g++-6
-        - cppcheck
+        # libpcre3-dev is needed to build a recent cppcheck
+        - libpcre3-dev
     before_script:
       - export CXX=g++-6
       - export CC=gcc-6
+      - curl -OL https://github.com/danmar/cppcheck/archive/1.79.tar.gz
+      - tar -xvf 1.79.tar.gz
+      - cd cppcheck-1.79
+      - make
+      - cd ..
     after_success:
-      - cppcheck --enable=all --error-exitcode=1 --project=compile_commands.json
+      - ../cppcheck-1.79/cppcheck --enable=all --error-exitcode=1 --project=compile_commands.json
 
   # Debug Assertion build
   - os: linux
