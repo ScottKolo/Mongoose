@@ -168,7 +168,6 @@ double QPgradproj
         lambda = QPnapsack(y, n, lo, hi, Ew, lambda,
             FreeSet_status, wx, wi1, wi2);
 
-        // TODO: This can probably be done in the napsack to avoid O(n) loop
         /* Compute the maximum error. */
         err = -INFINITY;
         for (Int k = 0; k < n; k++) err = MONGOOSE_MAX2(err, fabs(y[k]-x[k]));
@@ -188,7 +187,6 @@ double QPgradproj
         it++;
 
         /* compute stepsize st = g_F'g_F/-g_F'(A+D)g_F */
-        /* TODO: Can Dgrad be cleared after use to avoid O(n)? */
         for (Int k = 0; k < n; k++) Dgrad[k] = 0.;
 
         DEBUG (FreeSet_dump ("QPGradProj:1",
@@ -202,7 +200,7 @@ double QPgradproj
             double s = grad[i];
             for (Int p = Ep[i]; p < Ep[i+1]; p++)
             {
-                Dgrad[Ei[p]] -= s * Ex[p];      // TODO all Ex NULL (all 1s)
+                Dgrad[Ei[p]] -= s * Ex[p];
             }
             Dgrad[i] -= s * D[i];
         }
@@ -254,7 +252,7 @@ double QPgradproj
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
-                    Dgrad[Ei[p]] -= Ex[p] * t;      // TODO all Ex NULL (all 1s)
+                    Dgrad[Ei[p]] -= Ex[p] * t;
                 }
                 Dgrad[j] -= D[j] * t;
             }
@@ -279,7 +277,7 @@ double QPgradproj
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
-                    Dgrad[Ei[p]] -= Ex[p] * t;      // TODO all Ex NULL (all 1s)
+                    Dgrad[Ei[p]] -= Ex[p] * t;
                 }
                 Dgrad[j] -= D[j] * t;
             }

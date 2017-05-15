@@ -91,7 +91,6 @@ bool guessCut(Graph *G, Options *O)
 
       case QP_GradProj:
       {
-          // TODO will this work?  Or will it break lo <= a'*x <= hi?
           for (Int k = 0; k < G->n; k++) G->partition[k] = false;
           G->W0 = G->W;
           G->W1 = 0.0;
@@ -217,7 +216,7 @@ void partBFS
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
     G->markValue = markValue ;
 }
 
@@ -276,11 +275,11 @@ void findAllPseudoperipheralNodes
             }
         }
 
-        MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
+        MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
     G->markValue = markValue ;
 
     *listsize = tail;
@@ -323,7 +322,7 @@ void pseudoperipheralGuess
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
     G->markValue = markValue ;
 
     /* Load the boundary heap. */

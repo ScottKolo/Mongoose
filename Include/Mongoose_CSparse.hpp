@@ -3,7 +3,8 @@
  *
  * A subset of the CSparse library is used for its sparse matrix data
  * structure and efficient fundamental matrix operations, such as adding, 
- * permuting, and finding strongly connected components.
+ * permuting, and finding strongly connected components.  This version
+ * uses the same integer (csi or SuiteSparse_long) as the Int in Mongoose.
  */
 
 #ifndef Mongoose_CSparse_hpp
@@ -18,13 +19,8 @@
 #include "mex.h"
 #endif
 
-#ifdef MATLAB_MEX_FILE
-#undef csi
-#define csi mwSignedIndex
-#endif
-#ifndef csi
-#define csi ptrdiff_t
-#endif
+/* same as Int in Mongoose */
+typedef csi SuiteSparse_long ;
 
 /* CSparse Macros */
 #ifndef CS_CSC

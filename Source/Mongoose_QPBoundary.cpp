@@ -201,9 +201,6 @@ void QPboundary
     /* Step 2. Examine flips of x_k from 0 to 1 or from 1 to 0 */
     /* ---------------------------------------------------------------------- */
 
-    // TODO: can we keep a list of the bound values of x [k]?
-    // If so, then this next loop would take O(nbound) time.
-
     PR (("Boundary step 2:\n")) ;
 
     for (Int k = 0; k < n; k++)
@@ -251,7 +248,7 @@ void QPboundary
             {
                 for (Int p = Ep[k]; p < Ep[k+1]; p++)
                 {
-                    grad[Ei[p]] += Ex[p];   // TODO allow Ex NULL (all 1's)
+                    grad[Ei[p]] += Ex[p];
                 }
                 grad[k] += D[k];
             }
@@ -259,7 +256,7 @@ void QPboundary
             {
                 for (Int p = Ep[k]; p < Ep[k+1]; p++)
                 {
-                    grad[Ei[p]] -= Ex[p];   // TODO allow Ex NULL (all 1's)
+                    grad[Ei[p]] -= Ex[p];
                 }
                 grad[k] -= D[k];
             }
@@ -303,20 +300,6 @@ void QPboundary
             // j has already been deleted, skip it
             continue ;
         }
-
-#if 0
-        // TODO merge this loop with the next one.  Clear marks if continue.
-        // count how many neighbors of j are free
-        Int m = 1;                                  // (including j itself)
-        for (Int p = Ep[j]; p < Ep[j+1]; p++)
-        {
-            Int i = Ei[p] ;
-            ASSERT(i != j) ;                       // graph has no self edges
-            if (FreeSet_status[i] == 0) m++;
-        }
-        // do not consider j if all its neighbors are in the FreeSet
-        if (m == nFreeSet) continue;
-#endif
 
         /* -------------------------------------------------------------- */
         /* find i and j both free and where a_{ij} = 0 */
@@ -429,11 +412,11 @@ void QPboundary
 
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
-                    grad[Ei[p]] -= Ex[p] * dxj; // TODO allow Ex NULL (all 1's)
+                    grad[Ei[p]] -= Ex[p] * dxj;
                 }
                 for (Int p = Ep[i]; p < Ep[i+1]; p++) 
                 {
-                    grad[Ei[p]] -= Ex[p] * dxi; // TODO allow Ex NULL (all 1's)
+                    grad[Ei[p]] -= Ex[p] * dxi;
                 }
                 grad[j] -= D[j] * dxj;
                 grad[i] -= D[i] * dxi;
@@ -592,11 +575,11 @@ void QPboundary
 
         for (Int k = Ep[j]; k < Ep[j+1]; k++)
         {
-            grad[Ei[k]] -= Ex[k] * dxj; // TODO allow Ex NULL (all 1's)
+            grad[Ei[k]] -= Ex[k] * dxj;
         }
         for (Int k = Ep[i]; k < Ep[i+1]; k++)
         {
-            grad[Ei[k]] -= Ex[k] * dxi; // TODO allow Ex NULL (all 1's)
+            grad[Ei[k]] -= Ex[k] * dxi;
         }
         grad[j] -= D[j] * dxj;
         grad[i] -= D[i] * dxi;
@@ -738,7 +721,7 @@ void QPboundary
         {
             for (Int p = Ep[j]; p < Ep[j+1]; p++)
             {
-                grad[Ei[p]] -= Ex[p] * dxj; // TODO allow Ex NULL (all 1's)
+                grad[Ei[p]] -= Ex[p] * dxj;
             }
             grad[j] -= D[j] * dxj;
         }

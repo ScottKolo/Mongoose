@@ -304,7 +304,6 @@ double QPnapsack        /* return the final lambda */
         for (Int k = 0; k < n; k++)
         {
             double xi = x[k];
-            // TODO: Rewrite nested ternary operator
             if (xi < 0)
             {
                 x[k] = 0;
@@ -317,7 +316,6 @@ double QPnapsack        /* return the final lambda */
             {
                 x[k] = xi;
             }
-            //x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
         }
         checkatx (x, Gw, n, lo, hi) ;
     }
@@ -326,7 +324,6 @@ double QPnapsack        /* return the final lambda */
         for (Int k = 0; k < n; k++)
         {
             double xi = x[k] - Gw[k] * lambda;
-            // TODO: Rewrite nested ternary operator
             if (xi < 0)
             {
                 x[k] = 0;
@@ -339,7 +336,6 @@ double QPnapsack        /* return the final lambda */
             {
                 x[k] = xi;
             }
-            //x[k] = (xi < 0. ? 0. : xi > 1. ?  1. : xi);
         }
         checkatx (x, Gw, n, lo, hi) ;
     }

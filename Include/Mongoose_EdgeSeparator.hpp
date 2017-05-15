@@ -1,3 +1,4 @@
+// TODO : make a single user include file
 #ifndef Mongoose_EdgeSeparator_hpp
 #define Mongoose_EdgeSeparator_hpp
 

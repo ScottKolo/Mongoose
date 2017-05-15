@@ -22,8 +22,8 @@ void QPlinks
     Int n = G->n;
     Int *Ep = G->p;
     Int *Ei = G->i;
-    double *Ex = G->x;      // TODO allow Ex NULL (means all 1s)
-    double *a = G->w;       // TODO allow a NULL (means all 1s)
+    double *Ex = G->x;
+    double *a = G->w
 
     /* working array */
     double *D = QP->D;
@@ -55,7 +55,7 @@ void QPlinks
         double r = 0.5 - xk;
         for (Int p = Ep[k]; p < Ep[k+1]; p++)
         {
-            grad[Ei[p]] += r * Ex[p];   // TODO allow Ex NULL (all 1s)
+            grad[Ei[p]] += r * Ex[p];
         }
         if (xk >= 1.)
         {
@@ -80,34 +80,9 @@ void QPlinks
     DEBUG (FreeSet_dump ("QPLinks:done",
         n, FreeSet_list, nFreeSet, FreeSet_status, 1, x)) ;
 
-    // make sure lo <= b <= hi holds, where b = a'*x and x is the input guess
-    // TODO call napsack instead?
-    /*
-    if (QP->b >= QP->hi)
-    {
-        // b starts at the upper bound.
-        // adjust upper bound to ensure x is feasible
-        PR (("adjust hi from %g to b = %g\n", QP->hi, QP->b)) ;
-        QP->hi = QP->b ;
-        QP->ib = +1 ;
-    }
-    else if (QP->b <= QP->lo)
-    {
-        // b starts at the lower bound.
-        // adjust lower bound to ensure x is feasible
-        PR (("adjust lo from %g to b = %g\n", QP->lo, QP->b)) ;
-        QP->lo = QP->b ;
-        QP->ib = -1 ;
-    }
-    else
-    {
-        // b starts between: lo < b < hi
-        QP->ib = 0 ;
-    }
-     */
+    // Note that b can be less than lo or greater than hi.
     // b starts between: lo < b < hi
     QP->ib = (s <= QP->lo ? -1 : s < QP->hi ? 0 : 1);
-
 
     // for debugging only
     QP->check_cost = INFINITY ;

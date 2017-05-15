@@ -155,7 +155,7 @@ void improveCutUsingQP
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(n) ;      // TODO: reset if int overflow
+    MONGOOSE_CLEAR_ALL_MARKS(n) ;
     G->markValue = markValue ;
 
     /* Free the QP structure */

@@ -1,3 +1,5 @@
+// This include file should not be visible to the user
+
 #ifndef Mongoose_Internal_hpp
 #define Mongoose_Internal_hpp
 
@@ -26,9 +28,9 @@ namespace Mongoose
 {
 
 /* Type definitions */
-typedef long Int;
+typedef SuiteSparse_long Int;
 #ifndef MAX_INT
-#define MAX_INT LONG_MAX
+#define MAX_INT SuiteSparse_long_max
 #endif
 
 /* Enumerations */
