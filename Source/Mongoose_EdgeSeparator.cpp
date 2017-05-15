@@ -96,8 +96,8 @@ bool initialize(Graph *graph, Options *options)
     }
     Int n = graph->n;
     Int *Gp = graph->p;
-    Weight *Gx = graph->x;
-    Weight *Gw = graph->w;
+    double *Gx = graph->x;
+    double *Gw = graph->w;
 
     graph->cn = 0;
     graph->matching =       (Int*) SuiteSparse_calloc(n, sizeof(Int));
@@ -111,7 +111,7 @@ bool initialize(Graph *graph, Options *options)
     graph->bhIndex =        (Int*) SuiteSparse_calloc(n, sizeof(Int));
     graph->bhHeap[0] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
     graph->bhHeap[1] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    graph->vertexGains = (Weight*) SuiteSparse_malloc(graph->n, sizeof(Weight));
+    graph->vertexGains = (double*) SuiteSparse_malloc(graph->n, sizeof(double));
     graph->externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
 
     /* Check memory and abort if necessary. */
@@ -129,18 +129,18 @@ bool initialize(Graph *graph, Options *options)
         graph->bhIndex =        (Int*) SuiteSparse_free(graph->bhIndex);
         graph->bhHeap[0] =      (Int*) SuiteSparse_free(graph->bhHeap[0]);
         graph->bhHeap[1] =      (Int*) SuiteSparse_free(graph->bhHeap[1]);
-        graph->vertexGains = (Weight*) SuiteSparse_free(graph->vertexGains);
+        graph->vertexGains = (double*) SuiteSparse_free(graph->vertexGains);
         graph->externalDegree = (Int*) SuiteSparse_free(graph->externalDegree);
         return false;
     }
 
     /* Compute worst-case gains, and compute X. */
-    Weight X = 0.0, W = 0.0;
-    Weight *gains = graph->vertexGains;
+    double X = 0.0, W = 0.0;
+    double *gains = graph->vertexGains;
     for (Int k = 0; k < n; k++)
     {
         W += Gw[k];
-        Weight sumEdgeWeights = 0.0;
+        double sumEdgeWeights = 0.0;
 
         for (Int p = Gp[k]; p < Gp[k+1]; p++) sumEdgeWeights += Gx[p];
 

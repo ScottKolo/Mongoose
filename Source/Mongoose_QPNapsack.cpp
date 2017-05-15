@@ -146,7 +146,7 @@ double QPnapsack        /* return the final lambda */
             }
             else if (FreeSet_status[k] == 0)
             {
-                Weight ai = Gw[k];
+                double ai = Gw[k];
                 asum += x[k] * ai;
                 a2sum += ai * ai;
             }

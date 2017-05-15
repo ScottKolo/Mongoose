@@ -14,7 +14,7 @@ struct Options
     Int coarsenLimit;
     MatchingStrategy matchingStrategy;
     bool doCommunityMatching;
-    Weight davisBrotherlyThreshold;
+    double davisBrotherlyThreshold;
 
     /** Guess Partitioning Options *******************************************/
     GuessCutType guessCutType;   /* The guess cut type to use */
@@ -34,12 +34,12 @@ struct Options
     /**** Quadratic Programming Options **************************************/
     bool useQPGradProj;          /* Flag governing the use of gradproj       */
     bool useQPBallOpt;           /* Flag governing the use of qp ball opt    */
-    Weight gradprojTol;          /* Convergence tol for projected gradient   */
+    double gradprojTol;          /* Convergence tol for projected gradient   */
     Int gradprojIterationLimit;  /* Max # of iterations for gradproj         */
 
     /** Final Partition Target Metrics ***************************************/
-    Weight targetSplit;          /* The desired split ratio (default 50/50)  */
-    Weight tolerance;            /* The allowable tolerance (default 1%)     */
+    double targetSplit;          /* The desired split ratio (default 50/50)  */
+    double tolerance;            /* The allowable tolerance (default 1%)     */
 
     /** Debug Options ********************************************************/
     bool doExpensiveChecks;

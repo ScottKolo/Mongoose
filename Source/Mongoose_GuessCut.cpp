@@ -57,7 +57,7 @@ bool guessCut(Graph *G, Options *O)
           findAllPseudoperipheralNodes(G, O, list, &size, ppvMark);
 
           /* Find the best guess. */
-          Weight bestCost = INFINITY;
+          double bestCost = INFINITY;
           Int bestGuess = -1;
 
           for (Int i = 0; i < size; i++)
@@ -124,13 +124,13 @@ Int diagBFS
     bool *partition = G->partition;
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gw = G->w;
+    double *Gw = G->w;
 
     Int markValue = markStart;
     Int start = *inout_start;
 
-    Weight halfW = G->W / 2.0;
-    Weight W0 = 0.0;
+    double halfW = G->W / 2.0;
+    double W0 = 0.0;
 
     Int head = 0, tail = 0;
     stack[tail++] = start;
@@ -187,13 +187,13 @@ void partBFS
     bool *partition = G->partition;
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gw = G->w;
+    double *Gw = G->w;
 
     Int *mark = G->mark;
     Int markValue = G->markValue;
 
-    Weight halfW = G->W / 2.0;
-    Weight W0 = 0.0;
+    double halfW = G->W / 2.0;
+    double W0 = 0.0;
 
     Int *stack = G->matchmap, head = 0, tail = 0;
     stack[tail++] = start;

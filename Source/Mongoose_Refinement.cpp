@@ -20,7 +20,7 @@ Graph *refine(Graph *G, Options *O)
     Int *invmatchmap = P->invmatchmap;
     Int *matching = P->matching;
     bool *fPartition = P->partition;
-    Weight *fGains = P->vertexGains;
+    double *fGains = P->vertexGains;
     Int *fExternalDegree = P->externalDegree;
 
     /* Transfer cut costs and partition details upwards. */
@@ -85,7 +85,7 @@ Graph *refine(Graph *G, Options *O)
             {
                 Int vertex = v[i];
 
-                Weight gain;
+                double gain;
                 Int externalDegree;
                 calculateGain(P, O, vertex, &gain, &externalDegree);
 

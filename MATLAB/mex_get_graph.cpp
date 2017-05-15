@@ -18,17 +18,17 @@ Graph *mex_get_graph
     Int n = returner->n = mxGetN(Gmatlab);
     Int *Gp = returner->p = (Int*) mxGetJc(Gmatlab);
     Int *Gi = returner->i = (Int*) mxGetIr(Gmatlab);
-    Weight *Gx = returner->x = (Weight*) mxGetPr(Gmatlab);
+    double *Gx = returner->x = (double*) mxGetPr(Gmatlab);
     Int nz = returner->nz = Gp[n];
 
     /* Read node weights from matlab into the problem. */
     if(Amatlab != NULL)
     {
-        returner->w = (Weight*) mxGetPr(Amatlab);
+        returner->w = (double*) mxGetPr(Amatlab);
     }
     else
     {
-        returner->w = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
+        returner->w = (double*) SuiteSparse_malloc(n, sizeof(double));
         for(Int k=0; k<n; k++) returner->w[k] = 1.0;
     }
 

@@ -31,8 +31,6 @@ typedef long Int;
 #define MAX_INT LONG_MAX
 #endif
 
-typedef double Weight;  /* Used for floating point edge & node weights */
-
 /* Enumerations */
 enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };

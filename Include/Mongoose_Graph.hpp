@@ -27,16 +27,16 @@ public:
     Int nz;                              /** # edges                         */
     Int *p;                              /** Column pointers                 */
     Int *i;                              /** Row indices                     */
-    Weight *x;                           /** Edge weight                     */
-    Weight *w;                           /** Node weight                     */
-    Weight X;                            /** Sum of edge weights             */
-    Weight W;                            /** Sum of node weights             */
+    double *x;                           /** Edge weight                     */
+    double *w;                           /** Node weight                     */
+    double X;                            /** Sum of edge weights             */
+    double W;                            /** Sum of node weights             */
 
-    Weight H;                            /** Heuristic max penalty to assess */
+    double H;                            /** Heuristic max penalty to assess */
 
     /** Partition Data *******************************************************/
     bool *partition;                     /** T/F denoting partition side     */
-    Weight *vertexGains;                 /** Gains for each vertex           */
+    double *vertexGains;                 /** Gains for each vertex           */
     Int *externalDegree;                 /** # edges lying across the cut    */
     Int *bhIndex;                        /** Index+1 of a vertex in the heap */
     Int *bhHeap[2];                      /** Heap data structure organized by
@@ -44,11 +44,11 @@ public:
     Int bhSize[2];                       /** Size of the boundary heap       */
 
     /** Cut Cost Metrics *****************************************************/
-    Weight heuCost;                      /** cutCost + balance penalty       */
-    Weight cutCost;                      /** Sum of edge weights in cut set  */
-    Weight W0;                           /** Sum of partition 0 node weights */
-    Weight W1;                           /** Sum of partition 1 node weights */
-    Weight imbalance;                    /** Degree to which the partitioning
+    double heuCost;                      /** cutCost + balance penalty       */
+    double cutCost;                      /** Sum of edge weights in cut set  */
+    double W0;                           /** Sum of partition 0 node weights */
+    double W1;                           /** Sum of partition 1 node weights */
+    double imbalance;                    /** Degree to which the partitioning
                                              is imbalanced, and this is
                                              computed as (0.5 - W0/W).       */
 

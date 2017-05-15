@@ -44,7 +44,7 @@ void bhRemove
     Graph *G,
     Options *O,
     Int vertex,
-    Weight gain,
+    double gain,
     bool partition,
     Int bhPosition
 );
@@ -53,10 +53,10 @@ void heapifyUp
 (
     Int *bhIndex,
     Int *bhHeap,
-    Weight *gains,
+    double *gains,
     Int vertex,
     Int position,
-    Weight gain
+    double gain
 );
 
 void heapifyDown
@@ -64,10 +64,10 @@ void heapifyDown
     Int *bhIndex,
     Int *bhHeap,
     Int size,
-    Weight *gains,
+    double *gains,
     Int vertex,
     Int position,
-    Weight gain
+    double gain
 );
 
 } // end namespace Mongoose

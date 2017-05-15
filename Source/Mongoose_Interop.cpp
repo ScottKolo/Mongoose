@@ -70,7 +70,7 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     if (!returner->x || resetEW)
     {
         Int nz = returner->nz;
-        returner->x = (Weight*) SuiteSparse_malloc(nz, sizeof(Weight));
+        returner->x = (double*) SuiteSparse_malloc(nz, sizeof(double));
         attachEdgeWeights = true;
     }
 
@@ -79,7 +79,7 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     if (!returner->w || resetNW)
     {
         Int n = returner->n;
-        returner->w = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
+        returner->w = (double*) SuiteSparse_malloc(n, sizeof(double));
         attachNodeWeights = true;
     }
 

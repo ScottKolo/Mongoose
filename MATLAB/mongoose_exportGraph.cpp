@@ -21,7 +21,7 @@ void mexFunction
     Int n = G->n;
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gx = G->x;
+    double *Gx = G->x;
 
     FILE *troll = fopen("troll.mtx", "w");
     fprintf(troll, "%ld %ld %ld\n", n, n, Gp[n]);

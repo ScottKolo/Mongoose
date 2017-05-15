@@ -14,11 +14,11 @@ struct SwapCandidate
 {
     Int vertex;
     bool partition;
-    Weight nodeWeight;
-    Weight gain;
-    Weight heuCost;
+    double nodeWeight;
+    double gain;
+    double heuCost;
     Int bhPosition;
-    Weight imbalance;
+    double imbalance;
 
     SwapCandidate(){
         vertex = 0;
@@ -42,7 +42,7 @@ void fmSwap
     Graph *G,
     Options *O,
     Int vertex,
-    Weight gain,
+    double gain,
     bool oldPartition,
     Int *mark,
     Int markValue
@@ -53,7 +53,7 @@ void calculateGain
     Graph *G,
     Options *O,
     Int vertex,
-    Weight *out_gain,
+    double *out_gain,
     Int *out_externalDegree
 );
 

@@ -64,8 +64,8 @@ Graph* Graph::Create (
     ret->cs_nz = -1; /* Compressed Column Format */
     ret->p = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
     ret->i = (Int*) SuiteSparse_malloc(nz, sizeof(Int));
-    ret->x = (Weight*) SuiteSparse_malloc(nz, sizeof(Weight));
-    ret->w = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
+    ret->x = (double*) SuiteSparse_malloc(nz, sizeof(double));
+    ret->w = (double*) SuiteSparse_malloc(n, sizeof(double));
     ret->X = 0.0;
     ret->W = 0.0;
     ret->H = 0.0;
@@ -77,7 +77,7 @@ Graph* Graph::Create (
     }
 
     ret->partition = (bool*) SuiteSparse_malloc(n, sizeof(bool));
-    ret->vertexGains = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
+    ret->vertexGains = (double*) SuiteSparse_malloc(n, sizeof(double));
     ret->externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->bhIndex = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->bhHeap[0] = (Int*) SuiteSparse_malloc(n, sizeof(Int));
@@ -137,8 +137,8 @@ Graph* Graph::Create (
     ret->cs_nz = -1; /* Compressed Column Format */
     ret->p = (Int*) SuiteSparse_malloc((n+1), sizeof(Int));
     ret->i = (Int*) SuiteSparse_malloc(nz, sizeof(Int));
-    ret->x = (Weight*) SuiteSparse_malloc(nz, sizeof(Weight));
-    ret->w = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
+    ret->x = (double*) SuiteSparse_malloc(nz, sizeof(double));
+    ret->w = (double*) SuiteSparse_malloc(n, sizeof(double));
     ret->X = 0.0;
     ret->W = _parent->W;
     ret->H = 0.0;
@@ -150,7 +150,7 @@ Graph* Graph::Create (
     }
 
     ret->partition = (bool*) SuiteSparse_malloc(n, sizeof(bool));
-    ret->vertexGains = (Weight*) SuiteSparse_malloc(n, sizeof(Weight));
+    ret->vertexGains = (double*) SuiteSparse_malloc(n, sizeof(double));
     ret->externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->bhIndex = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->bhHeap[0] = (Int*) SuiteSparse_malloc(n, sizeof(Int));
@@ -197,11 +197,11 @@ Graph::~Graph()
 
     p = (Int*) SuiteSparse_free(p);
     i = (Int*) SuiteSparse_free(i);
-    x = (Weight*) SuiteSparse_free(x);
-    w = (Weight*) SuiteSparse_free(w);
+    x = (double*) SuiteSparse_free(x);
+    w = (double*) SuiteSparse_free(w);
 
     partition = (bool*) SuiteSparse_free(partition);
-    vertexGains = (Weight*) SuiteSparse_free(vertexGains);
+    vertexGains = (double*) SuiteSparse_free(vertexGains);
     externalDegree = (Int*) SuiteSparse_free(externalDegree);
     bhIndex = (Int*) SuiteSparse_free(bhIndex);
     bhHeap[0] = (Int*) SuiteSparse_free(bhHeap[0]);

@@ -44,8 +44,8 @@ Graph *coarsen(Graph *G, Options *O)
     Int cn = G->cn;
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gx = G->x;
-    Weight *Gw = G->w;
+    double *Gx = G->x;
+    double *Gw = G->w;
 
     Int *matching = G->matching;
     Int *matchmap = G->matchmap;
@@ -57,11 +57,11 @@ Graph *coarsen(Graph *G, Options *O)
 
     Int *Cp = C->p;
     Int *Ci = C->i;
-    Weight *Cx = C->x;
-    Weight *Cw = C->w;
-    Weight *gains = C->vertexGains;
+    double *Cx = C->x;
+    double *Cw = C->w;
+    double *gains = C->vertexGains;
     Int munch = 0;
-    Weight X = 0.0;
+    double X = 0.0;
 
     /* Hashtable stores column pointer values. */
     Int *htable = (Int*) SuiteSparse_malloc(cn, sizeof(Int));
@@ -89,8 +89,8 @@ Graph *coarsen(Graph *G, Options *O)
 
         Int ps = Cp[k] = munch;     /* The munch start for this column */
 
-        Weight nodeWeight = 0.0;
-        Weight sumEdgeWeights = 0.0;
+        double nodeWeight = 0.0;
+        double sumEdgeWeights = 0.0;
         for (Int i = 0; i < 3 && v[i] != -1; i++)
         {
             /* Read the matched vertex and accumulate the node weight. */
@@ -103,7 +103,7 @@ Graph *coarsen(Graph *G, Options *O)
                 if (toCoarsened == k) continue;         /* Delete self-edges */
 
                 /* Read the edge weight and accumulate the sum of edge weights. */
-                Weight edgeWeight = Gx[p];
+                double edgeWeight = Gx[p];
                 sumEdgeWeights += Gx[p];
 
                 /* Check the hashtable before scattering. */
@@ -148,7 +148,7 @@ Graph *coarsen(Graph *G, Options *O)
      * the problem into multiple connected components. */
     if (O->doExpensiveChecks)
     {
-        Weight W = 0.0;
+        double W = 0.0;
         for (Int k = 0; k < cn; k++)
         {
             Int degree = Cp[k+1] - Cp[k];

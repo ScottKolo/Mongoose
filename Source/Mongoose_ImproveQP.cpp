@@ -23,9 +23,9 @@ void improveCutUsingQP
     /* Unpack structure fields */
     Int n = G->n;
     Int *Gp = G->p;
-    Weight *Gx = G->x;              // edge weights
-    Weight *Gw = G->w;              // node weights
-    Weight *gains = G->vertexGains;
+    double *Gx = G->x;              // edge weights
+    double *Gw = G->w;              // node weights
+    double *gains = G->vertexGains;
     Int *externalDegree = G->externalDegree;
     Int *bhIndex = G->bhIndex;
 
@@ -55,7 +55,7 @@ void improveCutUsingQP
     ASSERT (QP->lo <= QP->hi);
 
     /* Convert the guess from discrete to continuous. */
-    Weight *D = QP->D;
+    double *D = QP->D;
     double *guess = QP->x;
     bool *partition = G->partition;
     for (Int k = 0; k < n; k++)
@@ -75,7 +75,7 @@ void improveCutUsingQP
                 guess[k] = MONGOOSE_IN_BOUNDARY(k) ? 0.25 : 0.0;
             }
         }
-        Weight maxWeight = -INFINITY;
+        double maxWeight = -INFINITY;
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
             maxWeight = MONGOOSE_MAX2(maxWeight, Gx[p]);
@@ -167,7 +167,7 @@ void improveCutUsingQP
     G->W0 = cost.W[0];
     G->W1 = cost.W[1];
     G->imbalance = cost.imbalance;
-    Weight absImbalance = fabs(G->imbalance);
+    double absImbalance = fabs(G->imbalance);
     G->heuCost = G->cutCost +
                  (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
 

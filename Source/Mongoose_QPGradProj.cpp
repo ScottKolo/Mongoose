@@ -90,8 +90,8 @@ double QPgradproj
     Int n = G->n;                  /* problem dimension */
     Int *Ep = G->p;                /* points into Ex or Ei */
     Int *Ei = G->i;                /* adjacent vertices for each node */
-    Weight *Ex = G->x;             /* edge weights */
-    Weight *Ew = G->w;             /* node weights; a'x = b, lo <= b <= hi */
+    double *Ex = G->x;             /* edge weights */
+    double *Ew = G->w;             /* node weights; a'x = b, lo <= b <= hi */
 
     double lo = QP->lo ;
     double hi = QP->hi ;
@@ -144,7 +144,7 @@ double QPgradproj
             {
                 double xk = x[k];
                 s += Ew[k] * xk;
-                Weight r = 0.5 - xk;
+                double r = 0.5 - xk;
                 for (Int p = Ep[k]; p < Ep[k+1]; p++)
                 {
                     mygrad[Ei[p]] += r * Ex[p];
@@ -232,7 +232,7 @@ double QPgradproj
 
         /* otherwise st = 1 and y is as computed above */
         Int nc = 0; /* number of changes (number of j for which y_j != x_j) */
-        Weight s = 0.;
+        double s = 0.;
         for (Int j = 0; j < n; j++) Dgrad[j] = 0.;
 
         // consider nodes j in the FreeSet_list

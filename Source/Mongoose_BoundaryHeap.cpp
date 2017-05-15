@@ -21,10 +21,10 @@ void bhLoad
     Int n = G->n;
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gx = G->x;
-    Weight *Gw = G->w;
+    double *Gx = G->x;
+    double *Gw = G->w;
     bool *partition = G->partition;
-    Weight *gains = G->vertexGains;
+    double *gains = G->vertexGains;
     Int *externalDegree = G->externalDegree;
 
     /* Keep track of the cut cost. */
@@ -41,11 +41,11 @@ void bhLoad
         bool kPartition = partition[k];
         cost.W[kPartition] += Gw[k];
 
-        Weight gain = 0.0;
+        double gain = 0.0;
         Int exD = 0;
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            Weight edgeWeight = Gx[p];
+            double edgeWeight = Gx[p];
             bool onSameSide = (kPartition == partition[Gi[p]]);
             gain += (onSameSide ? -edgeWeight : edgeWeight);
             if (!onSameSide)
@@ -87,7 +87,7 @@ void bhInsert
     Int *bhIndex = G->bhIndex;
     Int *bhHeap = G->bhHeap[vp];
     Int size = G->bhSize[vp];
-    Weight *gains = G->vertexGains;
+    double *gains = G->vertexGains;
 
     bhHeap[size] = vertex;
     MONGOOSE_PUT_BHINDEX(vertex, size);
@@ -136,12 +136,12 @@ void bhRemove
     Graph *G,
     Options *O,
     Int vertex,
-    Weight gain,
+    double gain,
     bool partition,
     Int bhPosition
 )
 {
-    Weight *gains = G->vertexGains;
+    double *gains = G->vertexGains;
     Int *bhIndex = G->bhIndex;
     Int *bhHeap = G->bhHeap[partition];
     Int size = (--G->bhSize[partition]);
@@ -170,17 +170,17 @@ void heapifyUp
 (
     Int *bhIndex,
     Int *bhHeap,
-    Weight *gains,
+    double *gains,
     Int vertex,
     Int position,
-    Weight gain
+    double gain
 )
 {
     if (position == 0) return;
 
     Int posParent = MONGOOSE_HEAP_PARENT(position);
     Int pVertex = bhHeap[posParent];
-    Weight pGain = gains[pVertex];
+    double pGain = gains[pVertex];
 
     /* If we need to swap this node with the parent then: */
     if (pGain < gain)
@@ -201,10 +201,10 @@ void heapifyDown
     Int *bhIndex,
     Int *bhHeap,
     Int size,
-    Weight *gains,
+    double *gains,
     Int vertex,
     Int position,
-    Weight gain
+    double gain
 )
 {
     if (position >= size) return;
@@ -215,8 +215,8 @@ void heapifyDown
     Int lv = (lp < size ? bhHeap[lp] : -1);
     Int rv = (rp < size ? bhHeap[rp] : -1);
 
-    Weight lg = (lv >= 0 ? gains[lv] : -INFINITY);
-    Weight rg = (rv >= 0 ? gains[rv] : -INFINITY);
+    double lg = (lv >= 0 ? gains[lv] : -INFINITY);
+    double rg = (rv >= 0 ? gains[rv] : -INFINITY);
 
     if (gain < lg || gain < rg)
     {

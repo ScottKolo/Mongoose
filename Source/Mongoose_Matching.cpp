@@ -144,7 +144,7 @@ void matching_PA(Graph *G, Options *O)
     Int cn = G->cn;
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gx = G->x;
+    double *Gx = G->x;
     Int *matching = G->matching;
     Int *matchmap = G->matchmap;
     Int *invmatchmap = G->invmatchmap;
@@ -170,14 +170,14 @@ void matching_PA(Graph *G, Options *O)
         if (MONGOOSE_IS_MATCHED(k)) continue;
 
         Int heaviestNeighbor = -1;
-        Weight heaviestWeight = -1.0;
+        double heaviestWeight = -1.0;
 
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
             Int neighbor = Gi[p];
 
             /* Keep track of the heaviest. */
-            Weight x = Gx[p];
+            double x = Gx[p];
             if (x > heaviestWeight)
             {
                 heaviestWeight = x;
@@ -276,7 +276,7 @@ void matching_DavisPA(Graph *G, Options *O)
     Int *matchtype = G->matchtype;
 
     /* The brotherly threshold is the Davis constant times average degree. */
-    Weight bt = O->davisBrotherlyThreshold * ((Weight) G->nz / (Weight) G->n);
+    double bt = O->davisBrotherlyThreshold * ((double) G->nz / (double) G->n);
 
     /* In order for us to use Passive-Aggressive matching,
      * all unmatched vertices must have matched neighbors. */
@@ -346,7 +346,7 @@ void matching_HEM(Graph *G, Options *O)
     Int cn = G->cn;
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gx = G->x;
+    double *Gx = G->x;
     Int *matching = G->matching;
     Int *matchmap = G->matchmap;
     Int *invmatchmap = G->invmatchmap;
@@ -358,7 +358,7 @@ void matching_HEM(Graph *G, Options *O)
         if (MONGOOSE_IS_MATCHED(k)) continue;
 
         Int heaviestNeighbor = -1;
-        Weight heaviestWeight = -1.0;
+        double heaviestWeight = -1.0;
         for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
             Int neighbor = Gi[p];
@@ -367,7 +367,7 @@ void matching_HEM(Graph *G, Options *O)
             if (MONGOOSE_IS_MATCHED(neighbor)) continue;
 
             /* Keep track of the heaviest. */
-            Weight x = Gx[p];
+            double x = Gx[p];
             if (x > heaviestWeight)
             {
                 heaviestWeight = x;

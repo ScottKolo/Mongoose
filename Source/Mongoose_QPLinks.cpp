@@ -22,8 +22,8 @@ void QPlinks
     Int n = G->n;
     Int *Ep = G->p;
     Int *Ei = G->i;
-    Weight *Ex = G->x;      // TODO allow Ex NULL (means all 1s)
-    Weight *a = G->w;       // TODO allow a NULL (means all 1s)
+    double *Ex = G->x;      // TODO allow Ex NULL (means all 1s)
+    double *a = G->w;       // TODO allow a NULL (means all 1s)
 
     /* working array */
     double *D = QP->D;
@@ -52,7 +52,7 @@ void QPlinks
         }
         // TODO do we also check a [k] > 0 ?
         s += a[k] * xk;
-        Weight r = 0.5 - xk;
+        double r = 0.5 - xk;
         for (Int p = Ep[k]; p < Ep[k+1]; p++)
         {
             grad[Ei[p]] += r * Ex[p];   // TODO allow Ex NULL (all 1s)

@@ -110,7 +110,7 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     LogInfo("Reading matrix data...\n");
     Int *I = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
     Int *J = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
-    Weight *val = (Weight *) SuiteSparse_malloc(nz, sizeof(Weight));
+    double *val = (double *) SuiteSparse_malloc(nz, sizeof(double));
 
     if (!I || !J || !val)
     {

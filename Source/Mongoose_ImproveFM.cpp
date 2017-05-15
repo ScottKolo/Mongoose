@@ -20,7 +20,7 @@ void improveCutUsingFM(Graph *G, Options *O)
 
     if (!O->useFM) return;
 
-    Weight heuCost = INFINITY;
+    double heuCost = INFINITY;
     for (Int i = 0; i < O->fmMaxNumRefinements && G->heuCost < heuCost; i++)
     {
         heuCost = G->heuCost;
@@ -35,13 +35,13 @@ void improveCutUsingFM(Graph *G, Options *O)
 //-----------------------------------------------------------------------------
 void fmRefine_worker(Graph *G, Options *O)
 {
-    Weight *Gw = G->w;
-    Weight W = G->W;
+    double *Gw = G->w;
+    double W = G->W;
     Int **bhHeap  = G->bhHeap;
     Int *bhIndex = G->bhIndex;
     Int *bhSize = G->bhSize;
     Int *externalDegree = G->externalDegree;
-    Weight *gains = G->vertexGains;
+    double *gains = G->vertexGains;
     bool *partition = G->partition;
 
     Int *mark = G->mark;
@@ -60,8 +60,8 @@ void fmRefine_worker(Graph *G, Options *O)
     workingCost.imbalance = bestCost.imbalance = G->imbalance;
 
     /* Tolerance and the linear penalty to assess. */
-    Weight tol = O->tolerance;
-    Weight H = G->H;
+    double tol = O->tolerance;
+    double H = G->H;
 
     // fix tolerance if out of range
     if (tol < 0)
@@ -90,17 +90,17 @@ void fmRefine_worker(Graph *G, Options *O)
                 if (MONGOOSE_MARKED(v)) continue;
 
                 /* Read the gain for the vertex. */
-                Weight gain = gains[v];
+                double gain = gains[v];
 
                 /* The balance penalty is the penalty to assess for the move. */
-                Weight nodeWeight = Gw[v];
-                Weight imbalance = workingCost.imbalance + (h ? -1.0 : 1.0) *
+                double nodeWeight = Gw[v];
+                double imbalance = workingCost.imbalance + (h ? -1.0 : 1.0) *
                                    (nodeWeight / W);
-                Weight absImbalance = fabs(imbalance);
-                Weight imbalanceDelta = absImbalance - fabs(workingCost.imbalance);
+                double absImbalance = fabs(imbalance);
+                double imbalanceDelta = absImbalance - fabs(workingCost.imbalance);
 
                 /* If the move hurts the balance past tol, add a penalty. */
-                Weight balPenalty = 0.0;
+                double balPenalty = 0.0;
                 if (imbalanceDelta > 0 && absImbalance > tol)
                 {
                     balPenalty = absImbalance * H;
@@ -108,7 +108,7 @@ void fmRefine_worker(Graph *G, Options *O)
 
                 /* Heuristic cost is the cut cost reduced by the gain for making this move.
                  * The gain for the move is amplified by any impact to the balance penalty. */
-                Weight heuCost = workingCost.cutCost - (gain - balPenalty);
+                double heuCost = workingCost.cutCost - (gain - balPenalty);
 
                 /* If our heuristic value is better than the running one: */
                 if (heuCost < bestCandidate.heuCost)
@@ -150,7 +150,7 @@ void fmRefine_worker(Graph *G, Options *O)
             workingCost.W[bestCandidate.partition]  -= bestCandidate.nodeWeight;
             workingCost.W[!bestCandidate.partition] += bestCandidate.nodeWeight;
             workingCost.imbalance = bestCandidate.imbalance;
-            Weight absImbalance = fabs(bestCandidate.imbalance);
+            double absImbalance = fabs(bestCandidate.imbalance);
             workingCost.heuCost = workingCost.cutCost +
                                   (absImbalance > tol ? absImbalance * H : 0.0);
 
@@ -229,7 +229,7 @@ void fmSwap
     Graph *G,
     Options *O,
     Int vertex,
-    Weight gain,
+    double gain,
     bool oldPartition,
     Int *mark,
     Int markValue
@@ -237,9 +237,9 @@ void fmSwap
 {
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gx = G->x;
+    double *Gx = G->x;
     bool *partition = G->partition;
-    Weight *gains = G->vertexGains;
+    double *gains = G->vertexGains;
     Int *externalDegree = G->externalDegree;
     Int *bhIndex = G->bhIndex;
     Int **bhHeap = G->bhHeap;
@@ -262,8 +262,8 @@ void fmSwap
         if (!sameSide) exD++;
 
         /* Update the neighbor's gain. */
-        Weight edgeWeight = Gx[p];
-        Weight neighborGain = gains[neighbor];
+        double edgeWeight = Gx[p];
+        double neighborGain = gains[neighbor];
         neighborGain += 2 * (sameSide ? -edgeWeight : edgeWeight);
         gains[neighbor] = neighborGain;
 
@@ -323,22 +323,22 @@ void calculateGain
     Graph *G,
     Options *O,
     Int vertex,
-    Weight *out_gain,
+    double *out_gain,
     Int *out_externalDegree
 )
 {
     Int *Gp = G->p;
     Int *Gi = G->i;
-    Weight *Gx = G->x;
+    double *Gx = G->x;
     bool *partition = G->partition;
 
     bool vp = partition[vertex];
 
-    Weight gain = 0.0;
+    double gain = 0.0;
     Int externalDegree = 0;
     for (Int p = Gp[vertex]; p < Gp[vertex+1]; p++)
     {
-        Weight ew = (Gx ? Gx[p] : 1.0);
+        double ew = (Gx ? Gx[p] : 1.0);
         bool sameSide = (partition[Gi[p]] == vp);
         gain += (sameSide ? -ew : ew);
 
