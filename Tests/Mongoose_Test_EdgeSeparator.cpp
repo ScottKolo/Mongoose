@@ -70,10 +70,9 @@ void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit
         {
             target = 1 - target;
         }
-        LogTest("Split: " << split << ", Target: " << target << ", Tolerance: " << tolerance);
-        std::cout << "Split: " << split << ", Target: " << target << ", Tolerance: " << tolerance << std::endl;
-        assert (split <= target + 100*tolerance);
-        assert (split >= target - 100*tolerance);
+        // Tolerance bounds are soft, so we relax them by 5
+        assert (split <= target + 5*tolerance);
+        assert (split >= target - 5*tolerance);
 
         Logger::printTimingInfo();
         LogTest("Cut Properties:");

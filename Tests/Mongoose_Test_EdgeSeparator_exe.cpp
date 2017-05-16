@@ -29,6 +29,10 @@ int main(int argn, char** argv)
         // Default split of 0.5
         targetSplit = 0.5;
     }
+    else
+    {
+        targetSplit = std::stod(argv[2]);
+    }
 
     // Read in input file name
     std::string inputFile = std::string(argv[1]);

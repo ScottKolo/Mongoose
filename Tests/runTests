@@ -94,7 +94,8 @@ def runTests(args):
                                 sys.exit(status)
                         if args.tests == 'edgesep' or args.tests == 'all':
                             print("Calling Edge Separator Test...")
-                            status = call(["./tests/mongoose_test_edgesep", matrix_path])
+                            target_split = args.target_split
+                            status = call(["./tests/mongoose_test_edgesep", matrix_path, str(target_split)])
                             if status:
                                 print("Error! Edge Separator Test Failure")
                                 sys.exit(status)
@@ -202,6 +203,13 @@ def parseArguments():
                         choices=['all', 'memory', 'io', 'edgesep', 'performance', 'valgrind', 'none'],
                         default='none',
                         help='choice of which tests to run')
+    parser.add_argument('-s', '--split',
+                        action='store',
+                        metavar='target_split',
+                        type=float,
+                        dest='target_split',
+                        default=0.5,
+                        help='target split ratio for edge separator test [default: 0.5]')
     parser.add_argument('-d', '--matrix-directory', 
                         action='store', 
                         metavar='matrix_dir',

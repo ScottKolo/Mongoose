@@ -213,6 +213,7 @@ set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 
 add_test(Edge_Separator_Test ./runTests -min 1 -max 15 -t edgesep)
 add_test(Edge_Separator_Test_2 ./runTests -t edgesep -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533)
+add_test(Target_Split_Test ./runTests -min 1 -max 15 -t edgesep -s 0.3)
 
 # Memory Tests
 add_executable(mongoose_test_memory 
