@@ -15,12 +15,13 @@
 #include <math.h>
 #include <stdio.h>
 #include <stddef.h>
+#include "Mongoose_Internal.hpp"
 #ifdef MATLAB_MEX_FILE
 #include "mex.h"
 #endif
 
 /* same as Int in Mongoose */
-typedef csi SuiteSparse_long ;
+typedef SuiteSparse_long csi ;
 
 /* CSparse Macros */
 #ifndef CS_CSC
