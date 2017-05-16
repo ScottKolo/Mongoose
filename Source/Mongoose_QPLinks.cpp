@@ -23,7 +23,7 @@ void QPlinks
     Int *Ep = G->p;
     Int *Ei = G->i;
     double *Ex = G->x;
-    double *a = G->w
+    double *a = G->w;
 
     /* working array */
     double *D = QP->D;

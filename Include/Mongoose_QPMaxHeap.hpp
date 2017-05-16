@@ -1,4 +1,4 @@
-difndef Mongoose_QPMaxHeap_hpp
+#ifndef Mongoose_QPMaxHeap_hpp
 #define Mongoose_QPMaxHeap_hpp
 
 #include "Mongoose_Internal.hpp"
