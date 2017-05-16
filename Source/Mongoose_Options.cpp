@@ -18,7 +18,7 @@ Options* Options::Create()
 
         ret->coarsenLimit = 256;
         ret->matchingStrategy = HEMDavisPA;
-        ret->doCommunityMatching = true;//false;
+        ret->doCommunityMatching = false;
         ret->davisBrotherlyThreshold = 2.0;
 
         ret->guessCutType = Pseudoperipheral_Fast;
