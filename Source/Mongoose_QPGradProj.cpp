@@ -305,8 +305,10 @@ double QPgradproj
                 aty += Ew [j] * y [j] ;
                 atx += Ew [j] * x [j] ;
             }
-            int good_aty = (lo-tol <= aty) && (aty <= hi+tol) ;
-            int good_atx = (lo-tol <= atx) && (atx <= hi+tol) ;
+            int good_aty = ((aty - lo) / (lo + tol) >= -tol) &&
+                           ((hi - aty) / (hi + tol) >= -tol);
+            int good_atx = ((atx - lo) / (lo + tol) >= -tol) &&
+                           ((hi - atx) / (hi + tol) >= -tol);
             if (!good_aty || !good_atx)
             {
                 if (!good_aty)
@@ -321,10 +323,10 @@ double QPgradproj
                 }
                 FFLUSH ;
             }
-            ASSERT (lo-tol <= aty) ;
-            ASSERT (aty <= hi+tol) ;
-            ASSERT (lo-tol <= atx) ;
-            ASSERT (atx <= hi+tol) ;
+            ASSERT (((aty - lo) / (lo + tol) >= -tol)) ;
+            ASSERT (((hi - aty) / (hi + tol) >= -tol)) ;
+            ASSERT (((atx - lo) / (lo + tol) >= -tol)) ;
+            ASSERT (((hi - atx) / (hi + tol) >= -tol)) ;
         }
 #endif
 
