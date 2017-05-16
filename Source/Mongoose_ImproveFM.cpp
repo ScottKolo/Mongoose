@@ -63,12 +63,6 @@ void fmRefine_worker(Graph *G, Options *O)
     double tol = O->tolerance;
     double H = G->H;
 
-    // fix tolerance if out of range
-    if (tol < 0)
-    {
-        O->tolerance = tol = 0. ;
-    }
-
     Int fmSearchDepth = O->fmSearchDepth;
     Int fmConsiderCount = O->fmConsiderCount;
     Int i = 0;
