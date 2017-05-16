@@ -1,12 +1,8 @@
 #include <string>
 #include "Mongoose_IO.hpp"
 #include "Mongoose_EdgeSeparator.hpp"
-#include <cassert>
 #include "Mongoose_Test.hpp"
-#include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 
 using namespace Mongoose;
 

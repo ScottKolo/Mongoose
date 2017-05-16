@@ -1,11 +1,6 @@
 
 #include "Mongoose_EdgeSeparator.hpp"
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_IO.hpp"
-#include "Mongoose_Graph.hpp"
-#include "Mongoose_Options.hpp"
-#include "Mongoose_Interop.hpp"
-#include <string>
 #include <iostream>
 #include "Mongoose_Test.hpp"
 

@@ -1,7 +1,4 @@
 #include "Mongoose_Test.hpp"
-#include "Mongoose_Internal.hpp"
-#include <string>
-#include <stdlib.h>
 
 using namespace Mongoose;
 

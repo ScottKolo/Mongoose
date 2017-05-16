@@ -8,9 +8,6 @@
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Interop.hpp"
-#include "Mongoose_CSparse.hpp"
-#include <string>
-#include <stdlib.h>
 
 using namespace Mongoose;
 

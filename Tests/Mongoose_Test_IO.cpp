@@ -1,8 +1,6 @@
 #include <string>
 #include "Mongoose_IO.hpp"
-#include <cassert>
 #include "Mongoose_Test.hpp"
-#include "Mongoose_Internal.hpp"
 
 using namespace Mongoose;
 

@@ -1,15 +1,12 @@
 #include <string>
 #include "Mongoose_IO.hpp"
 #include "Mongoose_EdgeSeparator.hpp"
-#include <cassert>
 #include "Mongoose_Test.hpp"
-#include <iostream>
 #include <fstream>
-#include "Mongoose_Logger.hpp"
 
 using namespace Mongoose;
 
-void runEdgeSeparatorTest(const std::string &inputFile)
+void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
 {
     LogTest("Running Edge Separator Test on " << inputFile);
         
@@ -25,6 +22,8 @@ void runEdgeSeparatorTest(const std::string &inputFile)
         SuiteSparse_free(options);
         assert(false);
     }
+
+    options->targetSplit = targetSplit;
     
     // Read graph from file
     G = readGraph(inputFile);
@@ -51,12 +50,30 @@ void runEdgeSeparatorTest(const std::string &inputFile)
     {
         // The graph should be partitioned
         assert (G->partition != NULL);
+        int count = 0;
         for (int i = 0; i < G->n; i++)
         {
             bool equals_0 = (G->partition[i] == 0);
             bool equals_1 = (G->partition[i] == 1);
             assert(equals_0 != equals_1);
+
+            count += G->partition[i];
         }
+        double tolerance = options->tolerance;
+        double split = (double) count / (double) G->n;
+        double target = targetSplit;
+        if (split > 0.5)
+        {
+            split = 1 - split;
+        }
+        if (targetSplit > 0.5)
+        {
+            target = 1 - target;
+        }
+        LogTest("Split: " << split << ", Target: " << target << ", Tolerance: " << tolerance);
+        std::cout << "Split: " << split << ", Target: " << target << ", Tolerance: " << tolerance << std::endl;
+        assert (split <= target + 100*tolerance);
+        assert (split >= target - 100*tolerance);
 
         Logger::printTimingInfo();
         LogTest("Cut Properties:");
