@@ -1,6 +1,4 @@
 #include "Mongoose_Test.hpp"
-#include "Mongoose_Internal.hpp"
-#include "Mongoose_Logger.hpp"
 
 using namespace Mongoose;
 
@@ -17,11 +15,19 @@ int main(int argn, char** argv)
 {
     SuiteSparse_start();
 
-    if (argn != 2)
+    if (argn < 2 || argn > 3)
     {
         // Wrong number of arguments - return error
         SuiteSparse_finish();
         return 1;
+    }
+
+    double targetSplit;
+
+    if (argn == 2)
+    {
+        // Default split of 0.5
+        targetSplit = 0.5;
     }
 
     // Read in input file name
@@ -34,7 +40,7 @@ int main(int argn, char** argv)
     Logger::setTimingFlag(true);
 
     // Run the Edge Separator test
-    runEdgeSeparatorTest(inputFile);
+    runEdgeSeparatorTest(inputFile, targetSplit);
 
     SuiteSparse_finish();
 

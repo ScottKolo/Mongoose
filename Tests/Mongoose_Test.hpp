@@ -18,7 +18,7 @@
 void runIOTest(const std::string &inputFile, bool validGraph);
 void runMemoryTest(const std::string &inputFile);
 void runTimingTest(const std::string &inputFile);
-void runEdgeSeparatorTest(const std::string &inputFile);
+void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit);
 void runPerformanceTest(const std::string &inputFile, const std::string &outputFile);
 
 // Currently unused
