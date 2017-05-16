@@ -79,7 +79,7 @@ void QPcheckCom
     Int markValue = G->markValue;
     double *D  = QP->D ;   /* diagonal of quadratic */
     double *grad  = QP->gradient ;   /* gradient at current x */
-    double tol = 1e-8 ;
+    double tol = O->gradprojTol;
 
     // get workspace
     Int *w0 = (Int *) calloc (n+1, sizeof (Int)) ;    // [
@@ -275,7 +275,7 @@ void QPcheckCom
 
     /* check that cost decreases */
 
-    if ( newcost > tol + QP->check_cost )
+    if ( newcost / QP->check_cost > (1 + tol) )
     {
         PR (("cost increases, old %30.15e new %30.15e\n",
             QP->check_cost, newcost)) ;
