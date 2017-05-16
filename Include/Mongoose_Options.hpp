@@ -33,7 +33,6 @@ struct Options
 
     /**** Quadratic Programming Options **************************************/
     bool useQPGradProj;          /* Flag governing the use of gradproj       */
-    bool useQPBallOpt;           /* Flag governing the use of qp ball opt    */
     double gradprojTol;          /* Convergence tol for projected gradient   */
     Int gradprojIterationLimit;  /* Max # of iterations for gradproj         */
 
