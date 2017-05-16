@@ -31,7 +31,7 @@ int main(int argn, char** argv)
     }
     else
     {
-        targetSplit = std::stod(argv[2]);
+        targetSplit = atof(argv[2]);
     }
 
     // Read in input file name
