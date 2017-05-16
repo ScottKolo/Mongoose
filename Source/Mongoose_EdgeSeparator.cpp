@@ -18,7 +18,7 @@ int ComputeEdgeSeparator(Graph *G)
     // use default options if not present
     Options *O = Options::Create ( ) ;
     if (!O) return (EXIT_FAILURE) ;
-    int result = ComputeEdgeSeparator(Graph *G, O) ;
+    int result = ComputeEdgeSeparator(G, O) ;
     SuiteSparse_free (O) ;
     return (result) ;
 }
