@@ -75,8 +75,6 @@ void QPcheckCom
 
     double lo = QP->lo ;
     double hi = QP->hi ;
-    Int *mark = G->mark;
-    Int markValue = G->markValue;
     double *D  = QP->D ;   /* diagonal of quadratic */
     double *grad  = QP->gradient ;   /* gradient at current x */
     double tol = O->gradprojTol;
