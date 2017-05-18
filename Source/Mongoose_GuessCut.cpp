@@ -114,8 +114,6 @@ Int diagBFS
     Graph *G,
     Options *O,
     Int *stack,
-    Int *mark,
-    Int markStart,
     Int *inout_start
 )
 {
@@ -124,8 +122,9 @@ Int diagBFS
     Int *Gp = G->p;
     Int *Gi = G->i;
     double *Gw = G->w;
-
-    Int markValue = markStart;
+    // TODO: This should work with the mark array, but may still overflow!
+    G->checkForSpaceAndResetIfNeeded(n+1);
+    Int markStart = G->getMarkValue();
     Int start = *inout_start;
 
     double halfW = G->W / 2.0;
@@ -133,7 +132,7 @@ Int diagBFS
 
     Int head = 0, tail = 0;
     stack[tail++] = start;
-    MONGOOSE_MARK(start);
+    G->mark(start);
 
     Int v, vmark;
     while (head < tail)
@@ -141,14 +140,14 @@ Int diagBFS
         v = stack[head++];
         W0 += Gw[v];
         partition[v] = (W0 < halfW);
-        vmark = mark[v]+1;
+        vmark = G->getMarkArrayValue(v)+1;
 
         for (Int p = Gp[v]; p < Gp[v+1]; p++)
         {
             Int neighbor = Gi[p];
-            if (mark[neighbor] < markStart)
+            if (G->getMarkArrayValue(neighbor) < markStart)
             {
-                mark[neighbor] = vmark;
+                G->mark(neighbor, vmark);
                 stack[tail++] = neighbor;
             }
         }
@@ -159,7 +158,7 @@ Int diagBFS
 
     /* Choose the next start based on the smallest degree. */
     Int minDegree = n;
-    for (Int v = stack[--head]; mark[v] == maxLevel && minDegree > 1;
+    for (Int v = stack[--head]; G->getMarkArrayValue(v) == maxLevel && minDegree > 1;
          v = stack[--head])
     {
         Int degree = Gp[v+1] - Gp[v];
@@ -188,15 +187,12 @@ void partBFS
     Int *Gi = G->i;
     double *Gw = G->w;
 
-    Int *mark = G->mark;
-    Int markValue = G->markValue;
-
     double halfW = G->W / 2.0;
     double W0 = 0.0;
 
     Int *stack = G->matchmap, head = 0, tail = 0;
     stack[tail++] = start;
-    MONGOOSE_MARK(start);
+    G->mark(start);
 
     while (head < tail)
     {
@@ -207,17 +203,16 @@ void partBFS
         for (Int p = Gp[v]; p < Gp[v+1]; p++)
         {
             Int neighbor = Gi[p];
-            if (!MONGOOSE_MARKED(neighbor))
+            if (!G->isMarked(neighbor))
             {
-                MONGOOSE_MARK(neighbor);
+                G->mark(neighbor);
                 stack[tail++] = neighbor;
             }
         }
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
-    G->markValue = markValue ;
+    G->clearMarkArray();
 }
 
 //-----------------------------------------------------------------------------
@@ -235,14 +230,12 @@ void findAllPseudoperipheralNodes
 )
 {
     Int n = G->n;
-    Int *mark = G->mark;
-    Int markValue = G->markValue;
     Int diameter = 0;
 
     Int *stack = G->matchmap, head = 0, tail = 0;
 
     /* Add the first vertex to the list. */
-    Int startVertex = O->randomSeed % n;
+    Int startVertex = O->randomSeed % n; // TODO: Not incredibly random
     list[tail++] = startVertex;
     ppvMark[startVertex] = true;
 
@@ -256,17 +249,17 @@ void findAllPseudoperipheralNodes
         // and reset if it does, BEFORE using the markValue
 
         Int start = list[head++];
-        diameter = diagBFS(G, O, stack, mark, markValue, &start);
+        diameter = diagBFS(G, O, stack, &start);
 
         // clear all marks
-        markValue += diameter + 1;      // TODO: reset if int overflow
+        G->clearMarkArray(diameter + 1);
 
         /* Go backwards through the last level and add new vertices to the list
          * of pseudoperipheral nodes that we're finding. */
         for (Int s = n-1; s >= 0; s--)
         {
             Int v = stack[s];
-            if (!MONGOOSE_MARKED(v)) break;
+            if (!G->isMarked(v)) break;
 
             if (!ppvMark[v])
             {
@@ -275,12 +268,11 @@ void findAllPseudoperipheralNodes
             }
         }
 
-        MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
+        G->clearMarkArray();
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
-    G->markValue = markValue ;
+    G->clearMarkArray();
 
     *listsize = tail;
 }
@@ -297,8 +289,6 @@ void pseudoperipheralGuess
 )
 {
     Int n = G->n;
-    Int *mark = G->mark;
-    Int markValue = G->markValue;
 
     Int *stack = G->matching;
     for (Int k = 0; k < n; k++) stack[k] = 0;
@@ -315,15 +305,14 @@ void pseudoperipheralGuess
         // and reset if it does, BEFORE using the markValue
 
         diameter = newDiameter;
-        newDiameter = diagBFS(G, O, stack, mark, markValue, &start);
+        newDiameter = diagBFS(G, O, stack, &start);
 
         // clear all marks
-        markValue += newDiameter + 2;       // TODO reset if int overflow
+        G->clearMarkArray(newDiameter + 2);
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
-    G->markValue = markValue ;
+    G->clearMarkArray();
 
     /* Load the boundary heap. */
     bhLoad(G, O);

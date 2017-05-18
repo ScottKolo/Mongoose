@@ -20,8 +20,6 @@ Int diagBFS
     Graph *G,
     Options *O,
     Int *stack,
-    Int *mark,
-    Int markStart,
     Int *start
 );
 

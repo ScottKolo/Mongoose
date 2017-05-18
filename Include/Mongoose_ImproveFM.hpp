@@ -43,9 +43,7 @@ void fmSwap
     Options *O,
     Int vertex,
     double gain,
-    bool oldPartition,
-    Int *mark,
-    Int markValue
+    bool oldPartition
 );
 
 void calculateGain

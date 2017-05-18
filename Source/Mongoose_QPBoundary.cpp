@@ -89,9 +89,6 @@ void QPboundary
     double lo = QP->lo ;
     double hi = QP->hi ;
 
-    Int *mark = G->mark;
-    Int markValue = G->markValue;
-
     /* work array */
     double *D  = QP->D;    /* diagonal of quadratic */
 
@@ -310,9 +307,9 @@ void QPboundary
         {
             Int i = Ei[p] ;
             ASSERT(i != j) ;                       // graph has no self edges
-            MONGOOSE_MARK(i);
+            G->mark(i);
         }
-        MONGOOSE_MARK(j);
+        G->mark(j);
 
         // for each i that follows after j in the FreeSet
         for (Int ifree = jfree + 1 ; ifree < nFreeSet ; ifree++)
@@ -326,7 +323,7 @@ void QPboundary
                 continue ;
             }
 
-            if (!MONGOOSE_MARKED(i))
+            if (!G->isMarked(i))
             {
                 // node i is not adjacent to j in the graph G 
                 double aj = a[j];
@@ -456,7 +453,7 @@ void QPboundary
         }
 
         // clear the marks from all the nodes
-        MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
+        G->clearMarkArray();
 
     }
 
@@ -743,8 +740,7 @@ void QPboundary
     QP->ib = ib;
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
-    G->markValue = markValue ;
+    G->clearMarkArray();
 
     DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
     PR (("----- QPboundary end ]\n")) ;

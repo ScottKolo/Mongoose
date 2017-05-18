@@ -112,8 +112,6 @@ void improveCutUsingQP
     cost.imbalance = G->imbalance;
 
     /* Do the recommended swaps and compute the new cut cost. */
-    Int *mark = G->mark;
-    Int markValue = G->markValue;
 
     for (Int k = 0; k < n; k++)
     {
@@ -146,8 +144,7 @@ void improveCutUsingQP
                 G, O,
                 k,
                 gains[k],
-                partition[k],
-                mark, markValue
+                partition[k]
             );
 
             if (externalDegree[k] > 0) bhInsert(G, k);
@@ -155,8 +152,7 @@ void improveCutUsingQP
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(n) ;
-    G->markValue = markValue ;
+    G->clearMarkArray();
 
     /* Free the QP structure */
     QP->~QPDelta();

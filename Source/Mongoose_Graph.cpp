@@ -40,7 +40,7 @@ Graph::Graph()
     invmatchmap = NULL;
     matchtype = NULL;
 
-    mark = NULL;
+    markArray = NULL;
     markValue = 1;
 }
 
@@ -104,9 +104,9 @@ Graph* Graph::Create (
     ret->matchmap = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->invmatchmap = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->matchtype = (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    ret->mark = (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    ret->markArray = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->markValue = 1;
-    if(!ret->matching || !ret->matchmap || !ret->invmatchmap || !ret->mark
+    if(!ret->matching || !ret->matchmap || !ret->invmatchmap || !ret->markArray
     || !ret->matchtype )
     {
          ret->~Graph();
@@ -177,9 +177,9 @@ Graph* Graph::Create (
     ret->matchmap = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->invmatchmap = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->matchtype = (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    ret->mark = (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    ret->markArray = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->markValue = 1;
-    if(!ret->matching || !ret->matchmap || !ret->invmatchmap || !ret->mark
+    if(!ret->matching || !ret->matchmap || !ret->invmatchmap || !ret->markArray
     || !ret->matchtype )
     {
          ret->~Graph();
@@ -219,15 +219,134 @@ Graph::~Graph()
     invmatchmap = (Int*) SuiteSparse_free(invmatchmap);
     matchtype = (Int*) SuiteSparse_free(matchtype);
 
-    mark = (Int*) SuiteSparse_free(mark);
+    markArray = (Int*) SuiteSparse_free(markArray);
     markValue = 1;
 }
 
-void resetMarkArray(Int *mark, Int n)
+/* Initialize a top level graph with a a set of options. */
+bool Graph::initialize(Options *options)
 {
+    Int *Gp = p;
+    double *Gx = x;
+    double *Gw = w;
+
+    cn = 0;
+    matching =       (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    matchmap =       (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    invmatchmap =    (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    matchtype =      (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    markArray =      (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    markValue = 1;
+
+    partition =     (bool*) SuiteSparse_malloc(n, sizeof(bool));
+    bhIndex =        (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    bhHeap[0] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    bhHeap[1] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    vertexGains = (double*) SuiteSparse_malloc(n, sizeof(double));
+    externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
+
+    /* Check memory and abort if necessary. */
+    if (!matching || !matchmap || !invmatchmap || !matchtype ||
+        !markArray || !partition || !bhIndex || !bhHeap[0] ||
+        !bhHeap[1] ||
+        !vertexGains || !externalDegree)
+    {
+        matching =       (Int*) SuiteSparse_free(matching);
+        matchmap =       (Int*) SuiteSparse_free(matchmap);
+        invmatchmap =    (Int*) SuiteSparse_free(invmatchmap);
+        matchtype =      (Int*) SuiteSparse_free(matchtype);
+        markArray =      (Int*) SuiteSparse_free(markArray);
+        partition =     (bool*) SuiteSparse_free(partition);
+        bhIndex =        (Int*) SuiteSparse_free(bhIndex);
+        bhHeap[0] =      (Int*) SuiteSparse_free(bhHeap[0]);
+        bhHeap[1] =      (Int*) SuiteSparse_free(bhHeap[1]);
+        vertexGains = (double*) SuiteSparse_free(vertexGains);
+        externalDegree = (Int*) SuiteSparse_free(externalDegree);
+        return false;
+    }
+
+    /* Compute worst-case gains, and compute X. */
+    double X = 0.0, W = 0.0;
+    double *gains = vertexGains;
+    for (Int k = 0; k < n; k++)
+    {
+        W += Gw[k];
+        double sumEdgeWeights = 0.0;
+
+        for (Int p = Gp[k]; p < Gp[k+1]; p++) sumEdgeWeights += Gx[p];
+
+        gains[k] = -sumEdgeWeights;
+        X += sumEdgeWeights;
+    }
+    this->X = X;
+    this->W = W;
+    H = 2.0 * X;
+    return true;
+}
+
+void Graph::clearMarkArray()
+{
+    markValue += 1;
+    if (markValue < 0)
+    {
+        resetMarkArray();
+    }
+}
+
+void Graph::clearMarkArray(Int incrementBy)
+{
+    markValue += incrementBy;
+    if (markValue < 0)
+    {
+        resetMarkArray();
+    }
+}
+
+void Graph::mark(Int index)
+{
+    markArray[index] = markValue;
+}
+
+// Only use this if you know what you're doing!
+void Graph::mark(Int index, Int value)
+{
+    markArray[index] = value;
+}
+
+void Graph::unmark(Int index)
+{
+    markArray[index] = 0;
+}
+
+void Graph::checkForSpaceAndResetIfNeeded(Int incrementBy)
+{
+    if (markValue + incrementBy < markValue)
+    {
+        resetMarkArray();
+    }
+}
+
+bool Graph::isMarked(Int index)
+{
+    return markArray[index] == markValue;
+}
+
+Int Graph::getMarkValue()
+{
+    return markValue;
+}
+
+Int Graph::getMarkArrayValue(Int index)
+{
+    return markArray[index];
+}
+
+void Graph::resetMarkArray()
+{
+    markValue = 1;
     for (Int i = 0; i < n; i++)
     {
-        mark[i] = 0;
+        markArray[i] = 0;
     }
 }
 

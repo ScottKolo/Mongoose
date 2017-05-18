@@ -44,9 +44,6 @@ void fmRefine_worker(Graph *G, Options *O)
     double *gains = G->vertexGains;
     bool *partition = G->partition;
 
-    Int *mark = G->mark;
-    Int markValue = G->markValue;
-
     /* Keep a stack of moved nodes. */
     Int *stack = G->matchmap;
     Int head = 0, tail = 0;
@@ -81,7 +78,7 @@ void fmRefine_worker(Graph *G, Options *O)
             {
                 /* Read the vertex, and if it's marked, try the next one. */
                 Int v = heap[c];
-                if (MONGOOSE_MARKED(v)) continue;
+                if (G->isMarked(v)) continue;
 
                 /* Read the gain for the vertex. */
                 double gain = gains[v];
@@ -122,7 +119,7 @@ void fmRefine_worker(Graph *G, Options *O)
         if (bestCandidate.heuCost < INFINITY)
         {
             productive = true;
-            MONGOOSE_MARK(bestCandidate.vertex);
+            G->mark(bestCandidate.vertex);
 
             /* Move the vertex from the boundary into the move set. */
             bhRemove(G, O, bestCandidate.vertex, bestCandidate.gain,
@@ -135,8 +132,7 @@ void fmRefine_worker(Graph *G, Options *O)
                 G, O,
                 bestCandidate.vertex,
                 bestCandidate.gain,
-                bestCandidate.partition,
-                mark, markValue
+                bestCandidate.partition
             );
 
             /* Update the cut cost. */
@@ -165,7 +161,7 @@ void fmRefine_worker(Graph *G, Options *O)
         Int bhVertexPosition = MONGOOSE_GET_BHINDEX(vertex);
 
         /* Unmark this vertex. */
-        mark[vertex] = markValue-1;     // TODO better to set to zero
+        G->unmark(vertex);
 
         /* It is possible, although rare, that a vertex may have gone
          * from not in the boundary to an undo state that places it in
@@ -183,15 +179,14 @@ void fmRefine_worker(Graph *G, Options *O)
             G, O,
             vertex,
             gains[vertex],
-            partition[vertex],
-            mark, markValue     // TODO redundant args
+            partition[vertex]
         );
 
         if (externalDegree[vertex] > 0) bhInsert(G, vertex);
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
+    G->clearMarkArray();
 
     /* Re-add any vertices that were moved that are still on the boundary. */
     for (Int i = 0; i < head; i++)
@@ -204,8 +199,7 @@ void fmRefine_worker(Graph *G, Options *O)
     }
 
     // clear the marks from all the nodes
-    MONGOOSE_CLEAR_ALL_MARKS(G->n) ;
-    G->markValue = markValue ;
+    G->clearMarkArray();
 
     /* Save the best cost back into the graph. */
     G->heuCost   = bestCost.heuCost;
@@ -224,9 +218,7 @@ void fmSwap
     Options *O,
     Int vertex,
     double gain,
-    bool oldPartition,
-    Int *mark,
-    Int markValue
+    bool oldPartition
 )
 {
     Int *Gp = G->p;
@@ -299,7 +291,7 @@ void fmSwap
         /* Else the neighbor wasn't in the heap so add it. */
         else
         {
-            if (!MONGOOSE_MARKED(neighbor))
+            if (!G->isMarked(neighbor))
             {
                 ASSERT (!MONGOOSE_IN_BOUNDARY(neighbor));
                 bhInsert(G, neighbor);

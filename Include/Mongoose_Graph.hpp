@@ -9,6 +9,7 @@
 #define Mongoose_Graph_hpp
 
 #include "Mongoose_Internal.hpp"
+#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {
@@ -65,35 +66,35 @@ public:
                                               2: Brotherly
                                               3: Community                   */
 
-    /** Mark Data ************************************************************/
-    Int *mark;                           /** O(n) mark array                 */
-    Int markValue;                       /** Mark array can be cleared in O(k)
-                                             by incrementing markValue.
-                                             Implicitly, a mark value less than
-                                             markValue is unmarked.          */
+
 
     /* Constructor & Destructor */
     Graph();
     static Graph *Create (const Int _n, const Int _nz);
     static Graph *Create (Graph *_parent);
     ~Graph();
+    bool initialize(Options *options);
+
+    void clearMarkArray();
+    void clearMarkArray(Int incrementBy);
+    void mark(Int index);
+    void mark(Int index, Int value);
+    void unmark(Int index);
+    void checkForSpaceAndResetIfNeeded(Int incrementBy);
+    Int getMarkValue();
+    Int getMarkArrayValue(Int index);
+    bool isMarked(Int index);
+
+private:
+    /** Mark Data ************************************************************/
+    Int *markArray;                      /** O(n) mark array                 */
+    Int markValue;                       /** Mark array can be cleared in O(k)
+                                             by incrementing markValue.
+                                             Implicitly, a mark value less than
+                                             markValue is unmarked.          */
+    void resetMarkArray();
 };
 
-void resetMarkArray(Int *mark, Int n);
-
 } // end namespace Mongoose
-
-/* Mongoose graph-related macros */
-#ifndef MONGOOSE_MARKED
-#define MONGOOSE_MARKED(a)   (mark[(a)] == markValue)
-#endif
-
-#ifndef MONGOOSE_MARK
-#define MONGOOSE_MARK(a)     (mark[(a)] = markValue);
-#endif
-
-#ifndef MONGOOSE_CLEAR_ALL_MARKS
-#define MONGOOSE_CLEAR_ALL_MARKS(n)    if (++markValue < 0) { markValue = 1; resetMarkArray(mark, (n)); }
-#endif
 
 #endif
