@@ -29,7 +29,7 @@ void mexFunction
     if(!O)
         mexErrMsgTxt("Unable to get Options struct");
 
-    initialize(G, O);
+    G->initialize(O);
     match(G, O);
     Graph *G_coarse = coarsen(G, O);
 
