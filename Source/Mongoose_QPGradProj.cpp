@@ -131,6 +131,7 @@ double QPgradproj
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
         DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ;
 
+#ifndef NDEBUG
         // check grad
         {
             // for debugging, just use malloc
@@ -160,6 +161,7 @@ double QPgradproj
             ASSERT (maxerr < tol) ;
             free (mygrad) ;
         }
+#endif
 
         /* Moving in the gradient direction. */
         for (Int k = 0; k < n; k++) y[k] = x[k] - grad[k];
