@@ -122,7 +122,7 @@ Int diagBFS
     Int *Gp = G->p;
     Int *Gi = G->i;
     double *Gw = G->w;
-    // TODO: This should work with the mark array, but may still overflow!
+    
     G->checkForSpaceAndResetIfNeeded(n+1);
     Int markStart = G->getMarkValue();
     Int start = *inout_start;
