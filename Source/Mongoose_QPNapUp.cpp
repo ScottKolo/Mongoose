@@ -58,7 +58,7 @@ double QPnapup      /* return lambda */
                 bound_heap[n_bound] = i;
                 asum++;
                 t = x[i] - 1.;
-                minbound = MONGOOSE_MIN2 (minbound, t);
+                minbound = std::min (minbound, t);
                 breakpts[i] = t;
             }
             else if (xi > 0.)
@@ -68,7 +68,7 @@ double QPnapup      /* return lambda */
                 asum += x[i];
                 a2sum++;
                 t = x[i];
-                minfree = MONGOOSE_MIN2 (minfree, t);
+                minfree = std::min (minfree, t);
                 breakpts[i] = t;
             }
         }
@@ -85,7 +85,7 @@ double QPnapup      /* return lambda */
                 bound_heap[n_bound] = i;
                 asum += ai;
                 t = (x[i] - 1.) / ai;
-                minbound = MONGOOSE_MIN2 (minbound, t);
+                minbound = std::min (minbound, t);
                 breakpts[i] = t;
             }
             else if (xi > 0.)
@@ -95,7 +95,7 @@ double QPnapup      /* return lambda */
                 asum += x[i] * ai;
                 a2sum += ai * ai;
                 t = x[i] / ai;
-                minfree = MONGOOSE_MIN2 (minfree, t);
+                minfree = std::min (minfree, t);
                 breakpts[i] = t;
             }
         }
@@ -108,7 +108,7 @@ double QPnapup      /* return lambda */
         /* check to see if zero slope achieved without changing the free set  */
         /* remember that the slope must always be adjusted by b               */
         /*------------------------------------------------------------------- */
-        new_break = MONGOOSE_MIN2 (minfree, minbound);
+        new_break = std::min (minfree, minbound);
         s = asum - new_break * a2sum;
         if ((s <= b) || (new_break == INFINITY)) /* done */
         {

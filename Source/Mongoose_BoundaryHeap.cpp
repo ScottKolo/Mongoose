@@ -67,7 +67,7 @@ void bhLoad
     double targetSplit = O->targetSplit ;
     if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
 
-    G->imbalance = targetSplit - MONGOOSE_MIN2 (G->W0, G->W1) / G->W;
+    G->imbalance = targetSplit - std::min(G->W0, G->W1) / G->W;
     G->heuCost = (G->cutCost + (fabs(G->imbalance) > O->tolerance
                                 ? fabs(G->imbalance) * G->H
                                 : 0.0));

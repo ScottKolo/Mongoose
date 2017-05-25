@@ -256,7 +256,7 @@ void QPcheckCom
         }
     }
     s = 0. ;
-    for (j = 0; j < n; j++) s = MONGOOSE_MAX2 (s, fabs (gtemp [j]-grad [j])) ;
+    for (j = 0; j < n; j++) s = std::max (s, fabs (gtemp [j]-grad [j])) ;
     if ( s > tol )
     {
         PR (("error (%e) in grad: current grad, true grad, x:\n", s)) ;

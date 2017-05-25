@@ -15,7 +15,6 @@
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_QPGradProj.hpp"
 #include "Mongoose_QPNapsack.hpp"
-#include "Mongoose_QPBoundary.hpp"
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 
@@ -155,7 +154,7 @@ double QPgradproj
             for (Int k = 0; k < n; k++)
             {
                 double err = fabs (grad [k]-mygrad [k]) ;
-                maxerr = MONGOOSE_MAX2 (maxerr, err) ;
+                maxerr = std::max (maxerr, err) ;
             }
             // PR (("check grad %g\n", maxerr)) ;
             ASSERT (maxerr < tol) ;
@@ -172,7 +171,7 @@ double QPgradproj
 
         /* Compute the maximum error. */
         err = -INFINITY;
-        for (Int k = 0; k < n; k++) err = MONGOOSE_MAX2(err, fabs(y[k]-x[k]));
+        for (Int k = 0; k < n; k++) err = std::max(err, fabs(y[k]-x[k]));
 
         /* If we converged or got exhausted, save context and exit. */
         if ((err <= tol) || (it >= limit))
@@ -224,7 +223,7 @@ double QPgradproj
         if (st_den > 0.)
         {
             // PR (("change y\n")) ;
-            double st = MONGOOSE_MAX2 (st_num / st_den, 0.001);
+            double st = std::max(st_num / st_den, 0.001);
             for (Int j = 0; j < n; j++) y[j] = x[j] - st * grad[j];
             lambda = QPnapsack(y, n, lo, hi, Ew, lambda,
                 FreeSet_status, wx, wi1, wi2);

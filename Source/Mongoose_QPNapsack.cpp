@@ -182,7 +182,7 @@ double QPnapsack        /* return the final lambda */
         {
             PR (("napsack case 1 up\n")) ;
             lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
-            lambda = MONGOOSE_MAX2(0., lambda);
+            lambda = std::max(0., lambda);
         }
         else
         {
@@ -195,7 +195,7 @@ double QPnapsack        /* return the final lambda */
         {
             PR (("napsack case 2 down\n")) ;
             lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
-            lambda = MONGOOSE_MIN2(lambda, 0.);
+            lambda = std::min(lambda, 0.);
         }
         else
         {
@@ -248,13 +248,13 @@ double QPnapsack        /* return the final lambda */
                     PR (("napsack case 4a up\n")) ;
                     lambda = 0.;
                     lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
-                    lambda = MONGOOSE_MAX2(lambda, 0.);
+                    lambda = std::max(lambda, 0.);
                 }
                 else if (slope0 < lo)
                 {
                     PR (("napsack case 4b up\n")) ;
                     lambda = QPnapup(x, n, lambda, Gw, lo, w, heap1, heap2);
-                    lambda = MONGOOSE_MIN2(0., lambda);
+                    lambda = std::min(0., lambda);
                 }
                 else
                 {
@@ -271,7 +271,7 @@ double QPnapsack        /* return the final lambda */
                 {
                     PR (("napsack case 3d down\n")) ;
                     lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
-                    lambda = MONGOOSE_MIN2(0., lambda);
+                    lambda = std::min(0., lambda);
                 }
                 else
                 {
@@ -284,7 +284,7 @@ double QPnapsack        /* return the final lambda */
                 {
                     PR (("napsack case 4d up\n")) ;
                     lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
-                    lambda = MONGOOSE_MAX2(lambda, 0.);
+                    lambda = std::max(lambda, 0.);
                 }
                 else
                 {

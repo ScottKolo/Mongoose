@@ -50,8 +50,8 @@ void improveCutUsingQP
     // QP upper and lower bounds.  targetSplit +/- tol is in the range 0 to 1,
     // and then this factor is multiplied by the sum of all node weights (G->W)
     // to get the QP lo and hi.
-    QP->lo = G->W * MONGOOSE_MAX2 (0., targetSplit - tol);
-    QP->hi = G->W * MONGOOSE_MIN2 (1., targetSplit + tol);
+    QP->lo = G->W * std::max(0., targetSplit - tol);
+    QP->hi = G->W * std::min(1., targetSplit + tol);
     ASSERT (QP->lo <= QP->hi);
 
     /* Convert the guess from discrete to continuous. */
@@ -78,7 +78,7 @@ void improveCutUsingQP
         double maxWeight = -INFINITY;
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            maxWeight = MONGOOSE_MAX2(maxWeight, Gx[p]);
+            maxWeight = std::max(maxWeight, Gx[p]);
         }
         D[k] = maxWeight;
     }
@@ -125,7 +125,7 @@ void improveCutUsingQP
             cost.W[oldPartition] -= Gw[k];
             cost.W[newPartition] += Gw[k];
             cost.imbalance = targetSplit -
-                MONGOOSE_MIN2 (cost.W[0], cost.W[1]) / G->W;
+                std::min(cost.W[0], cost.W[1]) / G->W;
 
             Int bhVertexPosition = MONGOOSE_GET_BHINDEX(k);
 

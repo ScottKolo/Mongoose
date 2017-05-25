@@ -59,7 +59,7 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     returner->cs_m = G->m;
     returner->cs_nz = G->nz;
     returner->cs_nzmax = G->nzmax;
-    returner->n = MONGOOSE_MAX2(G->n, G->m);
+    returner->n = std::max(G->n, G->m);
     returner->nz = G->p[G->n];
     returner->p = (Int*) G->p;
     returner->i = (Int*) G->i;

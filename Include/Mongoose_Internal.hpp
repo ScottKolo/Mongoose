@@ -3,14 +3,6 @@
 #ifndef Mongoose_Internal_hpp
 #define Mongoose_Internal_hpp
 
-#ifndef MONGOOSE_MIN2
-#define MONGOOSE_MIN2(x,y) ((x)<(y) ? (x) : (y))
-#endif
-
-#ifndef MONGOOSE_MAX2
-#define MONGOOSE_MAX2(x,y) ((x)>(y) ? (x) : (y))
-#endif
-
 #define FREESET_DEBUG 0
 
 #include <climits>

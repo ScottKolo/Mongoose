@@ -57,7 +57,7 @@ double QPnapdown            /* return lambda */
                 n_bound++;
                 bound_heap[n_bound] = i;
                 t = x[i];
-                maxbound = MONGOOSE_MAX2(maxbound, t);
+                maxbound = std::max(maxbound, t);
                 breakpts[i] = t;
             }
             else if (xi < 1.)
@@ -67,7 +67,7 @@ double QPnapdown            /* return lambda */
                 t = x[i] - 1.;
                 asum += x[i];
                 a2sum++;
-                maxfree = MONGOOSE_MAX2(maxfree, t);
+                maxfree = std::max(maxfree, t);
                 breakpts[i] = t;
             }
             else
@@ -85,7 +85,7 @@ double QPnapdown            /* return lambda */
                 n_bound++;
                 bound_heap[n_bound] = i;
                 t = x[i] / ai;
-                maxbound = MONGOOSE_MAX2(maxbound, t);
+                maxbound = std::max(maxbound, t);
                 breakpts[i] = t;
             }
             else if (xi < 1.)
@@ -95,7 +95,7 @@ double QPnapdown            /* return lambda */
                 t = (x[i] - 1.) / ai;
                 asum += x[i] * ai;
                 a2sum += ai * ai;
-                maxfree = MONGOOSE_MAX2(maxfree, t);
+                maxfree = std::max(maxfree, t);
                 breakpts[i] = t;
             }
             else
@@ -111,7 +111,7 @@ double QPnapdown            /* return lambda */
     maxsteps = 2 * n + 1;
     for (k = 1; k <= maxsteps; k++)
     {
-        new_break = MONGOOSE_MAX2(maxfree, maxbound);
+        new_break = std::max(maxfree, maxbound);
         s = asum - new_break * a2sum;
         if ((s >= b) || (new_break == -INFINITY)) /* done */
         {
