@@ -297,10 +297,6 @@ void pseudoperipheralGuess
     Int guessSearchDepth = O->guessSearchDepth;
     for (Int i = 0; i < guessSearchDepth || diameter < newDiameter; i++)
     {
-
-        // TODO make sure markValue + (n+1) does not overflow
-        // and reset if it does, BEFORE using the markValue
-
         diameter = newDiameter;
         newDiameter = diagBFS(G, O, stack, &start);
 
