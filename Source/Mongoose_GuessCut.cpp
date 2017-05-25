@@ -122,7 +122,7 @@ Int diagBFS
     Int *Gp = G->p;
     Int *Gi = G->i;
     double *Gw = G->w;
-    
+
     G->checkForSpaceAndResetIfNeeded(n+1);
     Int markStart = G->getMarkValue();
     Int start = *inout_start;
@@ -245,9 +245,6 @@ void findAllPseudoperipheralNodes
     {
         if (i++ > guessSearchDepth) break;
 
-        // TODO make sure markValue + (n+1) does not overflow
-        // and reset if it does, BEFORE using the markValue
-
         Int start = list[head++];
         diameter = diagBFS(G, O, stack, &start);
 
@@ -260,7 +257,7 @@ void findAllPseudoperipheralNodes
         {
             Int v = stack[s];
             if (!G->isMarked(v)) break;
-
+            // TODO: This should never be executed?
             if (!ppvMark[v])
             {
                 list[tail++] = v;
