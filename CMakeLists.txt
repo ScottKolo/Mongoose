@@ -257,7 +257,7 @@ add_executable(mongoose_unit_test_edgesep
         Tests/Mongoose_UnitTest_EdgeSep_exe.cpp)
 target_link_libraries(mongoose_unit_test_edgesep mongoose_dbg)
 set_target_properties(mongoose_unit_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
-add_test(Unit_Test_Graph ./tests/mongoose_unit_test_edgesep)
+add_test(Unit_Test_EdgeSep ./tests/mongoose_unit_test_edgesep)
 
 message( STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
