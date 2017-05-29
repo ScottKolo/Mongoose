@@ -5,18 +5,20 @@
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 #include "Mongoose_QPNapsack.hpp"
+#include "Mongoose_QPLinks.hpp"
+#include "Mongoose_QPBoundary.hpp"
 
 namespace Mongoose
 {
 
-void improveCutUsingQP
+bool improveCutUsingQP
 (
     Graph *G,
     Options *O,
     bool isInitial
 )
 {
-    if (!O->useQPGradProj) return;
+    if (!O->useQPGradProj) return false;
 
     Logger::tic(QPTiming);
 
@@ -34,7 +36,7 @@ void improveCutUsingQP
     if (!QP)
     {
         Logger::toc(QPTiming);
-        return;
+        return false;
     }
 
     // set the QP parameters
@@ -94,7 +96,11 @@ void improveCutUsingQP
     }
 
     // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi
-    QPlinks(G, O, QP);
+    if (!QPlinks(G, O, QP))
+    {
+        Logger::toc(QPTiming);
+        return false;
+    }
 
     // lo <= a'x <= hi now holds (lo and hi are modified as needed in QPLinks)
 
@@ -168,6 +174,8 @@ void improveCutUsingQP
                  (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
 
     Logger::toc(QPTiming);
+
+    return true;
 }
 
 } // end namespace Mongoose

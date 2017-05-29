@@ -8,7 +8,7 @@
 namespace Mongoose
 {
 
-void QPlinks
+bool QPlinks
 (
     Graph *G,
     Options *O,
@@ -48,7 +48,8 @@ void QPlinks
         double xk = x[k];
         if (xk < 0. || xk > 1.)
         {
-            // TODO return an error condition here
+            // Error!
+            return false;
         }
         // TODO do we also check a [k] > 0 ?
         s += a[k] * xk;
@@ -84,6 +85,7 @@ void QPlinks
     // b starts between: lo < b < hi
     QP->ib = (s <= QP->lo ? -1 : s < QP->hi ? 0 : 1);
 
+#ifndef NDEBUG
     // for debugging only
     QP->check_cost = INFINITY ;
 
@@ -100,6 +102,9 @@ void QPlinks
     ASSERT (IMPLIES ((ib ==  0), ( (QP->lo < (QP->b + eps)) && (QP->b < (QP->hi + eps))))) ; // lo < b <hi
     ASSERT (IMPLIES ((ib == +1), ( fabs(QP->b - QP->hi) < eps ))) ;  // b = hi
     ASSERT ((QP->lo <= (QP->b + eps) && QP->b <= (QP->hi + eps) )) ; // x feasible
+#endif
+
+    return true;
 }
 
 } // end namespace Mongoose

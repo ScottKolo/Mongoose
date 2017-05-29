@@ -9,21 +9,7 @@
 namespace Mongoose
 {
 
-void QPlinks
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP          /* pointer to QPDelta structure  */
-);
-
 double QPgradproj
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP
-);
-
-void QPboundary
 (
     Graph *G,
     Options *O,

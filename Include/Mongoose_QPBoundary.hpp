@@ -9,7 +9,7 @@
 namespace Mongoose
 {
 
-void QPBoundary
+void QPboundary
 (
     Graph *G,
     Options *O,

@@ -56,7 +56,11 @@ bool guessCut(Graph *G, Options *O)
           G->W0 = G->W;
           G->W1 = 0.0;
           bhLoad(G, O);
-          improveCutUsingQP(G, O, true);
+          if (!improveCutUsingQP(G, O, true))
+          {
+              return false;
+              // Error - QP Failure
+          }
           break;
       }
     }

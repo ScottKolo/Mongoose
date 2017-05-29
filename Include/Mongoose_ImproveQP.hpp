@@ -10,7 +10,7 @@
 namespace Mongoose
 {
 
-void improveCutUsingQP
+bool improveCutUsingQP
 (
     Graph *G,
     Options *O,

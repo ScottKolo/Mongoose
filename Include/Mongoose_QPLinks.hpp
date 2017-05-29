@@ -9,7 +9,7 @@
 namespace Mongoose
 {
 
-void QPlinks
+bool QPlinks
 (
     Graph *G,
     Options *O,
