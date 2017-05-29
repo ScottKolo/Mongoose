@@ -2,8 +2,6 @@
 #include "Mongoose_GuessCut.hpp"
 #include "Mongoose_ImproveQP.hpp"
 #include "Mongoose_Waterdance.hpp"
-#include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -200,7 +198,7 @@ bool findAllPseudoperipheralNodes
     Int *stack = G->matchmap, head = 0, tail = 0;
 
     /* Add the first vertex to the list. */
-    Int startVertex = O->randomSeed % n; // TODO: Not incredibly random
+    Int startVertex = std::rand() % n;
     list[tail++] = startVertex;
     ppvMark[startVertex] = true;
 

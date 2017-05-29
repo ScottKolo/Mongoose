@@ -25,9 +25,9 @@ int ComputeEdgeSeparator(Graph *G)
 
 int ComputeEdgeSeparator(Graph *G, Options *O)
 {
-
     // Check inputs
     if (!optionsAreValid(O)) return (EXIT_FAILURE) ;
+    std::srand(O->randomSeed);
 
     if (!G) return EXIT_FAILURE;
 
