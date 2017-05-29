@@ -8,38 +8,6 @@
 namespace Mongoose
 {
 
-Int diagBFS
-(
-    Graph *G,
-    Options *O,
-    Int *stack,
-    Int *mark,
-    Int markStart,
-    Int *inout_start
-);
-
-void partBFS
-(
-    Graph *G,
-    Options *O,
-    Int start
-);
-
-void findAllPseudoperipheralNodes
-(
-    Graph *G,
-    Options *O,
-    Int *list,
-    Int *listsize,
-    bool *ppvMark
-);
-
-void pseudoperipheralGuess
-(
-    Graph *G,
-    Options *O
-);
-
 //-----------------------------------------------------------------------------
 // This function takes a graph with options and computes the initial guess cut
 //-----------------------------------------------------------------------------
@@ -49,12 +17,9 @@ bool guessCut(Graph *G, Options *O)
     {
       case Pseudoperipheral_All:
       {
-          bool *ppvMark = (bool*) SuiteSparse_calloc(G->n, sizeof(bool));
-          if (!ppvMark) return false;
-
           /* Find pseudoperipheral nodes from which we can generate guess cuts. */
           Int *list = G->matching, size = 0;
-          findAllPseudoperipheralNodes(G, O, list, &size, ppvMark);
+          if (!findAllPseudoperipheralNodes(G, O, list, &size)) return false;
 
           /* Find the best guess. */
           double bestCost = INFINITY;
@@ -78,8 +43,6 @@ bool guessCut(Graph *G, Options *O)
           /* Load the best guess. */
           partBFS(G, O, list[bestGuess]);
           bhLoad(G, O);
-
-          SuiteSparse_free(ppvMark);
           break;
       }
 
@@ -220,17 +183,19 @@ void partBFS
 // It is used as a kernel for a guess cut code that tries region-growing
 // from every pseudoperipheral node
 //-----------------------------------------------------------------------------
-void findAllPseudoperipheralNodes
+bool findAllPseudoperipheralNodes
 (
     Graph *G,
     Options *O,
     Int *list,
-    Int *listsize,
-    bool *ppvMark
+    Int *listsize
 )
 {
     Int n = G->n;
     Int diameter = 0;
+
+    bool *ppvMark = (bool*) SuiteSparse_calloc(G->n, sizeof(bool));
+    if (!ppvMark) return false;
 
     Int *stack = G->matchmap, head = 0, tail = 0;
 
@@ -257,7 +222,7 @@ void findAllPseudoperipheralNodes
         {
             Int v = stack[s];
             if (!G->isMarked(v)) break;
-            // TODO: This should never be executed?
+
             if (!ppvMark[v])
             {
                 list[tail++] = v;
@@ -272,6 +237,10 @@ void findAllPseudoperipheralNodes
     G->clearMarkArray();
 
     *listsize = tail;
+
+    SuiteSparse_free(ppvMark);
+
+    return true;
 }
 
 //-----------------------------------------------------------------------------

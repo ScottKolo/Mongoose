@@ -13,7 +13,7 @@ namespace Mongoose
 bool guessCut(Graph *G, Options *O);
 
 void pseudoperipheralGuess(Graph *G, Options *O);
-void findAllPseudoperipheralNodes(Graph *G, Options *O, Int *list, Int *listsize);
+bool findAllPseudoperipheralNodes(Graph *G, Options *O, Int *list, Int *listsize);
 
 Int diagBFS
 (
