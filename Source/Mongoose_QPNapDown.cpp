@@ -33,6 +33,7 @@ double QPnapdown            /* return lambda */
     Int *free_heap          /* work array */
 )
 {
+    ASSERT(a != NULL);
     Int i, k, e, maxsteps, n_bound, n_free;
     double ai, asum, a2sum, maxbound, maxfree, new_break, s, t, xi;
 
@@ -47,60 +48,30 @@ double QPnapdown            /* return lambda */
     n_free = 0;
     asum = 0.;
     a2sum = 0.;
-    if (a == NULL)
+    for (i = 0; i < n; i++)
     {
-        for (i = 0; i < n; i++)
+        ai = a[i];
+        xi = x[i] - ai * lambda;
+        if (xi < 0.)
         {
-            xi = x[i] - lambda;
-            if (xi < 0.)
-            {
-                n_bound++;
-                bound_heap[n_bound] = i;
-                t = x[i];
-                maxbound = std::max(maxbound, t);
-                breakpts[i] = t;
-            }
-            else if (xi < 1.)
-            {
-                n_free++;
-                free_heap[n_free] = i;
-                t = x[i] - 1.;
-                asum += x[i];
-                a2sum++;
-                maxfree = std::max(maxfree, t);
-                breakpts[i] = t;
-            }
-            else
-                asum++;
+            n_bound++;
+            bound_heap[n_bound] = i;
+            t = x[i] / ai;
+            maxbound = std::max(maxbound, t);
+            breakpts[i] = t;
         }
-    }
-    else
-    {
-        for (i = 0; i < n; i++)
+        else if (xi < 1.)
         {
-            ai = a[i];
-            xi = x[i] - ai * lambda;
-            if (xi < 0.)
-            {
-                n_bound++;
-                bound_heap[n_bound] = i;
-                t = x[i] / ai;
-                maxbound = std::max(maxbound, t);
-                breakpts[i] = t;
-            }
-            else if (xi < 1.)
-            {
-                n_free++;
-                free_heap[n_free] = i;
-                t = (x[i] - 1.) / ai;
-                asum += x[i] * ai;
-                a2sum += ai * ai;
-                maxfree = std::max(maxfree, t);
-                breakpts[i] = t;
-            }
-            else
-                asum += ai;
+            n_free++;
+            free_heap[n_free] = i;
+            t = (x[i] - 1.) / ai;
+            asum += x[i] * ai;
+            a2sum += ai * ai;
+            maxfree = std::max(maxfree, t);
+            breakpts[i] = t;
         }
+        else
+            asum += ai;
     }
 
     /*------------------------------------------------------------------- */
@@ -132,66 +103,34 @@ double QPnapdown            /* return lambda */
 
         if (n_free > 0)
         {
-            if (a == NULL)
+            while (breakpts[e = free_heap[1]] >= lambda)
             {
-                while (breakpts[e = free_heap[1]] >= lambda)
-                {
-                    a2sum--;
-                    asum = asum + (1. - x[e]);
+                ai = a[e];
+                a2sum -= ai * ai;
+                asum = asum + ai * (1. - x[e]);
 
-                    n_free = QPmaxheap_delete(free_heap, n_free, breakpts);
-                    if (n_free == 0)
-                        break;
-                }
-            }
-            else
-            {
-                while (breakpts[e = free_heap[1]] >= lambda)
+                n_free = QPmaxheap_delete(free_heap, n_free, breakpts);
+                if (n_free == 0)
                 {
-                    ai = a[e];
-                    a2sum -= ai * ai;
-                    asum = asum + ai * (1. - x[e]);
-
-                    n_free = QPmaxheap_delete(free_heap, n_free, breakpts);
-                    if (n_free == 0)
-                    {
-                        a2sum = 0.;
-                        break;
-                    }
+                    a2sum = 0.;
+                    break;
                 }
             }
         }
 
         if (n_bound > 0)
         {
-            if (a == NULL)
+            while (breakpts[e = bound_heap[1]] >= lambda)
             {
-                while (breakpts[e = bound_heap[1]] >= lambda)
-                {
-                    n_bound = QPmaxheap_delete(bound_heap, n_bound, breakpts);
-                    a2sum++;
-                    asum = asum + x[e];
-                    t = x[e] - 1.;
-                    breakpts[e] = t;
-                    n_free = QPmaxheap_add(e, free_heap, breakpts, n_free);
-                    if (n_bound == 0)
-                        break;
-                }
-            }
-            else
-            {
-                while (breakpts[e = bound_heap[1]] >= lambda)
-                {
-                    n_bound = QPmaxheap_delete(bound_heap, n_bound, breakpts);
-                    ai = a[e];
-                    a2sum += ai * ai;
-                    asum = asum + ai * x[e];
-                    t = (x[e] - 1.) / ai;
-                    breakpts[e] = t;
-                    n_free = QPmaxheap_add(e, free_heap, breakpts, n_free);
-                    if (n_bound == 0)
-                        break;
-                }
+                n_bound = QPmaxheap_delete(bound_heap, n_bound, breakpts);
+                ai = a[e];
+                a2sum += ai * ai;
+                asum = asum + ai * x[e];
+                t = (x[e] - 1.) / ai;
+                breakpts[e] = t;
+                n_free = QPmaxheap_add(e, free_heap, breakpts, n_free);
+                if (n_bound == 0)
+                    break;
             }
         }
 
