@@ -35,18 +35,15 @@ const std::string demo_files[12] = {
 int main(int argn, const char **argv)
 {
     clock_t start = clock();
-    clock_t trial_start;
-    double duration, trial_duration;
-
-    Options *options;
+    double duration;
 
     for (int k = 0; k < 12; k++)
     {
         cout << "**************************************************" << endl;
         cout << "Computing an edge cut for " << demo_files[k] << "..." << endl;
         
-        trial_start = clock();
-        options = Options::Create();
+        clock_t trial_start = clock();
+        Options *options = Options::Create();
         if (!options) return 1; // Return an error if we failed.
 
         options->doExpensiveChecks = false;
@@ -66,7 +63,7 @@ int main(int argn, const char **argv)
         printf("Cut Cost:      %.2f\n", G->cutCost);
         printf("Cut Imbalance: %.2f%%\n", fabs(100*G->imbalance));
 
-        trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
+        clock_t trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
         printf("Trial Time:    %.0fms\n", trial_duration*1000);
 
         G->~Graph();
