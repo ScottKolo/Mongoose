@@ -31,8 +31,6 @@ bool QPlinks
     Int *FreeSet_list = QP->FreeSet_list;
     double *grad = QP->gradient;  /* gradient at current x */
 
-    Int lastl = n;
-
     // FreeSet is empty
     Int nFreeSet = 0;
 
