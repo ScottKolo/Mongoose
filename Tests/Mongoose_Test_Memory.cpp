@@ -7,12 +7,12 @@
 using namespace Mongoose;
 
 void RunAllTests (
-    const std::string inputFile, 
+    const std::string &inputFile,
     Options *O
 );
 
 int RunTest (
-    const std::string inputFile, 
+    const std::string &inputFile,
     Options *O,
     int allowedMallocs
 );
@@ -71,7 +71,7 @@ void runMemoryTest(const std::string &inputFile)
 }
 
 void RunAllTests (
-    const std::string inputFile,
+    const std::string &inputFile,
     Options *O
 )
 {
@@ -112,7 +112,7 @@ void RunAllTests (
 }
 
 int RunTest (
-    const std::string inputFile, 
+    const std::string &inputFile,
     Options *O,
     int allowedMallocs
 )
