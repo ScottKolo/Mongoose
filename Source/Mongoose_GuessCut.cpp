@@ -99,10 +99,10 @@ Int diagBFS
     stack[tail++] = start;
     G->mark(start);
 
-    Int v, vmark;
+    Int vmark;
     while (head < tail)
     {
-        v = stack[head++];
+        Int v = stack[head++];
         W0 += Gw[v];
         partition[v] = (W0 < halfW);
         vmark = G->getMarkArrayValue(v)+1;
@@ -194,7 +194,6 @@ bool findAllPseudoperipheralNodes
 )
 {
     Int n = G->n;
-    Int diameter = 0;
 
     bool *ppvMark = (bool*) SuiteSparse_calloc(G->n, sizeof(bool));
     if (!ppvMark) return false;
@@ -213,7 +212,7 @@ bool findAllPseudoperipheralNodes
         if (i++ > guessSearchDepth) break;
 
         Int start = list[head++];
-        diameter = diagBFS(G, O, stack, &start);
+        Int diameter = diagBFS(G, O, stack, &start);
 
         // clear all marks
         G->clearMarkArray(diameter + 1);
