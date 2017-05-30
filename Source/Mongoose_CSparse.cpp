@@ -135,7 +135,7 @@ cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
  */
 cs *cs_compress (const cs *T)
 {
-    csi m, n, nz, p, k, *Cp, *Ci, *w, *Ti, *Tj;
+    csi m, n, nz, k, *Cp, *Ci, *w, *Ti, *Tj;
     double *Cx, *Tx;
     cs *C;
     if (!CS_TRIPLET (T)) return (NULL);                 /* check inputs */
@@ -148,7 +148,8 @@ cs *cs_compress (const cs *T)
     cs_cumsum (Cp, w, n);                               /* column pointers */
     for (k = 0; k < nz; k++)
     {
-        Ci [p = w [Tj [k]]++] = Ti [k];     /* A(i,j) is the pth entry in C */
+        csi p = w [Tj [k]]++;
+        Ci [p] = Ti [k];     /* A(i,j) is the pth entry in C */
         if (Cx) Cx [p] = Tx [k];
     }
     return (cs_done (C, w, NULL, 1));       /* success; release w and return C */
@@ -187,13 +188,13 @@ double cs_cumsum (csi *p, csi *c, csi n)
 csi cs_scatter (const cs *A, csi j, double beta, csi *w, double *x, csi mark,
                 cs *C, csi nz)
 {
-    csi i, p, *Ap, *Ai, *Ci;
+    csi p, *Ap, *Ai, *Ci;
     double *Ax;
     if (!CS_CSC (A) || !w || !CS_CSC (C)) return (-1);      /* check inputs */
     Ap = A->p; Ai = A->i; Ax = A->x; Ci = C->i;
     for (p = Ap [j]; p < Ap [j+1]; p++)
     {
-        i = Ai [p];                             /* A(i,j) is nonzero */
+        csi i = Ai [p];                         /* A(i,j) is nonzero */
         if (w [i] < mark)
         {
             w [i] = mark;                       /* i is new entry in column j */
