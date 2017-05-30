@@ -64,7 +64,7 @@ int main(int argn, const char **argv)
         printf("Cut Imbalance: %.2f%%\n", fabs(100*G->imbalance));
 
         clock_t trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
-        printf("Trial Time:    %.0fms\n", trial_duration*1000);
+        printf("Trial Time:    %.0lums\n", trial_duration*1000);
 
         G->~Graph();
         free(G);
