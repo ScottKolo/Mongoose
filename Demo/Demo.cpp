@@ -39,7 +39,6 @@ int main(int argn, const char **argv)
     double duration, trial_duration;
 
     Options *options;
-    Graph *G;
 
     for (int k = 0; k < 12; k++)
     {
