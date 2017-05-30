@@ -315,21 +315,21 @@ csd *cs_ddone (csd *D, cs *C, void *w, csi ok)
 /* depth-first-search of the graph of a matrix, starting at node j */
 csi cs_dfs (csi j, cs *G, csi top, csi *xi, csi *pstack, const csi *pinv)
 {
-    csi i, p, p2, done, jnew, head = 0, *Gp, *Gi;
+    csi i, p, head = 0, *Gp, *Gi;
     if (!CS_CSC (G) || !xi || !pstack) return (-1);     /* check inputs */
     Gp = G->p; Gi = G->i;
     xi [0] = j;                 /* initialize the recursion stack */
     while (head >= 0)
     {
         j = xi [head];          /* get j from the top of the recursion stack */
-        jnew = pinv ? (pinv [j]) : j;
+        csi jnew = pinv ? (pinv [j]) : j;
         if (!CS_MARKED (Gp, j))
         {
             CS_MARK (Gp, j);        /* mark node j as visited */
             pstack [head] = (jnew < 0) ? 0 : CS_UNFLIP (Gp [jnew]);
         }
-        done = 1;                   /* node j done if no unvisited neighbors */
-        p2 = (jnew < 0) ? 0 : CS_UNFLIP (Gp [jnew+1]);
+        csi done = 1;                /* node j done if no unvisited neighbors */
+        csi p2 = (jnew < 0) ? 0 : CS_UNFLIP (Gp [jnew+1]);
         for (p = pstack [head]; p < p2; p++)    /* examine all neighbors of j */
         {
             i = Gi [p];             /* consider neighbor node i */
@@ -435,7 +435,7 @@ cs *cs_submat(const cs *A, const csi i1, const csi i2,
 /* C = A(p,q) where p and q are permutations of 0..m-1 and 0..n-1. */
 cs *cs_permute (const cs *A, const csi *pinv, const csi *q, csi values)
 {
-    csi t, j, k, nz = 0, m, n, *Ap, *Ai, *Cp, *Ci;
+    csi t, k, nz = 0, m, n, *Ap, *Ai, *Cp, *Ci;
     double *Cx, *Ax;
     cs *C;
     if (!CS_CSC (A)) return (NULL);     /* check inputs */
@@ -446,7 +446,7 @@ cs *cs_permute (const cs *A, const csi *pinv, const csi *q, csi values)
     for (k = 0; k < n; k++)
     {
         Cp [k] = nz;                    /* column k of C is column q[k] of A */
-        j = q ? (q [k]) : k;
+        csi j = q ? (q [k]) : k;
         for (t = Ap [j]; t < Ap [j+1]; t++)
         {
             if (Cx && Ax) Cx [nz] = Ax [t];   /* row i of A is row pinv[i] of C */
