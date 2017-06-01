@@ -1,6 +1,9 @@
-function comparisonData = compare(plot_outliers)
+function comparisonData = compare(plot_outliers, use_weights)
     if (nargin < 1)
         plot_outliers = 0;
+    end
+    if (nargin < 2)
+        use_weights = 0;
     end
     index = UFget;
     j = 1;
@@ -11,7 +14,9 @@ function comparisonData = compare(plot_outliers)
                             'rel_mongoose_times',  [], ...
                             'avg_mongoose_imbalance', [], ...
                             'avg_metis_imbalance', [], ...
+                            'avg_mongoose_cut_weight', [], ...
                             'avg_mongoose_cut_size', [], ...
+                            'avg_metis_cut_weight', [], ...
                             'avg_metis_cut_size', [], ...
                             'rel_mongoose_cut_size', [], ...
                             'problem_id', [], ...
@@ -19,7 +24,7 @@ function comparisonData = compare(plot_outliers)
                             'problem_kind', [], ...
                             'problem_nnz', [], ...
                             'problem_n', []);
-    for i = 1:length(index.nrows)
+    for i = 1:50%length(index.nrows)
         if (index.isReal(i) && index.nnz(i) < 7E8)
             Prob = UFget(i);
             A = Prob.A;
@@ -34,7 +39,7 @@ function comparisonData = compare(plot_outliers)
             A = sign(abs(A));
 
             % Sanitize the matrix (remove diagonal, take largest scc)
-            A = mongoose_sanitizeMatrix(A);
+            A = mongoose_sanitizeMatrix(A, ~use_weights);
             
             % If the sanitization removed all vertices, skip this matrix
             if nnz(A) < 2
@@ -62,7 +67,8 @@ function comparisonData = compare(plot_outliers)
                 perm = [part_A part_B];
                 p = length(partition);
                 A_perm = A(perm, perm);
-                mongoose_cut_size(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
+                mongoose_cut_weight(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
+                mongoose_cut_size(j,k) = sum(sum(sign(A_perm(p:n_cols, 1:p))));
                 mongoose_imbalance(j,k) = abs(0.5-(length(part_A)/(length(part_A) + length(part_B))));
             end
             
@@ -75,7 +81,8 @@ function comparisonData = compare(plot_outliers)
                 metis_times(j,k) = t;
                 perm = [part_A part_B];
                 A_perm = A(perm, perm);
-                metis_cut_size(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
+                metis_cut_weight(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
+                metis_cut_size(j,k) = sum(sum(sign(A_perm(p:n_cols, 1:p))));
                 metis_imbalance(j,k) = abs(0.5-(length(part_A)/(length(part_A) + length(part_B))));
             end
             j = j + 1;
@@ -87,16 +94,21 @@ function comparisonData = compare(plot_outliers)
     for i = 1:n
         % Compute trimmed means - trim lowest and highest 20%
         comparisonData(i).avg_mongoose_times = trimmean(mongoose_times(i,:), 40);
+        comparisonData(i).avg_mongoose_cut_weight = trimmean(mongoose_cut_weight(i,:), 40);
         comparisonData(i).avg_mongoose_cut_size = trimmean(mongoose_cut_size(i,:), 40);
         comparisonData(i).avg_mongoose_imbalance = trimmean(mongoose_imbalance(i,:), 40);
         
         comparisonData(i).avg_metis_times = trimmean(metis_times(i,:), 40);
+        comparisonData(i).avg_metis_cut_weight = trimmean(metis_cut_weight(i,:), 40);
         comparisonData(i).avg_metis_cut_size = trimmean(metis_cut_size(i,:), 40);
         comparisonData(i).avg_metis_imbalance = trimmean(metis_imbalance(i,:), 40);
         
         % Compute times relative to METIS
         comparisonData(i).rel_mongoose_times = (comparisonData(i).avg_mongoose_times / comparisonData(i).avg_metis_times);
-        
+
+        % Compute cut weight relative to METIS
+        comparisonData(i).rel_mongoose_cut_weight = (comparisonData(i).avg_mongoose_cut_weight / comparisonData(i).avg_metis_cut_weight);
+
         % Compute cut size relative to METIS
         comparisonData(i).rel_mongoose_cut_size = (comparisonData(i).avg_mongoose_cut_size / comparisonData(i).avg_metis_cut_size);
         
@@ -109,7 +121,7 @@ function comparisonData = compare(plot_outliers)
             outlier = 1;
             comparisonData(i).outlier.time = 1;
         end
-        if (comparisonData(i).rel_metis_times > 2)
+        if (comparisonData(i).rel_mongoose_times < 0.5)
             disp(['Outlier! METIS time significantly worse. ID: ', num2str(prob_id)]);
             outlier = 1;
             comparisonData(i).outlier.time = -1;
@@ -120,7 +132,7 @@ function comparisonData = compare(plot_outliers)
             outlier = 1;
             comparisonData(i).outlier.cut_size = 1;
         end
-        if (comparisonData(i).rel_metis_cut_size > 2)
+        if (comparisonData(i).rel_mongoose_cut_size < 0.5)
             disp(['Outlier! METIS cut size significantly worse. ID: ', num2str(prob_id)]);
             outlier = 1;
             comparisonData(i).outlier.cut_size = -1;
@@ -144,6 +156,7 @@ function comparisonData = compare(plot_outliers)
     
     % Sort metrics
     sorted_rel_mongoose_times = sort([comparisonData.rel_mongoose_times]);
+    sorted_rel_mongoose_cut_weight = sort([comparisonData.rel_mongoose_cut_weight]);
     sorted_rel_mongoose_cut_size = sort([comparisonData.rel_mongoose_cut_size]);
     sorted_avg_mongoose_imbalance = sort([comparisonData.avg_mongoose_imbalance]);
     sorted_avg_metis_imbalance = sort([comparisonData.avg_metis_imbalance]);
@@ -178,7 +191,30 @@ function comparisonData = compare(plot_outliers)
     end
     
     plt.export([filename '.png']);
-    
+
+    % Plot separator weight profiles
+    figure;
+    semilogy(1:n, sorted_rel_mongoose_cut_weight, 'Color', 'b');
+    hold on;
+    semilogy(1:n, ones(1,n), 'Color','r');
+    axis([1 n min(sorted_rel_mongoose_cut_weight) max(sorted_rel_mongoose_cut_weight)]);
+    xlabel('Matrix');
+    ylabel('Cut Weight Relative to METIS');
+    hold off;
+
+    plt = Plot();
+    plt.LineStyle = {'-', '--'};
+    plt.Legend = {'Mongoose', 'METIS'};
+    plt.LegendLoc = 'SouthEast';
+    plt.BoxDim = [6, 5];
+
+    filename = ['SeparatorWeight' date];
+    if(git_found)
+        title(['Separator Weight Profile - Commit ' commit]);
+        filename = ['SeparatorWeight-' commit];
+    end
+    plt.export([filename '.png']);
+
     % Plot separator size profiles
     figure;
     semilogy(1:n, sorted_rel_mongoose_cut_size, 'Color', 'b');
@@ -188,13 +224,13 @@ function comparisonData = compare(plot_outliers)
     xlabel('Matrix');
     ylabel('Cut Size Relative to METIS');
     hold off;
-    
+
     plt = Plot();
     plt.LineStyle = {'-', '--'};
     plt.Legend = {'Mongoose', 'METIS'};
     plt.LegendLoc = 'SouthEast';
     plt.BoxDim = [6, 5];
-    
+
     filename = ['SeparatorSize' date];
     if(git_found)
         title(['Separator Size Profile - Commit ' commit]);
