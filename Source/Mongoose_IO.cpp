@@ -16,7 +16,6 @@
 extern "C" {
 #include "mmio.h"
 }
-#include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 
 using namespace std;
@@ -46,7 +45,7 @@ Graph *readGraph (const char* filename)
         LogError("Error reading matrix from file\n");
         return NULL;
     }
-    cs *sanitized_A = sanitizeMatrix(A, mm_is_symmetric(matcode));
+    cs *sanitized_A = sanitizeMatrix(A, mm_is_symmetric(matcode), false);
     cs_spfree(A);
     if (!sanitized_A) return NULL;
     Graph *G = CSparse3ToGraph(sanitized_A);

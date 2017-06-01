@@ -10,7 +10,7 @@ using namespace std;
 namespace Mongoose
 {
 
-cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
+cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular, bool makeEdgeWeightsBinary)
 {
     cs *temp;
     if (symmetricTriangular)
@@ -96,8 +96,19 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular)
 
     for (Int p = 0; p < submatrix->p[submatrix->n]; p++)
     {
-        // Force edge weights to be positive
-        submatrix->x[p] = fabs(submatrix->x[p]);
+        if (makeEdgeWeightsBinary)
+        {
+            // Make edge weights binary
+            if (submatrix->x[p] != 0)
+            {
+                submatrix->x[p] = 1;
+            }
+        }
+        else
+        {
+            // Force edge weights to be positive
+            submatrix->x[p] = fabs(submatrix->x[p]);
+        }
     }
 
     return submatrix;

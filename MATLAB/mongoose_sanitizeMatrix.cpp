@@ -12,13 +12,24 @@ void mexFunction
     const mxArray *pargin [ ]
 )
 {
-    const char* usage = "Usage: A_safe = mongoose_sanitizeMatrix(A)";
+    const char* usage = "Usage: A_safe = mongoose_sanitizeMatrix(A, [makeBinary=false])";
+    if (nargin < 1 || nargin > 2)
+    {
+        mexErrMsgTxt(usage);
+    }
+
+    bool makeBinary = false;
+    if (nargin == 2)
+    {
+        makeBinary = (bool) mxGetScalar(pargin[1]);
+    }
+
     if(nargout != 1) mexErrMsgTxt(usage);
     const mxArray *A_matlab = pargin[0];
     cs *A = (cs *) SuiteSparse_malloc(1, sizeof(cs));
     A = cs_mex_get_sparse (A, 0, 1, A_matlab);
 
-    cs *A_safe = sanitizeMatrix(A, false);
+    cs *A_safe = sanitizeMatrix(A, false, makeBinary);
     A->p = NULL;
     A->i = NULL;
     A->x = NULL;
