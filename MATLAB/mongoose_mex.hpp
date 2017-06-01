@@ -8,6 +8,7 @@
 #include "Mongoose_Coarsening.hpp"
 #include "Mongoose_Interop.hpp"
 #include "Mongoose_Matching.hpp"
+#include <algorithm>
 
 namespace Mongoose
 {

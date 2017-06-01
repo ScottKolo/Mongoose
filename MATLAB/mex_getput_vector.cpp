@@ -122,7 +122,7 @@ Int *gp_mex_get_int
         i = (Int) p[k];
         C [k] = i - 1 ;
         if (i < lo) mexErrMsgTxt ("index out of bounds") ;
-        *imax = MONGOOSE_MAX2 (*imax, i) ;
+        *imax = std::max(*imax, i) ;
     }
     return (C) ;
 }
