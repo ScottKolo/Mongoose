@@ -42,6 +42,9 @@ void myFree(void *ptr)
 
 int main(int argn, char** argv)
 {
+    (void)argn; // Unused variable
+    (void)argv; // Unused variable
+
     SuiteSparse_start();
 
     // Set Logger to report all messages and turn off timing info
