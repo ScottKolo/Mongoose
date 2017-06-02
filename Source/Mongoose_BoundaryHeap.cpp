@@ -141,6 +141,7 @@ void bhRemove
 )
 {
     (void)options; // Unused variable
+    (void)gain;    // Unused variable
 
     double *gains = graph->vertexGains;
     Int *bhIndex = graph->bhIndex;
