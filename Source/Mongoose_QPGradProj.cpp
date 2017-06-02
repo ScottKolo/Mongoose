@@ -108,9 +108,7 @@ double QPgradproj
 
     /* components of x change; used in napsack as wi1 */
     Int *Change_list = wi1;
-
-    // TODO can Change_location use wi2?  I think so.
-    Int *Change_location = QP->Change_location ;
+    Int *Change_location = wi2;
 
     /* compute error, take step along projected gradient */
     Int ib = 0;             /* initialize ib so that lo < b < hi */
