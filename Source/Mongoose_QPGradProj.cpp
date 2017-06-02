@@ -26,7 +26,7 @@ namespace Mongoose
 // save the current state of the solution, just before returning from QPGradProj
 inline void saveContext
 (
-    Graph *G,
+    Graph *graph,
     QPDelta *QP, 
     Int it,
     double err,
@@ -46,7 +46,7 @@ inline void saveContext
     }
     else
     {
-        for (Int k = 0; k < G->n; k++) b += G->w[k] * QP->x[k];
+        for (Int k = 0; k < graph->n; k++) b += graph->w[k] * QP->x[k];
     }
     QP->ib = ib;
     QP->b = b;
