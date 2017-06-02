@@ -146,17 +146,14 @@ Graph *coarsen(Graph *G, Options *O)
 #ifndef NDEBUG
     /* If we want to do expensive checks, make sure we didn't break
      * the problem into multiple connected components. */
-    if (O->doExpensiveChecks)
+    double W = 0.0;
+    for (Int k = 0; k < cn; k++)
     {
-        double W = 0.0;
-        for (Int k = 0; k < cn; k++)
-        {
-            Int degree = Cp[k+1] - Cp[k];
-            ASSERT (degree > 0) ;
-            W += Cw[k];
-        }
-        ASSERT (W == C->W) ;
+        Int degree = Cp[k+1] - Cp[k];
+        ASSERT (degree > 0) ;
+        W += Cw[k];
     }
+    ASSERT (W == C->W) ;
 #endif
 
     Logger::toc(CoarseningTiming);
