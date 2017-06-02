@@ -118,17 +118,14 @@ void matching_Random(Graph *G, Options *O)
      *     1) matched
      *     2) has no unmatched neighbors
      */
-    if (O->doExpensiveChecks)
+    for (Int k = 0; k < n; k++)
     {
-        for (Int k = 0; k < n; k++)
+        /* Check condition 1 */
+        if (matching[k]) continue;
+        /* Check condition 2 */
+        for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            /* Check condition 1 */
-            if (matching[k]) continue;
-            /* Check condition 2 */
-            for (Int p = Gp[k]; p < Gp[k+1]; p++)
-            {
-                ASSERT (matching[Gi[p]]);
-            }
+            ASSERT (matching[Gi[p]]);
         }
     }
 #endif
