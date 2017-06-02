@@ -32,34 +32,36 @@ namespace Mongoose
  * Graph coarsened_graph = coarsen(large_graph, options);
  * @endcode
  *
- * @param G Graph to be coarsened
- * @param O Option struct specifying if debug checks should be done
+ * @param graph Graph to be coarsened
+ * @param options Option struct specifying if debug checks should be done
  * @return A coarsened version of G
  * @note Allocates memory for the coarsened graph, but frees on error.
  */
-Graph *coarsen(Graph *G, Options *O)
+Graph *coarsen(Graph *graph, Options *options)
 {
+    (void)options; // Unused variable
+
     Logger::tic(CoarseningTiming);
 
-    Int cn = G->cn;
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    double *Gx = G->x;
-    double *Gw = G->w;
+    Int cn = graph->cn;
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    double *Gx = graph->x;
+    double *Gw = graph->w;
 
-    Int *matching = G->matching;
-    Int *matchmap = G->matchmap;
-    Int *invmatchmap = G->invmatchmap;
+    Int *matching = graph->matching;
+    Int *matchmap = graph->matchmap;
+    Int *invmatchmap = graph->invmatchmap;
 
     /* Build the coarse graph */
-    Graph *C = Graph::Create(G);
-    if (!C) return NULL;
+    Graph *coarseGraph = Graph::Create(graph);
+    if (!coarseGraph) return NULL;
 
-    Int *Cp = C->p;
-    Int *Ci = C->i;
-    double *Cx = C->x;
-    double *Cw = C->w;
-    double *gains = C->vertexGains;
+    Int *Cp = coarseGraph->p;
+    Int *Ci = coarseGraph->i;
+    double *Cx = coarseGraph->x;
+    double *Cw = coarseGraph->w;
+    double *gains = coarseGraph->vertexGains;
     Int munch = 0;
     double X = 0.0;
 
@@ -67,8 +69,8 @@ Graph *coarsen(Graph *G, Options *O)
     Int *htable = (Int*) SuiteSparse_malloc(cn, sizeof(Int));
     if (!htable)
     {
-        C->~Graph();
-        SuiteSparse_free(C);
+        coarseGraph->~Graph();
+        SuiteSparse_free(coarseGraph);
         return NULL;
     }
     for (Int i = 0; i < cn; i++) htable[i] = -1;
@@ -134,11 +136,11 @@ Graph *coarsen(Graph *G, Options *O)
 
     /* Set the last column pointer */
     Cp[cn] = munch;
-    C->nz = munch;
+    coarseGraph->nz = munch;
 
     /* Save the sum of edge weights on the graph. */
-    C->X = X;
-    C->H = 2.0 * X;
+    coarseGraph->X = X;
+    coarseGraph->H = 2.0 * X;
 
     /* Cleanup resources */
     SuiteSparse_free(htable);
@@ -153,13 +155,13 @@ Graph *coarsen(Graph *G, Options *O)
         ASSERT (degree > 0) ;
         W += Cw[k];
     }
-    ASSERT (W == C->W) ;
+    ASSERT (W == coarseGraph->W) ;
 #endif
 
     Logger::toc(CoarseningTiming);
 
     /* Return the coarse graph */
-    return C;
+    return coarseGraph;
 }
 
 } // end namespace Mongoose
