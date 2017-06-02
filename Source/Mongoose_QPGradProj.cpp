@@ -72,7 +72,7 @@ double QPgradproj
     double *wx2 = QP->wx[1];    /* work array for napsack and here as Dgrad */
     double *wx3 = QP->wx[2];    /* work array used here for d=y-x */
     Int *wi1 = QP->wi[0];       /* work array for napsack
-                                   and here as Change_list */
+                                   and here as changeList */
     Int *wi2 = QP->wi[1];       /* work array only for napsack */
 
     /* Output and Input */
@@ -107,8 +107,8 @@ double QPgradproj
     double *Dgrad = wx;     /* gradient change       ; used in napsack as wx  */
 
     /* components of x change; used in napsack as wi1 */
-    Int *Change_list = wi1;
-    Int *Change_location = wi2;
+    Int *changeList = wi1;
+    Int *changeLocation = wi2;
 
     /* compute error, take step along projected gradient */
     Int ib = 0;             /* initialize ib so that lo < b < hi */
@@ -240,14 +240,14 @@ double QPgradproj
             double t = y[j] - x[j];
             if (t != 0.)
             {
-                // PR (("Change_list: we shall consider j %ld t %g\n", j, t)) ;
+                // PR (("changeList: we shall consider j %ld t %g\n", j, t)) ;
                 d[j] = t;
                 s += t * grad[j]; /* derivative in the direction y - x */
-                // add j to the Change_list and keep track of its position
+                // add j to the changeList and keep track of its position
                 // in the FreeSet_list, in case we need to remove it from
                 // the FreeSet.
-                Change_list[nc] = j;
-                Change_location[j] = jfree ;
+                changeList[nc] = j;
+                changeLocation[j] = jfree ;
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
@@ -268,11 +268,11 @@ double QPgradproj
             double t = y[j] - x[j];
             if (t != 0.)
             {
-                // PR (("Change_list: we shall consider j %ld t %g\n", j, t)) ;
+                // PR (("changeList: we shall consider j %ld t %g\n", j, t)) ;
                 d[j] = t;
                 s += t * grad[j]; /* derivative in the direction y - x */
-                Change_list[nc] = j;
-                Change_location[j] = EMPTY ;        // j not in FreeSet
+                changeList[nc] = j;
+                changeLocation[j] = EMPTY ;        // j not in FreeSet
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j+1]; p++)
                 {
@@ -332,7 +332,7 @@ double QPgradproj
         double t = 0.;
         for (Int k = 0; k < nc; k++)
         {
-            Int j = Change_list[k];
+            Int j = changeList[k];
             t += Dgrad[j] * d[j]; /* -dg'd */
         }
 
@@ -344,7 +344,7 @@ double QPgradproj
             ib = (lambda > 0 ? 1 : lambda < 0 ? -1 : 0);
             for (Int k = 0; k < nc; k++)
             {
-                Int j = Change_list[k];
+                Int j = changeList[k];
                 double yj = y[j];
                 x[j] = yj;
 
@@ -407,7 +407,7 @@ double QPgradproj
                 {
                     // add j to the FreeSet
                     ASSERT (FreeSet_status [j] != 0) ;
-                    ASSERT (Change_location [j] == EMPTY) ;
+                    ASSERT (changeLocation [j] == EMPTY) ;
                     FreeSet_status[j] = 0;
                     FreeSet_list [nFreeSet++] = j ;
                     //---
@@ -418,7 +418,7 @@ double QPgradproj
                     ASSERT (FreeSet_status [j] == 0) ;
                     FreeSet_status [j] = FreeSet_status_j ;
                     ASSERT (FreeSet_status [j] != 0) ;
-                    Int jfree = Change_location [j] ;
+                    Int jfree = changeLocation [j] ;
                     ASSERT (0 <= jfree && jfree < nFreeSet) ;
                     ASSERT (FreeSet_list [jfree] == j) ;
                     FreeSet_list [jfree] = EMPTY ;
@@ -445,12 +445,12 @@ double QPgradproj
             // PR (("partial step towards y, st %g\n", st)) ;
             for (Int k = 0; k < nc; k++)
             {
-                Int j = Change_list[k];
+                Int j = changeList[k];
                 if (FreeSet_status[j] != 0) /* x_j became free */
                 {
                     // add j to the FreeSet
                     ASSERT (FreeSet_status [j] != 0) ;
-                    ASSERT (Change_location [j] == EMPTY) ;
+                    ASSERT (changeLocation [j] == EMPTY) ;
                     FreeSet_status[j] = 0;
                     FreeSet_list [nFreeSet++] = j ;
                     //---
