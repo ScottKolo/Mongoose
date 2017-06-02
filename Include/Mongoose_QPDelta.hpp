@@ -39,7 +39,9 @@ public:
     static QPDelta *Create(Int numVars);
     ~QPDelta();
 
-    double check_cost; // For debugging
+#ifndef NDEBUG
+    double check_cost;
+#endif
 
 private:
     static const Int WXSIZE = 2;
