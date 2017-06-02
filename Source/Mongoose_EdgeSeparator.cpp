@@ -13,40 +13,40 @@ namespace Mongoose
 bool optionsAreValid(Options *options);
 
 /* The input must be a single connected component. */
-int ComputeEdgeSeparator(Graph *G)
+int ComputeEdgeSeparator(Graph *graph)
 {
     // use default options if not present
-    Options *O = Options::Create ( ) ;
-    if (!O) return (EXIT_FAILURE) ;
-    int result = ComputeEdgeSeparator(G, O) ;
-    SuiteSparse_free (O) ;
+    Options *options = Options::Create ( ) ;
+    if (!options) return (EXIT_FAILURE) ;
+    int result = ComputeEdgeSeparator(graph, options) ;
+    SuiteSparse_free (options) ;
     return (result) ;
 }
 
-int ComputeEdgeSeparator(Graph *G, Options *O)
+int ComputeEdgeSeparator(Graph *graph, Options *options)
 {
     // Check inputs
-    if (!optionsAreValid(O)) return (EXIT_FAILURE) ;
-    std::srand(O->randomSeed);
+    if (!optionsAreValid(options)) return (EXIT_FAILURE) ;
+    std::srand(options->randomSeed);
 
-    if (!G) return EXIT_FAILURE;
+    if (!graph) return EXIT_FAILURE;
 
     /* Finish initialization */
-    if (!G->initialize(O)) return EXIT_FAILURE;
+    if (!graph->initialize(options)) return EXIT_FAILURE;
 
     /* Keep track of what the current graph is at any stage */
-    Graph *current = G;
+    Graph *current = graph;
 
     /* If we need to coarsen the graph, do the coarsening. */
-    while (current->n >= O->coarsenLimit)
+    while (current->n >= options->coarsenLimit)
     {
-        match(current, O);
-        Graph *next = coarsen(current, O);
+        match(current, options);
+        Graph *next = coarsen(current, options);
 
         /* If we ran out of memory during coarsening, unwind the stack. */
         if (!next)
         {
-            while (current != G)
+            while (current != graph)
             {
                 next = current->parent;
                 current->~Graph();
@@ -63,9 +63,9 @@ int ComputeEdgeSeparator(Graph *G, Options *O)
      * Generate a guess cut and do FM refinement.
      * On failure, unwind the stack.
      */
-    if (!guessCut(current, O))
+    if (!guessCut(current, options))
     {
-        while (current != G)
+        while (current != graph)
         {
             Graph *next = current->parent;
             current->~Graph();
@@ -80,8 +80,8 @@ int ComputeEdgeSeparator(Graph *G, Options *O)
      */
     while (current->parent != NULL)
     {
-        current = refine(current, O);
-        waterdance(current, O);
+        current = refine(current, options);
+        waterdance(current, options);
     }
 
     return EXIT_SUCCESS;
