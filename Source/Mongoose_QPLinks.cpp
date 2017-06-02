@@ -49,7 +49,7 @@ bool QPlinks
             // Error!
             return false;
         }
-        // TODO do we also check a [k] > 0 ?
+
         s += a[k] * xk;
         double r = 0.5 - xk;
         for (Int p = Ep[k]; p < Ep[k+1]; p++)
