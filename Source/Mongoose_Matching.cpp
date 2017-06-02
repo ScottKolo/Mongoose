@@ -342,7 +342,7 @@ void matching_DavisPA(Graph *graph, Options *options)
 void matching_HEM(Graph *graph, Options *options)
 {
     (void)options; // Unused variable
-    
+
     Int n = graph->n;
     Int cn = graph->cn;
     Int *Gp = graph->p;
