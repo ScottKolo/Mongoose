@@ -77,7 +77,7 @@ void QPcheckCom
     double hi = QP->hi ;
     double *D  = QP->D ;   /* diagonal of quadratic */
     double *grad  = QP->gradient ;   /* gradient at current x */
-    double tol = O->gradprojTol;
+    double tol = O->gradProjTolerance;
 
     // get workspace
     Int *w0 = (Int *) calloc (n+1, sizeof (Int)) ;    // [

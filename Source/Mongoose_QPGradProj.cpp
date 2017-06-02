@@ -67,7 +67,7 @@ double QPgradproj
     /* Unpack the relevant structures                                         */
     /* ---------------------------------------------------------------------- */
 
-    double tol = O->gradprojTol;
+    double tol = O->gradProjTolerance;
     double *wx1 = QP->wx[0];    /* work array for napsack and here as y */
     double *wx2 = QP->wx[1];    /* work array for napsack and here as Dgrad */
     double *wx3 = QP->wx[2];    /* work array used here for d=y-x */

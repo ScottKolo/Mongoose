@@ -32,7 +32,7 @@ Options* Options::Create()
         ret->fmMaxNumRefinements = 20;
 
         ret->useQPGradProj = true;
-        ret->gradprojTol = 0.001;
+        ret->gradProjTolerance = 0.001;
         ret->gradprojIterationLimit = 50;
 
         ret->targetSplit = 0.5;
