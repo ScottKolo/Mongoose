@@ -38,10 +38,9 @@ struct Options
 
     /** Final Partition Target Metrics ***************************************/
     double targetSplit;          /* The desired split ratio (default 50/50)  */
-    double tolerance;            /* The allowable tolerance (default 1%)     */
-
-    /** Debug Options ********************************************************/
-    bool doExpensiveChecks;
+    double softSplitTolerance;   /* The allowable soft split tolerance.      */
+                                 /* Cuts within this tolerance are treated   */
+                                 /* equally.                                 */
 
     /* Constructor & Destructor */
     static Options *Create();

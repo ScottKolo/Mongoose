@@ -68,7 +68,7 @@ void bhLoad
     if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
 
     G->imbalance = targetSplit - std::min(G->W0, G->W1) / G->W;
-    G->heuCost = (G->cutCost + (fabs(G->imbalance) > O->tolerance
+    G->heuCost = (G->cutCost + (fabs(G->imbalance) > O->softSplitTolerance
                                 ? fabs(G->imbalance) * G->H
                                 : 0.0));
 }

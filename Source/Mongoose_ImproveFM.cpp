@@ -57,7 +57,7 @@ void fmRefine_worker(Graph *G, Options *O)
     workingCost.imbalance = bestCost.imbalance = G->imbalance;
 
     /* Tolerance and the linear penalty to assess. */
-    double tol = O->tolerance;
+    double tol = O->softSplitTolerance;
     double H = G->H;
 
     Int fmSearchDepth = O->fmSearchDepth;

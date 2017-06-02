@@ -36,7 +36,7 @@ int main(int argn, char** argv)
     O->targetSplit = 0.4;
 
     // Test with invalid tolerance
-    O->tolerance = -1;
+    O->softSplitTolerance = -1;
     ComputeEdgeSeparator(G, O);
 
     SuiteSparse_finish();

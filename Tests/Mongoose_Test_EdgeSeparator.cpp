@@ -59,7 +59,7 @@ void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit
 
             count += G->partition[i];
         }
-        double tolerance = options->tolerance;
+        double tolerance = options->softSplitTolerance;
         double split = (double) count / (double) G->n;
         double target = targetSplit;
         if (split > 0.5)

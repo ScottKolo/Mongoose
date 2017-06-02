@@ -99,7 +99,7 @@ bool optionsAreValid(Options *options)
         // Error!
         return (false) ;
     }
-    if (options->tolerance < 0)
+    if (options->softSplitTolerance < 0)
     {
         // Error!
         return (false) ;

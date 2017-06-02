@@ -40,7 +40,7 @@ bool improveCutUsingQP
     }
 
     // set the QP parameters
-    double tol = O->tolerance;
+    double tol = O->softSplitTolerance;
     double targetSplit = O->targetSplit ;
     if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
 
@@ -171,7 +171,7 @@ bool improveCutUsingQP
     G->imbalance = cost.imbalance;
     double absImbalance = fabs(G->imbalance);
     G->heuCost = G->cutCost +
-                 (absImbalance > O->tolerance ? absImbalance * G->H : 0.0);
+                 (absImbalance > O->softSplitTolerance ? absImbalance * G->H : 0.0);
 
     Logger::toc(QPTiming);
 
