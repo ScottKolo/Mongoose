@@ -226,6 +226,8 @@ Graph::~Graph()
 /* Initialize a top level graph with a a set of options. */
 bool Graph::initialize(Options *options)
 {
+    (void)options; // Unused variable
+
     Int *Gp = p;
     double *Gx = x;
     double *Gw = w;
@@ -266,20 +268,17 @@ bool Graph::initialize(Options *options)
     }
 
     /* Compute worst-case gains, and compute X. */
-    double X = 0.0, W = 0.0;
     double *gains = vertexGains;
     for (Int k = 0; k < n; k++)
     {
         W += Gw[k];
         double sumEdgeWeights = 0.0;
 
-        for (Int p = Gp[k]; p < Gp[k+1]; p++) sumEdgeWeights += Gx[p];
+        for (Int j = Gp[k]; j < Gp[k+1]; j++) sumEdgeWeights += Gx[j];
 
         gains[k] = -sumEdgeWeights;
         X += sumEdgeWeights;
     }
-    this->X = X;
-    this->W = W;
     H = 2.0 * X;
     return true;
 }
@@ -344,9 +343,9 @@ Int Graph::getMarkArrayValue(Int index)
 void Graph::resetMarkArray()
 {
     markValue = 1;
-    for (Int i = 0; i < n; i++)
+    for (Int k = 0; k < n; k++)
     {
-        markArray[i] = 0;
+        markArray[k] = 0;
     }
 }
 
