@@ -24,7 +24,6 @@ public:
     double hi ;
 
     // workspace
-    Int *Change_location ;
     Int *wi[2];
     double *wx[3];
 
@@ -37,8 +36,16 @@ public:
 
     double lambda;
 
-    static QPDelta *Create(Int n);
+    static QPDelta *Create(Int numVars);
     ~QPDelta();
+
+#ifndef NDEBUG
+    double check_cost;
+#endif
+
+private:
+    static const Int WXSIZE = 2;
+    static const Int WISIZE = 3;
 };
 
 } // end namespace Mongoose

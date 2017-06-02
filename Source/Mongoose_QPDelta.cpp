@@ -1,36 +1,38 @@
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_QPDelta.hpp"
-#include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
 
-QPDelta* QPDelta::Create(Int n)
+QPDelta* QPDelta::Create(Int numVars)
 {
     QPDelta *ret = (QPDelta*) SuiteSparse_calloc(1, sizeof(QPDelta));
     if(!ret) return NULL;
 
-    ret->x = (double*) SuiteSparse_malloc(n, sizeof(double));
-    ret->FreeSet_status = (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    ret->FreeSet_list = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
-    ret->gradient = (double*) SuiteSparse_malloc(n, sizeof(double));
-    ret->D = (double*) SuiteSparse_malloc(n, sizeof(double));
+    ret->x = (double*) SuiteSparse_malloc(numVars, sizeof(double));
+    ret->FreeSet_status = (Int*) SuiteSparse_malloc(numVars, sizeof(Int));
+    ret->FreeSet_list = (Int*) SuiteSparse_malloc(numVars+1, sizeof(Int));
+    ret->gradient = (double*) SuiteSparse_malloc(numVars, sizeof(double));
+    ret->D = (double*) SuiteSparse_malloc(numVars, sizeof(double));
 
-    // TODO use WISIZE and WXSIZE here:
-    ret->wi[0] = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
-    ret->wi[1] = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
-    ret->wx[0] = (double*) SuiteSparse_malloc(n, sizeof(double));
-    ret->wx[1] = (double*) SuiteSparse_malloc(n, sizeof(double));
-    ret->wx[2] = (double*) SuiteSparse_malloc(n, sizeof(double));
+    for (int i = 0; i < WISIZE; i++)
+    {
+        ret->wi[i] = (Int*) SuiteSparse_malloc(numVars+1, sizeof(Int));
+    }
 
-    // TODO: can this use wi[1] instead?  I think so.
-    ret->Change_location = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
+    for (Int i = 0; i < WXSIZE; i++)
+    {
+        ret->wx[i] = (double*) SuiteSparse_malloc(numVars, sizeof(double));
+    }
+
+#ifndef NDEBUG
+    ret->check_cost = INFINITY;
+#endif
 
     if(!ret->x || !ret->FreeSet_status || !ret->FreeSet_list
     || !ret->gradient || !ret->D || !ret->wi[0] || !ret->wi[1]
-    || !ret->Change_location
+    //|| !ret->Change_location
     || !ret->wx[0] || !ret->wx[1] || !ret->wx[2])        
     {
         ret->~QPDelta();
@@ -47,14 +49,17 @@ QPDelta::~QPDelta()
     FreeSet_list = (Int*) SuiteSparse_free(FreeSet_list);
     gradient = (double*) SuiteSparse_free(gradient);
     D = (double*) SuiteSparse_free(D);
-    Change_location = (Int*) SuiteSparse_free(Change_location);
+    //Change_location = (Int*) SuiteSparse_free(Change_location);
 
-    // TODO use WISIZE and WXSIZE here:
-    for(Int i=0; i<2; i++)
+    for(Int i = 0; i < WISIZE; i++)
+    {
         wi[i] = (Int*) SuiteSparse_free(wi[i]);
+    }
 
-    for(Int i=0; i<3; i++)
-        wx[i] = (double*) SuiteSparse_free(wx[i]);
+    for(Int i = 0; i < WXSIZE; i++)
+    {
+        wx[i] = (double *) SuiteSparse_free(wx[i]);
+    }
 }
 
 } // end namespace Mongoose
