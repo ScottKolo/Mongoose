@@ -44,30 +44,30 @@ int main(int argn, const char **argv)
         
         clock_t trial_start = clock();
         Options *options = Options::Create();
-        if (!options) return 1; // Return an error if we failed.
+        if (!options) return EXIT_FAILURE; // Return an error if we failed.
 
         options->matchingStrategy = HEMDavisPA;
         options->guessCutType = QP_BallOpt;
 
-        Graph *G = readGraph("../Matrix/" + demo_files[k]);
-        if (!G)
+        Graph *graph = readGraph("../Matrix/" + demo_files[k]);
+        if (!graph)
         {
             free(options);
             return 1;
         }
 
-        ComputeEdgeSeparator (G, options);
+        ComputeEdgeSeparator (graph, options);
 
         cout << "Partitioning Complete!" << endl;
-        printf("Cut Cost:      %.2f\n", G->cutCost);
-        printf("Cut Imbalance: %.2f%%\n", fabs(100*G->imbalance));
+        printf("Cut Cost:      %.2f\n", graph->cutCost);
+        printf("Cut Imbalance: %.2f%%\n", fabs(100*graph->imbalance));
 
         clock_t trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
         printf("Trial Time:    %.0lums\n", trial_duration*1000);
 
-        G->~Graph();
-        free(G);
-        free(options);
+        graph->~Graph();
+        SuiteSparse_free(graph);
+        SuiteSparse_free(options);
     }
 
     duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
