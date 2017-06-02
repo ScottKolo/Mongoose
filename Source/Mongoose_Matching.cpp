@@ -19,36 +19,36 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // top-level matching code that serves as a multiple-dispatch system.
 //-----------------------------------------------------------------------------
-void match(Graph *G, Options *O)
+void match(Graph *graph, Options *options)
 {
     Logger::tic(MatchingTiming);
-    switch (O->matchingStrategy)
+    switch (options->matchingStrategy)
     {
       case Random:
-          matching_Random(G,O);
-          matching_Cleanup(G,O);
+          matching_Random(graph,options);
+          matching_Cleanup(graph,options);
           break;
 
       case HEM:
-          matching_HEM(G,O);
-          matching_Cleanup(G,O);
+          matching_HEM(graph,options);
+          matching_Cleanup(graph,options);
           break;
 
       case HEMPA:
-          matching_HEM(G,O);
-          matching_PA(G,O);
-          if (!O->doCommunityMatching) matching_Cleanup(G,O);
+          matching_HEM(graph,options);
+          matching_PA(graph,options);
+          if (!options->doCommunityMatching) matching_Cleanup(graph,options);
           break;
 
       case HEMDavisPA:
-          matching_HEM(G,O);
-          matching_DavisPA(G,O);
-          matching_Cleanup(G,O);
+          matching_HEM(graph,options);
+          matching_DavisPA(graph,options);
+          matching_Cleanup(graph,options);
           break;
 
 //      case LabelPropagation:
-//          matching_LabelProp(G,O);
-//          matching_Cleanup(G,O);
+//          matching_LabelProp(graph,options);
+//          matching_Cleanup(graph,options);
 //          break;
 
     }
@@ -58,14 +58,14 @@ void match(Graph *G, Options *O)
 //-----------------------------------------------------------------------------
 // Cleans up a matching by matching remaining unmatched vertices to themselves
 //-----------------------------------------------------------------------------
-void matching_Cleanup(Graph *G, Options *O)
+void matching_Cleanup(Graph *graph, Options *options)
 {
-    Int n = G->n;
-    Int cn = G->cn;
-    Int *matching = G->matching;
-    Int *matchmap = G->matchmap;
-    Int *invmatchmap = G->invmatchmap;
-    Int *matchtype = G->matchtype;
+    Int n = graph->n;
+    Int cn = graph->cn;
+    Int *matching = graph->matching;
+    Int *matchmap = graph->matchmap;
+    Int *invmatchmap = graph->invmatchmap;
+    Int *matchtype = graph->matchtype;
 
     /* Match unmatched vertices to themselves. */
     for (Int k = 0; k < n; k++)
@@ -74,22 +74,22 @@ void matching_Cleanup(Graph *G, Options *O)
     }
 
     /* Save the # of coarse nodes. */
-    G->cn = cn;
+    graph->cn = cn;
 }
 
 //-----------------------------------------------------------------------------
 // This is a random matching strategy
 //-----------------------------------------------------------------------------
-void matching_Random(Graph *G, Options *O)
+void matching_Random(Graph *graph, Options *options)
 {
-    Int n = G->n;
-    Int cn = G->cn;
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    Int *matching = G->matching;
-    Int *matchmap = G->matchmap;
-    Int *invmatchmap = G->invmatchmap;
-    Int *matchtype = G->matchtype;
+    Int n = graph->n;
+    Int cn = graph->cn;
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    Int *matching = graph->matching;
+    Int *matchmap = graph->matchmap;
+    Int *invmatchmap = graph->invmatchmap;
+    Int *matchtype = graph->matchtype;
 
     for (Int k = 0; k < n; k++)
     {
@@ -111,7 +111,7 @@ void matching_Random(Graph *G, Options *O)
     }
 
     /* Save the # of coarse nodes. */
-    G->cn = cn;
+    graph->cn = cn;
 
 #ifndef NDEBUG
     /* If we want to do expensive checks, make sure that every node is either:
@@ -135,17 +135,17 @@ void matching_Random(Graph *G, Options *O)
 //-----------------------------------------------------------------------------
 // This is the implementation of passive-aggressive matching
 //-----------------------------------------------------------------------------
-void matching_PA(Graph *G, Options *O)
+void matching_PA(Graph *graph, Options *options)
 {
-    Int n = G->n;
-    Int cn = G->cn;
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    double *Gx = G->x;
-    Int *matching = G->matching;
-    Int *matchmap = G->matchmap;
-    Int *invmatchmap = G->invmatchmap;
-    Int *matchtype = G->matchtype;
+    Int n = graph->n;
+    Int cn = graph->cn;
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    double *Gx = graph->x;
+    Int *matching = graph->matching;
+    Int *matchmap = graph->matchmap;
+    Int *invmatchmap = graph->invmatchmap;
+    Int *matchtype = graph->matchtype;
 
 #ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,
@@ -204,7 +204,7 @@ void matching_PA(Graph *G, Options *O)
             /* If we had a vertex left over: */
             if (v != -1)
             {
-                if (O->doCommunityMatching)
+                if (options->doCommunityMatching)
                 {
                     MONGOOSE_COMMUNITY_MATCH(heaviestNeighbor, v,
                                              MatchType_Community);
@@ -218,13 +218,13 @@ void matching_PA(Graph *G, Options *O)
     }
 
     /* Save the # of coarse nodes. */
-    G->cn = cn;
+    graph->cn = cn;
 
 #ifndef DEBUG
     /* Every vertex must be matched in no more than a 3-way matching. */
     for (Int k = 0; k < n; k++)
     {
-        if (O->doCommunityMatching)
+        if (options->doCommunityMatching)
         {
             if (!MONGOOSE_IS_MATCHED(k)) PR (("%ld is unmatched\n", k)) ;
             ASSERT (MONGOOSE_IS_MATCHED(k));
@@ -241,7 +241,7 @@ void matching_PA(Graph *G, Options *O)
             if (v[2] == v[0]) v[2] = -1;
         }
 
-        if (O->doCommunityMatching)
+        if (options->doCommunityMatching)
         {
             if (v[2] != -1) { ASSERT (MONGOOSE_GETMATCH(v[2]) == v[0]); }
             else            { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
@@ -260,19 +260,19 @@ void matching_PA(Graph *G, Options *O)
 // This uses the Davis style passive-aggressive matching where we only try
 // PA matching if the problem is some percent unmatched.
 //-----------------------------------------------------------------------------
-void matching_DavisPA(Graph *G, Options *O)
+void matching_DavisPA(Graph *graph, Options *options)
 {
-    Int n = G->n;
-    Int cn = G->cn;
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    Int *matching = G->matching;
-    Int *matchmap = G->matchmap;
-    Int *invmatchmap = G->invmatchmap;
-    Int *matchtype = G->matchtype;
+    Int n = graph->n;
+    Int cn = graph->cn;
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    Int *matching = graph->matching;
+    Int *matchmap = graph->matchmap;
+    Int *invmatchmap = graph->invmatchmap;
+    Int *matchtype = graph->matchtype;
 
     /* The brotherly threshold is the Davis constant times average degree. */
-    double bt = O->davisBrotherlyThreshold * ((double) G->nz / (double) G->n);
+    double bt = options->davisBrotherlyThreshold * ((double) graph->nz / (double) graph->n);
 
 #ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,
@@ -315,7 +315,7 @@ void matching_DavisPA(Graph *G, Options *O)
             /* If we had a vertex left over: */
             if (v != -1)
             {
-                if (O->doCommunityMatching)
+                if (options->doCommunityMatching)
                 {
                     MONGOOSE_COMMUNITY_MATCH(k, v, MatchType_Community);
                 }
@@ -328,24 +328,24 @@ void matching_DavisPA(Graph *G, Options *O)
     }
 
     /* Save the # of coarse nodes. */
-    G->cn = cn;
+    graph->cn = cn;
     ASSERT (cn < n);
 }
 
 //-----------------------------------------------------------------------------
 // This is a vanilla implementation of heavy edge matching
 //-----------------------------------------------------------------------------
-void matching_HEM(Graph *G, Options *O)
+void matching_HEM(Graph *graph, Options *options)
 {
-    Int n = G->n;
-    Int cn = G->cn;
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    double *Gx = G->x;
-    Int *matching = G->matching;
-    Int *matchmap = G->matchmap;
-    Int *invmatchmap = G->invmatchmap;
-    Int *matchtype = G->matchtype;
+    Int n = graph->n;
+    Int cn = graph->cn;
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    double *Gx = graph->x;
+    Int *matching = graph->matching;
+    Int *matchmap = graph->matchmap;
+    Int *invmatchmap = graph->invmatchmap;
+    Int *matchtype = graph->matchtype;
 
     for (Int k = 0; k < n; k++)
     {
@@ -378,7 +378,7 @@ void matching_HEM(Graph *G, Options *O)
     }
 
     /* Save the # of coarse nodes. */
-    G->cn = cn;
+    graph->cn = cn;
 
 #ifndef NDEBUG
     /* If we want to do expensive checks, make sure that every node is either:

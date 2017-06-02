@@ -16,14 +16,14 @@ enum MatchType
     MatchType_Community = 3
 };
 
-void match(Graph *G, Options *O);
+void match(Graph *graph, Options *options);
 
-void matching_Random(Graph *G, Options *O);
-void matching_HEM(Graph *G, Options *O);
-void matching_PA(Graph *G, Options *O);
-void matching_DavisPA(Graph *G, Options *O);
+void matching_Random(Graph *graph, Options *options);
+void matching_HEM(Graph *graph, Options *options);
+void matching_PA(Graph *graph, Options *options);
+void matching_DavisPA(Graph *graph, Options *options);
 void matching_LabelProp(Graph *G, Options *O);
-void matching_Cleanup(Graph *G, Options *O);
+void matching_Cleanup(Graph *graph, Options *options);
 
 } // end namespace Mongoose
 
