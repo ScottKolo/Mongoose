@@ -150,19 +150,18 @@ void matching_PA(Graph *G, Options *O)
     Int *invmatchmap = G->invmatchmap;
     Int *matchtype = G->matchtype;
 
+#ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,
      * all unmatched vertices must have matched neighbors. */
-    if (O->doExpensiveChecks)
+    for (Int k = 0; k < n; k++)
     {
-        for (Int k = 0; k < n; k++)
+        if (MONGOOSE_IS_MATCHED(k)) continue;
+        for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            if (MONGOOSE_IS_MATCHED(k)) continue;
-            for (Int p = Gp[k]; p < Gp[k+1]; p++)
-            {
-                ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
-            }
+            ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
         }
     }
+#endif
 
     for (Int k = 0; k < n; k++)
     {
@@ -224,40 +223,40 @@ void matching_PA(Graph *G, Options *O)
     /* Save the # of coarse nodes. */
     G->cn = cn;
 
+#ifndef DEBUG
     /* Every vertex must be matched in no more than a 3-way matching. */
-    if (O->doExpensiveChecks)
+    for (Int k = 0; k < n; k++)
     {
-        for (Int k = 0; k < n; k++)
+        if (O->doCommunityMatching)
         {
-            if (O->doCommunityMatching)
-            {
-                if (!MONGOOSE_IS_MATCHED(k)) PR (("%ld is unmatched\n", k)) ;
-                ASSERT (MONGOOSE_IS_MATCHED(k));
-            }
+            if (!MONGOOSE_IS_MATCHED(k)) PR (("%ld is unmatched\n", k)) ;
+            ASSERT (MONGOOSE_IS_MATCHED(k));
+        }
 
-            /* Load matching. */
-            Int v[3] = {-1, -1, -1};
-            v[0] = k;
-            v[1] = MONGOOSE_GETMATCH(v[0]);
-            if (v[1] == v[0]) v[1] = -1;
-            if (v[1] != -1)
-            {
-                v[2] = MONGOOSE_GETMATCH(v[1]);
-                if (v[2] == v[0]) v[2] = -1;
-            }
+        /* Load matching. */
+        Int v[3] = {-1, -1, -1};
+        v[0] = k;
+        v[1] = MONGOOSE_GETMATCH(v[0]);
+        if (v[1] == v[0]) v[1] = -1;
+        if (v[1] != -1)
+        {
+            v[2] = MONGOOSE_GETMATCH(v[1]);
+            if (v[2] == v[0]) v[2] = -1;
+        }
 
-            if (O->doCommunityMatching)
-            {
-                if (v[2] != -1) { ASSERT (MONGOOSE_GETMATCH(v[2]) == v[0]); }
-                else            { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
-            }
-            else
-            {
-                if (v[1] != -1) { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
-                else            { ASSERT (MONGOOSE_GETMATCH(v[0]) == v[0]); }
-            }
+        if (O->doCommunityMatching)
+        {
+            if (v[2] != -1) { ASSERT (MONGOOSE_GETMATCH(v[2]) == v[0]); }
+            else            { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
+        }
+        else
+        {
+            if (v[1] != -1) { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
+            else            { ASSERT (MONGOOSE_GETMATCH(v[0]) == v[0]); }
         }
     }
+#endif
+
 }
 
 //-----------------------------------------------------------------------------
@@ -278,19 +277,18 @@ void matching_DavisPA(Graph *G, Options *O)
     /* The brotherly threshold is the Davis constant times average degree. */
     double bt = O->davisBrotherlyThreshold * ((double) G->nz / (double) G->n);
 
+#ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,
      * all unmatched vertices must have matched neighbors. */
-    if (O->doExpensiveChecks)
+    for (Int k = 0; k < n; k++)
     {
-        for (Int k = 0; k < n; k++)
+        if (MONGOOSE_IS_MATCHED(k)) continue;
+        for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            if (MONGOOSE_IS_MATCHED(k)) continue;
-            for (Int p = Gp[k]; p < Gp[k+1]; p++)
-            {
-                ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
-            }
+            ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
         }
     }
+#endif
 
     for (Int k = 0; k < n; k++)
     {
@@ -385,24 +383,24 @@ void matching_HEM(Graph *G, Options *O)
     /* Save the # of coarse nodes. */
     G->cn = cn;
 
+#ifndef NDEBUG
     /* If we want to do expensive checks, make sure that every node is either:
      *     1) matched
      *     2) has no unmatched neighbors
      */
-    if (O->doExpensiveChecks)
+    for (Int k = 0; k < n; k++)
     {
-        for (Int k = 0; k < n; k++)
-        {
-            /* Check condition 1 */
-            if (matching[k]) continue;
+        /* Check condition 1 */
+        if (matching[k]) continue;
 
-            /* Check condition 2 */
-            for (Int p = Gp[k]; p < Gp[k + 1]; p++)
-            {
-                ASSERT (matching[Gi[p]]);
-            }
+        /* Check condition 2 */
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
+        {
+            ASSERT (matching[Gi[p]]);
         }
     }
+#endif
+
 }
 
 //-----------------------------------------------------------------------------
@@ -465,24 +463,23 @@ void matching_LabelProp(Graph *G, Options *O)
     // Save the # of coarse nodes.
     G->cn = cn;
 
+#ifndef NDEBUG
     //  If we want to do expensive checks, make sure that every node is either:
     //     1) matched
     //     2) has no unmatched neighbors
-
-    if (O->doExpensiveChecks)
+    for (Int k = 0; k < n; k++)
     {
-        for (Int k = 0; k < n; k++)
-        {
-            // Check condition 1
-            if (matching[k]) continue;
+        // Check condition 1
+        if (matching[k]) continue;
 
-            // Check condition 2
-            for (Int p = Gp[k]; p < Gp[k+1]; p++)
-            {
-                ASSERT (matching[Gi[p]]);
-            }
+        // Check condition 2
+        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        {
+            ASSERT (matching[Gi[p]]);
         }
     }
+#endif
+
 }
 #endif
 

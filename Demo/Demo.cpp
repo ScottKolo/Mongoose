@@ -46,7 +46,6 @@ int main(int argn, const char **argv)
         Options *options = Options::Create();
         if (!options) return 1; // Return an error if we failed.
 
-        options->doExpensiveChecks = false;
         options->matchingStrategy = HEMDavisPA;
         options->guessCutType = QP_BallOpt;
 

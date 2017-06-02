@@ -56,8 +56,6 @@ void runMemoryTest(const std::string &inputFile)
         return; // Return early if we failed.
     }
 
-    O->doExpensiveChecks = true;
-
     /* Override SuiteSparse memory management with custom testers. */
     SuiteSparse_config.malloc_func = myMalloc;
     SuiteSparse_config.calloc_func = myCalloc;

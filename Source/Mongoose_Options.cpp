@@ -37,8 +37,6 @@ Options* Options::Create()
 
         ret->targetSplit = 0.5;
         ret->softSplitTolerance = 0;
-
-        ret->doExpensiveChecks = false;
     }
 
     return ret;
