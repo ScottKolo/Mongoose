@@ -24,25 +24,25 @@ namespace Mongoose
 
 void bhLoad
 (
-    Graph *G,
-    Options *O
+    Graph *graph,
+    Options *options
 );
 
 void bhClear
 (
-    Graph *G
+    Graph *graph
 );
 
 void bhInsert
 (
-    Graph *G,
+    Graph *graph,
     Int vertex
 );
 
 void bhRemove
 (
-    Graph *G,
-    Options *O,
+    Graph *graph,
+    Options *options,
     Int vertex,
     double gain,
     bool partition,

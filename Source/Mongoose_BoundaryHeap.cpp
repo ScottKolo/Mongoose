@@ -1,7 +1,6 @@
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_CutCost.hpp"
-#include "Mongoose_CSparse.hpp"
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 
@@ -13,19 +12,19 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 void bhLoad
 (
-    Graph *G,
-    Options *O
+    Graph *graph,
+    Options *options
 )
 {
     /* Load the boundary heaps. */
-    Int n = G->n;
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    double *Gx = G->x;
-    double *Gw = G->w;
-    bool *partition = G->partition;
-    double *gains = G->vertexGains;
-    Int *externalDegree = G->externalDegree;
+    Int n = graph->n;
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    double *Gx = graph->x;
+    double *Gw = graph->w;
+    bool *partition = graph->partition;
+    double *gains = graph->vertexGains;
+    Int *externalDegree = graph->externalDegree;
 
     /* Keep track of the cut cost. */
     CutCost cost;
@@ -56,20 +55,20 @@ void bhLoad
         }
         gains[k] = gain;
         externalDegree[k] = exD;
-        if (exD > 0) bhInsert(G, k);
+        if (exD > 0) bhInsert(graph, k);
     }
 
     /* Save the cut cost to the graph. */
-    G->cutCost = cost.cutCost;
-    G->W0 = cost.W[0];
-    G->W1 = cost.W[1];
+    graph->cutCost = cost.cutCost;
+    graph->W0 = cost.W[0];
+    graph->W1 = cost.W[1];
 
-    double targetSplit = O->targetSplit ;
+    double targetSplit = options->targetSplit ;
     if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
 
-    G->imbalance = targetSplit - std::min(G->W0, G->W1) / G->W;
-    G->heuCost = (G->cutCost + (fabs(G->imbalance) > O->softSplitTolerance
-                                ? fabs(G->imbalance) * G->H
+    graph->imbalance = targetSplit - std::min(graph->W0, graph->W1) / graph->W;
+    graph->heuCost = (graph->cutCost + (fabs(graph->imbalance) > options->softSplitTolerance
+                                ? fabs(graph->imbalance) * graph->H
                                 : 0.0));
 }
 
@@ -78,16 +77,16 @@ void bhLoad
 //-----------------------------------------------------------------------------
 void bhInsert
 (
-    Graph *G,
+    Graph *graph,
     Int vertex
 )
 {
     /* Unpack structures */
-    Int vp = G->partition[vertex];
-    Int *bhIndex = G->bhIndex;
-    Int *bhHeap = G->bhHeap[vp];
-    Int size = G->bhSize[vp];
-    double *gains = G->vertexGains;
+    Int vp = graph->partition[vertex];
+    Int *bhIndex = graph->bhIndex;
+    Int *bhHeap = graph->bhHeap[vp];
+    Int size = graph->bhSize[vp];
+    double *gains = graph->vertexGains;
 
     bhHeap[size] = vertex;
     MONGOOSE_PUT_BHINDEX(vertex, size);
@@ -95,7 +94,7 @@ void bhInsert
     heapifyUp(bhIndex, bhHeap, gains, vertex, size, gains[vertex]);
 
     /* Save the size. */
-    G->bhSize[vp] = size+1;
+    graph->bhSize[vp] = size+1;
 }
 
 //-----------------------------------------------------------------------------
@@ -103,16 +102,16 @@ void bhInsert
 //-----------------------------------------------------------------------------
 void bhClear
 (
-    Graph *G
+    Graph *graph
 )
 {
     /* Clear the index entries for the heaps. */
-    Int *bhIndex = G->bhIndex;
-    Int *externalDegree = G->externalDegree;
+    Int *bhIndex = graph->bhIndex;
+    Int *externalDegree = graph->externalDegree;
     for (Int h = 0; h < 2; h++)
     {
-        Int *bhHeap = G->bhHeap[h];
-        Int size = G->bhSize[h];
+        Int *bhHeap = graph->bhHeap[h];
+        Int size = graph->bhSize[h];
         for (Int i = 0; i < size; i++)
         {
             Int v = bhHeap[i];
@@ -122,7 +121,7 @@ void bhClear
     }
 
     /* Clear the size. */
-    G->bhSize[0] = G->bhSize[1] = 0;
+    graph->bhSize[0] = graph->bhSize[1] = 0;
 }
 
 
@@ -133,18 +132,20 @@ void bhClear
 //-----------------------------------------------------------------------------
 void bhRemove
 (
-    Graph *G,
-    Options *O,
+    Graph *graph,
+    Options *options,
     Int vertex,
     double gain,
     bool partition,
     Int bhPosition
 )
 {
-    double *gains = G->vertexGains;
-    Int *bhIndex = G->bhIndex;
-    Int *bhHeap = G->bhHeap[partition];
-    Int size = (--G->bhSize[partition]);
+    (void)options; // Unused variable
+
+    double *gains = graph->vertexGains;
+    Int *bhIndex = graph->bhIndex;
+    Int *bhHeap = graph->bhHeap[partition];
+    Int size = (--graph->bhSize[partition]);
 
     /* If we removed the last position in the heap, there's nothing to do. */
     if (bhPosition == size) { bhIndex[vertex] = 0; return; }
