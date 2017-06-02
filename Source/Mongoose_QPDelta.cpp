@@ -28,8 +28,6 @@ QPDelta* QPDelta::Create(Int n)
     // TODO: can this use wi[1] instead?  I think so.
     ret->Change_location = (Int*) SuiteSparse_malloc(n+1, sizeof(Int));
 
-    ret->check_cost = INFINITY ;
-
     if(!ret->x || !ret->FreeSet_status || !ret->FreeSet_list
     || !ret->gradient || !ret->D || !ret->wi[0] || !ret->wi[1]
     || !ret->Change_location

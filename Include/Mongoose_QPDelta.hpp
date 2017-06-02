@@ -35,7 +35,6 @@ public:
                             // ib = -1 means b == lo
     double b;               // b = a'*x
 
-    double check_cost ;     // for debugging only
     double lambda;
 
     static QPDelta *Create(Int n);
