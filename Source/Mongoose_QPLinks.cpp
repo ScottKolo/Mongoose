@@ -11,7 +11,7 @@ namespace Mongoose
 bool qpLinks(Graph *graph, Options *options, QPDelta *QP)
 {
     (void)options; // Unused variable
-    
+
     /* Inputs */
     double *x = QP->x;
 
@@ -92,7 +92,23 @@ bool qpLinks(Graph *graph, Options *options, QPDelta *QP)
         (QP->b)-(QP->lo), (QP->hi)-(QP->b))) ;
     fflush (stdout) ;
     fflush (stderr) ;
-    double eps = 1E-8;
+
+    double minVal = INFINITY;
+    double maxVal = 1;
+    for (Int k = 0; k < n; k++)
+    {
+        if (minVal > x[k])
+        {
+            minVal = x[k];
+        }
+        if (maxVal < x[k])
+        {
+            maxVal = x[k];
+        }
+    }
+    minVal = std::max(minVal, 1E-8);
+    maxVal = std::max(maxVal, 1E-8);
+    double eps = maxVal*minVal*n;
     ASSERT (IMPLIES ((ib == -1), ( fabs(QP->b - QP->lo) < eps ))) ;  // b = lo
     ASSERT (IMPLIES ((ib ==  0), ( (QP->lo < (QP->b + eps)) && (QP->b < (QP->hi + eps))))) ; // lo < b <hi
     ASSERT (IMPLIES ((ib == +1), ( fabs(QP->b - QP->hi) < eps ))) ;  // b = hi

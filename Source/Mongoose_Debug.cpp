@@ -326,7 +326,7 @@ void FreeSet_dump (const char *where,
         {
             // note that in rare cases, x[j] can be 0 or 1 yet
             // still be in the FreeSet.
-            if (x != NULL) ASSERT (0 <= x [j] && x [j] <= 1.) ;
+            if (x != NULL) ASSERT (-1E-8 <= x [j] && x [j] <= 1.+1E-8) ;
             nFree2++ ;
         }
         else if (FreeSet_status [j] == 1)

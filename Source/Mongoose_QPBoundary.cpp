@@ -253,7 +253,7 @@ void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
                 grad[k] -= D[k];
             }
         }
-        DEBUG (QPcheckCom (graph, options, QP, 1, nFreeSet, b)) ;         // check b
+        // DEBUG (QPcheckCom (graph, options, QP, 1, nFreeSet, b)) ;         // check b
     }
 
     /* ---------------------------------------------------------------------- */
