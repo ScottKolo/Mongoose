@@ -32,7 +32,6 @@
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_QPBoundary.hpp"
 #include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
 
 #define EMPTY (-1)
 
@@ -40,13 +39,9 @@ namespace Mongoose
 {
 
 
-void qpBoundary
-        (
-                Graph *graph,
-                Options *options,
-                QPDelta *QP
-        )
+void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
 {
+    (void)options; // Unused variable
     /* ---------------------------------------------------------------------- */
     /* Step 0. read in the needed arrays                                      */
     /* ---------------------------------------------------------------------- */

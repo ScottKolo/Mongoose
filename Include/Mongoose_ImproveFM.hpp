@@ -38,8 +38,8 @@ void improveCutUsingFM
 
 void fmSwap
 (
-    Graph *G,
-    Options *O,
+    Graph *graph,
+    Options *options,
     Int vertex,
     double gain,
     bool oldPartition
@@ -47,8 +47,8 @@ void fmSwap
 
 void calculateGain
 (
-    Graph *G,
-    Options *O,
+    Graph *graph,
+    Options *options,
     Int vertex,
     double *out_gain,
     Int *out_externalDegree

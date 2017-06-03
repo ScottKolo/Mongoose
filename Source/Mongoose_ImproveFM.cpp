@@ -189,9 +189,9 @@ void fmRefine_worker(Graph *G, Options *O)
     G->clearMarkArray();
 
     /* Re-add any vertices that were moved that are still on the boundary. */
-    for (Int i = 0; i < head; i++)
+    for (Int k = 0; k < head; k++)
     {
-        Int vertex = stack[i];
+        Int vertex = stack[k];
         if (externalDegree[vertex] > 0 && !MONGOOSE_IN_BOUNDARY(vertex))
         {
             bhInsert(G, vertex);
@@ -214,22 +214,22 @@ void fmRefine_worker(Graph *G, Options *O)
 //-----------------------------------------------------------------------------
 void fmSwap
 (
-    Graph *G,
-    Options *O,
+    Graph *graph,
+    Options *options,
     Int vertex,
     double gain,
     bool oldPartition
 )
 {
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    double *Gx = G->x;
-    bool *partition = G->partition;
-    double *gains = G->vertexGains;
-    Int *externalDegree = G->externalDegree;
-    Int *bhIndex = G->bhIndex;
-    Int **bhHeap = G->bhHeap;
-    Int *bhSize = G->bhSize;
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    double *Gx = graph->x;
+    bool *partition = graph->partition;
+    double *gains = graph->vertexGains;
+    Int *externalDegree = graph->externalDegree;
+    Int *bhIndex = graph->bhIndex;
+    Int **bhHeap = graph->bhHeap;
+    Int *bhSize = graph->bhSize;
 
     /* Swap partitions */
     bool newPartition = !oldPartition;
@@ -268,7 +268,7 @@ void fmSwap
             {
                 bhRemove
                 (
-                    G, O,
+                    graph, options,
                     neighbor,
                     neighborGain,
                     neighborPartition,
@@ -291,10 +291,10 @@ void fmSwap
         /* Else the neighbor wasn't in the heap so add it. */
         else
         {
-            if (!G->isMarked(neighbor))
+            if (!graph->isMarked(neighbor))
             {
                 ASSERT (!MONGOOSE_IN_BOUNDARY(neighbor));
-                bhInsert(G, neighbor);
+                bhInsert(graph, neighbor);
             }
         }
     }
@@ -306,17 +306,19 @@ void fmSwap
 //-----------------------------------------------------------------------------
 void calculateGain
 (
-    Graph *G,
-    Options *O,
+    Graph *graph,
+    Options *options,
     Int vertex,
     double *out_gain,
     Int *out_externalDegree
 )
 {
-    Int *Gp = G->p;
-    Int *Gi = G->i;
-    double *Gx = G->x;
-    bool *partition = G->partition;
+    (void)options; // Unused variable
+
+    Int *Gp = graph->p;
+    Int *Gi = graph->i;
+    double *Gx = graph->x;
+    bool *partition = graph->partition;
 
     bool vp = partition[vertex];
 
