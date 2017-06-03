@@ -7,6 +7,10 @@ namespace Mongoose
 
 class QPDelta
 {
+private:
+    static const Int WXSIZE = 3;
+    static const Int WISIZE = 2;
+
 public:
     double *x;             /* current estimate of solution                    */
 
@@ -23,8 +27,8 @@ public:
     double hi ;
 
     // workspace
-    Int *wi[2];
-    double *wx[3];
+    Int *wi[WISIZE];
+    double *wx[WXSIZE];
 
     Int its;
     double err;
@@ -42,9 +46,6 @@ public:
     double check_cost;
 #endif
 
-private:
-    static const Int WXSIZE = 2;
-    static const Int WISIZE = 3;
 };
 
 } // end namespace Mongoose
