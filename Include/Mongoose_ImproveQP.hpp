@@ -1,5 +1,4 @@
-#ifndef Mongoose_ImproveQP_hpp
-#define Mongoose_ImproveQP_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -19,4 +18,3 @@ bool improveCutUsingQP
 
 } // end namespace Mongoose
 
-#endif

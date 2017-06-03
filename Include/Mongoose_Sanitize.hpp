@@ -1,5 +1,4 @@
-#ifndef Mongoose_Sanitize_hpp
-#define Mongoose_Sanitize_hpp
+#pragma once
 
 #include "Mongoose_CSparse.hpp"
 #include "Mongoose_Internal.hpp"
@@ -13,5 +12,3 @@ void removeDiagonal(cs *A);
 cs *mirrorTriangular(cs *A);
 
 } // end namespace Mongoose
-
-#endif

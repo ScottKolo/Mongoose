@@ -7,8 +7,7 @@
  * random, etc.), coarsening constructs the new, coarsened graph.
  */
 
-#ifndef Mongoose_Coarsening_hpp
-#define Mongoose_Coarsening_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -22,4 +21,3 @@ Graph *coarsen(Graph *graph, Options *options);
 
 } // end namespace Mongoose
 
-#endif

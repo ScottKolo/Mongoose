@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPMinHeap_hpp
-#define Mongoose_QPMinHeap_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 
@@ -47,4 +46,3 @@ void QPminheap_check
 
 } // end namespace Mongoose
 
-#endif

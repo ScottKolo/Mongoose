@@ -7,8 +7,7 @@
  * (easier for C programmers) or std::string (easier from C++).
  */
 
-#ifndef Mongoose_IO_hpp
-#define Mongoose_IO_hpp
+#pragma once
 
 #include "Mongoose_CSparse.hpp"
 #include "Mongoose_Internal.hpp"
@@ -77,5 +76,3 @@ Graph *readGraph (const char* filename);
 cs *readMatrix (const char* filename, MM_typecode &matcode);
 
 } // end namespace Mongoose
-
-#endif

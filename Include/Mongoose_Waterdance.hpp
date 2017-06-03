@@ -1,5 +1,4 @@
-#ifndef Mongoose_Waterdance_hpp
-#define Mongoose_Waterdance_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -12,4 +11,3 @@ void waterdance(Graph *G, Options *O);
 
 } // end namespace Mongoose
 
-#endif

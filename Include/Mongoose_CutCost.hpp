@@ -1,5 +1,4 @@
-#ifndef Mongoose_CutCost_hpp
-#define Mongoose_CutCost_hpp
+#pragma once
 
 namespace Mongoose
 {
@@ -15,4 +14,3 @@ struct CutCost
 
 } // end namespace Mongoose
 
-#endif

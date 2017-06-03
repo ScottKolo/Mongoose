@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPDelta_hpp
-#define Mongoose_QPDelta_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 
@@ -50,4 +49,3 @@ private:
 
 } // end namespace Mongoose
 
-#endif

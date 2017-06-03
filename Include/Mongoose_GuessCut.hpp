@@ -1,5 +1,4 @@
-#ifndef Mongoose_GuessCut_hpp
-#define Mongoose_GuessCut_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -32,4 +31,3 @@ void partBFS
 
 } // end namespace Mongoose
 
-#endif

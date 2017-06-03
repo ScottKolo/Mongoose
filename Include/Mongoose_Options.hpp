@@ -1,5 +1,4 @@
-#ifndef Mongoose_Options_hpp
-#define Mongoose_Options_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 
@@ -48,4 +47,3 @@ struct Options
 
 } // end namespace Mongoose
 
-#endif

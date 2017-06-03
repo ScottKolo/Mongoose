@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPBoundaryHeap_hpp
-#define Mongoose_QPBoundaryHeap_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -71,5 +70,3 @@ void heapifyDown
 );
 
 } // end namespace Mongoose
-
-#endif

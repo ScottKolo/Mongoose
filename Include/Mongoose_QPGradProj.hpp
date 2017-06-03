@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPGradProj_hpp
-#define Mongoose_QPGradProj_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -13,4 +12,3 @@ double qpGradProj(Graph*, Options*, QPDelta*);
 
 } // end namespace Mongoose
 
-#endif

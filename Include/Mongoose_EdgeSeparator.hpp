@@ -1,6 +1,5 @@
 // TODO : make a single user include file
-#ifndef Mongoose_EdgeSeparator_hpp
-#define Mongoose_EdgeSeparator_hpp
+#pragma once
 
 #include "Mongoose_Graph.hpp"
 #include "Mongoose_Options.hpp"
@@ -14,4 +13,3 @@ bool initialize(Graph *graph, Options *options);
 
 } // end namespace Mongoose
 
-#endif

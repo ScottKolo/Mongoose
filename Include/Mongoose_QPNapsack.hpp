@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPNapsack_hpp
-#define Mongoose_QPNapsack_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 
@@ -23,4 +22,3 @@ double QPnapsack            /* return the final lambda */
 
 } // end namespace Mongoose
 
-#endif

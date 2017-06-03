@@ -1,5 +1,4 @@
-#ifndef Mongoose_ImproveFM_hpp
-#define Mongoose_ImproveFM_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -57,4 +56,3 @@ void calculateGain
 
 } // end namespace Mongoose
 
-#endif

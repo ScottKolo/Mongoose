@@ -1,5 +1,4 @@
-#ifndef Mongoose_Matching_hpp
-#define Mongoose_Matching_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -69,7 +68,5 @@ void matching_Cleanup(Graph *graph, Options *options);
         matchtype[b] = t;                               \
     }                                                   \
 }                                                       \
-
-#endif
 
 #endif

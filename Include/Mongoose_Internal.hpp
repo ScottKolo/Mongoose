@@ -1,7 +1,6 @@
 // This include file should not be visible to the user
 
-#ifndef Mongoose_Internal_hpp
-#define Mongoose_Internal_hpp
+#pragma once
 
 #define FREESET_DEBUG 0
 
@@ -31,4 +30,3 @@ enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_
 
 } // end namespace Mongoose
 
-#endif

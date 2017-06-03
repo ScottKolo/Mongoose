@@ -1,5 +1,4 @@
-#ifndef Mongoose_Interop_hpp
-#define Mongoose_Interop_hpp
+#pragma once
 
 #include "string.h"
 #include "Mongoose_CSparse.hpp"
@@ -16,4 +15,3 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW = false, bool resetNW = false);
 
 } // end namespace Mongoose
 
-#endif

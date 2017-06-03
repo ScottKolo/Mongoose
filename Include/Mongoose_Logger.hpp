@@ -7,8 +7,7 @@
  * here with a tic/toc pattern.
  */
 
-#ifndef Mongoose_Logger_hpp
-#define Mongoose_Logger_hpp
+#pragma once
 
 #include <string>
 #include <time.h> 
@@ -153,5 +152,3 @@ inline int Logger::getDebugLevel()
 }
 
 } // end namespace Mongoose
-
-#endif

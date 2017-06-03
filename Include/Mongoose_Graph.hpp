@@ -5,8 +5,7 @@
  * storing information about matching, coarsening, and partitioning.
  */
 
-#ifndef Mongoose_Graph_hpp
-#define Mongoose_Graph_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Options.hpp"
@@ -97,4 +96,3 @@ private:
 
 } // end namespace Mongoose
 
-#endif

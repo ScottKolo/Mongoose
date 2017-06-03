@@ -1,5 +1,4 @@
-#ifndef Mongoose_Refinement_hpp
-#define Mongoose_Refinement_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -12,4 +11,3 @@ Graph *refine(Graph *G, Options *O);
 
 } // end namespace Mongoose
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPNapUp_hpp
-#define Mongoose_QPNapUp_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 
@@ -20,4 +19,3 @@ double QPnapup              /* return lambda */
 
 } // end namespace Mongoose
 
-#endif

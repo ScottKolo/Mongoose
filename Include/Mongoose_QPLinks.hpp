@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPLinks_hpp
-#define Mongoose_QPLinks_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
@@ -13,4 +12,3 @@ bool qpLinks(Graph*, Options*, QPDelta*);
 
 } // end namespace Mongoose
 
-#endif

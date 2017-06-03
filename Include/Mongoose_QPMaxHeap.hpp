@@ -1,5 +1,4 @@
-#ifndef Mongoose_QPMaxHeap_hpp
-#define Mongoose_QPMaxHeap_hpp
+#pragma once
 
 #include "Mongoose_Internal.hpp"
 
@@ -47,4 +46,3 @@ void QPmaxheap_check
 
 } // end namespace Mongoose
 
-#endif

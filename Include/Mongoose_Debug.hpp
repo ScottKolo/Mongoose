@@ -5,8 +5,7 @@
 // TODO: this file should not be included into any user program.
 // TODO: optional: move this file to ../Mongoose/Source
 
-#ifndef Mongoose_Debug_hpp
-#define Mongoose_Debug_hpp
+#pragma once
 
 #include "Mongoose_Graph.hpp"
 #include "Mongoose_CSparse.hpp"
@@ -92,4 +91,3 @@ void FreeSet_dump (const char *where,
 
 } // end namespace Mongoose
 
-#endif

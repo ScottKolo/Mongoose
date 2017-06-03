@@ -7,8 +7,7 @@
  * uses the same integer (csi or SuiteSparse_long) as the Int in Mongoose.
  */
 
-#ifndef Mongoose_CSparse_hpp
-#define Mongoose_CSparse_hpp
+#pragma once
 
 #include <stdlib.h>
 #include <limits.h>
@@ -93,4 +92,3 @@ csi *cs_pinv (csi const *p, csi n);
 
 } // end namespace Mongoose
 
-#endif
