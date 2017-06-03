@@ -23,7 +23,7 @@
 namespace Mongoose
 {
 
-// save the current state of the solution, just before returning from QPGradProj
+// save the current state of the solution, just before returning from qpGradProj
 inline void saveContext
 (
     Graph *graph,
@@ -52,15 +52,15 @@ inline void saveContext
     QP->b = b;
 }
 
-double QPgradproj
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP
-)
+double qpGradProj
+        (
+                Graph *G,
+                Options *O,
+                QPDelta *QP
+        )
 {
 
-    PR (("\n------- QPGradProj start: [\n")) ;
+    PR (("\n------- qpGradProj start: [\n")) ;
     DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ; // do not check b
 
     /* ---------------------------------------------------------------------- */
@@ -117,14 +117,14 @@ double QPgradproj
     Int it = 0;
     double err = INFINITY;
 
-    DEBUG (FreeSet_dump ("QPGradProj: start",
+    DEBUG (FreeSet_dump ("qpGradProj: start",
         n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
     while (err > tol)
     {
 
         PR (("top of QPgrad while loop\n")) ;
-        DEBUG (FreeSet_dump ("QPGradProj:0",
+        DEBUG (FreeSet_dump ("qpGradProj:0",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
         DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ;
 
@@ -174,12 +174,12 @@ double QPgradproj
         /* If we converged or got exhausted, save context and exit. */
         if ((err <= tol) || (it >= limit))
         {
-            PR (("QPGradProj exhausted:")) ;
+            PR (("qpGradProj exhausted:")) ;
             saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
             DEBUG (QPcheckCom (G, O, QP, 1, QP->nFreeSet, QP->b)) ;
-            DEBUG (FreeSet_dump ("QPGradProj exhausted",
+            DEBUG (FreeSet_dump ("qpGradProj exhausted",
                 n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
-            PR (("------- QPGradProj end ]\n")) ;
+            PR (("------- qpGradProj end ]\n")) ;
             return err;
         }
 
@@ -188,7 +188,7 @@ double QPgradproj
         /* compute stepsize st = g_F'g_F/-g_F'(A+D)g_F */
         for (Int k = 0; k < n; k++) Dgrad[k] = 0.;
 
-        DEBUG (FreeSet_dump ("QPGradProj:1",
+        DEBUG (FreeSet_dump ("qpGradProj:1",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         // for each i in the FreeSet:
@@ -207,7 +207,7 @@ double QPgradproj
         double st_num = 0.;
         double st_den = 0.;
 
-        DEBUG (FreeSet_dump ("QPGradProj:2",
+        DEBUG (FreeSet_dump ("qpGradProj:2",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         for (Int jfree = 0 ; jfree < nFreeSet ; jfree++)
@@ -287,11 +287,11 @@ double QPgradproj
         /* If directional derivative has wrong sign, save context and exit. */
         if (s >= 0.)
         {
-            PR (("QPGradProj directional derivative has wrong sign\n")) ;
+            PR (("qpGradProj directional derivative has wrong sign\n")) ;
             saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
-            DEBUG (FreeSet_dump ("QPGradProj wrong sign",
+            DEBUG (FreeSet_dump ("qpGradProj wrong sign",
                 n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
-            PR (("------- QPGradProj end ]\n")) ;
+            PR (("------- qpGradProj end ]\n")) ;
             return err;
         }
 
@@ -479,19 +479,19 @@ double QPgradproj
         }
         nFreeSet = jfree2 ;
 
-        DEBUG (FreeSet_dump ("QPGradProj:6",
+        DEBUG (FreeSet_dump ("qpGradProj:6",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         // do not check b
-        PR (("QPGradProj continues:\n")) ;
+        PR (("qpGradProj continues:\n")) ;
         QP->nFreeSet = nFreeSet ;
         DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ;
     }
 
-    DEBUG (FreeSet_dump ("QPGradProj end",
+    DEBUG (FreeSet_dump ("qpGradProj end",
         n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
-    PR (("------- QPGradProj end ]\n")) ;
+    PR (("------- qpGradProj end ]\n")) ;
     return err;
 }
 

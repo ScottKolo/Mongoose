@@ -9,12 +9,7 @@
 namespace Mongoose
 {
 
-double QPgradproj
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP
-);
+double qpGradProj(Graph*, Options*, QPDelta*);
 
 } // end namespace Mongoose
 

@@ -96,19 +96,19 @@ bool improveCutUsingQP
     }
 
     // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi
-    if (!QPlinks(G, O, QP))
+    if (!qpLinks(G, O, QP))
     {
         Logger::toc(QPTiming);
         return false;
     }
 
-    // lo <= a'x <= hi now holds (lo and hi are modified as needed in QPLinks)
+    // lo <= a'x <= hi now holds (lo and hi are modified as needed in qpLinks)
 
     /* Do one run of gradient projection. */
-    QPgradproj(G, O, QP);
-    QPboundary(G, O, QP);
-    QPgradproj(G, O, QP);
-    QPboundary(G, O, QP);
+    qpGradProj(G, O, QP);
+    qpBoundary(G, O, QP);
+    qpGradProj(G, O, QP);
+    qpBoundary(G, O, QP);
 
     /* Use the CutCost to keep track of impacts to the cut cost. */
     CutCost cost;

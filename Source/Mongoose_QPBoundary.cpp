@@ -1,5 +1,5 @@
 /* ========================================================================== */
-/* === QPboundary =========================================================== */
+/* === qpBoundary =========================================================== */
 /* ========================================================================== */
 
 /*
@@ -40,12 +40,12 @@ namespace Mongoose
 {
 
 
-void QPboundary
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP
-)
+void qpBoundary
+        (
+                Graph *graph,
+                Options *options,
+                QPDelta *QP
+        )
 {
     /* ---------------------------------------------------------------------- */
     /* Step 0. read in the needed arrays                                      */
@@ -80,11 +80,11 @@ void QPboundary
     double b = QP->b;           /* current value for a'x */
 
     /* problem specification for the graph G */
-    Int n  = G->n;              /* problem dimension */
-    double *Ex = G->x;          /* numerical values for edge weights */
-    Int *Ei = G->i;             /* adjacent vertices for each node */
-    Int *Ep = G->p;             /* points into Ex or Ei */
-    double *a  = G->w;          /* a'x = b, lo <= b <= hi */
+    Int n  = graph->n;              /* problem dimension */
+    double *Ex = graph->x;          /* numerical values for edge weights */
+    Int *Ei = graph->i;             /* adjacent vertices for each node */
+    Int *Ep = graph->p;             /* points into Ex or Ei */
+    double *a  = graph->w;          /* a'x = b, lo <= b <= hi */
 
     double lo = QP->lo ;
     double hi = QP->hi ;
@@ -92,15 +92,15 @@ void QPboundary
     /* work array */
     double *D  = QP->D;    /* diagonal of quadratic */
 
-    PR (("\n----- QPboundary start: [\n")) ;
-    DEBUG (QPcheckCom (G, O, QP, 1, QP->nFreeSet, QP->b)) ;      // check b
+    PR (("\n----- qpBoundary start: [\n")) ;
+    DEBUG (QPcheckCom (graph, options, QP, 1, QP->nFreeSet, QP->b)) ;      // check b
 
     /* ---------------------------------------------------------------------- */
     /* Step 1. if lo < b < hi, then for each free k,                          */
     /*         see if x_k can be pushed to 0 or 1                             */
     /* ---------------------------------------------------------------------- */
 
-    DEBUG (FreeSet_dump ("QPBoundary start",
+    DEBUG (FreeSet_dump ("qpBoundary start",
         n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
     PR (("Boundary 1 start: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
@@ -258,7 +258,7 @@ void QPboundary
                 grad[k] -= D[k];
             }
         }
-        DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
+        DEBUG (QPcheckCom (graph, options, QP, 1, nFreeSet, b)) ;         // check b
     }
 
     /* ---------------------------------------------------------------------- */
@@ -272,7 +272,7 @@ void QPboundary
         QP->nFreeSet = nFreeSet;
         QP->b = b;
         QP->ib = ib;
-        PR (("------- QPBoundary end ]\n")) ;
+        PR (("------- qpBoundary end ]\n")) ;
         return ;
     }
 
@@ -307,9 +307,9 @@ void QPboundary
         {
             Int i = Ei[p] ;
             ASSERT(i != j) ;                       // graph has no self edges
-            G->mark(i);
+            graph->mark(i);
         }
-        G->mark(j);
+        graph->mark(j);
 
         // for each i that follows after j in the FreeSet
         for (Int ifree = jfree + 1 ; ifree < nFreeSet ; ifree++)
@@ -323,7 +323,7 @@ void QPboundary
                 continue ;
             }
 
-            if (!G->isMarked(i))
+            if (!graph->isMarked(i))
             {
                 // node i is not adjacent to j in the graph G 
                 double aj = a[j];
@@ -453,7 +453,7 @@ void QPboundary
         }
 
         // clear the marks from all the nodes
-        G->clearMarkArray();
+        graph->clearMarkArray();
 
     }
 
@@ -475,7 +475,7 @@ void QPboundary
     DEBUG (FreeSet_dump ("step 3 done",
         n, FreeSet_list, nFreeSet, FreeSet_status, 1, x)) ;
 
-    DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
+    DEBUG (QPcheckCom (graph, options, QP, 1, nFreeSet, b)) ;         // check b
 
 #ifndef NDEBUG
     // the nodes in the FreeSet now form a single clique.  Check this.
@@ -618,7 +618,7 @@ void QPboundary
 
         DEBUG (FreeSet_dump ("step 4", n, FreeSet_list, nFreeSet,
             FreeSet_status, 0, x)) ;
-        DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
+        DEBUG (QPcheckCom (graph, options, QP, 1, nFreeSet, b)) ;         // check b
     }
 
     DEBUG (FreeSet_dump ("wrapup", n, FreeSet_list, nFreeSet,
@@ -729,7 +729,7 @@ void QPboundary
     /* ---------------------------------------------------------------------- */
 
     PR (("QBboundary, done:\n")) ;
-    DEBUG (FreeSet_dump ("QPBoundary: done ", n, FreeSet_list,
+    DEBUG (FreeSet_dump ("qpBoundary: done ", n, FreeSet_list,
         nFreeSet, FreeSet_status, 0, x)) ;
     ASSERT (nFreeSet == 0 || nFreeSet == 1) ;
     PR (("Boundary done: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
@@ -740,10 +740,10 @@ void QPboundary
     QP->ib = ib;
 
     // clear the marks from all the nodes
-    G->clearMarkArray();
+    graph->clearMarkArray();
 
-    DEBUG (QPcheckCom (G, O, QP, 1, nFreeSet, b)) ;         // check b
-    PR (("----- QPboundary end ]\n")) ;
+    DEBUG (QPcheckCom (graph, options, QP, 1, nFreeSet, b)) ;         // check b
+    PR (("----- qpBoundary end ]\n")) ;
 }
 
 } // end namespace Mongoose

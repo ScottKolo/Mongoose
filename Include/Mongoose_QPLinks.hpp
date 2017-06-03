@@ -9,12 +9,7 @@
 namespace Mongoose
 {
 
-bool QPlinks
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP          /* pointer to QPDelta structure  */
-);
+bool qpLinks(Graph*, Options*, QPDelta*);
 
 } // end namespace Mongoose
 

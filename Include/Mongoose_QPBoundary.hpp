@@ -9,12 +9,7 @@
 namespace Mongoose
 {
 
-void QPboundary
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP
-);
+void qpBoundary(Graph*, Options*, QPDelta*);
 
 } // end namespace Mongoose
 

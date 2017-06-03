@@ -8,22 +8,19 @@
 namespace Mongoose
 {
 
-bool QPlinks
-(
-    Graph *G,
-    Options *O,
-    QPDelta *QP          /* pointer to QPDelta structure  */
-)
+bool qpLinks(Graph *graph, Options *options, QPDelta *QP)
 {
+    (void)options; // Unused variable
+    
     /* Inputs */
     double *x = QP->x;
 
     /* Unpack structures. */
-    Int n = G->n;
-    Int *Ep = G->p;
-    Int *Ei = G->i;
-    double *Ex = G->x;
-    double *a = G->w;
+    Int n = graph->n;
+    Int *Ep = graph->p;
+    Int *Ei = graph->i;
+    double *Ex = graph->x;
+    double *a = graph->w;
 
     /* working array */
     double *D = QP->D;
@@ -76,7 +73,7 @@ bool QPlinks
     QP->nFreeSet = nFreeSet;
     QP->b = s;
 
-    DEBUG (FreeSet_dump ("QPLinks:done",
+    DEBUG (FreeSet_dump ("qpLinks:done",
         n, FreeSet_list, nFreeSet, FreeSet_status, 1, x)) ;
 
     // Note that b can be less than lo or greater than hi.
@@ -91,7 +88,7 @@ bool QPlinks
     Int ib = QP->ib ;
     PR (("QPlinks: target "
         "%g GW %g ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
-        O->targetSplit, G->W, ib, QP->lo, QP->b, QP->hi,
+        options->targetSplit, graph->W, ib, QP->lo, QP->b, QP->hi,
         (QP->b)-(QP->lo), (QP->hi)-(QP->b))) ;
     fflush (stdout) ;
     fflush (stderr) ;
