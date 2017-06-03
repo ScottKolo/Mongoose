@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* Find x that minimizes ||x-y|| while satisfying the constraints
-   0 <= x <= 1, a'x = b. If a = NULL, then we assume that a = 1.
+   0 <= x <= 1, a'x = b.
    The algorithm is described in the napsack comments.
    It is assumed that the starting guess lambda for the dual multiplier is >=
    the correct multiplier. Hence, lambda will be decreased.  The slope of the
