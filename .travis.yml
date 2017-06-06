@@ -55,7 +55,7 @@ matrix:
       - export CXX=g++-6
       - export CC=gcc-6
     after_success:
-      - valgrind --error-exitcode=1 --leak-check=full ./tests/mongoose_test_memory ../Matrix/bcspwr04.mtx
+      - valgrind --error-exitcode=1 --leak-check=full --show-reachable=yes ./tests/mongoose_test_memory ../Matrix/bcspwr04.mtx
 
   # cppcheck build
   - os: linux
