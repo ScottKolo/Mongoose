@@ -54,51 +54,51 @@ inline void saveContext
 
 double qpGradProj
         (
-                Graph *G,
-                Options *O,
-                QPDelta *QP
+                Graph *graph,
+                Options *options,
+                QPDelta *qpDelta
         )
 {
 
     PR (("\n------- qpGradProj start: [\n")) ;
-    DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ; // do not check b
+    DEBUG (QPcheckCom (graph, options, qpDelta, 0, qpDelta->nFreeSet, -999999)) ; // do not check b
 
     /* ---------------------------------------------------------------------- */
     /* Unpack the relevant structures                                         */
     /* ---------------------------------------------------------------------- */
 
-    double tol = O->gradProjTolerance;
-    double *wx1 = QP->wx[0];    /* work array for napsack and here as y */
-    double *wx2 = QP->wx[1];    /* work array for napsack and here as Dgrad */
-    double *wx3 = QP->wx[2];    /* work array used here for d=y-x */
-    Int *wi1 = QP->wi[0];       /* work array for napsack
+    double tol = options->gradProjTolerance;
+    double *wx1 = qpDelta->wx[0];    /* work array for napsack and here as y */
+    double *wx2 = qpDelta->wx[1];    /* work array for napsack and here as Dgrad */
+    double *wx3 = qpDelta->wx[2];    /* work array used here for d=y-x */
+    Int *wi1 = qpDelta->wi[0];       /* work array for napsack
                                    and here as changeList */
-    Int *wi2 = QP->wi[1];       /* work array only for napsack */
+    Int *wi2 = qpDelta->wi[1];       /* work array only for napsack */
 
     /* Output and Input */
-    double *x = QP->x;             /* current estimate of solution            */
-    Int *FreeSet_status = QP->FreeSet_status;
+    double *x = qpDelta->x;             /* current estimate of solution            */
+    Int *FreeSet_status = qpDelta->FreeSet_status;
         /* FreeSet_status [i] = +1,-1, or 0 if x_i = 1,0, or 0 < x_i < 1 */
 
-    Int nFreeSet = QP->nFreeSet;    /* number of i such that 0 < x_i < 1 */
-    Int *FreeSet_list = QP->FreeSet_list;     /* list of free indices */
+    Int nFreeSet = qpDelta->nFreeSet;    /* number of i such that 0 < x_i < 1 */
+    Int *FreeSet_list = qpDelta->FreeSet_list;     /* list of free indices */
 
-    double *grad = QP->gradient;          /* gradient at current x */
+    double *grad = qpDelta->gradient;          /* gradient at current x */
 
     /* Unpack the problem's parameters. */
-    Int n = G->n;                  /* problem dimension */
-    Int *Ep = G->p;                /* points into Ex or Ei */
-    Int *Ei = G->i;                /* adjacent vertices for each node */
-    double *Ex = G->x;             /* edge weights */
-    double *Ew = G->w;             /* node weights; a'x = b, lo <= b <= hi */
+    Int n = graph->n;                  /* problem dimension */
+    Int *Ep = graph->p;                /* points into Ex or Ei */
+    Int *Ei = graph->i;                /* adjacent vertices for each node */
+    double *Ex = graph->x;             /* edge weights */
+    double *Ew = graph->w;             /* node weights; a'x = b, lo <= b <= hi */
 
-    double lo = QP->lo ;
-    double hi = QP->hi ;
+    double lo = qpDelta->lo ;
+    double hi = qpDelta->hi ;
 
-    double *D = QP->D; /* diagonal of quadratic */
+    double *D = qpDelta->D; /* diagonal of quadratic */
 
     /* gradient projection parameters */
-    Int limit = O->gradprojIterationLimit; /* max number of iterations */
+    Int limit = options->gradprojIterationLimit; /* max number of iterations */
 
     /* work arrays */
     double *y = wx1;
@@ -113,7 +113,7 @@ double qpGradProj
     /* compute error, take step along projected gradient */
     Int ib = 0;             /* initialize ib so that lo < b < hi */
     //double lambda = 0.;
-    double lambda = QP->lambda;
+    double lambda = qpDelta->lambda;
     Int it = 0;
     double err = INFINITY;
 
@@ -126,7 +126,7 @@ double qpGradProj
         PR (("top of QPgrad while loop\n")) ;
         DEBUG (FreeSet_dump ("qpGradProj:0",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
-        DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ;
+        DEBUG (QPcheckCom (graph, options, qpDelta, 0, qpDelta->nFreeSet, -999999)) ;
 
 #ifndef NDEBUG
         // check grad
@@ -175,8 +175,8 @@ double qpGradProj
         if ((err <= tol) || (it >= limit))
         {
             PR (("qpGradProj exhausted:")) ;
-            saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
-            DEBUG (QPcheckCom (G, O, QP, 1, QP->nFreeSet, QP->b)) ;
+            saveContext(graph, qpDelta, it, err, nFreeSet, ib, lo, hi);
+            DEBUG (QPcheckCom (graph, options, qpDelta, 1, qpDelta->nFreeSet, qpDelta->b)) ;
             DEBUG (FreeSet_dump ("qpGradProj exhausted",
                 n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
             PR (("------- qpGradProj end ]\n")) ;
@@ -288,7 +288,7 @@ double qpGradProj
         if (s >= 0.)
         {
             PR (("qpGradProj directional derivative has wrong sign\n")) ;
-            saveContext(G, QP, it, err, nFreeSet, ib, lo, hi);
+            saveContext(graph, qpDelta, it, err, nFreeSet, ib, lo, hi);
             DEBUG (FreeSet_dump ("qpGradProj wrong sign",
                 n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
             PR (("------- qpGradProj end ]\n")) ;
@@ -484,8 +484,8 @@ double qpGradProj
 
         // do not check b
         PR (("qpGradProj continues:\n")) ;
-        QP->nFreeSet = nFreeSet ;
-        DEBUG (QPcheckCom (G, O, QP, 0, QP->nFreeSet, -999999)) ;
+        qpDelta->nFreeSet = nFreeSet ;
+        DEBUG (QPcheckCom (graph, options, qpDelta, 0, qpDelta->nFreeSet, -999999)) ;
     }
 
     DEBUG (FreeSet_dump ("qpGradProj end",
