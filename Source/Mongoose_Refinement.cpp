@@ -9,14 +9,12 @@
 namespace Mongoose
 {
 
-Graph *refine(Graph *G, Options *O)
+Graph *refine(Graph *graph, Options *options)
 {
     Logger::tic(RefinementTiming);
-
-    Graph *P = G->parent;
-
-    Int cn = G->n;
-    bool *cPartition = G->partition;
+    Graph *P = graph->parent;
+    Int cn = graph->n;
+    bool *cPartition = graph->partition;
     Int *invmatchmap = P->invmatchmap;
     Int *matching = P->matching;
     bool *fPartition = P->partition;
@@ -24,11 +22,11 @@ Graph *refine(Graph *G, Options *O)
     Int *fExternalDegree = P->externalDegree;
 
     /* Transfer cut costs and partition details upwards. */
-    P->heuCost = G->heuCost;
-    P->cutCost = G->cutCost;
-    P->W0 = G->W0;
-    P->W1 = G->W1;
-    P->imbalance = G->imbalance;
+    P->heuCost = graph->heuCost;
+    P->cutCost = graph->cutCost;
+    P->W0 = graph->W0;
+    P->W1 = graph->W1;
+    P->imbalance = graph->imbalance;
 
     /* For each vertex in the coarse graph. */
     for (Int k = 0; k < cn; k++)
@@ -36,14 +34,13 @@ Graph *refine(Graph *G, Options *O)
         /* Load up the inverse matching */
         Int v[3] = {-1, -1, -1};
         v[0] = invmatchmap[k];
-        v[1] = MONGOOSE_GETMATCH(v[0]);
+        v[1] = P->getMatch(v[0]);
         if (v[0] == v[1]) { v[1] = -1; }
         else
         {
-            v[2] = MONGOOSE_GETMATCH(v[1]);
+            v[2] = P->getMatch(v[1]);
             if (v[0] == v[2]) { v[2] = -1; }
         }
-
         /* Transfer the partition choices to the fine level. */
         bool cp = cPartition[k];
         for (Int i = 0; i < 3 && v[i] != -1; i++)
@@ -52,7 +49,6 @@ Graph *refine(Graph *G, Options *O)
             fPartition[vertex] = cp;
         }
     }
-
     /* See if we can relax the boundary constraint and recompute gains for
      * vertices on the boundary.
      * NOTE: For this, we only need to go through the set of vertices that
@@ -60,8 +56,8 @@ Graph *refine(Graph *G, Options *O)
     for (Int h = 0; h < 2; h++)
     {
         /* Get the appropriate heap's data. */
-        Int *heap = G->bhHeap[h];
-        Int size = G->bhSize[h];
+        Int *heap = graph->bhHeap[h];
+        Int size = graph->bhSize[h];
 
         /* Go through all the boundary nodes. */
         for (Int hpos = 0; hpos < size; hpos++)
@@ -72,11 +68,11 @@ Graph *refine(Graph *G, Options *O)
             /* Load up the inverse matching */
             Int v[3] = {-1, -1, -1};
             v[0] = invmatchmap[k];
-            v[1] = MONGOOSE_GETMATCH(v[0]);
+            v[1] = graph->getMatch(v[0]);
             if (v[0] == v[1]) { v[1] = -1; }
             else
             {
-                v[2] = MONGOOSE_GETMATCH(v[1]);
+                v[2] = graph->getMatch(v[1]);
                 if (v[0] == v[2]) { v[2] = -1; }
             }
 
@@ -87,7 +83,7 @@ Graph *refine(Graph *G, Options *O)
 
                 double gain;
                 Int externalDegree;
-                calculateGain(P, O, vertex, &gain, &externalDegree);
+                calculateGain(P, options, vertex, &gain, &externalDegree);
 
                 /* Only add relevant vertices to the boundary heap. */
                 if (externalDegree > 0)
@@ -101,8 +97,8 @@ Graph *refine(Graph *G, Options *O)
     }
 
     /* Now that we're done with the coarse graph, we can release it. */
-    G->~Graph();
-    SuiteSparse_free(G);
+    graph->~Graph();
+    SuiteSparse_free(graph);
 
     Logger::toc(RefinementTiming);
 

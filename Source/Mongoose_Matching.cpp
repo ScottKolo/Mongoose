@@ -72,7 +72,7 @@ void matching_Cleanup(Graph *graph, Options *options)
     /* Match unmatched vertices to themselves. */
     for (Int k = 0; k < n; k++)
     {
-        if (!MONGOOSE_IS_MATCHED(k)) { MONGOOSE_MATCH(k, k, MatchType_Orphan); }
+        if (!graph->isMatched(k)) { MONGOOSE_MATCH(k, k, MatchType_Orphan); }
     }
 
     /* Save the # of coarse nodes. */
@@ -98,7 +98,7 @@ void matching_Random(Graph *graph, Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Consider only unmatched nodes */
-        if (MONGOOSE_IS_MATCHED(k)) continue;
+        if (graph->isMatched(k)) continue;
 
         bool unmatched = true;
         for (Int p = Gp[k]; p < Gp[k+1] && unmatched; p++)
@@ -106,7 +106,7 @@ void matching_Random(Graph *graph, Options *options)
             Int neighbor = Gi[p];
 
             /* Consider only unmatched neighbors */
-            if (MONGOOSE_IS_MATCHED(neighbor)) continue;
+            if (graph->isMatched(neighbor)) continue;
 
             unmatched = false;
 
@@ -156,10 +156,10 @@ void matching_PA(Graph *graph, Options *options)
      * all unmatched vertices must have matched neighbors. */
     for (Int k = 0; k < n; k++)
     {
-        if (MONGOOSE_IS_MATCHED(k)) continue;
+        if (graph->isMatched(k)) continue;
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
+            ASSERT (graph->isMatched(Gi[p]));
         }
     }
 #endif
@@ -167,7 +167,7 @@ void matching_PA(Graph *graph, Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Consider only unmatched nodes */
-        if (MONGOOSE_IS_MATCHED(k)) continue;
+        if (graph->isMatched(k)) continue;
 
         Int heaviestNeighbor = -1;
         double heaviestWeight = -1.0;
@@ -192,7 +192,7 @@ void matching_PA(Graph *graph, Options *options)
             for (Int p = Gp[heaviestNeighbor]; p < Gp[heaviestNeighbor+1]; p++)
             {
                 Int neighbor = Gi[p];
-                if (MONGOOSE_IS_MATCHED(neighbor)) continue;
+                if (graph->isMatched(neighbor)) continue;
 
                 if (v == -1)
                 {
@@ -230,30 +230,30 @@ void matching_PA(Graph *graph, Options *options)
     {
         if (options->doCommunityMatching)
         {
-            if (!MONGOOSE_IS_MATCHED(k)) PR (("%ld is unmatched\n", k)) ;
-            ASSERT (MONGOOSE_IS_MATCHED(k));
+            if (!graph->isMatched(k)) PR (("%ld is unmatched\n", k)) ;
+            ASSERT (graph->isMatched(k));
         }
 
         /* Load matching. */
         Int v[3] = {-1, -1, -1};
         v[0] = k;
-        v[1] = MONGOOSE_GETMATCH(v[0]);
+        v[1] = graph->getMatch(v[0]);
         if (v[1] == v[0]) v[1] = -1;
         if (v[1] != -1)
         {
-            v[2] = MONGOOSE_GETMATCH(v[1]);
+            v[2] = graph->getMatch(v[1]);
             if (v[2] == v[0]) v[2] = -1;
         }
 
         if (options->doCommunityMatching)
         {
-            if (v[2] != -1) { ASSERT (MONGOOSE_GETMATCH(v[2]) == v[0]); }
-            else            { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
+            if (v[2] != -1) { ASSERT (graph->getMatch(v[2]) == v[0]); }
+            else            { ASSERT (graph->getMatch(v[1]) == v[0]); }
         }
         else
         {
-            if (v[1] != -1) { ASSERT (MONGOOSE_GETMATCH(v[1]) == v[0]); }
-            else            { ASSERT (MONGOOSE_GETMATCH(v[0]) == v[0]); }
+            if (v[1] != -1) { ASSERT (graph->getMatch(v[1]) == v[0]); }
+            else            { ASSERT (graph->getMatch(v[0]) == v[0]); }
         }
     }
 #endif
@@ -283,10 +283,10 @@ void matching_DavisPA(Graph *graph, Options *options)
      * all unmatched vertices must have matched neighbors. */
     for (Int k = 0; k < n; k++)
     {
-        if (MONGOOSE_IS_MATCHED(k)) continue;
+        if (graph->isMatched(k)) continue;
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            ASSERT (MONGOOSE_IS_MATCHED(Gi[p]));
+            ASSERT (graph->isMatched(Gi[p]));
         }
     }
 #endif
@@ -294,7 +294,7 @@ void matching_DavisPA(Graph *graph, Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Consider only matched nodes */
-        if (!MONGOOSE_IS_MATCHED(k)) continue;
+        if (!graph->isMatched(k)) continue;
 
         Int degree = Gp[k+1] - Gp[k];
         if (degree >= (Int) bt)
@@ -303,7 +303,7 @@ void matching_DavisPA(Graph *graph, Options *options)
             for (Int p = Gp[k]; p < Gp[k+1]; p++)
             {
                 Int neighbor = Gi[p];
-                if (MONGOOSE_IS_MATCHED(neighbor)) continue;
+                if (graph->isMatched(neighbor)) continue;
 
                 if (v == -1)
                 {
@@ -356,7 +356,7 @@ void matching_HEM(Graph *graph, Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Consider only unmatched nodes */
-        if (MONGOOSE_IS_MATCHED(k)) continue;
+        if (graph->isMatched(k)) continue;
 
         Int heaviestNeighbor = -1;
         double heaviestWeight = -1.0;
@@ -365,7 +365,7 @@ void matching_HEM(Graph *graph, Options *options)
             Int neighbor = Gi[p];
 
             /* Consider only unmatched neighbors */
-            if (MONGOOSE_IS_MATCHED(neighbor)) continue;
+            if (graph->isMatched(neighbor)) continue;
 
             /* Keep track of the heaviest. */
             double x = Gx[p];
@@ -436,7 +436,7 @@ void matching_LabelProp(Graph *G, Options *O)
         for (Int k = 0; k < n; k++)
         {
             // Consider only unmatched nodes
-            if (MONGOOSE_IS_MATCHED(k)) continue;
+            if (graph->isMatched(k)) continue;
 
             std::map<Int, Int> count;
             Int max = 0;

@@ -84,6 +84,16 @@ public:
     Int getMarkArrayValue(Int index);
     bool isMarked(Int index);
 
+    bool isMatched(Int vertex)
+    {
+        return (matching[vertex] > 0);
+    }
+
+    Int getMatch(Int vertex)
+    {
+        return (matching[vertex]-1);
+    }
+
 private:
     /** Mark Data ************************************************************/
     Int *markArray;                      /** O(n) mark array                 */

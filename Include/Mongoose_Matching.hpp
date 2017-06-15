@@ -30,10 +30,6 @@ void matching_Cleanup(Graph *graph, Options *options);
 #ifndef MONGOOSE_MATCHING_MACROS
 #define MONGOOSE_MATCHING_MACROS
 
-#define MONGOOSE_IS_MATCHED(a) (matching[(a)] > 0)
-
-#define MONGOOSE_GETMATCH(a) (matching[(a)]-1)
-
 #define MONGOOSE_MATCH(a,b,t)                           \
 {                                                       \
     matching[(a)] = (b)+1;                              \
@@ -50,9 +46,9 @@ void matching_Cleanup(Graph *graph, Options *options);
 {                                                       \
     Int vm[4] = {-1,-1,-1,-1};                          \
     vm[0] = a;                                          \
-    vm[1] = MONGOOSE_GETMATCH(vm[0]);                   \
-    vm[2] = MONGOOSE_GETMATCH(vm[1]);                   \
-    vm[3] = MONGOOSE_GETMATCH(vm[2]);                   \
+    vm[1] = graph->getMatch(vm[0]);                   \
+    vm[2] = graph->getMatch(vm[1]);                   \
+    vm[3] = graph->getMatch(vm[2]);                   \
                                                         \
     bool is3Way = (vm[0] == vm[3]);                     \
     if(is3Way)                                          \

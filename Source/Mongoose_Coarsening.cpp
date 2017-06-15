@@ -81,11 +81,11 @@ Graph *coarsen(Graph *graph, Options *options)
         /* Load up the inverse matching */
         Int v[3] = {-1, -1, -1};
         v[0] = invmatchmap[k];
-        v[1] = MONGOOSE_GETMATCH(v[0]);
+        v[1] = graph->getMatch(v[0]);
         if (v[0] == v[1]) { v[1] = -1; }
         else
         {
-            v[2] = MONGOOSE_GETMATCH(v[1]);
+            v[2] = graph->getMatch(v[1]);
             if (v[0] == v[2]) { v[2] = -1; }
         }
 
