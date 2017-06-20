@@ -8,7 +8,7 @@
 namespace Mongoose
 {
 
-bool qpLinks(Graph *graph, Options *options, QPDelta *QP)
+bool QPLinks(Graph *graph, Options *options, QPDelta *QP)
 {
     (void)options; // Unused variable
 
@@ -73,7 +73,7 @@ bool qpLinks(Graph *graph, Options *options, QPDelta *QP)
     QP->nFreeSet = nFreeSet;
     QP->b = s;
 
-    DEBUG (FreeSet_dump ("qpLinks:done",
+    DEBUG (FreeSet_dump ("QPLinks:done",
         n, FreeSet_list, nFreeSet, FreeSet_status, 1, x)) ;
 
     // Note that b can be less than lo or greater than hi.

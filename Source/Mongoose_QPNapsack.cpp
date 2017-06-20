@@ -1,5 +1,5 @@
 /* ========================================================================== */
-/* === QPnapsack ============================================================ */
+/* === QPNapsack ============================================================ */
 /* ==========================================================================
     Find x that minimizes ||x-y|| while satisfying 0 <= x <= 1,
     a'x = b, lo <= b <= hi.  It is assumed that the column vector a is strictly
@@ -111,20 +111,20 @@ void checkatx (double *x, double *a, Int n, double lo, double hi)
     }
 }
 
-double QPnapsack        /* return the final lambda */
-(
-    double *x,      /* holds y on input, and the solution x on output */
-    Int n,          /* size of x, constraint lo <= a'x <= hi */
-    double lo,      /* partition lower bound */
-    double hi,      /* partition upper bound */
-    double *Gw,     /* vector of nodal weights */
-    double Lambda,  /* initial guess for lambda */
-    Int *FreeSet_status, /* FreeSet_status [i] = +1,-1, or 0 on input,
+double QPNapsack        /* return the final lambda */
+        (
+                double *x,      /* holds y on input, and the solution x on output */
+                Int n,          /* size of x, constraint lo <= a'x <= hi */
+                double lo,      /* partition lower bound */
+                double hi,      /* partition upper bound */
+                double *Gw,     /* vector of nodal weights */
+                double Lambda,  /* initial guess for lambda */
+                Int *FreeSet_status, /* FreeSet_status [i] = +1,-1, or 0 on input,
                        for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
-    double *w,      /* work array of size n   */
-    Int *heap1,     /* work array of size n+1 */
-    Int *heap2      /* work array of size n+1 */
-)
+                double *w,      /* work array of size n   */
+                Int *heap1,     /* work array of size n+1 */
+                Int *heap2      /* work array of size n+1 */
+        )
 {
     double lambda = Lambda;
     PR (("QPNapsack start [\n")) ;
@@ -181,7 +181,7 @@ double QPnapsack        /* return the final lambda */
         if (slope > hi)
         {
             PR (("napsack case 1 up\n")) ;
-            lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
+            lambda = QPNapUp(x, n, lambda, Gw, hi, w, heap1, heap2);
             lambda = std::max(0., lambda);
         }
         else
@@ -194,7 +194,7 @@ double QPnapsack        /* return the final lambda */
         if (slope < lo)
         {
             PR (("napsack case 2 down\n")) ;
-            lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
+            lambda = QPNapDown(x, n, lambda, Gw, lo, w, heap1, heap2);
             lambda = std::min(lambda, 0.);
         }
         else
@@ -226,13 +226,13 @@ double QPnapsack        /* return the final lambda */
                 {
                     PR (("napsack case 3a down\n")) ;
                     lambda = 0.;
-                    lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
+                    lambda = QPNapDown(x, n, lambda, Gw, lo, w, heap1, heap2);
                     if (lambda > 0.) lambda = 0.;
                 }
                 else if (slope0 > hi)
                 {
                     PR (("napsack case 3b down\n")) ;
-                    lambda = QPnapdown(x, n, lambda, Gw, hi, w, heap1, heap2);
+                    lambda = QPNapDown(x, n, lambda, Gw, hi, w, heap1, heap2);
                     if (lambda < 0.) lambda = 0.;
                 }
                 else
@@ -247,13 +247,13 @@ double QPnapsack        /* return the final lambda */
                 {
                     PR (("napsack case 4a up\n")) ;
                     lambda = 0.;
-                    lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
+                    lambda = QPNapUp(x, n, lambda, Gw, hi, w, heap1, heap2);
                     lambda = std::max(lambda, 0.);
                 }
                 else if (slope0 < lo)
                 {
                     PR (("napsack case 4b up\n")) ;
-                    lambda = QPnapup(x, n, lambda, Gw, lo, w, heap1, heap2);
+                    lambda = QPNapUp(x, n, lambda, Gw, lo, w, heap1, heap2);
                     lambda = std::min(0., lambda);
                 }
                 else
@@ -270,7 +270,7 @@ double QPnapsack        /* return the final lambda */
                 if (slope < lo)
                 {
                     PR (("napsack case 3d down\n")) ;
-                    lambda = QPnapdown(x, n, lambda, Gw, lo, w, heap1, heap2);
+                    lambda = QPNapDown(x, n, lambda, Gw, lo, w, heap1, heap2);
                     lambda = std::min(0., lambda);
                 }
                 else
@@ -283,7 +283,7 @@ double QPnapsack        /* return the final lambda */
                 if (slope > hi)
                 {
                     PR (("napsack case 4d up\n")) ;
-                    lambda = QPnapup(x, n, lambda, Gw, hi, w, heap1, heap2);
+                    lambda = QPNapUp(x, n, lambda, Gw, hi, w, heap1, heap2);
                     lambda = std::max(lambda, 0.);
                 }
                 else

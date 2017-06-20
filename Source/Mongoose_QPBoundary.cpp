@@ -1,5 +1,5 @@
 /* ========================================================================== */
-/* === qpBoundary =========================================================== */
+/* === QPBoundary =========================================================== */
 /* ========================================================================== */
 
 /*
@@ -39,7 +39,7 @@ namespace Mongoose
 {
 
 
-void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
+void QPBoundary(Graph *graph, Options *options, QPDelta *QP)
 {
     (void)options; // Unused variable
     /* ---------------------------------------------------------------------- */
@@ -87,7 +87,7 @@ void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
     /* work array */
     double *D  = QP->D;    /* diagonal of quadratic */
 
-    PR (("\n----- qpBoundary start: [\n")) ;
+    PR (("\n----- QPBoundary start: [\n")) ;
     DEBUG (QPcheckCom (graph, options, QP, 1, QP->nFreeSet, QP->b)) ;      // check b
 
     /* ---------------------------------------------------------------------- */
@@ -95,7 +95,7 @@ void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
     /*         see if x_k can be pushed to 0 or 1                             */
     /* ---------------------------------------------------------------------- */
 
-    DEBUG (FreeSet_dump ("qpBoundary start",
+    DEBUG (FreeSet_dump ("QPBoundary start",
         n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
     PR (("Boundary 1 start: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
@@ -267,7 +267,7 @@ void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
         QP->nFreeSet = nFreeSet;
         QP->b = b;
         QP->ib = ib;
-        PR (("------- qpBoundary end ]\n")) ;
+        PR (("------- QPBoundary end ]\n")) ;
         return ;
     }
 
@@ -724,7 +724,7 @@ void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
     /* ---------------------------------------------------------------------- */
 
     PR (("QBboundary, done:\n")) ;
-    DEBUG (FreeSet_dump ("qpBoundary: done ", n, FreeSet_list,
+    DEBUG (FreeSet_dump ("QPBoundary: done ", n, FreeSet_list,
         nFreeSet, FreeSet_status, 0, x)) ;
     ASSERT (nFreeSet == 0 || nFreeSet == 1) ;
     PR (("Boundary done: ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
@@ -738,7 +738,7 @@ void qpBoundary(Graph *graph, Options *options, QPDelta *QP)
     graph->clearMarkArray();
 
     DEBUG (QPcheckCom (graph, options, QP, 1, nFreeSet, b)) ;         // check b
-    PR (("----- qpBoundary end ]\n")) ;
+    PR (("----- QPBoundary end ]\n")) ;
 }
 
 } // end namespace Mongoose

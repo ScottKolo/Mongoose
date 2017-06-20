@@ -8,7 +8,7 @@
 namespace Mongoose
 {
 
-bool qpLinks(Graph*, Options*, QPDelta*);
+bool QPLinks(Graph *, Options *, QPDelta *);
 
 } // end namespace Mongoose
 

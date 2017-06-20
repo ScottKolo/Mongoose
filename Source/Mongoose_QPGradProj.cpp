@@ -23,7 +23,7 @@
 namespace Mongoose
 {
 
-// save the current state of the solution, just before returning from qpGradProj
+// save the current state of the solution, just before returning from QPGradProj
 inline void saveContext
 (
     Graph *graph,
@@ -52,7 +52,7 @@ inline void saveContext
     QP->b = b;
 }
 
-double qpGradProj
+double QPGradProj
         (
                 Graph *graph,
                 Options *options,
@@ -60,7 +60,7 @@ double qpGradProj
         )
 {
 
-    PR (("\n------- qpGradProj start: [\n")) ;
+    PR (("\n------- QPGradProj start: [\n")) ;
     DEBUG (QPcheckCom (graph, options, qpDelta, 0, qpDelta->nFreeSet, -999999)) ; // do not check b
 
     /* ---------------------------------------------------------------------- */
@@ -117,14 +117,14 @@ double qpGradProj
     Int it = 0;
     double err = INFINITY;
 
-    DEBUG (FreeSet_dump ("qpGradProj: start",
+    DEBUG (FreeSet_dump ("QPGradProj: start",
         n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
     while (err > tol)
     {
 
         PR (("top of QPgrad while loop\n")) ;
-        DEBUG (FreeSet_dump ("qpGradProj:0",
+        DEBUG (FreeSet_dump ("QPGradProj:0",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
         DEBUG (QPcheckCom (graph, options, qpDelta, 0, qpDelta->nFreeSet, -999999)) ;
 
@@ -164,8 +164,8 @@ double qpGradProj
         for (Int k = 0; k < n; k++) y[k] = x[k] - grad[k];
 
         /* Run the napsack. */
-        lambda = QPnapsack(y, n, lo, hi, Ew, lambda,
-            FreeSet_status, wx, wi1, wi2);
+        lambda = QPNapsack(y, n, lo, hi, Ew, lambda,
+                           FreeSet_status, wx, wi1, wi2);
 
         /* Compute the maximum error. */
         err = -INFINITY;
@@ -174,12 +174,12 @@ double qpGradProj
         /* If we converged or got exhausted, save context and exit. */
         if ((err <= tol) || (it >= limit))
         {
-            PR (("qpGradProj exhausted:")) ;
+            PR (("QPGradProj exhausted:")) ;
             saveContext(graph, qpDelta, it, err, nFreeSet, ib, lo, hi);
             DEBUG (QPcheckCom (graph, options, qpDelta, 1, qpDelta->nFreeSet, qpDelta->b)) ;
-            DEBUG (FreeSet_dump ("qpGradProj exhausted",
+            DEBUG (FreeSet_dump ("QPGradProj exhausted",
                 n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
-            PR (("------- qpGradProj end ]\n")) ;
+            PR (("------- QPGradProj end ]\n")) ;
             return err;
         }
 
@@ -188,7 +188,7 @@ double qpGradProj
         /* compute stepsize st = g_F'g_F/-g_F'(A+D)g_F */
         for (Int k = 0; k < n; k++) Dgrad[k] = 0.;
 
-        DEBUG (FreeSet_dump ("qpGradProj:1",
+        DEBUG (FreeSet_dump ("QPGradProj:1",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         // for each i in the FreeSet:
@@ -207,7 +207,7 @@ double qpGradProj
         double st_num = 0.;
         double st_den = 0.;
 
-        DEBUG (FreeSet_dump ("qpGradProj:2",
+        DEBUG (FreeSet_dump ("QPGradProj:2",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         for (Int jfree = 0 ; jfree < nFreeSet ; jfree++)
@@ -223,8 +223,8 @@ double qpGradProj
             // PR (("change y\n")) ;
             double st = std::max(st_num / st_den, 0.001);
             for (Int j = 0; j < n; j++) y[j] = x[j] - st * grad[j];
-            lambda = QPnapsack(y, n, lo, hi, Ew, lambda,
-                FreeSet_status, wx, wi1, wi2);
+            lambda = QPNapsack(y, n, lo, hi, Ew, lambda,
+                               FreeSet_status, wx, wi1, wi2);
         }
 
         /* otherwise st = 1 and y is as computed above */
@@ -287,11 +287,11 @@ double qpGradProj
         /* If directional derivative has wrong sign, save context and exit. */
         if (s >= 0.)
         {
-            PR (("qpGradProj directional derivative has wrong sign\n")) ;
+            PR (("QPGradProj directional derivative has wrong sign\n")) ;
             saveContext(graph, qpDelta, it, err, nFreeSet, ib, lo, hi);
-            DEBUG (FreeSet_dump ("qpGradProj wrong sign",
+            DEBUG (FreeSet_dump ("QPGradProj wrong sign",
                 n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
-            PR (("------- qpGradProj end ]\n")) ;
+            PR (("------- QPGradProj end ]\n")) ;
             return err;
         }
 
@@ -479,19 +479,19 @@ double qpGradProj
         }
         nFreeSet = jfree2 ;
 
-        DEBUG (FreeSet_dump ("qpGradProj:6",
+        DEBUG (FreeSet_dump ("QPGradProj:6",
             n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
         // do not check b
-        PR (("qpGradProj continues:\n")) ;
+        PR (("QPGradProj continues:\n")) ;
         qpDelta->nFreeSet = nFreeSet ;
         DEBUG (QPcheckCom (graph, options, qpDelta, 0, qpDelta->nFreeSet, -999999)) ;
     }
 
-    DEBUG (FreeSet_dump ("qpGradProj end",
+    DEBUG (FreeSet_dump ("QPGradProj end",
         n, FreeSet_list, nFreeSet, FreeSet_status, 0, x)) ;
 
-    PR (("------- qpGradProj end ]\n")) ;
+    PR (("------- QPGradProj end ]\n")) ;
     return err;
 }
 

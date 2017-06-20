@@ -11,56 +11,56 @@ namespace Mongoose
 {
 
 /* ========================================================================== */
-/* === maxheap_build ======================================================== */
+/* === QPMaxHeap_build ======================================================== */
 /* ========================================================================== */
 
 /* build a max heap in heap [1..nheap] */
 
-void QPmaxheap_build
-(
-    Int *heap,  /* on input, an unsorted set of elements */
-    Int size,   /* number of elements to build into the heap */
-    double *x
-)
+void QPMaxHeap_build
+        (
+                Int *heap,  /* on input, an unsorted set of elements */
+                Int size,   /* number of elements to build into the heap */
+                double *x
+        )
 {
-    for (Int p = size/2; p >= 1; p--) QPmaxheapify(p, heap, size, x);
+    for (Int p = size/2; p >= 1; p--) QPMaxHeapify(p, heap, size, x);
 }
 
 /* ========================================================================== */
-/* === maxheap_delete ====================================================== */
+/* === QPMaxHeap_delete ====================================================== */
 /* ========================================================================== */
 
 /* delete the top element in a max heap */
 
-Int QPmaxheap_delete    /* return new size of heap */
-(
-    Int *heap,   /* containing indices into x, 1..n on input */
-    Int size,    /* number of items in heap */
-    double *x    /* not modified */
-)
+Int QPMaxHeap_delete    /* return new size of heap */
+        (
+                Int *heap,   /* containing indices into x, 1..n on input */
+                Int size,    /* number of items in heap */
+                double *x    /* not modified */
+        )
 {
     if (size <= 1) return 0;
 
     /* Replace top element with last element. */
     heap[1] = heap[size];
     size--;
-    QPmaxheapify(1, heap, size, x);
+    QPMaxHeapify(1, heap, size, x);
     return size;
 }
 
 /* ========================================================================== */
-/* === maxheap_add ========================================================= */
+/* === QPMaxHeap_add ========================================================= */
 /* ========================================================================== */
 
 /* add a new leaf to a max heap */
 
-Int QPmaxheap_add
-(
-    Int leaf,    /* the new leaf */
-    Int *heap,   /* size n, containing indices into x */
-    double *x,   /* not modified */
-    Int size     /* number of elements in heap not counting new one */
-)
+Int QPMaxHeap_add
+        (
+                Int leaf,    /* the new leaf */
+                Int *heap,   /* size n, containing indices into x */
+                double *x,   /* not modified */
+                Int size     /* number of elements in heap not counting new one */
+        )
 {
     Int l, lnew, lold;
     double xold, xnew;
@@ -93,20 +93,20 @@ Int QPmaxheap_add
 }
 
 /* ========================================================================== */
-/* === maxheapify =========================================================== */
+/* === QPMaxHeapify =========================================================== */
 /* ========================================================================== */
 
 /* heapify starting at node p.  On input, the heap at node p satisfies the */
 /* heap property, except for heap [p] itself.  On output, the whole heap */
 /* satisfies the heap property. */
 
-void QPmaxheapify
-(
-    Int p,                       /* start at node p in the heap */
-    Int *heap,                   /* size n, containing indices into x */
-    Int size,                    /* heap [ ... nheap] is in use */
-    double *x                    /* not modified */
-)
+void QPMaxHeapify
+        (
+                Int p,                       /* start at node p in the heap */
+                Int *heap,                   /* size n, containing indices into x */
+                Int size,                    /* heap [ ... nheap] is in use */
+                double *x                    /* not modified */
+        )
 {
     Int left, right, e, hleft, hright;
     double xe, xleft, xright;

@@ -11,38 +11,38 @@ namespace Mongoose
 {
 
 /* ========================================================================== */
-/* === minheap_build ======================================================== */
+/* === QPMinHeap_build ======================================================== */
 /* ========================================================================== */
 
 /* build a min heap in heap [1..nheap] */
 
-void QPminheap_build
-(
-    Int *heap,      /* on input, an unsorted set of elements */
-    Int size,       /* number of elements to build into the heap */
-    double *x
-)
+void QPMinHeap_build
+        (
+                Int *heap,      /* on input, an unsorted set of elements */
+                Int size,       /* number of elements to build into the heap */
+                double *x
+        )
 {
     Int p;
 
     for (p = size / 2; p >= 1; p--)
     {
-        QPminheapify(p, heap, size, x);
+        QPMinHeapify(p, heap, size, x);
     }
 }
 
 /* ========================================================================== */
-/* === minheap_delete ====================================================== */
+/* === QPMinHeap_delete ====================================================== */
 /* ========================================================================== */
 
 /* delete the top element in a min heap */
 
-Int QPminheap_delete    /* return new size of heap */
-(
-    Int *heap,  /* containing indices into x, 1..n on input */
-    Int size,   /* number of items in heap */
-    double *x   /* not modified */
-)
+Int QPMinHeap_delete    /* return new size of heap */
+        (
+                Int *heap,  /* containing indices into x, 1..n on input */
+                Int size,   /* number of items in heap */
+                double *x   /* not modified */
+        )
 {
     if (size <= 1)
     {
@@ -52,24 +52,24 @@ Int QPminheap_delete    /* return new size of heap */
     /* move element from the end of the heap to the top */
     heap[1] = heap[size];
     size--;
-    QPminheapify(1, heap, size, x);
+    QPMinHeapify(1, heap, size, x);
     return (size);
 }
 
 
 /* ========================================================================== */
-/* === minheap_add ========================================================== */
+/* === QPMinHeap_add ========================================================== */
 /* ========================================================================== */
 
 /* add a new leaf to a min heap */
 
-Int QPminheap_add
-(
-    Int leaf,   /* the new leaf */
-    Int *heap,  /* size n, containing indices into x */
-    double *x,  /* not modified */
-    Int nheap   /* number of elements in heap not counting new one */
-)
+Int QPMinHeap_add
+        (
+                Int leaf,   /* the new leaf */
+                Int *heap,  /* size n, containing indices into x */
+                double *x,  /* not modified */
+                Int nheap   /* number of elements in heap not counting new one */
+        )
 {
     Int l, lnew, lold;
     double xold, xnew;
@@ -101,20 +101,20 @@ Int QPminheap_add
 }
 
 /* ========================================================================== */
-/* === minheapify =========================================================== */
+/* === QPMinHeapify =========================================================== */
 /* ========================================================================== */
 
 /* heapify starting at node p.  On input, the heap at node p satisfies the */
 /* heap property, except for heap [p] itself.  On output, the whole heap */
 /* satisfies the heap property. */
 
-void QPminheapify
-(
-    Int p,      /* start at node p in the heap */
-    Int *heap,  /* size n, containing indices into x */
-    Int size,   /* heap [ ... nheap] is in use */
-    double *x   /* not modified */
-)
+void QPMinHeapify
+        (
+                Int p,      /* start at node p in the heap */
+                Int *heap,  /* size n, containing indices into x */
+                Int size,   /* heap [ ... nheap] is in use */
+                double *x   /* not modified */
+        )
 {
     Int left, right, e, hleft, hright;
     double xe, xleft, xright;

@@ -1,5 +1,5 @@
 /* ========================================================================== */
-/* === QPnapdown ============================================================ */
+/* === QPNapDown ============================================================ */
 /* ========================================================================== */
 
 /* Find x that minimizes ||x-y|| while satisfying the constraints
@@ -21,17 +21,17 @@
 namespace Mongoose
 {
 
-double QPnapdown            /* return lambda */
-(
-    double *x,              /* holds y on input, not modified */
-    Int n,                  /* size of x */
-    double lambda,          /* initial guess for the shift */
-    double *a,              /* input constraint vector */
-    double b,               /* input constraint scalar */
-    double *breakpts,       /* break points */
-    Int *bound_heap,        /* work array */
-    Int *free_heap          /* work array */
-)
+double QPNapDown            /* return lambda */
+        (
+                double *x,              /* holds y on input, not modified */
+                Int n,                  /* size of x */
+                double lambda,          /* initial guess for the shift */
+                double *a,              /* input constraint vector */
+                double b,               /* input constraint scalar */
+                double *breakpts,       /* break points */
+                Int *bound_heap,        /* work array */
+                Int *free_heap          /* work array */
+        )
 {
     ASSERT(a != NULL);
     Int i, k, e, maxsteps, n_bound, n_free;
@@ -93,8 +93,8 @@ double QPnapdown            /* return lambda */
 
         if (k == 1)
         {
-            QPmaxheap_build(free_heap, n_free, breakpts);
-            QPmaxheap_build(bound_heap, n_bound, breakpts);
+            QPMaxHeap_build(free_heap, n_free, breakpts);
+            QPMaxHeap_build(bound_heap, n_bound, breakpts);
         }
 
         /* -------------------------------------------------------------- */
@@ -109,7 +109,7 @@ double QPnapdown            /* return lambda */
                 a2sum -= ai * ai;
                 asum = asum + ai * (1. - x[e]);
 
-                n_free = QPmaxheap_delete(free_heap, n_free, breakpts);
+                n_free = QPMaxHeap_delete(free_heap, n_free, breakpts);
                 if (n_free == 0)
                 {
                     a2sum = 0.;
@@ -122,13 +122,13 @@ double QPnapdown            /* return lambda */
         {
             while (breakpts[e = bound_heap[1]] >= lambda)
             {
-                n_bound = QPmaxheap_delete(bound_heap, n_bound, breakpts);
+                n_bound = QPMaxHeap_delete(bound_heap, n_bound, breakpts);
                 ai = a[e];
                 a2sum += ai * ai;
                 asum = asum + ai * x[e];
                 t = (x[e] - 1.) / ai;
                 breakpts[e] = t;
-                n_free = QPmaxheap_add(e, free_heap, breakpts, n_free);
+                n_free = QPMaxHeap_add(e, free_heap, breakpts, n_free);
                 if (n_bound == 0)
                     break;
             }

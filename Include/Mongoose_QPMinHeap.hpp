@@ -5,35 +5,35 @@
 namespace Mongoose
 {
 
-void QPminheap_build
-(
-    Int *heap,                      /* on input, an unsorted set of elements */
-    Int size,                       /* size of the heap */
-    double *x
-);
+void QPMinHeap_build
+        (
+                Int *heap,                      /* on input, an unsorted set of elements */
+                Int size,                       /* size of the heap */
+                double *x
+        );
 
-Int QPminheap_delete             /* return new size of heap */
-(
-    Int *heap,                   /* containing indices into x, 1..n on input */
-    Int size,                    /* size of the heap */
-    double *x                    /* not modified */
-);
+Int QPMinHeap_delete             /* return new size of heap */
+        (
+                Int *heap,                   /* containing indices into x, 1..n on input */
+                Int size,                    /* size of the heap */
+                double *x                    /* not modified */
+        );
 
-void QPminheapify
-(
-    Int p,                       /* start at node p in the heap */
-    Int *heap,                   /* size n, containing indices into x */
-    Int size,                    /* heap [ ... nheap] is in use */
-    double *x                    /* not modified */
-);
+void QPMinHeapify
+        (
+                Int p,                       /* start at node p in the heap */
+                Int *heap,                   /* size n, containing indices into x */
+                Int size,                    /* heap [ ... nheap] is in use */
+                double *x                    /* not modified */
+        );
 
-Int QPminheap_add
-(
-    Int leaf ,   /* the new leaf */
-    Int *heap ,  /* size n, containing indices into x */
-    double *x ,  /* not modified */
-    Int size     /* number of elements in heap not counting new one */
-);
+Int QPMinHeap_add
+        (
+                Int leaf,   /* the new leaf */
+                Int *heap,  /* size n, containing indices into x */
+                double *x,  /* not modified */
+                Int size     /* number of elements in heap not counting new one */
+        );
 
 void QPminheap_check
 (
