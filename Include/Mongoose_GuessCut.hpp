@@ -9,25 +9,12 @@
 namespace Mongoose
 {
 
-bool guessCut(Graph *graph, Options *options);
+bool guessCut(Graph*, Options*);
 
-void pseudoperipheralGuess(Graph *graph, Options *options);
-bool findAllPseudoperipheralNodes(Graph *graph, Options *options, Int *list, Int *listsize);
-
-Int diagBFS
-(
-    Graph *graph,
-    Options *options,
-    Int *stack,
-    Int *start
-);
-
-void partBFS
-(
-    Graph *graph,
-    Options *options,
-    Int start
-);
+void pseudoperipheralGuess(Graph*, Options*);
+bool findAllPseudoperipheralNodes(Graph*, Options*, Int *list, Int *listsize);
+Int diagBFS(Graph*, Options*, Int *stack, Int *start);
+void partBFS(Graph*, Options*, Int start);
 
 } // end namespace Mongoose
 

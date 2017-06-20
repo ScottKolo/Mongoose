@@ -9,12 +9,7 @@
 namespace Mongoose
 {
 
-bool improveCutUsingQP
-(
-    Graph *G,
-    Options *O,
-    bool isInitial = false
-);
+bool improveCutUsingQP(Graph*, Options*, bool isInitial = false);
 
 } // end namespace Mongoose
 

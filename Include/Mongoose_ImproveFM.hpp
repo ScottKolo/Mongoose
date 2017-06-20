@@ -30,16 +30,12 @@ struct SwapCandidate
     }
 };
 
-void improveCutUsingFM
-(
-    Graph *G,
-    Options *O
-);
+void improveCutUsingFM(Graph*, Options*);
 
 void fmSwap
 (
-    Graph *graph,
-    Options *options,
+    Graph*,
+    Options*,
     Int vertex,
     double gain,
     bool oldPartition
@@ -47,8 +43,8 @@ void fmSwap
 
 void calculateGain
 (
-    Graph *graph,
-    Options *options,
+    Graph*,
+    Options*,
     Int vertex,
     double *out_gain,
     Int *out_externalDegree

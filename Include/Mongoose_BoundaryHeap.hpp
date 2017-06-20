@@ -21,27 +21,14 @@
 namespace Mongoose
 {
 
-void bhLoad
-(
-    Graph *graph,
-    Options *options
-);
-
-void bhClear
-(
-    Graph *graph
-);
-
-void bhInsert
-(
-    Graph *graph,
-    Int vertex
-);
+void bhLoad(Graph*, Options*);
+void bhClear(Graph*);
+void bhInsert(Graph*, Int vertex);
 
 void bhRemove
 (
-    Graph *graph,
-    Options *options,
+    Graph*,
+    Options*,
     Int vertex,
     double gain,
     bool partition,
