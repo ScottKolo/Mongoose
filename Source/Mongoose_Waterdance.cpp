@@ -8,13 +8,13 @@
 namespace Mongoose
 {
 
-void waterdance(Graph *G, Options *O)
+void waterdance(Graph *graph, Options *options)
 {
-    Int numDances = O->numDances;
+    Int numDances = options->numDances;
     for (Int i = 0; i < numDances; i++)
     {
-        improveCutUsingFM(G, O);
-        improveCutUsingQP(G, O);
+        improveCutUsingFM(graph, options);
+        improveCutUsingQP(graph, options);
     }
 }
 

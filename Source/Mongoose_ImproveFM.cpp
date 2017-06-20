@@ -9,22 +9,22 @@
 namespace Mongoose
 {
 
-void fmRefine_worker(Graph *G, Options *O);
+void fmRefine_worker(Graph *graph, Options *options);
 
 //-----------------------------------------------------------------------------
 // Wrapper for Fidducia-Mattheyes cut improvement.
 //-----------------------------------------------------------------------------
-void improveCutUsingFM(Graph *G, Options *O)
+void improveCutUsingFM(Graph *graph, Options *options)
 {
     Logger::tic(FMTiming);
 
-    if (!O->useFM) return;
+    if (!options->useFM) return;
 
     double heuCost = INFINITY;
-    for (Int i = 0; i < O->fmMaxNumRefinements && G->heuCost < heuCost; i++)
+    for (Int i = 0; i < options->fmMaxNumRefinements && graph->heuCost < heuCost; i++)
     {
-        heuCost = G->heuCost;
-        fmRefine_worker(G, O);
+        heuCost = graph->heuCost;
+        fmRefine_worker(graph, options);
     }
 
     Logger::toc(FMTiming);
@@ -33,35 +33,34 @@ void improveCutUsingFM(Graph *G, Options *O)
 //-----------------------------------------------------------------------------
 // Make a number of partition moves while considering the impact on problem balance.
 //-----------------------------------------------------------------------------
-void fmRefine_worker(Graph *G, Options *O)
+void fmRefine_worker(Graph *graph, Options *options)
 {
-    double *Gw = G->w;
-    double W = G->W;
-    Int **bhHeap  = G->bhHeap;
-    Int *bhIndex = G->bhIndex;
-    Int *bhSize = G->bhSize;
-    Int *externalDegree = G->externalDegree;
-    double *gains = G->vertexGains;
-    bool *partition = G->partition;
+    double *Gw = graph->w;
+    double W = graph->W;
+    Int **bhHeap  = graph->bhHeap;
+    Int *bhSize = graph->bhSize;
+    Int *externalDegree = graph->externalDegree;
+    double *gains = graph->vertexGains;
+    bool *partition = graph->partition;
 
     /* Keep a stack of moved nodes. */
-    Int *stack = G->matchmap;
+    Int *stack = graph->matchmap;
     Int head = 0, tail = 0;
 
     /* Create & initialize a working cost and a best cost. */
     struct CutCost workingCost, bestCost;
-    workingCost.heuCost   = bestCost.heuCost   = G->heuCost;
-    workingCost.cutCost   = bestCost.cutCost   = G->cutCost;
-    workingCost.W[0]      = bestCost.W[0]      = G->W0;
-    workingCost.W[1]      = bestCost.W[1]      = G->W1;
-    workingCost.imbalance = bestCost.imbalance = G->imbalance;
+    workingCost.heuCost   = bestCost.heuCost   = graph->heuCost;
+    workingCost.cutCost   = bestCost.cutCost   = graph->cutCost;
+    workingCost.W[0]      = bestCost.W[0]      = graph->W0;
+    workingCost.W[1]      = bestCost.W[1]      = graph->W1;
+    workingCost.imbalance = bestCost.imbalance = graph->imbalance;
 
     /* Tolerance and the linear penalty to assess. */
-    double tol = O->softSplitTolerance;
-    double H = G->H;
+    double tol = options->softSplitTolerance;
+    double H = graph->H;
 
-    Int fmSearchDepth = O->fmSearchDepth;
-    Int fmConsiderCount = O->fmConsiderCount;
+    Int fmSearchDepth = options->fmSearchDepth;
+    Int fmConsiderCount = options->fmConsiderCount;
     Int i = 0;
     bool productive = true;
     for (; i < fmSearchDepth && productive; i++)
@@ -78,7 +77,7 @@ void fmRefine_worker(Graph *G, Options *O)
             {
                 /* Read the vertex, and if it's marked, try the next one. */
                 Int v = heap[c];
-                if (G->isMarked(v)) continue;
+                if (graph->isMarked(v)) continue;
 
                 /* Read the gain for the vertex. */
                 double gain = gains[v];
@@ -119,17 +118,17 @@ void fmRefine_worker(Graph *G, Options *O)
         if (bestCandidate.heuCost < INFINITY)
         {
             productive = true;
-            G->mark(bestCandidate.vertex);
+            graph->mark(bestCandidate.vertex);
 
             /* Move the vertex from the boundary into the move set. */
-            bhRemove(G, O, bestCandidate.vertex, bestCandidate.gain,
+            bhRemove(graph, options, bestCandidate.vertex, bestCandidate.gain,
                      bestCandidate.partition, bestCandidate.bhPosition);
             stack[tail++] = bestCandidate.vertex;
 
             /* Swap & update the vertex and its neighbors afterwards. */
             fmSwap
             (
-                G, O,
+                graph, options,
                 bestCandidate.vertex,
                 bestCandidate.gain,
                 bestCandidate.partition
@@ -158,10 +157,10 @@ void fmRefine_worker(Graph *G, Options *O)
     for (Int u = tail-1; u >= head; u--)
     {
         Int vertex = stack[u];
-        Int bhVertexPosition = MONGOOSE_GET_BHINDEX(vertex);
+        Int bhVertexPosition = graph->BH_getIndex(vertex);
 
         /* Unmark this vertex. */
-        G->unmark(vertex);
+        graph->unmark(vertex);
 
         /* It is possible, although rare, that a vertex may have gone
          * from not in the boundary to an undo state that places it in
@@ -169,44 +168,43 @@ void fmRefine_worker(Graph *G, Options *O)
          * this vertex to the boundary already. */
         if (bhVertexPosition != -1)
         {
-            bhRemove(G, O, vertex, gains[vertex], partition[vertex],
+            bhRemove(graph, options, vertex, gains[vertex], partition[vertex],
                      bhVertexPosition);
         }
 
         /* Swap the partition and compute the impact on neighbors. */
         fmSwap
         (
-            G, O,
+            graph, options,
             vertex,
             gains[vertex],
             partition[vertex]
         );
-
-        if (externalDegree[vertex] > 0) bhInsert(G, vertex);
+        if (externalDegree[vertex] > 0) bhInsert(graph, vertex);
     }
 
     // clear the marks from all the nodes
-    G->clearMarkArray();
+    graph->clearMarkArray();
 
     /* Re-add any vertices that were moved that are still on the boundary. */
     for (Int k = 0; k < head; k++)
     {
         Int vertex = stack[k];
-        if (externalDegree[vertex] > 0 && !MONGOOSE_IN_BOUNDARY(vertex))
+        if (externalDegree[vertex] > 0 && !graph->BH_inBoundary(vertex))
         {
-            bhInsert(G, vertex);
+            bhInsert(graph, vertex);
         }
     }
 
     // clear the marks from all the nodes
-    G->clearMarkArray();
+    graph->clearMarkArray();
 
     /* Save the best cost back into the graph. */
-    G->heuCost   = bestCost.heuCost;
-    G->cutCost   = bestCost.cutCost;
-    G->W0        = bestCost.W[0];
-    G->W1        = bestCost.W[1];
-    G->imbalance = bestCost.imbalance;
+    graph->heuCost   = bestCost.heuCost;
+    graph->cutCost   = bestCost.cutCost;
+    graph->W0        = bestCost.W[0];
+    graph->W1        = bestCost.W[1];
+    graph->imbalance = bestCost.imbalance;
 }
 
 //-----------------------------------------------------------------------------
@@ -227,7 +225,6 @@ void fmSwap
     bool *partition = graph->partition;
     double *gains = graph->vertexGains;
     Int *externalDegree = graph->externalDegree;
-    Int *bhIndex = graph->bhIndex;
     Int **bhHeap = graph->bhHeap;
     Int *bhSize = graph->bhSize;
 
@@ -257,8 +254,7 @@ void fmSwap
         Int neighborExD = externalDegree[neighbor];
         neighborExD += (sameSide ? -1 : 1);
         externalDegree[neighbor] = neighborExD;
-
-        Int position = MONGOOSE_GET_BHINDEX(neighbor);
+        Int position = graph->BH_getIndex(neighbor);
 
         /* If the neighbor was in a heap: */
         if (position != -1)
@@ -280,10 +276,10 @@ void fmSwap
             else
             {
                 Int v = neighbor;
-                heapifyUp(bhIndex, bhHeap[neighborPartition], gains, v,
+                heapifyUp(graph, bhHeap[neighborPartition], gains, v,
                           position, neighborGain);
                 v = bhHeap[neighborPartition][position];
-                heapifyDown(bhIndex, bhHeap[neighborPartition],
+                heapifyDown(graph, bhHeap[neighborPartition],
                             bhSize[neighborPartition], gains, v, position,
                             gains[v]);
             }
@@ -293,11 +289,12 @@ void fmSwap
         {
             if (!graph->isMarked(neighbor))
             {
-                ASSERT (!MONGOOSE_IN_BOUNDARY(neighbor));
+                ASSERT (!graph->BH_inBoundary(neighbor));
                 bhInsert(graph, neighbor);
             }
         }
     }
+
     externalDegree[vertex] = exD;
 }
 

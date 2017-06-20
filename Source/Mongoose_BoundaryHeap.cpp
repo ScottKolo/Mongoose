@@ -10,11 +10,7 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // This function inserts the specified vertex into the graph
 //-----------------------------------------------------------------------------
-void bhLoad
-(
-    Graph *graph,
-    Options *options
-)
+void bhLoad(Graph *graph, Options *options)
 {
     /* Load the boundary heaps. */
     Int n = graph->n;
@@ -75,11 +71,7 @@ void bhLoad
 //-----------------------------------------------------------------------------
 // This function inserts the specified vertex into the graph's boundary heap
 //-----------------------------------------------------------------------------
-void bhInsert
-(
-    Graph *graph,
-    Int vertex
-)
+void bhInsert(Graph *graph, Int vertex)
 {
     /* Unpack structures */
     Int vp = graph->partition[vertex];
@@ -89,9 +81,9 @@ void bhInsert
     double *gains = graph->vertexGains;
 
     bhHeap[size] = vertex;
-    MONGOOSE_PUT_BHINDEX(vertex, size);
+    graph->BH_putIndex(vertex, size);
 
-    heapifyUp(bhIndex, bhHeap, gains, vertex, size, gains[vertex]);
+    heapifyUp(graph, bhHeap, gains, vertex, size, gains[vertex]);
 
     /* Save the size. */
     graph->bhSize[vp] = size+1;
@@ -100,10 +92,7 @@ void bhInsert
 //-----------------------------------------------------------------------------
 // This function clears the entire boundary heap
 //-----------------------------------------------------------------------------
-void bhClear
-(
-    Graph *graph
-)
+void bhClear(Graph *graph)
 {
     /* Clear the index entries for the heaps. */
     Int *bhIndex = graph->bhIndex;
@@ -153,16 +142,16 @@ void bhRemove
 
     /* Replace the vertex with the last element in the heap. */
     Int v = bhHeap[bhPosition] = bhHeap[size];
-    MONGOOSE_PUT_BHINDEX(v, bhPosition);
+    graph->BH_putIndex(v, bhPosition);
 
     /* Finish the delete of "vertex" from the heap. */
     bhIndex[vertex] = 0;
 
     /* Bubble up then bubble down with a reread of v because it may have
      * changed during heapifyUp. */
-    heapifyUp(bhIndex, bhHeap, gains, v, bhPosition, gains[v]);
+    heapifyUp(graph, bhHeap, gains, v, bhPosition, gains[v]);
     v = bhHeap[bhPosition];
-    heapifyDown(bhIndex, bhHeap, size, gains, v, bhPosition, gains[v]);
+    heapifyDown(graph, bhHeap, size, gains, v, bhPosition, gains[v]);
 }
 
 //-----------------------------------------------------------------------------
@@ -170,7 +159,7 @@ void bhRemove
 //-----------------------------------------------------------------------------
 void heapifyUp
 (
-    Int *bhIndex,
+    Graph *graph,
     Int *bhHeap,
     double *gains,
     Int vertex,
@@ -180,7 +169,7 @@ void heapifyUp
 {
     if (position == 0) return;
 
-    Int posParent = MONGOOSE_HEAP_PARENT(position);
+    Int posParent = graph->BH_getParent(position);
     Int pVertex = bhHeap[posParent];
     double pGain = gains[pVertex];
 
@@ -189,9 +178,9 @@ void heapifyUp
     {
         bhHeap[posParent] = vertex;
         bhHeap[position] = pVertex;
-        MONGOOSE_PUT_BHINDEX(vertex, posParent);
-        MONGOOSE_PUT_BHINDEX(pVertex, position);
-        heapifyUp(bhIndex, bhHeap, gains, vertex, posParent, gain);
+        graph->BH_putIndex(vertex, posParent);
+        graph->BH_putIndex(pVertex, position);
+        heapifyUp(graph, bhHeap, gains, vertex, posParent, gain);
     }
 }
 
@@ -200,7 +189,7 @@ void heapifyUp
 //-----------------------------------------------------------------------------
 void heapifyDown
 (
-    Int *bhIndex,
+    Graph *graph,
     Int *bhHeap,
     Int size,
     double *gains,
@@ -211,8 +200,8 @@ void heapifyDown
 {
     if (position >= size) return;
 
-    Int lp = MONGOOSE_LEFT_CHILD(position);
-    Int rp = MONGOOSE_RIGHT_CHILD(position);
+    Int lp = graph->BH_getLeftChild(position);
+    Int rp = graph->BH_getRightChild(position);
 
     Int lv = (lp < size ? bhHeap[lp] : -1);
     Int rv = (rp < size ? bhHeap[rp] : -1);
@@ -225,18 +214,18 @@ void heapifyDown
         if (lg > rg)
         {
             bhHeap[position] = lv;
-            MONGOOSE_PUT_BHINDEX(lv, position);
+            graph->BH_putIndex(lv, position);
             bhHeap[lp] = vertex;
-            MONGOOSE_PUT_BHINDEX(vertex, lp);
-            heapifyDown(bhIndex, bhHeap, size, gains, vertex, lp, gain);
+            graph->BH_putIndex(vertex, lp);
+            heapifyDown(graph, bhHeap, size, gains, vertex, lp, gain);
         }
         else
         {
             bhHeap[position] = rv;
-            MONGOOSE_PUT_BHINDEX(rv, position);
+            graph->BH_putIndex(rv, position);
             bhHeap[rp] = vertex;
-            MONGOOSE_PUT_BHINDEX(vertex, rp);
-            heapifyDown(bhIndex, bhHeap, size, gains, vertex, rp, gain);
+            graph->BH_putIndex(vertex, rp);
+            heapifyDown(graph, bhHeap, size, gains, vertex, rp, gain);
         }
     }
 }

@@ -74,6 +74,49 @@ public:
     ~Graph();
     bool initialize(Options *options);
 
+    /** Matching Functions ****************************************************/
+    inline bool isMatched(Int vertex)
+    {
+        return (matching[vertex] > 0);
+    }
+
+    inline Int getMatch(Int vertex)
+    {
+        return (matching[vertex]-1);
+    }
+
+    /** Boundary Heap Functions ***********************************************/
+    inline Int BH_getParent(Int a)
+    {
+        return ((a - 1) / 2);
+    }
+
+    inline Int BH_getLeftChild(Int a)
+    {
+        return (2*a + 1);
+    }
+
+    inline Int BH_getRightChild(Int a)
+    {
+        return (2*a + 2);
+    }
+
+    inline bool BH_inBoundary(Int v)
+    {
+        return (bhIndex[v] > 0);
+    }
+
+    inline void BH_putIndex(Int v, Int p)
+    {
+        bhIndex[v] = (p + 1);
+    }
+
+    inline Int BH_getIndex(Int v)
+    {
+        return (bhIndex[v] - 1);
+    }
+
+    /** Mark Array Functions **************************************************/
     void clearMarkArray();
     void clearMarkArray(Int incrementBy);
     void mark(Int index);
@@ -83,16 +126,6 @@ public:
     Int getMarkValue();
     Int getMarkArrayValue(Int index);
     bool isMarked(Int index);
-
-    bool isMatched(Int vertex)
-    {
-        return (matching[vertex] > 0);
-    }
-
-    Int getMatch(Int vertex)
-    {
-        return (matching[vertex]-1);
-    }
 
 private:
     /** Mark Data ************************************************************/
