@@ -25,8 +25,22 @@ typedef SuiteSparse_long Int;
 #endif
 
 /* Enumerations */
-enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
-enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
+enum MatchingStrategy
+{
+    Random,
+    HEM,
+    HEMPA,
+    HEMDavisPA
+};
+
+enum GuessCutType
+{
+    Pseudoperipheral_Fast,
+    Pseudoperipheral_All,
+    QP_GradProj,
+    QP_BallOpt
+};
+
 enum MatchType
 {
     MatchType_Orphan = 0,
