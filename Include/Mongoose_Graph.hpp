@@ -85,6 +85,39 @@ public:
         return (matching[vertex]-1);
     }
 
+    inline void createMatch(Int vertexA, Int vertexB, MatchType matchType) {
+        matching[vertexA] = (vertexB)+1;
+        matching[vertexB] = (vertexA)+1;
+        invmatchmap[cn] = vertexA;
+        matchtype[vertexA] = matchType;
+        matchtype[vertexB] = matchType;
+        matchmap[vertexA] = cn;
+        matchmap[vertexB] = cn;
+        cn++;
+    }
+
+    inline void createCommunityMatch(Int vertexA, Int vertexB, MatchType matchType) {
+        Int vm[4] = {-1,-1,-1,-1};
+        vm[0] = vertexA;
+        vm[1] = getMatch(vm[0]);
+        vm[2] = getMatch(vm[1]);
+        vm[3] = getMatch(vm[2]);
+
+        bool is3Way = (vm[0] == vm[3]);
+        if(is3Way)
+        {
+            matching[vm[1]] = vertexA+1;
+            createMatch(vm[2], vertexB, matchType);
+        }
+        else
+        {
+            matching[vertexB] = matching[vertexA];
+            matching[vertexA] = vertexB+1;
+            matchmap[vertexB] = matchmap[vertexA];
+            matchtype[vertexB] = matchType;
+        }
+    }
+
     /** Boundary Heap Functions ***********************************************/
     inline Int BH_getParent(Int a)
     {

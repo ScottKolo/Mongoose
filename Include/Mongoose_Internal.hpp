@@ -27,6 +27,13 @@ typedef SuiteSparse_long Int;
 /* Enumerations */
 enum MatchingStrategy{ Random, HEM, HEMPA, HEMDavisPA };
 enum GuessCutType{ Pseudoperipheral_Fast, Pseudoperipheral_All, QP_GradProj, QP_BallOpt };
+enum MatchType
+{
+    MatchType_Orphan = 0,
+    MatchType_Standard = 1,
+    MatchType_Brotherly = 2,
+    MatchType_Community = 3
+};
 
 } // end namespace Mongoose
 

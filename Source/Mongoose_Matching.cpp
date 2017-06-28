@@ -63,20 +63,12 @@ void matching_Cleanup(Graph *graph, Options *options)
     (void)options; // Unused variable
 
     Int n = graph->n;
-    Int cn = graph->cn;
-    Int *matching = graph->matching;
-    Int *matchmap = graph->matchmap;
-    Int *invmatchmap = graph->invmatchmap;
-    Int *matchtype = graph->matchtype;
 
     /* Match unmatched vertices to themselves. */
     for (Int k = 0; k < n; k++)
     {
-        if (!graph->isMatched(k)) { MONGOOSE_MATCH(k, k, MatchType_Orphan); }
+        if (!graph->isMatched(k)) { graph->createMatch(k, k, MatchType_Orphan); }
     }
-
-    /* Save the # of coarse nodes. */
-    graph->cn = cn;
 }
 
 //-----------------------------------------------------------------------------
@@ -87,13 +79,8 @@ void matching_Random(Graph *graph, Options *options)
     (void)options; // Unused variable
 
     Int n = graph->n;
-    Int cn = graph->cn;
     Int *Gp = graph->p;
     Int *Gi = graph->i;
-    Int *matching = graph->matching;
-    Int *matchmap = graph->matchmap;
-    Int *invmatchmap = graph->invmatchmap;
-    Int *matchtype = graph->matchtype;
 
     for (Int k = 0; k < n; k++)
     {
@@ -110,12 +97,9 @@ void matching_Random(Graph *graph, Options *options)
 
             unmatched = false;
 
-            MONGOOSE_MATCH(k, neighbor, MatchType_Standard);
+            graph->createMatch(k, neighbor, MatchType_Standard);
         }
     }
-
-    /* Save the # of coarse nodes. */
-    graph->cn = cn;
 
 #ifndef NDEBUG
     /* If we want to do expensive checks, make sure that every node is either:
@@ -142,14 +126,9 @@ void matching_Random(Graph *graph, Options *options)
 void matching_PA(Graph *graph, Options *options)
 {
     Int n = graph->n;
-    Int cn = graph->cn;
     Int *Gp = graph->p;
     Int *Gi = graph->i;
     double *Gx = graph->x;
-    Int *matching = graph->matching;
-    Int *matchmap = graph->matchmap;
-    Int *invmatchmap = graph->invmatchmap;
-    Int *matchtype = graph->matchtype;
 
 #ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,
@@ -200,7 +179,7 @@ void matching_PA(Graph *graph, Options *options)
                 }
                 else
                 {
-                    MONGOOSE_MATCH(v, neighbor, MatchType_Brotherly);
+                    graph->createMatch(v, neighbor, MatchType_Brotherly);
                     v = -1;
                 }
             }
@@ -210,19 +189,16 @@ void matching_PA(Graph *graph, Options *options)
             {
                 if (options->doCommunityMatching)
                 {
-                    MONGOOSE_COMMUNITY_MATCH(heaviestNeighbor, v,
+                    graph->createCommunityMatch(heaviestNeighbor, v,
                                              MatchType_Community);
                 }
                 else
                 {
-                    MONGOOSE_MATCH(v, v, MatchType_Orphan);
+                    graph->createMatch(v, v, MatchType_Orphan);
                 }
             }
         }
     }
-
-    /* Save the # of coarse nodes. */
-    graph->cn = cn;
 
 #ifndef DEBUG
     /* Every vertex must be matched in no more than a 3-way matching. */
@@ -267,13 +243,8 @@ void matching_PA(Graph *graph, Options *options)
 void matching_DavisPA(Graph *graph, Options *options)
 {
     Int n = graph->n;
-    Int cn = graph->cn;
     Int *Gp = graph->p;
     Int *Gi = graph->i;
-    Int *matching = graph->matching;
-    Int *matchmap = graph->matchmap;
-    Int *invmatchmap = graph->invmatchmap;
-    Int *matchtype = graph->matchtype;
 
     /* The brotherly threshold is the Davis constant times average degree. */
     double bt = options->davisBrotherlyThreshold * ((double) graph->nz / (double) graph->n);
@@ -311,7 +282,7 @@ void matching_DavisPA(Graph *graph, Options *options)
                 }
                 else
                 {
-                    MONGOOSE_MATCH(v, neighbor, MatchType_Brotherly);
+                    graph->createMatch(v, neighbor, MatchType_Brotherly);
                     v = -1;
                 }
             }
@@ -321,19 +292,18 @@ void matching_DavisPA(Graph *graph, Options *options)
             {
                 if (options->doCommunityMatching)
                 {
-                    MONGOOSE_COMMUNITY_MATCH(k, v, MatchType_Community);
+                    graph->createCommunityMatch(k, v, MatchType_Community);
                 }
                 else
                 {
-                    MONGOOSE_MATCH(v, v, MatchType_Orphan);
+                    graph->createMatch(v, v, MatchType_Orphan);
                 }
             }
         }
     }
 
     /* Save the # of coarse nodes. */
-    graph->cn = cn;
-    ASSERT (cn < n);
+    ASSERT (graph->cn < n);
 }
 
 //-----------------------------------------------------------------------------
@@ -344,14 +314,9 @@ void matching_HEM(Graph *graph, Options *options)
     (void)options; // Unused variable
 
     Int n = graph->n;
-    Int cn = graph->cn;
     Int *Gp = graph->p;
     Int *Gi = graph->i;
     double *Gx = graph->x;
-    Int *matching = graph->matching;
-    Int *matchmap = graph->matchmap;
-    Int *invmatchmap = graph->invmatchmap;
-    Int *matchtype = graph->matchtype;
 
     for (Int k = 0; k < n; k++)
     {
@@ -379,12 +344,9 @@ void matching_HEM(Graph *graph, Options *options)
         /* Match to the heaviest. */
         if (heaviestNeighbor != -1)
         {
-            MONGOOSE_MATCH(k, heaviestNeighbor, MatchType_Standard);
+            graph->createMatch(k, heaviestNeighbor, MatchType_Standard);
         }
     }
-
-    /* Save the # of coarse nodes. */
-    graph->cn = cn;
 
 #ifndef NDEBUG
     /* If we want to do expensive checks, make sure that every node is either:
@@ -453,7 +415,7 @@ void matching_LabelProp(Graph *G, Options *O)
             }
 
             if (label[k] == mostFrequentLabel) {
-                MONGOOSE_MATCH(k, mostFrequentLabel, MatchType_Community);
+                graph->createMatch(k, mostFrequentLabel, MatchType_Community);
                 numMatched += 1;
             } else {
                 label[k] = mostFrequentLabel;

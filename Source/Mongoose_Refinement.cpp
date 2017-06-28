@@ -16,7 +16,6 @@ Graph *refine(Graph *graph, Options *options)
     Int cn = graph->n;
     bool *cPartition = graph->partition;
     Int *invmatchmap = P->invmatchmap;
-    Int *matching = P->matching;
     bool *fPartition = P->partition;
     double *fGains = P->vertexGains;
     Int *fExternalDegree = P->externalDegree;

@@ -49,7 +49,6 @@ Graph *coarsen(Graph *graph, Options *options)
     double *Gx = graph->x;
     double *Gw = graph->w;
 
-    Int *matching = graph->matching;
     Int *matchmap = graph->matchmap;
     Int *invmatchmap = graph->invmatchmap;
 
