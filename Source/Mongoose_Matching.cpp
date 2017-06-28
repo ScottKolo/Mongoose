@@ -109,11 +109,11 @@ void matching_Random(Graph *graph, Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Check condition 1 */
-        if (matching[k]) continue;
+        if (graph->matching[k]) continue;
         /* Check condition 2 */
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
-            ASSERT (matching[Gi[p]]);
+            ASSERT (graph->matching[Gi[p]]);
         }
     }
 #endif
@@ -200,7 +200,7 @@ void matching_PA(Graph *graph, Options *options)
         }
     }
 
-#ifndef DEBUG
+#ifndef NDEBUG
     /* Every vertex must be matched in no more than a 3-way matching. */
     for (Int k = 0; k < n; k++)
     {
@@ -356,12 +356,12 @@ void matching_HEM(Graph *graph, Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Check condition 1 */
-        if (matching[k]) continue;
+        if (graph->matching[k]) continue;
 
         /* Check condition 2 */
         for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
-            ASSERT (matching[Gi[p]]);
+            ASSERT (graph->matching[Gi[p]]);
         }
     }
 #endif
