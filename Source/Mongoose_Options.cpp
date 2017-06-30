@@ -16,12 +16,12 @@ Options* Options::Create()
     {
         ret->randomSeed = 0;
 
-        ret->coarsenLimit = 256;
+        ret->coarsenLimit = 50;
         ret->matchingStrategy = HEMDavisPA;
         ret->doCommunityMatching = false;
         ret->davisBrotherlyThreshold = 2.0;
 
-        ret->guessCutType = Pseudoperipheral_Fast;
+        ret->guessCutType = QP_GradProj;
         ret->guessSearchDepth = 10;
 
         ret->numDances = 1;

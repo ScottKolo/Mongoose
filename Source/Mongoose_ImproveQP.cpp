@@ -76,7 +76,7 @@ bool improveCutUsingQP
                 guess[k] = graph->BH_inBoundary(k) ? 0.25 : 0.0;
             }
         }
-        double maxWeight = -INFINITY;
+        double maxWeight = 0;
         for (Int p = Gp[k]; p < Gp[k+1]; p++)
         {
             maxWeight = std::max(maxWeight, Gx[p]);

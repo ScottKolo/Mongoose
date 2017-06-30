@@ -150,8 +150,6 @@ Graph *coarsen(Graph *graph, Options *options)
     double W = 0.0;
     for (Int k = 0; k < cn; k++)
     {
-        Int degree = Cp[k+1] - Cp[k];
-        ASSERT (degree > 0) ;
         W += Cw[k];
     }
     ASSERT (W == coarseGraph->W) ;

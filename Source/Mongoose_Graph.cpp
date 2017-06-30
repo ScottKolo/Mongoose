@@ -176,6 +176,7 @@ Graph* Graph::Create (
     ret->matching = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->matchmap = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->invmatchmap = (Int*) SuiteSparse_malloc(n, sizeof(Int));
+    ret->singleton = -1;
     ret->matchtype = (Int*) SuiteSparse_malloc(n, sizeof(Int));
     ret->markArray = (Int*) SuiteSparse_calloc(n, sizeof(Int));
     ret->markValue = 1;
@@ -218,6 +219,7 @@ Graph::~Graph()
     matchmap = (Int*) SuiteSparse_free(matchmap);
     invmatchmap = (Int*) SuiteSparse_free(invmatchmap);
     matchtype = (Int*) SuiteSparse_free(matchtype);
+    singleton = 0;
 
     markArray = (Int*) SuiteSparse_free(markArray);
     markValue = 1;
@@ -239,6 +241,7 @@ bool Graph::initialize(Options *options)
     matchtype =      (Int*) SuiteSparse_calloc(n, sizeof(Int));
     markArray =      (Int*) SuiteSparse_calloc(n, sizeof(Int));
     markValue = 1;
+    singleton = -1;
 
     partition =     (bool*) SuiteSparse_malloc(n, sizeof(bool));
     bhIndex =        (Int*) SuiteSparse_calloc(n, sizeof(Int));

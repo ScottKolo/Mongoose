@@ -64,6 +64,7 @@ public:
                                               1: Standard (random, hem, shem)
                                               2: Brotherly
                                               3: Community                   */
+    Int singleton;
 
 
 
@@ -85,7 +86,8 @@ public:
         return (matching[vertex]-1);
     }
 
-    inline void createMatch(Int vertexA, Int vertexB, MatchType matchType) {
+    inline void createMatch(Int vertexA, Int vertexB, MatchType matchType)
+    {
         matching[vertexA] = (vertexB)+1;
         matching[vertexB] = (vertexA)+1;
         invmatchmap[cn] = vertexA;
@@ -96,7 +98,8 @@ public:
         cn++;
     }
 
-    inline void createCommunityMatch(Int vertexA, Int vertexB, MatchType matchType) {
+    inline void createCommunityMatch(Int vertexA, Int vertexB, MatchType matchType)
+    {
         Int vm[4] = {-1,-1,-1,-1};
         vm[0] = vertexA;
         vm[1] = getMatch(vm[0]);

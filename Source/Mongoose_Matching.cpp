@@ -11,7 +11,6 @@
 #include "Mongoose_Matching.hpp"
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
-#include <map>
 
 namespace Mongoose
 {
@@ -63,11 +62,40 @@ void matching_Cleanup(Graph *graph, Options *options)
     (void)options; // Unused variable
 
     Int n = graph->n;
+    Int *Gp = graph->p;
 
     /* Match unmatched vertices to themselves. */
     for (Int k = 0; k < n; k++)
     {
-        if (!graph->isMatched(k)) { graph->createMatch(k, k, MatchType_Orphan); }
+        if (!graph->isMatched(k))
+        {
+            Int degree = Gp[k + 1] - Gp[k];
+            if (degree == 0)
+            {
+                // Singleton!
+                if (graph->singleton == -1)
+                {
+                    graph->singleton = k;
+                }
+                else
+                {
+                    graph->createMatch(k, graph->singleton, MatchType_Standard);
+                    graph->singleton = -1;
+                }
+            }
+            else
+            {
+                // Not a singleton
+                graph->createMatch(k, k, MatchType_Orphan);
+            }
+        }
+    }
+
+    if (graph->singleton != -1)
+    {
+        // Leftover singleton
+        Int k = graph->singleton;
+        graph->createMatch(k, k, MatchType_Orphan);
     }
 }
 
@@ -302,7 +330,6 @@ void matching_DavisPA(Graph *graph, Options *options)
         }
     }
 
-    /* Save the # of coarse nodes. */
     ASSERT (graph->cn < n);
 }
 
