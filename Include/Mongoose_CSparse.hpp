@@ -63,32 +63,13 @@ typedef struct cs_sparse    /* matrix in compressed-column or triplet form */
     csi nz ;        /* # of entries in triplet matrix, -1 for compressed-col */
 } cs ;
 
-typedef struct cs_dmperm_results    /* cs_dmperm or cs_scc output */
-{
-    csi *p ;        /* size m, row permutation */
-    csi *q ;        /* size n, column permutation */
-    csi *r ;        /* size nb+1, block k is rows r[k] to r[k+1]-1 in A(p,q) */
-    csi *s ;        /* size nb+1, block k is cols s[k] to s[k+1]-1 in A(p,q) */
-    csi nb ;        /* # of blocks in fine dmperm decomposition */
-    csi rr [5] ;    /* coarse row decomposition */
-    csi cc [5] ;    /* coarse column decomposition */
-} csd ;
-
 cs *cs_add (const cs *A, const cs *B, double alpha, double beta) ;
 cs *cs_transpose (const cs *A, csi values) ;
 
-csi cs_entry (cs *T, csi i, csi j, double x) ;
 cs *cs_compress (const cs *T) ;
 
 cs *cs_spalloc (csi m, csi n, csi nzmax, csi values, csi triplet) ;
-csi cs_sprealloc (cs *A, csi nzmax);
 cs *cs_spfree (cs *A) ;
-csd *cs_dfree (csd *D);
-
-csd *cs_scc (cs *A) ;
-cs *cs_submat(const cs *A,const csi i1, const csi i2,const csi j1,const csi j2);
-cs *cs_permute (const cs *A, const csi *pinv, const csi *q, csi values);
-csi *cs_pinv (csi const *p, csi n);
 
 } // end namespace Mongoose
 

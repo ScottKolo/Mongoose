@@ -115,22 +115,6 @@ int main(int argn, char** argv)
     assert(G6 == NULL);
     SuiteSparse_free(G6);
 
-    AllowedMallocs = 4;
-    cs *M6 = cs_submat(M5, 1, 3, 1, 3);
-    assert(M6 == NULL);
-
-    M5->nz = 5;
-    cs *M7 = cs_submat(M5, 1, 3, 1, 3);
-    assert(M7 == NULL);
-
-    cs_sprealloc(M5, 0);
-    assert(M5 != NULL);
-    AllowedMallocs = 1000;
-    M5->p[M5->n] = 0;
-    M5->nz = -1;
-    cs *M8 = cs_submat(M5, 0, 0, 0, 0);
-    assert(M8 != NULL);
-
     SuiteSparse_finish();
 
     return 0;
