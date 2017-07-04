@@ -50,15 +50,15 @@ if (nnz (G-G') > 0)
 end
 
 % get the connected components
-[p r] = mongoose_scc (G) ;
-rsize = diff (r) ;
-[ignore k] = max (rsize) ;
-G = G (p,p) ;
-x_vec = x_vec(p);
-y_vec = y_vec(p);
+% [p r] = mongoose_scc (G) ;
+% rsize = diff (r) ;
+% [ignore k] = max (rsize) ;
+% G = G (p,p) ;
+% x_vec = x_vec(p);
+% y_vec = y_vec(p);
 
-s = r (k) : (r (k+1)-1) ;
-G = G (s,s) ;
+% s = r (k) : (r (k+1)-1) ;
+% G = G (s,s) ;
 norig = n ;
 [m n] = size (G) ;
 if (DEBUG)
@@ -94,19 +94,19 @@ if (DEBUG)
     fprintf ('penwidth: %d\n', penwidth) ;
 end
 
-rsize = sort (rsize, 'descend') ;
-if (DEBUG)
-    fprintf ('singletons: %d\n', length (find (rsize == 1))) ;
-end
-nonsingleton = find (rsize ~= 1) ;
-if (DEBUG)
-    fprintf ('non singletons: %d\n', length (nonsingleton)) ;
-end
-if (~isempty (nonsingleton) && DEBUG)
-    fprintf ('non single graphs of size:\n') ;
-    fprintf ('%d ', rsize (nonsingleton)) ;
-    fprintf ('\n') ;
-end
+% rsize = sort (rsize, 'descend') ;
+% if (DEBUG)
+%     fprintf ('singletons: %d\n', length (find (rsize == 1))) ;
+% end
+% nonsingleton = find (rsize ~= 1) ;
+% if (DEBUG)
+%     fprintf ('non singletons: %d\n', length (nonsingleton)) ;
+% end
+% if (~isempty (nonsingleton) && DEBUG)
+%     fprintf ('non single graphs of size:\n') ;
+%     fprintf ('%d ', rsize (nonsingleton)) ;
+%     fprintf ('\n') ;
+% end
 
 [i j x] = find (tril (G, -1)) ;
 
