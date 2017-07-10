@@ -21,7 +21,7 @@ Options* Options::Create()
         ret->doCommunityMatching = false;
         ret->davisBrotherlyThreshold = 2.0;
 
-        ret->guessCutType = QP_GradProj;
+        ret->guessCutType = GuessRandom;//QP_GradProj;
         ret->guessSearchDepth = 10;
 
         ret->numDances = 1;

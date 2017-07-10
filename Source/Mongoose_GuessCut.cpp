@@ -11,17 +11,29 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 bool guessCut(Graph *graph, Options *options)
 {
-    for (Int k = 0; k < graph->n; k++)
+    if(options->guessCutType == QP_GradProj)
     {
-        graph->partition[k] = false;
-    }
-    graph->partition[0] = true;
+        for (Int k = 0; k < graph->n; k++)
+        {
+            graph->partition[k] = false;
+        }
+        graph->partition[0] = true;
 
-    bhLoad(graph, options);
-    if (!improveCutUsingQP(graph, options, true))
+        bhLoad(graph, options);
+        if (!improveCutUsingQP(graph, options, true))
+        {
+            return false;
+            // Error - QP Failure
+        }
+    }
+    else
     {
-        return false;
-        // Error - QP Failure
+        for (Int k = 0; k < graph->n; k++)
+        {
+            graph->partition[k] = (std::rand() % 2 == 0) ? true : false;
+        }
+
+        bhLoad(graph, options);
     }
 
     /* Do the waterdance refinement. */

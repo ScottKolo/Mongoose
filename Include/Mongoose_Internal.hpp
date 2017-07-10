@@ -38,7 +38,8 @@ enum GuessCutType
     Pseudoperipheral_Fast,
     Pseudoperipheral_All,
     QP_GradProj,
-    QP_BallOpt
+    QP_BallOpt,
+    GuessRandom
 };
 
 enum MatchType
