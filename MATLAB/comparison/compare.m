@@ -65,10 +65,10 @@ function comparisonData = compare(plot_outliers, use_weights)
                 part_A = find(partition);
                 part_B = find(1-partition);
                 perm = [part_A part_B];
-                p = length(partition);
+                p = length(part_A);
                 A_perm = A(perm, perm);
-                mongoose_cut_weight(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
-                mongoose_cut_size(j,k) = sum(sum(sign(A_perm(p:n_cols, 1:p))));
+                mongoose_cut_weight(j,k) = sum(sum(A_perm((p+1):n_cols, 1:p)));
+                mongoose_cut_size(j,k) = sum(sum(sign(A_perm((p+1):n_cols, 1:p))));
                 mongoose_imbalance(j,k) = abs(0.5-(length(part_A)/(length(part_A) + length(part_B))));
             end
             
@@ -79,10 +79,11 @@ function comparisonData = compare(plot_outliers, use_weights)
                 t = toc;
                 fprintf('METIS:    %0.2f\n', t);
                 metis_times(j,k) = t;
+                p = length(part_A);
                 perm = [part_A part_B];
                 A_perm = A(perm, perm);
-                metis_cut_weight(j,k) = sum(sum(A_perm(p:n_cols, 1:p)));
-                metis_cut_size(j,k) = sum(sum(sign(A_perm(p:n_cols, 1:p))));
+                metis_cut_weight(j,k) = sum(sum(A_perm((p+1):n_cols, 1:p)));
+                metis_cut_size(j,k) = sum(sum(sign(A_perm((p+1):n_cols, 1:p))));
                 metis_imbalance(j,k) = abs(0.5-(length(part_A)/(length(part_A) + length(part_B))));
             end
             j = j + 1;
