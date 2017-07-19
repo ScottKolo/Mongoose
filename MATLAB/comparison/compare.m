@@ -26,6 +26,13 @@ function comparisonData = compare(plot_outliers, use_weights)
                             'problem_n', []);
     for i = 1:length(index.nrows)
         if (index.isReal(i) && index.nnz(i) < 1E8)
+            
+            % For comparing graph performance
+            if (~index.isGraph(i))
+                continue;
+            end
+            use_weights = 1;
+            
             Prob = UFget(i);
             A = Prob.A;
             
@@ -36,7 +43,8 @@ function comparisonData = compare(plot_outliers, use_weights)
             end
 
             % Make matrix binary - matrix values are not necessarily edge weights
-            A = sign(abs(A));
+            %A = sign(abs(A));
+            A = abs(A); % Edit for graph comparison
 
             % Sanitize the matrix (remove diagonal, take largest scc)
             A = mongoose_sanitizeMatrix(A, ~use_weights);
