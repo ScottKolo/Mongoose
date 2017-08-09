@@ -4,8 +4,7 @@
 #include "Mongoose_Refinement.hpp"
 #include "Mongoose_Waterdance.hpp"
 #include "Mongoose_EdgeSeparator.hpp"
-#include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
+#include "Mongoose_Random.hpp"
 
 namespace Mongoose
 {
@@ -27,7 +26,7 @@ int ComputeEdgeSeparator(Graph *graph, Options *options)
 {
     // Check inputs
     if (!optionsAreValid(options)) return (EXIT_FAILURE) ;
-    std::srand(options->randomSeed);
+    setRandomSeed(options->randomSeed);
 
     if (!graph) return EXIT_FAILURE;
 

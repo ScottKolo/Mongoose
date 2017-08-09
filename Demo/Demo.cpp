@@ -47,7 +47,7 @@ int main(int argn, const char **argv)
         if (!options) return EXIT_FAILURE; // Return an error if we failed.
 
         options->matchingStrategy = HEMDavisPA;
-        options->guessCutType = QP_BallOpt;
+        options->guessCutType = GuessQP;
 
         Graph *graph = readGraph("../Matrix/" + demo_files[k]);
         if (!graph)

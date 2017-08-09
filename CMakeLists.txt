@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
+#cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 include(CMake/cmake_colors.cmake)
 
 project(Mongoose)
@@ -47,7 +48,8 @@ set(MONGOOSE_FILES
     Source/Mongoose_Refinement.cpp
     Source/Mongoose_Sanitize.cpp
     Source/Mongoose_Waterdance.cpp
-  )
+    Source/Mongoose_Random.cpp
+        Include/Mongoose_Random.hpp)
 
 set(NAPHEAP_FILES
     Include/Mongoose_QPBoundary.hpp
@@ -91,7 +93,7 @@ include_directories(Include
                     )
 
 # Require C++11... Someday.
-#set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Look for common SuiteSparse_config - otherwise, use our own

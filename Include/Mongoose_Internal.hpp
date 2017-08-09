@@ -4,6 +4,12 @@
 
 #define FREESET_DEBUG 0
 
+#if __cplusplus > 199711L
+#define CPP11_OR_LATER true
+#else
+#define CPP11_OR_LATER false
+#endif
+
 #include <climits>
 #include <cstdlib>
 
@@ -35,11 +41,9 @@ enum MatchingStrategy
 
 enum GuessCutType
 {
-    Pseudoperipheral_Fast,
-    Pseudoperipheral_All,
-    QP_GradProj,
-    QP_BallOpt,
-    GuessRandom
+    GuessQP,
+    GuessRandom,
+    GuessNaturalOrder
 };
 
 enum MatchType

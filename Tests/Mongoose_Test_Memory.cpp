@@ -76,7 +76,7 @@ void RunAllTests (
     LogTest("Running Memory Test on " << inputFile);
 
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
-    GuessCutType guessCutStrategies[3] = {Pseudoperipheral_All, Pseudoperipheral_Fast, QP_GradProj};
+    GuessCutType guessCutStrategies[3] = {GuessQP, GuessRandom, GuessNaturalOrder};
 
     for(int c = 0; c < 2; c++)
     {
