@@ -35,7 +35,7 @@ double QPNapDown            /* return lambda */
 {
     ASSERT(a != NULL);
     Int i, k, e, maxsteps, n_bound, n_free;
-    double ai, asum, a2sum, maxbound, maxfree, new_break, s, t, xi;
+    double ai, asum, a2sum, maxbound, maxfree, t;
 
     maxbound = -INFINITY;
     maxfree = -INFINITY;
@@ -51,7 +51,7 @@ double QPNapDown            /* return lambda */
     for (i = 0; i < n; i++)
     {
         ai = a[i];
-        xi = x[i] - ai * lambda;
+        double xi = x[i] - ai * lambda;
         if (xi < 0.)
         {
             n_bound++;
@@ -82,8 +82,8 @@ double QPNapDown            /* return lambda */
     maxsteps = 2 * n + 1;
     for (k = 1; k <= maxsteps; k++)
     {
-        new_break = std::max(maxfree, maxbound);
-        s = asum - new_break * a2sum;
+        double new_break = std::max(maxfree, maxbound);
+        double s = asum - new_break * a2sum;
         if ((s >= b) || (new_break == -INFINITY)) /* done */
         {
             if (a2sum != 0.) lambda = (asum - b) / a2sum;

@@ -63,7 +63,7 @@ Int QPMaxHeap_add
         )
 {
     Int l, lnew, lold;
-    double xold, xnew;
+    double xold;
 
     size++;
     lold = size;
@@ -73,7 +73,7 @@ Int QPMaxHeap_add
     {
         lnew = lold / 2;
         l = heap[lnew];
-        xnew = x[l];
+        double xnew = x[l];
 
         /* swap new and old */
         if (xnew < xold)

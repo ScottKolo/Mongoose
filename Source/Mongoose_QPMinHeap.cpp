@@ -72,7 +72,7 @@ Int QPMinHeap_add
         )
 {
     Int l, lnew, lold;
-    double xold, xnew;
+    double xold;
 
     nheap++;
     lold = nheap;
@@ -82,7 +82,7 @@ Int QPMinHeap_add
     {
         lnew = lold / 2;
         l = heap[lnew];
-        xnew = x[l];
+        double xnew = x[l];
 
         /* swap new and old */
         if (xnew > xold)

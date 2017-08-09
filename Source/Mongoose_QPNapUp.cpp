@@ -35,7 +35,7 @@ double QPNapUp      /* return lambda */
 {
     ASSERT(a != NULL);
     Int i, k, e, maxsteps, n_bound, n_free;
-    double ai, asum, a2sum, minbound, minfree, new_break, s, t, xi;
+    double ai, asum, a2sum, minbound, minfree, t;
 
     minbound = INFINITY;
     minfree = INFINITY;
@@ -52,7 +52,7 @@ double QPNapUp      /* return lambda */
     for (i = 0; i < n; i++)
     {
         ai = a[i];
-        xi = x[i] - ai * lambda;
+        double xi = x[i] - ai * lambda;
         if (xi > 1.)
         {
             n_bound++;
@@ -81,8 +81,8 @@ double QPNapUp      /* return lambda */
         /* check to see if zero slope achieved without changing the free set  */
         /* remember that the slope must always be adjusted by b               */
         /*------------------------------------------------------------------- */
-        new_break = std::min (minfree, minbound);
-        s = asum - new_break * a2sum;
+        double new_break = std::min (minfree, minbound);
+        double s = asum - new_break * a2sum;
         if ((s <= b) || (new_break == INFINITY)) /* done */
         {
             if (a2sum != 0.)

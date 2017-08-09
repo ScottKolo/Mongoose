@@ -75,7 +75,6 @@ void bhInsert(Graph *graph, Int vertex)
 {
     /* Unpack structures */
     Int vp = graph->partition[vertex];
-    Int *bhIndex = graph->bhIndex;
     Int *bhHeap = graph->bhHeap[vp];
     Int size = graph->bhSize[vp];
     double *gains = graph->vertexGains;
