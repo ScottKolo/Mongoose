@@ -18,7 +18,6 @@ double cs_cumsum (csi *p, csi *c, csi n);
 csi cs_scatter (const cs *A, csi j, double beta, csi *w, double *x, csi mark,
                 cs *C, csi nz);
 cs *cs_done (cs *C, void *w, void *x, csi ok);
-cs *cs_spfree (cs *A);
 
 /**
  * C = A'
@@ -46,7 +45,7 @@ cs *cs_transpose (const cs *A, csi values)
     cs *C;
     if (!CS_CSC (A)) return (NULL);     /* check inputs */
     m = A->m; n = A->n; Ap = A->p; Ai = A->i; Ax = A->x;
-    C = (cs*) cs_spalloc (n, m, Ap [n], values && Ax, 0);  /* allocate result */
+    C = cs_spalloc (n, m, Ap [n], values && Ax, 0);        /* allocate result */
     w = (csi*) SuiteSparse_calloc (m, sizeof (csi));       /* get workspace */
     if (!C || !w) return (cs_done (C, w, NULL, 0));        /* out of memory */
     Cp = C->p; Ci = C->i; Cx = C->x;
@@ -110,7 +109,7 @@ cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
         if (values) for (p = Cp [j]; p < nz; p++) Cx [p] = x [Ci [p]];
     }
     Cp [n] = nz;                        /* finalize the last column of C */
-    return ((cs*) cs_done (C, w, x, 1));      /* success; release workspace, return C */
+    return (cs_done (C, w, x, 1));      /* success; release workspace, return C */
 }
 
 /**

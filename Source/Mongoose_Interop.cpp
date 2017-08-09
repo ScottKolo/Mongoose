@@ -17,8 +17,8 @@ cs *GraphToCSparse3(Graph *G, bool copy)
     A->nzmax = G->cs_nzmax;
     if (!copy)
     {
-        A->p = (ptrdiff_t*) G->p;
-        A->i = (ptrdiff_t*) G->i;
+        A->p = G->p;
+        A->i = G->i;
         A->x = G->x;
     }
     else
@@ -59,11 +59,11 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     returner->cs_m = G->m;
     returner->cs_nz = G->nz;
     returner->cs_nzmax = G->nzmax;
-    returner->n = std::max(G->n, G->m);
+    returner->n  = std::max(G->n, G->m);
     returner->nz = G->p[G->n];
-    returner->p = (Int*) G->p;
-    returner->i = (Int*) G->i;
-    returner->x = G->x;
+    returner->p  = G->p;
+    returner->i  = G->i;
+    returner->x  = G->x;
 
     /* Allocate edge weights if necessary. */
     bool attachEdgeWeights = false;
