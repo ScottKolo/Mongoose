@@ -89,31 +89,6 @@ void bhInsert(Graph *graph, Int vertex)
 }
 
 //-----------------------------------------------------------------------------
-// This function clears the entire boundary heap
-//-----------------------------------------------------------------------------
-void bhClear(Graph *graph)
-{
-    /* Clear the index entries for the heaps. */
-    Int *bhIndex = graph->bhIndex;
-    Int *externalDegree = graph->externalDegree;
-    for (Int h = 0; h < 2; h++)
-    {
-        Int *bhHeap = graph->bhHeap[h];
-        Int size = graph->bhSize[h];
-        for (Int i = 0; i < size; i++)
-        {
-            Int v = bhHeap[i];
-            bhIndex[v] = 0;
-            externalDegree[v] = 0;
-        }
-    }
-
-    /* Clear the size. */
-    graph->bhSize[0] = graph->bhSize[1] = 0;
-}
-
-
-//-----------------------------------------------------------------------------
 // Removes the specified vertex from its heap.
 // To do this, we swap the last element in the heap with the element we
 // want to remove. Then we heapify up and heapify down.
