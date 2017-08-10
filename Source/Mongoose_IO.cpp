@@ -92,8 +92,7 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     }
 
     Int M, N, nz;
-    int ret_code;
-    if ((ret_code = mm_read_mtx_crd_size(file, &M, &N, &nz)) !=0)
+    if ((mm_read_mtx_crd_size(file, &M, &N, &nz)) !=0)
     {
         LogError("Error: Could not parse matrix dimension and size.\n");
         fclose(file);
@@ -107,9 +106,9 @@ cs *readMatrix (const char* filename, MM_typecode &matcode)
     }
     
     LogInfo("Reading matrix data...\n");
-    Int *I = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
-    Int *J = (Int *) SuiteSparse_malloc(nz, sizeof(Int));
-    double *val = (double *) SuiteSparse_malloc(nz, sizeof(double));
+    Int *I = (Int *) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(Int));
+    Int *J = (Int *) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(Int));
+    double *val = (double *) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(double));
 
     if (!I || !J || !val)
     {

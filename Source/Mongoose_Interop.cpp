@@ -25,9 +25,9 @@ cs *GraphToCSparse3(Graph *G, bool copy)
     {
         Int n = G->n;
         Int nz = G->nz;
-        A->p = (ptrdiff_t*) SuiteSparse_malloc((n+1), sizeof(ptrdiff_t));
-        A->i = (ptrdiff_t*) SuiteSparse_malloc(nz, sizeof(ptrdiff_t));
-        A->x = (double*) SuiteSparse_malloc(nz, sizeof(double));
+        A->p = (ptrdiff_t*) SuiteSparse_malloc(static_cast<size_t>(n + 1), sizeof(ptrdiff_t));
+        A->i = (ptrdiff_t*) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(ptrdiff_t));
+        A->x = (double*) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(double));
         if (!A->p || !A->i || !A->x)
         {
             cs_spfree(A);
@@ -70,7 +70,7 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     if (!returner->x || resetEW)
     {
         Int nz = returner->nz;
-        returner->x = (double*) SuiteSparse_malloc(nz, sizeof(double));
+        returner->x = (double*) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(double));
         attachEdgeWeights = true;
     }
 
@@ -79,7 +79,7 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     if (!returner->w || resetNW)
     {
         Int n = returner->n;
-        returner->w = (double*) SuiteSparse_malloc(n, sizeof(double));
+        returner->w = (double*) SuiteSparse_malloc(static_cast<size_t>(n), sizeof(double));
         attachNodeWeights = true;
     }
 
@@ -104,7 +104,7 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
 
     if (attachNodeWeights)
     {
-        int n = returner->n;
+        Int n = returner->n;
         for (Int k = 0; k < n; k++) returner->w[k] = 1.0;
     }
 

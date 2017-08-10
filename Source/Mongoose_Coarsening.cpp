@@ -65,7 +65,7 @@ Graph *coarsen(Graph *graph, Options *options)
     double X = 0.0;
 
     /* Hashtable stores column pointer values. */
-    Int *htable = (Int*) SuiteSparse_malloc(cn, sizeof(Int));
+    Int *htable = (Int*) SuiteSparse_malloc(static_cast<size_t>(cn), sizeof(Int));
     if (!htable)
     {
         coarseGraph->~Graph();

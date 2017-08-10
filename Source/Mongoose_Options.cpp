@@ -22,7 +22,6 @@ Options* Options::Create()
         ret->davisBrotherlyThreshold = 2.0;
 
         ret->guessCutType = GuessNaturalOrder;
-        ret->guessSearchDepth = 10;
 
         ret->numDances = 1;
 

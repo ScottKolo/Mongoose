@@ -29,24 +29,6 @@ typedef SuiteSparse_long csi ;
 #ifndef CS_TRIPLET
 #define CS_TRIPLET(A) (A && (A->nz >= 0))
 #endif
-#ifndef CS_MAX
-#define CS_MAX(a,b) (((a) > (b)) ? (a) : (b))
-#endif
-#ifndef CS_MIN
-#define CS_MIN(a,b) (((a) < (b)) ? (a) : (b))
-#endif
-#ifndef CS_FLIP
-#define CS_FLIP(i) (-(i)-2)
-#endif
-#ifndef CS_UNFLIP
-#define CS_UNFLIP(i) (((i) < 0) ? CS_FLIP(i) : (i))
-#endif
-#ifndef CS_MARKED
-#define CS_MARKED(w,j) (w [j] < 0)
-#endif
-#ifndef CS_MARK
-#define CS_MARK(w,j) { w [j] = CS_FLIP (w [j]) ; }
-#endif
 
 namespace Mongoose
 {

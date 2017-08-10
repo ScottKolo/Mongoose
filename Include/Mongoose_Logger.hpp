@@ -30,13 +30,6 @@
 #define LOG_TEST 0
 #endif
 
-struct NoneType { };
-
-template<typename List>
-struct LogData {
-    List list;
-};
-
 // Main Logging Macros
 #define LogError(msg) \
     do { if (LOG_ERROR) (std::cout << __FILE__ << ":" << __LINE__ << ": " << msg); } while (0)

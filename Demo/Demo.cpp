@@ -6,34 +6,32 @@
  * properly.
  */
 
-#include "Mongoose_Internal.hpp"
-#include "Mongoose_EdgeSeparator.hpp"
-#include "Mongoose_CSparse.hpp"
-#include "Mongoose_IO.hpp"
+#include "Mongoose.hpp"
 #include <ctime>
-#include <string>
 #include <iostream>
+#include <iomanip>
+#include <cmath>
 
 using namespace Mongoose;
 using namespace std;
 
-const std::string demo_files[12] = {
-    "bcspwr01.mtx",
-    "bcspwr02.mtx",
-    "bcspwr03.mtx",
-    "bcspwr04.mtx",
-    "bcspwr05.mtx",
-    "bcspwr06.mtx",
-    "bcspwr07.mtx",
-    "bcspwr08.mtx",
-    "bcspwr09.mtx",
-    "bcspwr10.mtx",
-    "jagmesh7.mtx",
-    "troll.mtx"
-};
-
 int main(int argn, const char **argv)
 {
+    const std::string demo_files[12] = {
+        "bcspwr01.mtx",
+        "bcspwr02.mtx",
+        "bcspwr03.mtx",
+        "bcspwr04.mtx",
+        "bcspwr05.mtx",
+        "bcspwr06.mtx",
+        "bcspwr07.mtx",
+        "bcspwr08.mtx",
+        "bcspwr09.mtx",
+        "bcspwr10.mtx",
+        "jagmesh7.mtx",
+        "troll.mtx"
+    };
+
     clock_t start = clock();
     double duration;
 
@@ -59,11 +57,11 @@ int main(int argn, const char **argv)
         ComputeEdgeSeparator (graph, options);
 
         cout << "Partitioning Complete!" << endl;
-        printf("Cut Cost:      %.2f\n", graph->cutCost);
-        printf("Cut Imbalance: %.2f%%\n", fabs(100*graph->imbalance));
+        cout << "Cut Cost:      " << setprecision(2) << graph->cutCost << endl;
+        cout << "Cut Imbalance: " << setprecision(2) << fabs(100*graph->imbalance) << "%" << endl;
 
-        clock_t trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
-        printf("Trial Time:    %.0lums\n", trial_duration*1000);
+        double trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
+        cout << "Trial Time:    " << trial_duration*1000 << "ms" << endl;
 
         graph->~Graph();
         SuiteSparse_free(graph);
@@ -73,7 +71,7 @@ int main(int argn, const char **argv)
     duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
 
     cout << "**************************************************" << endl;
-    printf("Total Demo Time: %.2fs\n", duration);
+    cout << "Total Demo Time: " << setprecision(2) << duration << endl;
 
     cout << endl;
     cout << "**************************************************" << endl;

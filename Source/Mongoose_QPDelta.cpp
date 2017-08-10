@@ -10,20 +10,22 @@ QPDelta* QPDelta::Create(Int numVars)
     QPDelta *ret = (QPDelta*) SuiteSparse_calloc(1, sizeof(QPDelta));
     if(!ret) return NULL;
 
-    ret->x = (double*) SuiteSparse_malloc(numVars, sizeof(double));
-    ret->FreeSet_status = (Int*) SuiteSparse_malloc(numVars, sizeof(Int));
-    ret->FreeSet_list = (Int*) SuiteSparse_malloc(numVars+1, sizeof(Int));
-    ret->gradient = (double*) SuiteSparse_malloc(numVars, sizeof(double));
-    ret->D = (double*) SuiteSparse_malloc(numVars, sizeof(double));
+    ret->x = (double*) SuiteSparse_malloc(static_cast<size_t>(numVars), sizeof(double));
+    ret->FreeSet_status = (Int*) SuiteSparse_malloc(
+        static_cast<size_t>(numVars), sizeof(Int));
+    ret->FreeSet_list = (Int*) SuiteSparse_malloc(
+        static_cast<size_t>(numVars + 1), sizeof(Int));
+    ret->gradient = (double*) SuiteSparse_malloc(static_cast<size_t>(numVars), sizeof(double));
+    ret->D = (double*) SuiteSparse_malloc(static_cast<size_t>(numVars), sizeof(double));
 
     for (int i = 0; i < WISIZE; i++)
     {
-        ret->wi[i] = (Int*) SuiteSparse_malloc(numVars+1, sizeof(Int));
+        ret->wi[i] = (Int*) SuiteSparse_malloc(static_cast<size_t>(numVars + 1), sizeof(Int));
     }
 
     for (Int i = 0; i < WXSIZE; i++)
     {
-        ret->wx[i] = (double*) SuiteSparse_malloc(numVars, sizeof(double));
+        ret->wx[i] = (double*) SuiteSparse_malloc(static_cast<size_t>(numVars), sizeof(double));
     }
 
 #ifndef NDEBUG

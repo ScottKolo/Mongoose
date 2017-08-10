@@ -31,7 +31,7 @@ bool guessCut(Graph *graph, Options *options)
         case GuessRandom:
             for (Int k = 0; k < graph->n; k++)
             {
-                graph->partition[k] = (random() % 2 == 0) ? true : false;
+                graph->partition[k] = (random() % 2 == 0);
             }
 
             bhLoad(graph, options);
@@ -39,7 +39,7 @@ bool guessCut(Graph *graph, Options *options)
         case GuessNaturalOrder:
             for (Int k = 0; k < graph->n; k++)
             {
-                graph->partition[k] = (k < graph->n/2) ? true : false;
+                graph->partition[k] = (k < graph->n/2);
             }
             break;
     }

@@ -46,7 +46,7 @@ cs *cs_transpose (const cs *A, csi values)
     if (!CS_CSC (A)) return (NULL);     /* check inputs */
     m = A->m; n = A->n; Ap = A->p; Ai = A->i; Ax = A->x;
     C = cs_spalloc (n, m, Ap [n], values && Ax, 0);        /* allocate result */
-    w = (csi*) SuiteSparse_calloc (m, sizeof (csi));       /* get workspace */
+    w = (csi*) SuiteSparse_calloc (static_cast<size_t>(m), sizeof (csi));       /* get workspace */
     if (!C || !w) return (cs_done (C, w, NULL, 0));        /* out of memory */
     Cp = C->p; Ci = C->i; Cx = C->x;
     for (p = 0; p < Ap [n]; p++) w [Ai [p]]++;             /* row counts */
@@ -95,9 +95,9 @@ cs *cs_add (const cs *A, const cs *B, double alpha, double beta)
     if (A->m != B->m || A->n != B->n) return (NULL);
     m = A->m; anz = A->p [A->n];
     n = B->n; Bp = B->p; Bx = B->x; bnz = Bp [n];
-    w = (csi*) SuiteSparse_calloc (m, sizeof (csi));               /* get workspace */
+    w = (csi*) SuiteSparse_calloc (static_cast<size_t>(m), sizeof (csi));               /* get workspace */
     values = (A->x != NULL) && (Bx != NULL);
-    x = values ? (double*) SuiteSparse_malloc (m, sizeof (double)) : NULL;     /* get workspace */
+    x = values ? (double*) SuiteSparse_malloc (static_cast<size_t>(m), sizeof (double)) : NULL;     /* get workspace */
     C = cs_spalloc (m, n, anz + bnz, values, 0);            /* allocate result*/
     if (!C || !w || (values && !x)) return (cs_done (C, w, x, 0));
     Cp = C->p; Ci = C->i; Cx = C->x;
@@ -136,7 +136,7 @@ cs *cs_compress (const cs *T)
     if (!CS_TRIPLET (T)) return (NULL);                 /* check inputs */
     m = T->m; n = T->n; Ti = T->i; Tj = T->p; Tx = T->x; nz = T->nz;
     C = cs_spalloc (m, n, nz, Tx != NULL, 0);           /* allocate result */
-    w = (csi*) SuiteSparse_calloc (n, sizeof (csi));    /* get workspace */
+    w = (csi*) SuiteSparse_calloc (static_cast<size_t>(n), sizeof (csi));    /* get workspace */
     if (!C || !w) return (cs_done (C, w, NULL, 0));     /* out of memory */
     Cp = C->p; Ci = C->i; Cx = C->x;
     for (k = 0; k < nz; k++) w [Tj [k]]++;              /* column counts */
@@ -213,10 +213,11 @@ cs *cs_spalloc (csi m, csi n, csi nzmax, csi values, csi triplet)
     A->n = n;
     A->nzmax = nzmax = std::max(nzmax, 1L);
     A->nz = triplet ? 0 : -1;               /* allocate triplet or comp.col */
-    A->p = (csi*) SuiteSparse_malloc (triplet ? nzmax : n+1, sizeof (csi));
-    A->i = (csi*) SuiteSparse_malloc (nzmax, sizeof (csi));
+    A->p = (csi*) SuiteSparse_malloc (
+        static_cast<size_t>(triplet ? nzmax : n + 1), sizeof (csi));
+    A->i = (csi*) SuiteSparse_malloc (static_cast<size_t>(nzmax), sizeof (csi));
     A->x =
-        values ? (double*) SuiteSparse_malloc (nzmax, sizeof (double)) : NULL;
+        values ? (double*) SuiteSparse_malloc (static_cast<size_t>(nzmax), sizeof (double)) : NULL;
     return ((!A->p || !A->i || (values && !A->x)) ? cs_spfree (A) : A);
 }
 

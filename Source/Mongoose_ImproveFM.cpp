@@ -104,7 +104,7 @@ void fmRefine_worker(Graph *graph, Options *options)
                 if (heuCost < bestCandidate.heuCost)
                 {
                     bestCandidate.vertex = v;
-                    bestCandidate.partition = h;
+                    bestCandidate.partition = static_cast<bool>(h);
                     bestCandidate.nodeWeight = nodeWeight;
                     bestCandidate.gain = gain;
                     bestCandidate.bhPosition = c;

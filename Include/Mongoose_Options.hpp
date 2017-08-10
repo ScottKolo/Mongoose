@@ -17,8 +17,6 @@ struct Options
 
     /** Guess Partitioning Options *******************************************/
     GuessCutType guessCutType;   /* The guess cut type to use */
-    Int guessSearchDepth;        /* # of times to run pseudoperipheral node
-                                    finder before settling on a guess        */
 
     /** Waterdance Options ***************************************************/
     Int numDances;               /* The number of interplays between FM and QP

@@ -235,20 +235,20 @@ bool Graph::initialize(Options *options)
     double *Gw = w;
 
     cn = 0;
-    matching =       (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    matchmap =       (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    invmatchmap =    (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    matchtype =      (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    markArray =      (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    matching =       (Int*) SuiteSparse_calloc(static_cast<size_t>(n), sizeof(Int));
+    matchmap =       (Int*) SuiteSparse_calloc(static_cast<size_t>(n), sizeof(Int));
+    invmatchmap =    (Int*) SuiteSparse_malloc(static_cast<size_t>(n), sizeof(Int));
+    matchtype =      (Int*) SuiteSparse_calloc(static_cast<size_t>(n), sizeof(Int));
+    markArray =      (Int*) SuiteSparse_calloc(static_cast<size_t>(n), sizeof(Int));
     markValue = 1;
     singleton = -1;
 
-    partition =     (bool*) SuiteSparse_malloc(n, sizeof(bool));
-    bhIndex =        (Int*) SuiteSparse_calloc(n, sizeof(Int));
-    bhHeap[0] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    bhHeap[1] =      (Int*) SuiteSparse_malloc(n, sizeof(Int));
-    vertexGains = (double*) SuiteSparse_malloc(n, sizeof(double));
-    externalDegree = (Int*) SuiteSparse_calloc(n, sizeof(Int));
+    partition =     (bool*) SuiteSparse_malloc(static_cast<size_t>(n), sizeof(bool));
+    bhIndex =        (Int*) SuiteSparse_calloc(static_cast<size_t>(n), sizeof(Int));
+    bhHeap[0] =      (Int*) SuiteSparse_malloc(static_cast<size_t>(n), sizeof(Int));
+    bhHeap[1] =      (Int*) SuiteSparse_malloc(static_cast<size_t>(n), sizeof(Int));
+    vertexGains = (double*) SuiteSparse_malloc(static_cast<size_t>(n), sizeof(double));
+    externalDegree = (Int*) SuiteSparse_calloc(static_cast<size_t>(n), sizeof(Int));
 
     /* Check memory and abort if necessary. */
     if (!matching || !matchmap || !invmatchmap || !matchtype ||

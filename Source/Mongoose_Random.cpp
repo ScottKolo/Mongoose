@@ -28,10 +28,10 @@ void setRandomSeed(Int seed)
 {
 #if CPP11_OR_LATER
     // Use C++11 random object
-    std::ranlux24_base generator(seed);
+    generator.seed(seed);
 #else
     // Forced to use non-reentrant std::rand
-    std::srand(seed);
+    std::srand(static_cast<unsigned int>(seed));
 #endif
 }
 

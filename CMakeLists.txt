@@ -85,7 +85,8 @@ set(EXE_FILES
     Executable/Mongoose.cpp)
 
 set(DEMO_FILES
-    Demo/Demo.cpp)
+    Demo/Demo.cpp
+    Include/Mongoose.hpp)
 
 # Specify the Include directory for *.hpp files
 include_directories(Include
