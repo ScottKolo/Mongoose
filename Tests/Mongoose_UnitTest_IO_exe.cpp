@@ -1,5 +1,6 @@
 #include "Mongoose_Test.hpp"
 #include "Mongoose_IO.hpp"
+#include "Mongoose_Sanitize.hpp"
 
 using namespace Mongoose;
 
@@ -55,6 +56,12 @@ int main(int argn, char** argv)
     std::string filename = "../Matrix/bcspwr01.mtx";
     cs *M = readMatrix(filename, matcode);
     assert(M != NULL);
+
+    cs *binaryM = sanitizeMatrix(M, true, true);
+    for (Int j = 0; j < M->nz; j++)
+    {
+        assert(binaryM->x[j] == 0 || binaryM->x[j] == 1);
+    }
 
     SuiteSparse_finish();
 
