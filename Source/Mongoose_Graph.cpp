@@ -309,23 +309,9 @@ void Graph::mark(Int index)
     markArray[index] = markValue;
 }
 
-// Only use this if you know what you're doing!
-void Graph::mark(Int index, Int value)
-{
-    markArray[index] = value;
-}
-
 void Graph::unmark(Int index)
 {
     markArray[index] = 0;
-}
-
-void Graph::checkForSpaceAndResetIfNeeded(Int incrementBy)
-{
-    if (markValue + incrementBy < markValue)
-    {
-        resetMarkArray();
-    }
 }
 
 bool Graph::isMarked(Int index)
@@ -336,11 +322,6 @@ bool Graph::isMarked(Int index)
 Int Graph::getMarkValue()
 {
     return markValue;
-}
-
-Int Graph::getMarkArrayValue(Int index)
-{
-    return markArray[index];
 }
 
 void Graph::resetMarkArray()
