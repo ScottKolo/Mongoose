@@ -71,7 +71,7 @@ mxArray *cs_mex_put_sparse (cs **Ahandle)
         /* A is a pattern only matrix; return all 1's to MATLAB */
         csi i, nz ;
         nz = A->p [A->n] ;
-        A->x = (double*) SuiteSparse_malloc (CS_MAX (nz,1), sizeof (double)) ;
+        A->x = (double*) SuiteSparse_malloc ( (nz > 1) ? nz : 1, sizeof (double)) ;
         for (i = 0 ; i < nz ; i++)
         {
             A->x [i] = 1 ;
