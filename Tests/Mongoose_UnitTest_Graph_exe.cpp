@@ -61,6 +61,11 @@ int main(int argn, char** argv)
     Int markValue = G2->getMarkValue();
     assert(markValue == 1);
 
+    G2->clearMarkArray(LONG_MAX-1);
+    G2->clearMarkArray();
+    markValue = G2->getMarkValue();
+    assert(markValue == 1);
+
     cs *M1 = GraphToCSparse3(G2, false);
     assert(M1 != NULL);
     cs *M2 = GraphToCSparse3(G2, true);
