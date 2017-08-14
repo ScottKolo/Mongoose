@@ -215,7 +215,7 @@ target_link_libraries(mongoose_test_edgesep mongoose_dbg)
 set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 add_test(Edge_Separator_Test ./runTests -min 1 -max 15 -t edgesep)
-add_test(Edge_Separator_Test_2 ./runTests -t edgesep -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533)
+add_test(Edge_Separator_Test_2 ./runTests -t edgesep -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533 360 1437)
 add_test(Weighted_Edge_Separator_Test ./runTests -t edgesep -i 2624)
 add_test(Target_Split_Test ./runTests -min 1 -max 15 -t edgesep -s 0.3)
 
