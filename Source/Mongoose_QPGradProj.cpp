@@ -304,9 +304,9 @@ double QPGradProj
                 aty += Ew [j] * y [j] ;
                 atx += Ew [j] * x [j] ;
             }
-            int good_aty = ((aty - lo) / (lo + tol) >= -tol) &&
+            bool good_aty = ((aty - lo) / (lo + tol) >= -tol) &&
                            ((hi - aty) / (hi + tol) >= -tol);
-            int good_atx = ((atx - lo) / (lo + tol) >= -tol) &&
+            bool good_atx = ((atx - lo) / (lo + tol) >= -tol) &&
                            ((hi - atx) / (hi + tol) >= -tol);
             if (!good_aty || !good_atx)
             {
