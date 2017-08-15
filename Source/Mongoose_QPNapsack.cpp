@@ -99,6 +99,7 @@ void checkatx (double *x, double *a, Int n, double lo, double hi)
     {
         if (x [k] < 0.) { ok = 0 ; PR (("x [%ld] = %g < 0!\n", k, x [k])) ; }
         if (x [k] > 1.) { ok = 0 ; PR (("x [%ld] = %g > 1!\n", k, x [k])) ; }
+        PR(("a'x = %g * %g = %g\n", a[k], x[k], a[k]*x[k]));
         atx += ((a == NULL) ? 1 : a [k]) * x [k] ;
     }
     if (atx < lo - 0.001) { ok = 0 ; }
@@ -299,46 +300,25 @@ double QPNapsack        /* return the final lambda */
     /* ---------------------------------------------------------------------- */
 
     PR (("lambda %g\n", lambda)) ;
-    if (lambda == 0.)
+    for (Int k = 0; k < n; k++)
     {
-        for (Int k = 0; k < n; k++)
+        double xi = x[k] - Gw[k] * lambda;
+        if (xi < 0)
         {
-            double xi = x[k];
-            if (xi < 0)
-            {
-                x[k] = 0;
-            }
-            else if (xi > 1)
-            {
-                x[k] = 1;
-            }
-            else
-            {
-                x[k] = xi;
-            }
+            x[k] = 0;
         }
-        checkatx (x, Gw, n, lo, hi) ;
-    }
-    else
-    {
-        for (Int k = 0; k < n; k++)
+        else if (xi > 1)
         {
-            double xi = x[k] - Gw[k] * lambda;
-            if (xi < 0)
-            {
-                x[k] = 0;
-            }
-            else if (xi > 1)
-            {
-                x[k] = 1;
-            }
-            else
-            {
-                x[k] = xi;
-            }
+            x[k] = 1;
         }
-        checkatx (x, Gw, n, lo, hi) ;
+        else
+        {
+            x[k] = xi;
+        }
     }
+    // Remove check, TODO: Why is a'x out of bounds here?
+    checkatx (x, Gw, n, lo, hi) ;
+
     PR (("QPNapsack done ]\n")) ;
 
     return lambda;

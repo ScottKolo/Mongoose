@@ -23,10 +23,10 @@ namespace Mongoose
 
 double QPNapDown            /* return lambda */
         (
-                double *x,              /* holds y on input, not modified */
-                Int n,                  /* size of x */
+                const double *x,        /* holds y on input, not modified */
+                const Int n,            /* size of x */
                 double lambda,          /* initial guess for the shift */
-                double *a,              /* input constraint vector */
+                const double *a,        /* input constraint vector */
                 double b,               /* input constraint scalar */
                 double *breakpts,       /* break points */
                 Int *bound_heap,        /* work array */
@@ -48,6 +48,7 @@ double QPNapDown            /* return lambda */
     n_free = 0;
     asum = 0.;
     a2sum = 0.;
+
     for (i = 0; i < n; i++)
     {
         ai = a[i];
@@ -56,6 +57,7 @@ double QPNapDown            /* return lambda */
         {
             n_bound++;
             bound_heap[n_bound] = i;
+
             t = x[i] / ai;
             maxbound = std::max(maxbound, t);
             breakpts[i] = t;
@@ -64,14 +66,17 @@ double QPNapDown            /* return lambda */
         {
             n_free++;
             free_heap[n_free] = i;
-            t = (x[i] - 1.) / ai;
             asum += x[i] * ai;
             a2sum += ai * ai;
+            t = (x[i] - 1.) / ai;
             maxfree = std::max(maxfree, t);
             breakpts[i] = t;
         }
         else
+        {
             asum += ai;
+            a2sum += ai * ai;
+        }
     }
 
     /*------------------------------------------------------------------- */
@@ -86,7 +91,10 @@ double QPNapDown            /* return lambda */
         double s = asum - new_break * a2sum;
         if ((s >= b) || (new_break == -INFINITY)) /* done */
         {
-            if (a2sum != 0.) lambda = (asum - b) / a2sum;
+            if (a2sum != 0.)
+            {
+                lambda = (asum - b) / a2sum;
+            }
             return lambda;
         }
         lambda = new_break;
@@ -107,7 +115,7 @@ double QPNapDown            /* return lambda */
             {
                 ai = a[e];
                 a2sum -= ai * ai;
-                asum = asum + ai * (1. - x[e]);
+                asum += ai * (1. - x[e]);
                 n_free = QPMaxHeap_delete(free_heap, n_free, breakpts);
                 if (n_free == 0)
                 {

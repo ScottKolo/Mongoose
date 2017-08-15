@@ -23,10 +23,10 @@ namespace Mongoose
 
 double QPNapUp      /* return lambda */
         (
-                double *x,              /* holds y on input, not modified */
-                Int n,                  /* size of x */
+                const double *x,        /* holds y on input, not modified */
+                const Int n,            /* size of x */
                 double lambda,          /* initial guess for the shift */
-                double *a,              /* input constraint vector */
+                const double *a,        /* input constraint vector */
                 double b,               /* input constraint scalar */
                 double *breakpts,       /* break points */
                 Int *bound_heap,        /* work array */
@@ -59,7 +59,7 @@ double QPNapUp      /* return lambda */
             bound_heap[n_bound] = i;
             asum += ai;
             t = (x[i] - 1.) / ai;
-            minbound = std::min (minbound, t);
+            minbound = std::min(minbound, t);
             breakpts[i] = t;
         }
         else if (xi > 0.)
@@ -69,7 +69,7 @@ double QPNapUp      /* return lambda */
             asum += x[i] * ai;
             a2sum += ai * ai;
             t = x[i] / ai;
-            minfree = std::min (minfree, t);
+            minfree = std::min(minfree, t);
             breakpts[i] = t;
         }
     }
@@ -81,12 +81,14 @@ double QPNapUp      /* return lambda */
         /* check to see if zero slope achieved without changing the free set  */
         /* remember that the slope must always be adjusted by b               */
         /*------------------------------------------------------------------- */
-        double new_break = std::min (minfree, minbound);
+        double new_break = std::min(minfree, minbound);
         double s = asum - new_break * a2sum;
         if ((s <= b) || (new_break == INFINITY)) /* done */
         {
             if (a2sum != 0.)
+            {
                 lambda = (asum - b) / a2sum;
+            }
             return (lambda);
         }
         lambda = new_break;
@@ -136,6 +138,7 @@ double QPNapUp      /* return lambda */
         /*------------------------------------------------------------------- */
         /* get the biggest entry in each heap */
         /*------------------------------------------------------------------- */
+
         minfree = (n_free > 0 ? breakpts[free_heap[1]] : INFINITY);
         minbound = (n_bound > 0 ? breakpts[bound_heap[1]] : INFINITY);
     }
