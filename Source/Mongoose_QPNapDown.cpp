@@ -108,7 +108,6 @@ double QPNapDown            /* return lambda */
                 ai = a[e];
                 a2sum -= ai * ai;
                 asum = asum + ai * (1. - x[e]);
-
                 n_free = QPMaxHeap_delete(free_heap, n_free, breakpts);
                 if (n_free == 0)
                 {
@@ -125,7 +124,7 @@ double QPNapDown            /* return lambda */
                 n_bound = QPMaxHeap_delete(bound_heap, n_bound, breakpts);
                 ai = a[e];
                 a2sum += ai * ai;
-                asum = asum + ai * x[e];
+                asum += ai * x[e];
                 t = (x[e] - 1.) / ai;
                 breakpts[e] = t;
                 n_free = QPMaxHeap_add(e, free_heap, breakpts, n_free);

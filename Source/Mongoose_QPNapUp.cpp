@@ -125,7 +125,8 @@ double QPNapUp      /* return lambda */
                 ai = a[e];
                 a2sum += ai * ai;
                 asum += ai * (x[e] - 1.);
-                breakpts[e] = x[e] / ai;
+                t = x[e] / ai;
+                breakpts[e] = t;
                 n_free = QPMinHeap_add(e, free_heap, breakpts, n_free);
                 if (n_bound == 0)
                     break;
