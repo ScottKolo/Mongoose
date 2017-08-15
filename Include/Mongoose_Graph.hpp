@@ -70,7 +70,7 @@ public:
 
     /* Constructor & Destructor */
     Graph();
-    static Graph *Create (const Int _n, const Int _nz);
+    static Graph *Create (Int _n, Int _nz);
     static Graph *Create (Graph *_parent);
     ~Graph();
     bool initialize(Options *options);
@@ -142,9 +142,9 @@ public:
         return (bhIndex[v] > 0);
     }
 
-    inline void BH_putIndex(Int v, Int p)
+    inline void BH_putIndex(Int v, Int pos)
     {
-        bhIndex[v] = (p + 1);
+        bhIndex[v] = (pos + 1);
     }
 
     inline Int BH_getIndex(Int v)
@@ -156,11 +156,8 @@ public:
     void clearMarkArray();
     void clearMarkArray(Int incrementBy);
     void mark(Int index);
-    void mark(Int index, Int value);
     void unmark(Int index);
-    void checkForSpaceAndResetIfNeeded(Int incrementBy);
     Int getMarkValue();
-    Int getMarkArrayValue(Int index);
     bool isMarked(Int index);
 
 private:
