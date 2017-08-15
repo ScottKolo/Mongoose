@@ -123,7 +123,7 @@ void cleanup(Graph *G, Options *options)
             for(Int j = G->p[i]; j < G->p[i+1]; j++) {
                 if (i != j && (!G->partition[j])) {
                     cutSize += 1;
-                    cutCost += G->x[j];
+                    cutCost += (G->x) ? G->x[j] : 1;
                 }
             }
         }
