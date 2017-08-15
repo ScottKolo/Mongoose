@@ -4,6 +4,8 @@
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Logger.hpp"
 
+#include <fstream>
+
 using namespace Mongoose;
 
 int main(int argn, const char **argv)
@@ -15,17 +17,27 @@ int main(int argn, const char **argv)
     // Set Logger to report only Error messages
     Logger::setDebugLevel(Error);
 
-    if (argn != 2)
+    if (argn < 2 || argn > 3)
     {
         // Wrong number of arguments - return error
-        LogError("Usage: Demo <MM-input-file.mtx>");
+        LogError("Usage: Demo <MM-input-file.mtx> [output-file]");
         SuiteSparse_finish();
         return 1;
     }
 
     // Read in input file name
     std::string inputFile = std::string(argv[1]);
-    
+
+    std::string outputFile;
+    if (argn == 3)
+    {
+        outputFile = std::string(argv[2]);
+    }
+    else
+    {
+        outputFile = "mongoose_out.txt";
+    }
+
     // Turn timing information on
     Logger::setTimingFlag(true);
 
@@ -37,7 +49,6 @@ int main(int argn, const char **argv)
         SuiteSparse_free(options);
         return 1;
     }
-    //options->matchingStrategy = LabelPropagation;
 
     Graph *G = readGraph(inputFile);
 
@@ -58,7 +69,7 @@ int main(int argn, const char **argv)
     if (error)
     {
         // Error occurred
-        LogError("Error computing edge separator in Performance Test");
+        LogError("Error computing edge separator");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
         return 1;
@@ -78,6 +89,36 @@ int main(int argn, const char **argv)
         std::cout << " Cut Size:  " << cutSize << "\n";
         std::cout << " Cut Cost:  " << G->cutCost << "\n";
         std::cout << " Imbalance: " << G->imbalance << "\n";
+
+        // Write results to file
+        if (!outputFile.empty())
+        {
+            LogTest("Writing results to file: " << outputFile);
+            std::ofstream ofs (outputFile.c_str(), std::ofstream::out);
+            ofs << "{" << std::endl;
+            ofs << "  \"InputFile\": \"" << inputFile << "\"," << std::endl;
+            ofs << "  \"Timing\": {" << std::endl;
+            ofs << "    \"Total\": " << test_time << "," << std::endl;
+            ofs << "    \"Matching\": " << Logger::getTime(MatchingTiming) << "," << std::endl;
+            ofs << "    \"Coarsening\": " << Logger::getTime(CoarseningTiming) << "," << std::endl;
+            ofs << "    \"Refinement\": " << Logger::getTime(RefinementTiming) << "," << std::endl;
+            ofs << "    \"FM\": " << Logger::getTime(FMTiming) << "," << std::endl;
+            ofs << "    \"QP\": " << Logger::getTime(QPTiming) << "," << std::endl;
+            ofs << "    \"IO\": " << Logger::getTime(IOTiming) << std::endl;
+            ofs << "  }," << std::endl;
+            ofs << "  \"CutSize\": " << G->cutCost << "," << std::endl;
+            ofs << "  \"Imbalance\": " << G->imbalance << std::endl;
+            ofs << "}" << std::endl;
+
+            ofs << std::endl;
+            for (Int i = 0; i < G->n; i++)
+            {
+                ofs << i << " " << G->partition[i] << std::endl;
+            }
+            ofs << std::endl;
+
+            ofs.close();
+        }
     }
 
     G->~Graph();
