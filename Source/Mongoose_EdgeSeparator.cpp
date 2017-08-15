@@ -6,10 +6,13 @@
 #include "Mongoose_EdgeSeparator.hpp"
 #include "Mongoose_Random.hpp"
 
+#include <algorithm>
+
 namespace Mongoose
 {
 
 bool optionsAreValid(Options *options);
+void cleanup(Graph *graph, Options *options);
 
 /* The input must be a single connected component. */
 int ComputeEdgeSeparator(Graph *graph)
@@ -83,6 +86,8 @@ int ComputeEdgeSeparator(Graph *graph, Options *options)
         waterdance(current, options);
     }
 
+    cleanup(current, options);
+
     return EXIT_SUCCESS;
 }
 
@@ -104,6 +109,28 @@ bool optionsAreValid(Options *options)
         return (false) ;
     }
     return (true) ;
+}
+
+void cleanup(Graph *G, Options *options)
+{
+    Int cutSize = 0;
+    double cutCost = 0;
+    double part_weight = 0;
+    for(Int i = 0; i < G->n; i++)
+    {
+        if (G->partition[i]) {
+            part_weight += (G->w) ? G->w[i] : 1;
+            for(Int j = G->p[i]; j < G->p[i+1]; j++) {
+                if (i != j && (!G->partition[j])) {
+                    cutSize += 1;
+                    cutCost += G->x[j];
+                }
+            }
+        }
+    }
+    G->imbalance = options->targetSplit - std::min(part_weight, G->W-part_weight) / G->W;
+    G->cutCost = cutCost;
+    G->cutSize = cutSize;
 }
 
 } // end namespace Mongoose

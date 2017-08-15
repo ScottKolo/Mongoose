@@ -46,6 +46,7 @@ public:
     /** Cut Cost Metrics *****************************************************/
     double heuCost;                      /** cutCost + balance penalty       */
     double cutCost;                      /** Sum of edge weights in cut set  */
+    Int cutSize;                         /** Number of edges in cut set      */
     double W0;                           /** Sum of partition 0 node weights */
     double W1;                           /** Sum of partition 1 node weights */
     double imbalance;                    /** Degree to which the partitioning
