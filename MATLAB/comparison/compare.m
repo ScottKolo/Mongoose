@@ -28,10 +28,10 @@ function comparisonData = compare(plot_outliers, use_weights)
         if (index.isReal(i) && index.nnz(i) < 1E8)
             
             % For comparing graph performance
-            if (~index.isGraph(i))
-                continue;
-            end
-            use_weights = 1;
+            % if (~index.isGraph(i))
+            %     continue;
+            % end
+            % use_weights = 1;
             
             Prob = UFget(i);
             A = Prob.A;
