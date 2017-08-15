@@ -75,7 +75,6 @@ double QPNapDown            /* return lambda */
         else
         {
             asum += ai;
-            a2sum += ai * ai;
         }
     }
 
