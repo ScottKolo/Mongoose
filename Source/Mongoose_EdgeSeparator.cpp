@@ -121,7 +121,7 @@ void cleanup(Graph *G, Options *options)
         if (G->partition[i]) {
             part_weight += (G->w) ? G->w[i] : 1;
             for(Int j = G->p[i]; j < G->p[i+1]; j++) {
-                if (i != j && (!G->partition[j])) {
+                if (i != j && (!G->partition[G->i[j]])) {
                     cutSize += 1;
                     cutCost += (G->x) ? G->x[j] : 1;
                 }
