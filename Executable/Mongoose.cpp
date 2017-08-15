@@ -76,19 +76,29 @@ int main(int argn, const char **argv)
     }
     else
     {
-        long cutSize = 0;
-        for(int i = 0; i < G->n; i++)
+        Int cutSize = 0;
+        double cutCost = 0;
+        double part_weight = 0;
+        for(Int i = 0; i < G->n; i++)
         {
-            cutSize += G->externalDegree[i];
+            if (G->partition[i] == 1) {
+                part_weight += (G->w) ? G->w[i] : 1;
+                for(Int j = G->p[i]; j < G->p[i+1]; j++) {
+                    if (i != j && (G->partition[j] == 0)) {
+                        cutSize += 1;
+                        cutCost += G->x[j];
+                    }
+                }
+            }
         }
-        cutSize = cutSize / 2;
+        double imbalance = options->targetSplit - std::min(part_weight, G->W-part_weight) / G->W;
         double test_time = ((double) t)/CLOCKS_PER_SEC;
         std::cout << "Total Edge Separator Time: " << test_time << "s\n";
         Logger::printTimingInfo();
         std::cout << "Cut Properties:\n";
         std::cout << " Cut Size:  " << cutSize << "\n";
-        std::cout << " Cut Cost:  " << G->cutCost << "\n";
-        std::cout << " Imbalance: " << G->imbalance << "\n";
+        std::cout << " Cut Cost:  " << cutCost << "\n";
+        std::cout << " Imbalance: " << imbalance << "\n";
 
         // Write results to file
         if (!outputFile.empty())
@@ -106,8 +116,9 @@ int main(int argn, const char **argv)
             ofs << "    \"QP\": " << Logger::getTime(QPTiming) << "," << std::endl;
             ofs << "    \"IO\": " << Logger::getTime(IOTiming) << std::endl;
             ofs << "  }," << std::endl;
-            ofs << "  \"CutSize\": " << G->cutCost << "," << std::endl;
-            ofs << "  \"Imbalance\": " << G->imbalance << std::endl;
+            ofs << "  \"CutSize\": " << cutSize << "," << std::endl;
+            ofs << "  \"CutCost\": " << cutCost << "," << std::endl;
+            ofs << "  \"Imbalance\": " << imbalance << std::endl;
             ofs << "}" << std::endl;
 
             ofs << std::endl;
