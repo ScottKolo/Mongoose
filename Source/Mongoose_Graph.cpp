@@ -273,17 +273,34 @@ bool Graph::initialize(Options *options)
 
     /* Compute worst-case gains, and compute X. */
     double *gains = vertexGains;
+    double min = 0;
+    double max = 0;
     for (Int k = 0; k < n; k++)
     {
         W += Gw[k];
         double sumEdgeWeights = 0.0;
 
-        for (Int j = Gp[k]; j < Gp[k+1]; j++) sumEdgeWeights += Gx[j];
+        for (Int j = Gp[k]; j < Gp[k+1]; j++)
+        {
+            sumEdgeWeights += Gx[j];
+
+            if (Gx[j] < min)
+            {
+                min = Gx[j];
+            }
+
+            if (Gx[j] > max)
+            {
+                max = Gx[j];
+            }
+        }
 
         gains[k] = -sumEdgeWeights;
         X += sumEdgeWeights;
     }
     H = 2.0 * X;
+
+    options->gradProjTolerance *= log(fabs(max/min));
     return true;
 }
 

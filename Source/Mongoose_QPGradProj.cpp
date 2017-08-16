@@ -165,7 +165,7 @@ double QPGradProj
 
         /* Run the napsack. */
         lambda = QPNapsack(y, n, lo, hi, Ew, lambda,
-                           FreeSet_status, wx, wi1, wi2);
+                           FreeSet_status, wx, wi1, wi2, tol);
 
         /* Compute the maximum error. */
         err = -INFINITY;
@@ -224,7 +224,7 @@ double QPGradProj
             double st = std::max(st_num / st_den, 0.001);
             for (Int j = 0; j < n; j++) y[j] = x[j] - st * grad[j];
             lambda = QPNapsack(y, n, lo, hi, Ew, lambda,
-                               FreeSet_status, wx, wi1, wi2);
+                               FreeSet_status, wx, wi1, wi2, tol);
         }
 
         /* otherwise st = 1 and y is as computed above */

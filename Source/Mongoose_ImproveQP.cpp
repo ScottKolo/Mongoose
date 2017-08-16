@@ -91,7 +91,7 @@ bool improveCutUsingQP
     {
         QP->lambda = QPNapsack(guess, n, QP->lo, QP->hi, graph->w, QP->lambda,
                                QP->FreeSet_status,
-                               QP->wx[1], QP->wi[0], QP->wi[1]);
+                               QP->wx[1], QP->wi[0], QP->wi[1], options->gradProjTolerance);
     }
 
     // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi

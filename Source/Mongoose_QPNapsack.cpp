@@ -91,7 +91,7 @@
 namespace Mongoose
 {
 
-void checkatx (double *x, double *a, Int n, double lo, double hi)
+void checkatx (double *x, double *a, Int n, double lo, double hi, double tol)
 {
     double atx = 0. ; 
     int ok = 1 ;
@@ -102,8 +102,8 @@ void checkatx (double *x, double *a, Int n, double lo, double hi)
         PR(("a'x = %g * %g = %g\n", a[k], x[k], a[k]*x[k]));
         atx += ((a == NULL) ? 1 : a [k]) * x [k] ;
     }
-    if (atx < lo - 0.001) { ok = 0 ; }
-    if (atx > hi + 0.001) { ok = 0 ; }
+    if (atx < lo - tol) { ok = 0 ; }
+    if (atx > hi + tol) { ok = 0 ; }
     if (!ok)
     {
         PR (("napsack error! lo %g a'x %g hi %g\n", lo, atx, hi)) ;
@@ -124,7 +124,8 @@ double QPNapsack        /* return the final lambda */
                        for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
                 double *w,      /* work array of size n   */
                 Int *heap1,     /* work array of size n+1 */
-                Int *heap2      /* work array of size n+1 */
+                Int *heap2,     /* work array of size n+1 */
+                double tol      /* Gradient projection tolerance */
         )
 {
     double lambda = Lambda;
@@ -317,7 +318,7 @@ double QPNapsack        /* return the final lambda */
         }
     }
     // Remove check, TODO: Why is a'x out of bounds here?
-    checkatx (x, Gw, n, lo, hi) ;
+    checkatx (x, Gw, n, lo, hi, tol) ;
 
     PR (("QPNapsack done ]\n")) ;
 

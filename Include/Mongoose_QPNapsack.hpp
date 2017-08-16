@@ -17,7 +17,8 @@ double QPNapsack            /* return the final lambda */
                        x_i = 1, 0, or 0< x_i< 1 */
         double *w,              /* work array of size n */
         Int *heap1,             /* work array of size n+1 */
-        Int *heap2              /* work array of size n+1 */
+        Int *heap2,             /* work array of size n+1 */
+        double tol
 );
 
 } // end namespace Mongoose
