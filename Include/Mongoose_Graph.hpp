@@ -33,6 +33,7 @@ public:
     double W;                            /** Sum of node weights             */
 
     double H;                            /** Heuristic max penalty to assess */
+    double worstCaseRatio;
 
     /** Partition Data *******************************************************/
     bool *partition;                     /** T/F denoting partition side     */

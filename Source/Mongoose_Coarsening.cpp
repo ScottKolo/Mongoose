@@ -141,6 +141,8 @@ Graph *coarsen(Graph *graph, Options *options)
     coarseGraph->X = X;
     coarseGraph->H = 2.0 * X;
 
+    coarseGraph->worstCaseRatio = graph->worstCaseRatio;
+
     /* Cleanup resources */
     SuiteSparse_free(htable);
 

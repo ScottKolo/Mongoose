@@ -155,7 +155,9 @@ double QPGradProj
                 maxerr = std::max (maxerr, err) ;
             }
             // PR (("check grad %g\n", maxerr)) ;
-            ASSERT (maxerr < tol) ;
+            double adj_tol = std::max(log10(options->gradProjTolerance * graph->worstCaseRatio),
+                                      options->gradProjTolerance);
+            ASSERT (maxerr < adj_tol) ;
             free (mygrad) ;
         }
 #endif
