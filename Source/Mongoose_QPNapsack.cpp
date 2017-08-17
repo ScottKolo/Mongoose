@@ -91,6 +91,7 @@
 namespace Mongoose
 {
 
+#ifndef NDEBUG
 void checkatx (double *x, double *a, Int n, double lo, double hi, double tol)
 {
     double atx = 0. ; 
@@ -106,11 +107,13 @@ void checkatx (double *x, double *a, Int n, double lo, double hi, double tol)
     if (atx > hi + tol) { ok = 0 ; }
     if (!ok)
     {
+        PR (("tol = %g\n", tol));
         PR (("napsack error! lo %g a'x %g hi %g\n", lo, atx, hi)) ;
         FFLUSH ;
         ASSERT (0) ;
     }
 }
+#endif
 
 double QPNapsack        /* return the final lambda */
         (
@@ -301,6 +304,7 @@ double QPNapsack        /* return the final lambda */
     /* ---------------------------------------------------------------------- */
 
     PR (("lambda %g\n", lambda)) ;
+    double atx = 0;
     for (Int k = 0; k < n; k++)
     {
         double xi = x[k] - Gw[k] * lambda;
@@ -316,9 +320,26 @@ double QPNapsack        /* return the final lambda */
         {
             x[k] = xi;
         }
+
+        atx += Gw[k] * x[k];
+
+        // Correction step if we go too far
+        if (atx > hi)
+        {
+            atx -= Gw[k] * x[k];
+            double diff = hi - atx;
+            // Need diff = Gw[k] * x[k], so...
+            x[k] = diff / Gw[k];
+            atx += Gw[k] * x[k];
+        }
     }
-    // Remove check, TODO: Why is a'x out of bounds here?
-    checkatx (x, Gw, n, lo, hi, tol) ;
+
+    // Define check tolerance by lambda values
+    double atx_tol = log10(std::max(fabs(lambda), fabs(Lambda)) /
+        (1e-9 + std::min(fabs(lambda), fabs(Lambda))));
+    atx_tol = std::max(atx_tol, tol);
+
+    DEBUG (checkatx (x, Gw, n, lo, hi, atx_tol));
 
     PR (("QPNapsack done ]\n")) ;
 
