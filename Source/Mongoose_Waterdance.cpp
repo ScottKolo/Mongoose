@@ -2,8 +2,6 @@
 #include "Mongoose_Waterdance.hpp"
 #include "Mongoose_ImproveFM.hpp"
 #include "Mongoose_ImproveQP.hpp"
-#include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
