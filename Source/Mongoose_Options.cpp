@@ -21,7 +21,7 @@ Options* Options::Create()
         ret->doCommunityMatching = false;
         ret->davisBrotherlyThreshold = 2.0;
 
-        ret->guessCutType = GuessNaturalOrder;
+        ret->guessCutType = GuessQP;
 
         ret->numDances = 1;
 
