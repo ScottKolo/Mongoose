@@ -1,14 +1,20 @@
-function comparisonData = compare(plot_outliers, use_weights)
-    if (nargin < 1)
+function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_weights)
+    if (nargin < 1 || trials < 1)
+        trials = 5;
+    end
+    if (nargin < 2 || percent_to_keep <= 0)
+        percent_to_keep = 60;
+    end
+    if (nargin < 3)
         plot_outliers = 0;
     end
-    if (nargin < 2)
+    if (nargin < 4)
         use_weights = 0;
     end
+    
     index = UFget;
     j = 1;
-    O = mongoose_getDefaultOptions();
-    O.randomSeed = 123456789;
+    
     comparisonData = struct('avg_mongoose_times', [], ...
                             'avg_metis_times', [], ...
                             'rel_mongoose_times',  [], ...
@@ -63,8 +69,10 @@ function comparisonData = compare(plot_outliers, use_weights)
             comparisonData(j).problem_nnz = nnz(A);
             comparisonData(j).problem_n = n_cols;
             
-            % Run Mongoose to partition the graph.
-            for k = 1:5
+            % Run Mongoose with default options to partition the graph.
+            O = mongoose_getDefaultOptions();
+            O.randomSeed = 123456789;
+            for k = 1:trials
                 tic;
                 partition = mongoose_computeEdgeSeparator(A,O);
                 t = toc;
@@ -81,7 +89,7 @@ function comparisonData = compare(plot_outliers, use_weights)
             end
             
             % Run METIS to partition the graph.
-            for k = 1:5
+            for k = 1:trials
                 tic;
                 [part_A,part_B] = metispart(A, 0, 123456789);
                 t = toc;
@@ -102,15 +110,15 @@ function comparisonData = compare(plot_outliers, use_weights)
     
     for i = 1:n
         % Compute trimmed means - trim lowest and highest 20%
-        comparisonData(i).avg_mongoose_times = trimmean(mongoose_times(i,:), 40);
-        comparisonData(i).avg_mongoose_cut_weight = trimmean(mongoose_cut_weight(i,:), 40);
-        comparisonData(i).avg_mongoose_cut_size = trimmean(mongoose_cut_size(i,:), 40);
-        comparisonData(i).avg_mongoose_imbalance = trimmean(mongoose_imbalance(i,:), 40);
+        comparisonData(i).avg_mongoose_times = trimmean(mongoose_times(i,:), 100-percent_to_keep);
+        comparisonData(i).avg_mongoose_cut_weight = trimmean(mongoose_cut_weight(i,:), 100-percent_to_keep);
+        comparisonData(i).avg_mongoose_cut_size = trimmean(mongoose_cut_size(i,:), 100-percent_to_keep);
+        comparisonData(i).avg_mongoose_imbalance = trimmean(mongoose_imbalance(i,:), 100-percent_to_keep);
         
-        comparisonData(i).avg_metis_times = trimmean(metis_times(i,:), 40);
-        comparisonData(i).avg_metis_cut_weight = trimmean(metis_cut_weight(i,:), 40);
-        comparisonData(i).avg_metis_cut_size = trimmean(metis_cut_size(i,:), 40);
-        comparisonData(i).avg_metis_imbalance = trimmean(metis_imbalance(i,:), 40);
+        comparisonData(i).avg_metis_times = trimmean(metis_times(i,:), 100-percent_to_keep);
+        comparisonData(i).avg_metis_cut_weight = trimmean(metis_cut_weight(i,:), 100-percent_to_keep);
+        comparisonData(i).avg_metis_cut_size = trimmean(metis_cut_size(i,:), 100-percent_to_keep);
+        comparisonData(i).avg_metis_imbalance = trimmean(metis_imbalance(i,:), 100-percent_to_keep);
         
         % Compute times relative to METIS
         comparisonData(i).rel_mongoose_times = (comparisonData(i).avg_mongoose_times / comparisonData(i).avg_metis_times);
