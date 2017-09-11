@@ -25,32 +25,23 @@ void match(Graph *graph, const Options *options)
     {
       case Random:
           matching_Random(graph,options);
-          matching_Cleanup(graph,options);
           break;
 
       case HEM:
           matching_HEM(graph,options);
-          matching_Cleanup(graph,options);
           break;
 
       case HEMPA:
           matching_HEM(graph,options);
           matching_PA(graph,options);
-          if (!options->doCommunityMatching) matching_Cleanup(graph,options);
           break;
 
       case HEMDavisPA:
           matching_HEM(graph,options);
           matching_DavisPA(graph,options);
-          matching_Cleanup(graph,options);
           break;
-
-//      case LabelPropagation:
-//          matching_LabelProp(graph,options);
-//          matching_Cleanup(graph,options);
-//          break;
-
     }
+    matching_Cleanup(graph,options);
     Logger::toc(MatchingTiming);
 }
 
