@@ -305,7 +305,7 @@ double QPNapsack        /* return the final lambda */
 
     PR (("lambda %g\n", lambda)) ;
     double atx = 0;
-    Int last_move = -1;
+    Int last_move = 0;
     for (Int k = 0; k < n; k++)
     {
         double xi = x[k] - Gw[k] * lambda;
@@ -322,22 +322,22 @@ double QPNapsack        /* return the final lambda */
             x[k] = xi;
             last_move = k;
         }
-
-        atx += Gw[k] * x[k];
+// todo
+        double newatx = atx + Gw[k] * x[k];
 
         // Correction step if we go too far
-        if (atx > hi)
+        if (newatx > hi)
         {
-            atx -= Gw[k] * x[k];
             double diff = hi - atx;
             // Need diff = Gw[k] * x[k], so...
             x[k] = diff / Gw[k];
-            atx += Gw[k] * x[k];
+            newatx = atx + Gw[k] * x[k];
         }
+        atx = newatx ;
     }
 
     // Correction step if we didn't go far enough
-    while (atx < lo)
+    for (Int kk = 0; kk < n && atx < lo; kk++)
     {
         Int k = last_move;
         atx -= Gw[k] * x[k];
@@ -348,12 +348,14 @@ double QPNapsack        /* return the final lambda */
         last_move = (k+1) % n;
     }
 
+#ifndef NDEBUG
     // Define check tolerance by lambda values
     double atx_tol = log10(std::max(fabs(lambda), fabs(Lambda)) /
         (1e-9 + std::min(fabs(lambda), fabs(Lambda))));
     atx_tol = std::max(atx_tol, tol);
 
-    DEBUG (checkatx (x, Gw, n, lo, hi, atx_tol));
+    checkatx (x, Gw, n, lo, hi, atx_tol);
+#endif
 
     PR (("QPNapsack done ]\n")) ;
 
