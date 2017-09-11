@@ -82,7 +82,6 @@
    ========================================================================== */
 
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_QPNapsack.hpp"
 #include "Mongoose_QPNapDown.hpp"
 #include "Mongoose_QPNapUp.hpp"
 #include "Mongoose_Debug.hpp"
@@ -100,8 +99,16 @@ void checkatx (double *x, double *a, Int n, double lo, double hi, double tol)
     {
         if (x [k] < 0.) { ok = 0 ; PR (("x [%ld] = %g < 0!\n", k, x [k])) ; }
         if (x [k] > 1.) { ok = 0 ; PR (("x [%ld] = %g > 1!\n", k, x [k])) ; }
-        PR(("a'x = %g * %g = %g\n", a[k], x[k], a[k]*x[k]));
-        atx += ((a == NULL) ? 1 : a [k]) * x [k] ;
+        if (a != NULL)
+        {
+            PR(("a'x = %g * %g = %g\n", a[k], x[k], a[k]*x[k]));
+            atx += a [k] * x [k] ;
+        }
+        else
+        {
+            PR(("a'x = %g * %g = %g\n", 1, x[k], x[k]));
+            atx += x [k] ;
+        }
     }
     if (atx < lo - tol) { ok = 0 ; }
     if (atx > hi + tol) { ok = 0 ; }
@@ -116,20 +123,21 @@ void checkatx (double *x, double *a, Int n, double lo, double hi, double tol)
 #endif
 
 double QPNapsack        /* return the final lambda */
-        (
-                double *x,      /* holds y on input, and the solution x on output */
-                Int n,          /* size of x, constraint lo <= a'x <= hi */
-                double lo,      /* partition lower bound */
-                double hi,      /* partition upper bound */
-                double *Gw,     /* vector of nodal weights */
-                double Lambda,  /* initial guess for lambda */
-                Int *FreeSet_status, /* FreeSet_status [i] = +1,-1, or 0 on input,
-                       for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
-                double *w,      /* work array of size n   */
-                Int *heap1,     /* work array of size n+1 */
-                Int *heap2,     /* work array of size n+1 */
-                double tol      /* Gradient projection tolerance */
-        )
+(
+        double *x,      /* holds y on input, and the solution x on output */
+        Int n,          /* size of x, constraint lo <= a'x <= hi */
+        double lo,      /* partition lower bound */
+        double hi,      /* partition upper bound */
+        double *Gw,     /* vector of nodal weights */
+        double Lambda,  /* initial guess for lambda */
+        const Int *FreeSet_status,
+               /* FreeSet_status [i] = +1,-1, or 0 on input,
+                  for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
+        double *w,      /* work array of size n   */
+        Int *heap1,     /* work array of size n+1 */
+        Int *heap2,     /* work array of size n+1 */
+        double tol      /* Gradient projection tolerance */
+)
 {
     double lambda = Lambda;
     PR (("QPNapsack start [\n")) ;

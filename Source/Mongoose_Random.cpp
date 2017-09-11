@@ -28,7 +28,7 @@ void setRandomSeed(Int seed)
 {
 #if CPP11_OR_LATER
     // Use C++11 random object
-    generator.seed(seed);
+    generator.seed(static_cast<unsigned int>(seed));
 #else
     // Forced to use non-reentrant std::rand
     std::srand(static_cast<unsigned int>(seed));

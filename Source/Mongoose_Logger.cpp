@@ -10,8 +10,6 @@
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
-#include <iostream>
-#include <cstdio>
 
 namespace Mongoose
 {

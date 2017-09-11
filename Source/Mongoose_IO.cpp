@@ -11,10 +11,8 @@
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Interop.hpp"
 #include "Mongoose_Sanitize.hpp"
-#include <cstdio>
 #include <iostream>
 extern "C" {
-#include "mmio.h"
 }
 #include "Mongoose_Logger.hpp"
 
@@ -36,7 +34,7 @@ cs *readMatrix (const std::string &filename, MM_typecode &matcode)
 Graph *readGraph (const char* filename)
 {
     Logger::tic(IOTiming);
-    LogInfo("Reading graph from file " << filename << "\n");
+    LogInfo("Reading graph from file " << std::string(filename) << "\n");
 
     MM_typecode matcode;
     cs* A = readMatrix(filename, matcode);
@@ -68,11 +66,11 @@ Graph *readGraph (const char* filename)
 
 cs *readMatrix (const char* filename, MM_typecode &matcode)
 {
-    LogInfo("Reading Matrix from " << filename << "\n");
+    LogInfo("Reading Matrix from " << std::string(filename) << "\n");
     FILE *file = fopen(filename, "r");
     if (!file)
     {
-        LogError("Error: Cannot read file " << filename << "\n");
+        LogError("Error: Cannot read file " << std::string(filename) << "\n");
         return NULL;
     }
 
