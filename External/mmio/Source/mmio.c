@@ -58,7 +58,7 @@ int mm_read_unsymmetric_sparse(const char *fname, long *M_, long *N_, long *nz_,
     *N_ = N;
     *nz_ = nz;
  
-    /* reseve memory for matrices */
+    /* reserve memory for matrices */
  
     I = (long *) malloc(nz * sizeof(long));
     J = (long *) malloc(nz * sizeof(long));
