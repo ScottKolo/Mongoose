@@ -39,7 +39,7 @@ namespace Mongoose
 {
 
 
-void QPBoundary(Graph *graph, Options *options, QPDelta *QP)
+void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
 {
     (void)options; // Unused variable
     /* ---------------------------------------------------------------------- */

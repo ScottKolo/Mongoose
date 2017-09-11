@@ -7,7 +7,7 @@
 namespace Mongoose
 {
 
-void waterdance(Graph*, Options*);
+void waterdance(Graph*, const Options*);
 
 } // end namespace Mongoose
 

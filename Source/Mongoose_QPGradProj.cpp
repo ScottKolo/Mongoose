@@ -55,7 +55,7 @@ inline void saveContext
 double QPGradProj
         (
                 Graph *graph,
-                Options *options,
+                const Options *options,
                 QPDelta *qpDelta
         )
 {

@@ -10,7 +10,7 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // This function takes a graph with options and computes the initial guess cut
 //-----------------------------------------------------------------------------
-bool guessCut(Graph *graph, Options *options)
+bool guessCut(Graph *graph, const Options *options)
 {
     switch (options->guessCutType)
     {

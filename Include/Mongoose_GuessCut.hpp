@@ -9,7 +9,7 @@
 namespace Mongoose
 {
 
-bool guessCut(Graph*, Options*);
+bool guessCut(Graph*, const Options*);
 
 } // end namespace Mongoose
 

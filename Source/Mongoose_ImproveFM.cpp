@@ -9,12 +9,12 @@
 namespace Mongoose
 {
 
-void fmRefine_worker(Graph *graph, Options *options);
+void fmRefine_worker(Graph *graph, const Options *options);
 
 //-----------------------------------------------------------------------------
 // Wrapper for Fidducia-Mattheyes cut improvement.
 //-----------------------------------------------------------------------------
-void improveCutUsingFM(Graph *graph, Options *options)
+void improveCutUsingFM(Graph *graph, const Options *options)
 {
     Logger::tic(FMTiming);
 
@@ -33,7 +33,7 @@ void improveCutUsingFM(Graph *graph, Options *options)
 //-----------------------------------------------------------------------------
 // Make a number of partition moves while considering the impact on problem balance.
 //-----------------------------------------------------------------------------
-void fmRefine_worker(Graph *graph, Options *options)
+void fmRefine_worker(Graph *graph, const Options *options)
 {
     double *Gw = graph->w;
     double W = graph->W;
@@ -213,7 +213,7 @@ void fmRefine_worker(Graph *graph, Options *options)
 void fmSwap
 (
     Graph *graph,
-    Options *options,
+    const Options *options,
     Int vertex,
     double gain,
     bool oldPartition
@@ -304,7 +304,7 @@ void fmSwap
 void calculateGain
 (
     Graph *graph,
-    Options *options,
+    const Options *options,
     Int vertex,
     double *out_gain,
     Int *out_externalDegree

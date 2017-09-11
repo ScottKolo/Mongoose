@@ -8,7 +8,7 @@
 namespace Mongoose
 {
 
-bool QPLinks(Graph *graph, Options *options, QPDelta *QP)
+bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
 {
     (void)options; // Unused variable
 

@@ -6,7 +6,7 @@
 namespace Mongoose
 {
 
-void waterdance(Graph *graph, Options *options)
+void waterdance(Graph *graph, const Options *options)
 {
     Int numDances = options->numDances;
     for (Int i = 0; i < numDances; i++)

@@ -10,7 +10,7 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // This function inserts the specified vertex into the graph
 //-----------------------------------------------------------------------------
-void bhLoad(Graph *graph, Options *options)
+void bhLoad(Graph *graph, const Options *options)
 {
     /* Load the boundary heaps. */
     Int n = graph->n;
@@ -96,7 +96,7 @@ void bhInsert(Graph *graph, Int vertex)
 void bhRemove
 (
     Graph *graph,
-    Options *options,
+    const Options *options,
     Int vertex,
     double gain,
     bool partition,

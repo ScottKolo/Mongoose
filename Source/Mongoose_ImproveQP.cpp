@@ -14,7 +14,7 @@ namespace Mongoose
 bool improveCutUsingQP
 (
     Graph *graph,
-    Options *options,
+    const Options *options,
     bool isInitial
 )
 {

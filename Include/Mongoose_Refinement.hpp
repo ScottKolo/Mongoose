@@ -7,7 +7,7 @@
 namespace Mongoose
 {
 
-Graph *refine(Graph*, Options*);
+Graph *refine(Graph*, const Options*);
 
 } // end namespace Mongoose
 

@@ -8,7 +8,7 @@
 namespace Mongoose
 {
 
-double QPGradProj(Graph*, Options*, QPDelta*);
+double QPGradProj(Graph*, const Options*, QPDelta*);
 
 } // end namespace Mongoose
 

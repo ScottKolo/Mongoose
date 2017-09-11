@@ -1,22 +1,19 @@
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Refinement.hpp"
-#include "Mongoose_Matching.hpp"
 #include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_ImproveFM.hpp"
-#include "Mongoose_Debug.hpp"
 #include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
 
-Graph *refine(Graph *graph, Options *options)
+Graph *refine(Graph *graph, const Options *options)
 {
     Logger::tic(RefinementTiming);
+
     Graph *P = graph->parent;
     Int cn = graph->n;
     bool *cPartition = graph->partition;
-    Int *invmatchmap = P->invmatchmap;
-    bool *fPartition = P->partition;
     double *fGains = P->vertexGains;
     Int *fExternalDegree = P->externalDegree;
 
@@ -32,7 +29,7 @@ Graph *refine(Graph *graph, Options *options)
     {
         /* Load up the inverse matching */
         Int v[3] = {-1, -1, -1};
-        v[0] = invmatchmap[k];
+        v[0] = P->invmatchmap[k];
         v[1] = P->getMatch(v[0]);
         if (v[0] == v[1]) { v[1] = -1; }
         else
@@ -45,7 +42,7 @@ Graph *refine(Graph *graph, Options *options)
         for (Int i = 0; i < 3 && v[i] != -1; i++)
         {
             Int vertex = v[i];
-            fPartition[vertex] = cp;
+            P->partition[vertex] = cp;
         }
     }
     /* See if we can relax the boundary constraint and recompute gains for
@@ -66,7 +63,7 @@ Graph *refine(Graph *graph, Options *options)
 
             /* Load up the inverse matching */
             Int v[3] = {-1, -1, -1};
-            v[0] = invmatchmap[k];
+            v[0] = P->invmatchmap[k];
             v[1] = P->getMatch(v[0]);
             if (v[0] == v[1]) { v[1] = -1; }
             else

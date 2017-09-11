@@ -75,7 +75,7 @@ public:
     static Graph *Create (Int _n, Int _nz);
     static Graph *Create (Graph *_parent);
     ~Graph();
-    bool initialize(Options *options);
+    bool initialize(const Options *options);
 
     /** Matching Functions ****************************************************/
     inline bool isMatched(Int vertex)

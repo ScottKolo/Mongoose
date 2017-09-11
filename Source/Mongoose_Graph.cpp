@@ -226,7 +226,7 @@ Graph::~Graph()
 }
 
 /* Initialize a top level graph with a a set of options. */
-bool Graph::initialize(Options *options)
+bool Graph::initialize(const Options *options)
 {
     (void)options; // Unused variable
 

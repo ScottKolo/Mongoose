@@ -8,7 +8,7 @@ namespace Mongoose
 {
 
 int ComputeEdgeSeparator(Graph*) ;
-int ComputeEdgeSeparator(Graph*, Options*);
+int ComputeEdgeSeparator(Graph*, const Options*);
 
 } // end namespace Mongoose
 

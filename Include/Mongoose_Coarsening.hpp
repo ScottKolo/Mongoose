@@ -17,7 +17,7 @@
 namespace Mongoose
 {
 
-Graph *coarsen(Graph*, Options*);
+Graph *coarsen(Graph*, const Options*);
 
 } // end namespace Mongoose
 

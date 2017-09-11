@@ -37,7 +37,7 @@ namespace Mongoose
  * @return A coarsened version of G
  * @note Allocates memory for the coarsened graph, but frees on error.
  */
-Graph *coarsen(Graph *graph, Options *options)
+Graph *coarsen(Graph *graph, const Options *options)
 {
     (void)options; // Unused variable
 

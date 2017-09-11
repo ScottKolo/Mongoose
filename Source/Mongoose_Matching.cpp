@@ -18,7 +18,7 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // top-level matching code that serves as a multiple-dispatch system.
 //-----------------------------------------------------------------------------
-void match(Graph *graph, Options *options)
+void match(Graph *graph, const Options *options)
 {
     Logger::tic(MatchingTiming);
     switch (options->matchingStrategy)
@@ -57,7 +57,7 @@ void match(Graph *graph, Options *options)
 //-----------------------------------------------------------------------------
 // Cleans up a matching by matching remaining unmatched vertices to themselves
 //-----------------------------------------------------------------------------
-void matching_Cleanup(Graph *graph, Options *options)
+void matching_Cleanup(Graph *graph, const Options *options)
 {
     (void)options; // Unused variable
 
@@ -102,7 +102,7 @@ void matching_Cleanup(Graph *graph, Options *options)
 //-----------------------------------------------------------------------------
 // This is a random matching strategy
 //-----------------------------------------------------------------------------
-void matching_Random(Graph *graph, Options *options)
+void matching_Random(Graph *graph, const Options *options)
 {
     (void)options; // Unused variable
 
@@ -151,7 +151,7 @@ void matching_Random(Graph *graph, Options *options)
 //-----------------------------------------------------------------------------
 // This is the implementation of passive-aggressive matching
 //-----------------------------------------------------------------------------
-void matching_PA(Graph *graph, Options *options)
+void matching_PA(Graph *graph, const Options *options)
 {
     Int n = graph->n;
     Int *Gp = graph->p;
@@ -268,7 +268,7 @@ void matching_PA(Graph *graph, Options *options)
 // This uses the Davis style passive-aggressive matching where we only try
 // PA matching if the problem is some percent unmatched.
 //-----------------------------------------------------------------------------
-void matching_DavisPA(Graph *graph, Options *options)
+void matching_DavisPA(Graph *graph, const Options *options)
 {
     Int n = graph->n;
     Int *Gp = graph->p;
@@ -336,7 +336,7 @@ void matching_DavisPA(Graph *graph, Options *options)
 //-----------------------------------------------------------------------------
 // This is a vanilla implementation of heavy edge matching
 //-----------------------------------------------------------------------------
-void matching_HEM(Graph *graph, Options *options)
+void matching_HEM(Graph *graph, const Options *options)
 {
     (void)options; // Unused variable
 

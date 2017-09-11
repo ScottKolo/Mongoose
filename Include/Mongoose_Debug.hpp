@@ -78,7 +78,7 @@ void print(Graph *G);
 void QPcheckCom
 (
     Graph *G,
-    Options *O,
+    const Options *O,
     QPDelta *QP,
     bool check_b,
     Int nFreeSet,

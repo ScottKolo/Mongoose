@@ -11,8 +11,8 @@
 namespace Mongoose
 {
 
-bool optionsAreValid(Options *options);
-void cleanup(Graph *graph, Options *options);
+bool optionsAreValid(const Options *options);
+void cleanup(Graph *graph, const Options *options);
 
 /* The input must be a single connected component. */
 int ComputeEdgeSeparator(Graph *graph)
@@ -25,10 +25,11 @@ int ComputeEdgeSeparator(Graph *graph)
     return (result) ;
 }
 
-int ComputeEdgeSeparator(Graph *graph, Options *options)
+int ComputeEdgeSeparator(Graph *graph, const Options *options)
 {
     // Check inputs
     if (!optionsAreValid(options)) return (EXIT_FAILURE) ;
+
     setRandomSeed(options->randomSeed);
 
     if (!graph) return EXIT_FAILURE;
@@ -91,7 +92,7 @@ int ComputeEdgeSeparator(Graph *graph, Options *options)
     return EXIT_SUCCESS;
 }
 
-bool optionsAreValid(Options *options)
+bool optionsAreValid(const Options *options)
 {
     if (!options)
     {
@@ -111,17 +112,20 @@ bool optionsAreValid(Options *options)
     return (true) ;
 }
 
-void cleanup(Graph *G, Options *options)
+void cleanup(Graph *G, const Options *options)
 {
     Int cutSize = 0;
     double cutCost = 0;
     double part_weight = 0;
     for(Int i = 0; i < G->n; i++)
     {
-        if (G->partition[i]) {
+        if (G->partition[i])
+        {
             part_weight += (G->w) ? G->w[i] : 1;
-            for(Int j = G->p[i]; j < G->p[i+1]; j++) {
-                if (i != j && (!G->partition[G->i[j]])) {
+            for(Int j = G->p[i]; j < G->p[i+1]; j++)
+            {
+                if (i != j && (!G->partition[G->i[j]]))
+                {
                     cutSize += 1;
                     cutCost += (G->x) ? G->x[j] : 1;
                 }

@@ -130,7 +130,7 @@ public:
     static Graph *Create (const Int _n, const Int _nz);
     static Graph *Create (Graph *_parent);
     ~Graph();
-    bool initialize(Options *options);
+    bool initialize(const Options *options);
 };
 
 
@@ -161,6 +161,6 @@ Graph *readGraph (const std::string &filename);
 Graph *readGraph (const char* filename);
 
 int ComputeEdgeSeparator(Graph*);
-int ComputeEdgeSeparator(Graph*, Options*);
+int ComputeEdgeSeparator(Graph*, const Options*);
 
 } // end namespace Mongoose
