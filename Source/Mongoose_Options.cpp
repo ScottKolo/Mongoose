@@ -1,8 +1,6 @@
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Options.hpp"
-#include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
@@ -10,7 +8,7 @@ namespace Mongoose
 /* Constructor & Destructor */
 Options* Options::Create()
 {
-    Options *ret = static_cast<Options*>(SuiteSparse_calloc(1, sizeof(Options)));
+    Options *ret = static_cast<Options*>(SuiteSparse_malloc(1, sizeof(Options)));
     
     if(ret != NULL)
     {
