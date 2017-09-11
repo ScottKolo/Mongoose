@@ -24,10 +24,10 @@ typedef SuiteSparse_long csi ;
 
 /* CSparse Macros */
 #ifndef CS_CSC
-#define CS_CSC(A) (A && (A->nz == -1))
+#define CS_CSC(A) ((A) && ((A)->nz == -1))
 #endif
 #ifndef CS_TRIPLET
-#define CS_TRIPLET(A) (A && (A->nz >= 0))
+#define CS_TRIPLET(A) ((A) && ((A)->nz >= 0))
 #endif
 
 namespace Mongoose

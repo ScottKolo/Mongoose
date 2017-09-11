@@ -32,13 +32,13 @@
 
 // Main Logging Macros
 #define LogError(msg) \
-    do { if (LOG_ERROR) (std::cout << __FILE__ << ":" << __LINE__ << ": " << msg); } while (0)
+    do { if (LOG_ERROR) (std::cout << __FILE__ << ":" << __LINE__ << ": " << (msg)); } while (0)
 #define LogWarn(msg) \
-    do { if (LOG_WARN) (std::cout << __FILE__ << ":" << __LINE__ << ": " << msg); } while (0)
+    do { if (LOG_WARN) (std::cout << __FILE__ << ":" << __LINE__ << ": " << (msg)); } while (0)
 #define LogInfo(msg) \
-    do { if (LOG_INFO) (std::cout << msg); } while (0)
+    do { if (LOG_INFO) (std::cout << (msg)); } while (0)
 #define LogTest(msg) \
-    do { if (LOG_TEST) (std::cout << msg); } while (0)
+    do { if (LOG_TEST) (std::cout << (msg)); } while (0)
 
 namespace Mongoose
 {

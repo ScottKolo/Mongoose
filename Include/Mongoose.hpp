@@ -127,7 +127,7 @@ public:
 
     /* Constructor & Destructor */
     Graph();
-    static Graph *Create (const Int _n, const Int _nz);
+    static Graph *Create (Int _n, Int _nz);
     static Graph *Create (Graph *_parent);
     ~Graph();
     bool initialize(const Options *options);

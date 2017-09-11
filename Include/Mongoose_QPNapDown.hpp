@@ -8,7 +8,7 @@ namespace Mongoose
 double QPNapDown            /* return lambda */
 (
         const double *x,        /* holds y on input, not modified */
-        const Int n,            /* size of x */
+        Int n,            /* size of x */
         double lambda,          /* initial guess for the shift */
         const double *a,        /* input constraint vector */
         double b,               /* input constraint scalar */
