@@ -77,6 +77,7 @@ void RunAllTests (
 
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
     GuessCutType guessCutStrategies[3] = {GuessQP, GuessRandom, GuessNaturalOrder};
+    Int coarsenLimit[3] = {64, 256, 1024};
 
     for(int c = 0; c < 2; c++)
     {
@@ -89,19 +90,23 @@ void RunAllTests (
             for(int j = 0; j < 3; j++)
             {
                 O->guessCutType = guessCutStrategies[j];
+                for(int k = 0; k < 3; k++)
+                {
+                    O->coarsenLimit = coarsenLimit[k];
 
-                int m = 0;
-                int remainingMallocs;
-                do {
-                    remainingMallocs = RunTest(inputFile, O, m);
-                    if (remainingMallocs == -1)
-                    {
-                        // Error!
-                        LogTest("Terminating Memory Test Early");
-                        return;
-                    }
-                    m += 1;
-                } while (remainingMallocs < 1);
+                    int m = 0;
+                    int remainingMallocs;
+                    do {
+                        remainingMallocs = RunTest(inputFile, O, m);
+                        if (remainingMallocs == -1)
+                        {
+                            // Error!
+                            LogTest("Terminating Memory Test Early");
+                            return;
+                        }
+                        m += 1;
+                    } while (remainingMallocs < 1);
+                }
             }
         }
     }
