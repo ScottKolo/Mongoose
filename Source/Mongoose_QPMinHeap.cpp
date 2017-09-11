@@ -39,7 +39,7 @@ Int QPMinHeap_delete    /* return new size of heap */
         (
                 Int *heap,  /* containing indices into x, 1..n on input */
                 Int size,   /* number of items in heap */
-                double *x   /* not modified */
+                const double *x   /* not modified */
         )
 {
     if (size <= 1)

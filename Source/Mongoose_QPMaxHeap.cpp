@@ -34,7 +34,7 @@ Int QPMaxHeap_delete    /* return new size of heap */
         (
                 Int *heap,   /* containing indices into x, 1..n on input */
                 Int size,    /* number of items in heap */
-                double *x    /* not modified */
+                const double *x    /* not modified */
         )
 {
     if (size <= 1) return 0;
@@ -103,7 +103,7 @@ void QPMaxHeapify
                 Int p,                       /* start at node p in the heap */
                 Int *heap,                   /* size n, containing indices into x */
                 Int size,                    /* heap [ ... nheap] is in use */
-                const double *x                    /* not modified */
+                const double *x              /* not modified */
         )
 {
     Int left, right, e, hleft, hright;

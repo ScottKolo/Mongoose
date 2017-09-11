@@ -2,9 +2,6 @@
 // Mongoose_Debug.hpp
 //------------------------------------------------------------------------------
 
-// TODO: this file should not be included into any user program.
-// TODO: optional: move this file to ../Mongoose/Source
-
 #pragma once
 
 #include "Mongoose_Graph.hpp"
@@ -66,6 +63,11 @@
 #define DEBUG(s) s
 #else
 #define DEBUG(s)
+#endif
+
+#ifndef NDEBUG
+#include "Mongoose_Interop.hpp"
+#include <algorithm>
 #endif
 
 namespace Mongoose
