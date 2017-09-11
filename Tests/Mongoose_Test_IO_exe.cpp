@@ -30,7 +30,7 @@ int main(int argn, char** argv)
     std::string inputFile = std::string(argv[1]);
 
     // Read in whether this file should produce a valid graph
-    bool validGraph = atoi(argv[2]);
+    bool validGraph = static_cast<bool>(atoi(argv[2]));
 
     // Run the I/O test
     runIOTest(inputFile, validGraph);

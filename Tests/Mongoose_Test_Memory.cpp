@@ -81,7 +81,7 @@ void RunAllTests (
 
     for(int c = 0; c < 2; c++)
     {
-        O->doCommunityMatching = c;
+        O->doCommunityMatching = static_cast<bool>(c);
 
         for(int i = 0; i < 4; i++)
         {

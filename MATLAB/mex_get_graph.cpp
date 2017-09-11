@@ -18,14 +18,17 @@ Graph *mex_get_graph
     double *Gx =  (double*) mxGetPr(Gmatlab);
     Int nz = Gp[n];
     
-    Graph *returner = Graph::Create(n,nz);
+    Graph *returner = Graph::Create(n, nz);
+
+    if (!returner)
+    {
+        return NULL;
+    }
+
     returner->p = Gp;
     returner->i = Gi;
     returner->x = Gx;
-    
-    if (!returner)
-        return NULL;
-    
+
     /* Read node weights from matlab into the problem. */
     if (Amatlab != NULL)
     {
@@ -34,8 +37,11 @@ Graph *mex_get_graph
     }
     else
     {
-        //returner->w = (double*) SuiteSparse_malloc(n, sizeof(double));
-        for(Int k=0; k<n; k++) returner->w[k] = 1.0;
+        // Assume node weights of 1
+        for(Int k = 0; k < n; k++)
+        {
+            returner->w[k] = 1.0;
+        }
     }
 
     return returner;
