@@ -5,46 +5,6 @@ namespace Mongoose
 
 /*****************************************************************************
 Function:
-    Shallow Copy Data to MATLAB
-
-Purpose:
-    Shallow-copies data into a new matlab structure field.
-
-Assumes:
-    mxREAL data only
-    M x N is really just 1 x size
-    the matlab structure is a single cell.
- *****************************************************************************/
-void shcpDataToMAT
-(
-    mxArray* matStruct,
-    const char* field,
-    mxClassID classID,
-    void* data,
-    size_t size
-)
-{
-    mxArray *newField;
-
-    /* If we weren't given a matlab structure, do nothing. */
-    if(!mxIsStruct(matStruct)) return;
-
-    newField = mxCreateNumericMatrix(0, 0, classID, mxREAL);
-
-    /* Brain Transplant */
-    mxFree(mxGetData(newField));
-    mxSetData(newField, data);
-    mxSetM(newField, 1);
-    mxSetN(newField, size);
-    mexMakeMemoryPersistent(data);
-
-    /* Add the new field to the given matlab structure. */
-    mxAddField(matStruct, field);
-    mxSetField(matStruct, 0, field, newField);
-}
-
-/*****************************************************************************
-Function:
     Add Field with Value
 
 Purpose:

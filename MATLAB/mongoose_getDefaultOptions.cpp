@@ -11,9 +11,6 @@ void mexFunction
     const mxArray *pargin [ ]
 )
 {
-    cs Amatrix;
-    int i, gtype, values;
-
     const char* usage = "Usage: O = mongoose_getDefaultOptions()";
     if(nargout != 1 || nargin != 0) mexErrMsgTxt(usage);
 
@@ -22,4 +19,5 @@ void mexFunction
         mexErrMsgTxt("Out of memory encountered while creating default Options");
 
     pargout[0] = mex_put_options(ret);
+    SuiteSparse_free(ret);
 }

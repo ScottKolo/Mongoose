@@ -33,7 +33,7 @@ void mexFunction
         mexErrMsgTxt("Unable to get Options struct");
 
     ComputeEdgeSeparator(G, O);
-
+    
     /* Copy the partition choices back to matlab. */
     pargout[0] = gp_mex_put_logical(G->partition, G->n) ;
 
@@ -45,6 +45,6 @@ void mexFunction
     /* Cleanup */
     G->~Graph();
     SuiteSparse_free(G);
-    O->~Options();
+
     SuiteSparse_free(O);
 }

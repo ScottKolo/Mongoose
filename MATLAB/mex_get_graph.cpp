@@ -12,23 +12,29 @@ Graph *mex_get_graph
     // Check for valid sparse matrix
     cs_mex_check (0, -1, -1, 1, 1, 1, Gmatlab) ;
 
-    Graph *returner = (Graph*) SuiteSparse_calloc(1, sizeof(Graph));
-    if(!returner) return NULL;
-
-    Int n = returner->n = mxGetN(Gmatlab);
-    Int *Gp = returner->p = (Int*) mxGetJc(Gmatlab);
-    Int *Gi = returner->i = (Int*) mxGetIr(Gmatlab);
-    double *Gx = returner->x = (double*) mxGetPr(Gmatlab);
-    Int nz = returner->nz = Gp[n];
-
+    Int n = mxGetN(Gmatlab);
+    Int *Gp = (Int*) mxGetJc(Gmatlab);
+    Int *Gi = (Int*) mxGetIr(Gmatlab);
+    double *Gx =  (double*) mxGetPr(Gmatlab);
+    Int nz = Gp[n];
+    
+    Graph *returner = Graph::Create(n,nz);
+    returner->p = Gp;
+    returner->i = Gi;
+    returner->x = Gx;
+    
+    if (!returner)
+        return NULL;
+    
     /* Read node weights from matlab into the problem. */
-    if(Amatlab != NULL)
+    if (Amatlab != NULL)
     {
+        SuiteSparse_free(returner->w);
         returner->w = (double*) mxGetPr(Amatlab);
     }
     else
     {
-        returner->w = (double*) SuiteSparse_malloc(n, sizeof(double));
+        //returner->w = (double*) SuiteSparse_malloc(n, sizeof(double));
         for(Int k=0; k<n; k++) returner->w[k] = 1.0;
     }
 

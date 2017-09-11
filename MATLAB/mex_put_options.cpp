@@ -16,15 +16,28 @@ mxArray *mex_put_options
     MEX_STRUCT_PUT(coarsenLimit);
     MEX_STRUCT_PUT(matchingStrategy);
     MEX_STRUCT_PUT(doCommunityMatching);
-//    MEX_STRUCT_PUT(davisBrotherlyThreshold);
+    MEX_STRUCT_PUT(davisBrotherlyThreshold);
+    
+    /** Guess Partitioning Options *******************************************/
     MEX_STRUCT_PUT(guessCutType);
+
+    /** Waterdance Options ***************************************************/
     MEX_STRUCT_PUT(numDances);
+
+    /**** Fidducia-Mattheyes Options *****************************************/
     MEX_STRUCT_PUT(useFM);
+    MEX_STRUCT_PUT(fmSearchDepth);
+    MEX_STRUCT_PUT(fmConsiderCount);
+    MEX_STRUCT_PUT(fmMaxNumRefinements);
+
+    /**** Quadratic Programming Options **************************************/
     MEX_STRUCT_PUT(useQPGradProj);
-//    MEX_STRUCT_PUT(gradprojTol);
-//    MEX_STRUCT_PUT(gradprojIterationLimit);
-//    MEX_STRUCT_PUT(targetSplit);
-//    MEX_STRUCT_PUT(tolerance);
+    MEX_STRUCT_PUT(gradProjTolerance);
+    MEX_STRUCT_PUT(gradprojIterationLimit);
+
+    /** Final Partition Target Metrics ***************************************/
+    MEX_STRUCT_PUT(targetSplit);
+    MEX_STRUCT_PUT(softSplitTolerance);
 
     return returner;
 }
