@@ -33,17 +33,17 @@ typedef SuiteSparse_long Int;
 /* Enumerations */
 enum MatchingStrategy
 {
-    Random,
-    HEM,
-    HEMPA,
-    HEMDavisPA
+    Random = 0,
+    HEM = 1,
+    HEMPA = 2,
+    HEMDavisPA = 3
 };
 
 enum GuessCutType
 {
-    GuessQP,
-    GuessRandom,
-    GuessNaturalOrder
+    GuessQP = 0,
+    GuessRandom = 1,
+    GuessNaturalOrder = 2
 };
 
 enum MatchType
