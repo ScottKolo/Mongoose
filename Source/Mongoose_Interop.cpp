@@ -1,6 +1,6 @@
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_Interop.hpp"
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Logger.hpp"
 
 namespace Mongoose
@@ -9,11 +9,12 @@ namespace Mongoose
 /* Configure a CSparse3 matrix from an existing Mongoose Graph. */
 cs *GraphToCSparse3(Graph *G, bool copy)
 {
-    cs *A = (cs*) SuiteSparse_malloc(1, sizeof(cs));
-    if (!A) return NULL;
-    A->n = G->cs_n;
-    A->m = G->cs_m;
-    A->nz = G->cs_nz;
+    cs *A = (cs *)SuiteSparse_malloc(1, sizeof(cs));
+    if (!A)
+        return NULL;
+    A->n     = G->cs_n;
+    A->m     = G->cs_m;
+    A->nz    = G->cs_nz;
     A->nzmax = G->cs_nzmax;
     if (!copy)
     {
@@ -23,11 +24,14 @@ cs *GraphToCSparse3(Graph *G, bool copy)
     }
     else
     {
-        Int n = G->n;
+        Int n  = G->n;
         Int nz = G->nz;
-        A->p = (ptrdiff_t*) SuiteSparse_malloc(static_cast<size_t>(n + 1), sizeof(ptrdiff_t));
-        A->i = (ptrdiff_t*) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(ptrdiff_t));
-        A->x = (double*) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(double));
+        A->p   = (ptrdiff_t *)SuiteSparse_malloc(static_cast<size_t>(n + 1),
+                                               sizeof(ptrdiff_t));
+        A->i   = (ptrdiff_t *)SuiteSparse_malloc(static_cast<size_t>(nz),
+                                               sizeof(ptrdiff_t));
+        A->x   = (double *)SuiteSparse_malloc(static_cast<size_t>(nz),
+                                            sizeof(double));
         if (!A->p || !A->i || !A->x)
         {
             cs_spfree(A);
@@ -36,11 +40,11 @@ cs *GraphToCSparse3(Graph *G, bool copy)
 
         for (Int k = 0; k <= n; k++)
         {
-            A->p[k] = (ptrdiff_t) G->p[k];
+            A->p[k] = (ptrdiff_t)G->p[k];
         }
         for (Int p = 0; p < nz; p++)
         {
-            A->i[p] = (ptrdiff_t) G->i[p];
+            A->i[p] = (ptrdiff_t)G->i[p];
             A->x[p] = G->x[p];
         }
     }
@@ -51,26 +55,29 @@ cs *GraphToCSparse3(Graph *G, bool copy)
 /* Create a new Mongoose Graph from an existing CSparse3 matrix. */
 Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
 {
-    Graph *returner = static_cast<Graph*>(SuiteSparse_calloc(1, sizeof(Graph)));
-    if (!returner) return NULL;
+    Graph *returner
+        = static_cast<Graph *>(SuiteSparse_calloc(1, sizeof(Graph)));
+    if (!returner)
+        return NULL;
 
     /* Brain-transplant the graph to the new representation. */
-    returner->cs_n = G->n;
-    returner->cs_m = G->m;
-    returner->cs_nz = G->nz;
+    returner->cs_n     = G->n;
+    returner->cs_m     = G->m;
+    returner->cs_nz    = G->nz;
     returner->cs_nzmax = G->nzmax;
-    returner->n  = std::max(G->n, G->m);
-    returner->nz = G->p[G->n];
-    returner->p  = G->p;
-    returner->i  = G->i;
-    returner->x  = G->x;
+    returner->n        = std::max(G->n, G->m);
+    returner->nz       = G->p[G->n];
+    returner->p        = G->p;
+    returner->i        = G->i;
+    returner->x        = G->x;
 
     /* Allocate edge weights if necessary. */
     bool attachEdgeWeights = false;
     if (!returner->x || resetEW)
     {
-        Int nz = returner->nz;
-        returner->x = (double*) SuiteSparse_malloc(static_cast<size_t>(nz), sizeof(double));
+        Int nz      = returner->nz;
+        returner->x = (double *)SuiteSparse_malloc(static_cast<size_t>(nz),
+                                                   sizeof(double));
         attachEdgeWeights = true;
     }
 
@@ -78,14 +85,15 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     bool attachNodeWeights = false;
     if (!returner->w || resetNW)
     {
-        Int n = returner->n;
-        returner->w = (double*) SuiteSparse_malloc(static_cast<size_t>(n), sizeof(double));
+        Int n             = returner->n;
+        returner->w       = (double *)SuiteSparse_malloc(static_cast<size_t>(n),
+                                                   sizeof(double));
         attachNodeWeights = true;
     }
 
     /* If we failed to attach weights, free the graph and return. */
-    if ((attachEdgeWeights && !returner->x) ||
-        (attachNodeWeights && !returner->w))
+    if ((attachEdgeWeights && !returner->x)
+        || (attachNodeWeights && !returner->w))
     {
         /* Undo the brain transplant, free the Graph skeleton, and return. */
         returner->p = NULL;
@@ -99,13 +107,15 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
     if (attachEdgeWeights)
     {
         Int nz = returner->nz;
-        for (Int p = 0; p < nz; p++) returner->x[p] = 1.0;
+        for (Int p = 0; p < nz; p++)
+            returner->x[p] = 1.0;
     }
 
     if (attachNodeWeights)
     {
         Int n = returner->n;
-        for (Int k = 0; k < n; k++) returner->w[k] = 1.0;
+        for (Int k = 0; k < n; k++)
+            returner->w[k] = 1.0;
     }
 
     return returner;

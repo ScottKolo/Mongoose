@@ -3,13 +3,13 @@
  *
  * During coarsening, a matching of vertices is computed to determine
  * which vertices are combined together into supernodes. This can be done using
- * a number of different strategies, including Heavy Edge Matching and 
+ * a number of different strategies, including Heavy Edge Matching and
  * Community/Brotherly (similar to 2-hop) Matching.
  */
 
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_Matching.hpp"
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Logger.hpp"
 
 namespace Mongoose
@@ -23,25 +23,25 @@ void match(Graph *graph, const Options *options)
     Logger::tic(MatchingTiming);
     switch (options->matchingStrategy)
     {
-      case Random:
-          matching_Random(graph,options);
-          break;
+    case Random:
+        matching_Random(graph, options);
+        break;
 
-      case HEM:
-          matching_HEM(graph,options);
-          break;
+    case HEM:
+        matching_HEM(graph, options);
+        break;
 
-      case HEMPA:
-          matching_HEM(graph,options);
-          matching_PA(graph,options);
-          break;
+    case HEMPA:
+        matching_HEM(graph, options);
+        matching_PA(graph, options);
+        break;
 
-      case HEMDavisPA:
-          matching_HEM(graph,options);
-          matching_DavisPA(graph,options);
-          break;
+    case HEMDavisPA:
+        matching_HEM(graph, options);
+        matching_DavisPA(graph, options);
+        break;
     }
-    matching_Cleanup(graph,options);
+    matching_Cleanup(graph, options);
     Logger::toc(MatchingTiming);
 }
 
@@ -52,7 +52,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
 {
     (void)options; // Unused variable
 
-    Int n = graph->n;
+    Int n   = graph->n;
     Int *Gp = graph->p;
 
     /* Match unmatched vertices to themselves. */
@@ -97,22 +97,24 @@ void matching_Random(Graph *graph, const Options *options)
 {
     (void)options; // Unused variable
 
-    Int n = graph->n;
+    Int n   = graph->n;
     Int *Gp = graph->p;
     Int *Gi = graph->i;
 
     for (Int k = 0; k < n; k++)
     {
         /* Consider only unmatched nodes */
-        if (graph->isMatched(k)) continue;
+        if (graph->isMatched(k))
+            continue;
 
         bool unmatched = true;
-        for (Int p = Gp[k]; p < Gp[k+1] && unmatched; p++)
+        for (Int p = Gp[k]; p < Gp[k + 1] && unmatched; p++)
         {
             Int neighbor = Gi[p];
 
             /* Consider only unmatched neighbors */
-            if (graph->isMatched(neighbor)) continue;
+            if (graph->isMatched(neighbor))
+                continue;
 
             unmatched = false;
 
@@ -128,15 +130,15 @@ void matching_Random(Graph *graph, const Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Check condition 1 */
-        if (graph->matching[k]) continue;
+        if (graph->matching[k])
+            continue;
         /* Check condition 2 */
-        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
-            ASSERT (graph->matching[Gi[p]]);
+            ASSERT(graph->matching[Gi[p]]);
         }
     }
 #endif
-
 }
 
 //-----------------------------------------------------------------------------
@@ -144,9 +146,9 @@ void matching_Random(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 void matching_PA(Graph *graph, const Options *options)
 {
-    Int n = graph->n;
-    Int *Gp = graph->p;
-    Int *Gi = graph->i;
+    Int n      = graph->n;
+    Int *Gp    = graph->p;
+    Int *Gi    = graph->i;
     double *Gx = graph->x;
 
 #ifndef NDEBUG
@@ -154,10 +156,11 @@ void matching_PA(Graph *graph, const Options *options)
      * all unmatched vertices must have matched neighbors. */
     for (Int k = 0; k < n; k++)
     {
-        if (graph->isMatched(k)) continue;
-        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        if (graph->isMatched(k))
+            continue;
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
-            ASSERT (graph->isMatched(Gi[p]));
+            ASSERT(graph->isMatched(Gi[p]));
         }
     }
 #endif
@@ -165,12 +168,13 @@ void matching_PA(Graph *graph, const Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Consider only unmatched nodes */
-        if (graph->isMatched(k)) continue;
+        if (graph->isMatched(k))
+            continue;
 
-        Int heaviestNeighbor = -1;
+        Int heaviestNeighbor  = -1;
         double heaviestWeight = -1.0;
 
-        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
             Int neighbor = Gi[p];
 
@@ -178,7 +182,7 @@ void matching_PA(Graph *graph, const Options *options)
             double x = Gx[p];
             if (x > heaviestWeight)
             {
-                heaviestWeight = x;
+                heaviestWeight   = x;
                 heaviestNeighbor = neighbor;
             }
         }
@@ -187,10 +191,12 @@ void matching_PA(Graph *graph, const Options *options)
         if (heaviestNeighbor != -1)
         {
             Int v = -1;
-            for (Int p = Gp[heaviestNeighbor]; p < Gp[heaviestNeighbor+1]; p++)
+            for (Int p = Gp[heaviestNeighbor]; p < Gp[heaviestNeighbor + 1];
+                 p++)
             {
                 Int neighbor = Gi[p];
-                if (graph->isMatched(neighbor)) continue;
+                if (graph->isMatched(neighbor))
+                    continue;
 
                 if (v == -1)
                 {
@@ -209,7 +215,7 @@ void matching_PA(Graph *graph, const Options *options)
                 if (options->doCommunityMatching)
                 {
                     graph->createCommunityMatch(heaviestNeighbor, v,
-                                             MatchType_Community);
+                                                MatchType_Community);
                 }
                 else
                 {
@@ -225,34 +231,48 @@ void matching_PA(Graph *graph, const Options *options)
     {
         if (options->doCommunityMatching)
         {
-            if (!graph->isMatched(k)) PR (("%ld is unmatched\n", k)) ;
-            ASSERT (graph->isMatched(k));
+            if (!graph->isMatched(k))
+                PR(("%ld is unmatched\n", k));
+            ASSERT(graph->isMatched(k));
         }
 
         /* Load matching. */
-        Int v[3] = {-1, -1, -1};
-        v[0] = k;
-        v[1] = graph->getMatch(v[0]);
-        if (v[1] == v[0]) v[1] = -1;
+        Int v[3] = { -1, -1, -1 };
+        v[0]     = k;
+        v[1]     = graph->getMatch(v[0]);
+        if (v[1] == v[0])
+            v[1] = -1;
         if (v[1] != -1)
         {
             v[2] = graph->getMatch(v[1]);
-            if (v[2] == v[0]) v[2] = -1;
+            if (v[2] == v[0])
+                v[2] = -1;
         }
 
         if (options->doCommunityMatching)
         {
-            if (v[2] != -1) { ASSERT (graph->getMatch(v[2]) == v[0]); }
-            else            { ASSERT (graph->getMatch(v[1]) == v[0]); }
+            if (v[2] != -1)
+            {
+                ASSERT(graph->getMatch(v[2]) == v[0]);
+            }
+            else
+            {
+                ASSERT(graph->getMatch(v[1]) == v[0]);
+            }
         }
         else
         {
-            if (v[1] != -1) { ASSERT (graph->getMatch(v[1]) == v[0]); }
-            else            { ASSERT (graph->getMatch(v[0]) == v[0]); }
+            if (v[1] != -1)
+            {
+                ASSERT(graph->getMatch(v[1]) == v[0]);
+            }
+            else
+            {
+                ASSERT(graph->getMatch(v[0]) == v[0]);
+            }
         }
     }
 #endif
-
 }
 
 //-----------------------------------------------------------------------------
@@ -261,22 +281,24 @@ void matching_PA(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 void matching_DavisPA(Graph *graph, const Options *options)
 {
-    Int n = graph->n;
+    Int n   = graph->n;
     Int *Gp = graph->p;
     Int *Gi = graph->i;
 
     /* The brotherly threshold is the Davis constant times average degree. */
-    double bt = options->davisBrotherlyThreshold * ((double) graph->nz / (double) graph->n);
+    double bt = options->davisBrotherlyThreshold
+                * ((double)graph->nz / (double)graph->n);
 
 #ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,
      * all unmatched vertices must have matched neighbors. */
     for (Int k = 0; k < n; k++)
     {
-        if (graph->isMatched(k)) continue;
-        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        if (graph->isMatched(k))
+            continue;
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
-            ASSERT (graph->isMatched(Gi[p]));
+            ASSERT(graph->isMatched(Gi[p]));
         }
     }
 #endif
@@ -284,16 +306,18 @@ void matching_DavisPA(Graph *graph, const Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Consider only matched nodes */
-        if (!graph->isMatched(k)) continue;
+        if (!graph->isMatched(k))
+            continue;
 
-        Int degree = Gp[k+1] - Gp[k];
-        if (degree >= (Int) bt)
+        Int degree = Gp[k + 1] - Gp[k];
+        if (degree >= (Int)bt)
         {
             Int v = -1;
-            for (Int p = Gp[k]; p < Gp[k+1]; p++)
+            for (Int p = Gp[k]; p < Gp[k + 1]; p++)
             {
                 Int neighbor = Gi[p];
-                if (graph->isMatched(neighbor)) continue;
+                if (graph->isMatched(neighbor))
+                    continue;
 
                 if (v == -1)
                 {
@@ -321,7 +345,7 @@ void matching_DavisPA(Graph *graph, const Options *options)
         }
     }
 
-    ASSERT (graph->cn < n);
+    ASSERT(graph->cn < n);
 }
 
 //-----------------------------------------------------------------------------
@@ -331,30 +355,32 @@ void matching_HEM(Graph *graph, const Options *options)
 {
     (void)options; // Unused variable
 
-    Int n = graph->n;
-    Int *Gp = graph->p;
-    Int *Gi = graph->i;
+    Int n      = graph->n;
+    Int *Gp    = graph->p;
+    Int *Gi    = graph->i;
     double *Gx = graph->x;
 
     for (Int k = 0; k < n; k++)
     {
         /* Consider only unmatched nodes */
-        if (graph->isMatched(k)) continue;
+        if (graph->isMatched(k))
+            continue;
 
-        Int heaviestNeighbor = -1;
+        Int heaviestNeighbor  = -1;
         double heaviestWeight = -1.0;
         for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
             Int neighbor = Gi[p];
 
             /* Consider only unmatched neighbors */
-            if (graph->isMatched(neighbor)) continue;
+            if (graph->isMatched(neighbor))
+                continue;
 
             /* Keep track of the heaviest. */
             double x = Gx[p];
             if (x > heaviestWeight)
             {
-                heaviestWeight = x;
+                heaviestWeight   = x;
                 heaviestNeighbor = neighbor;
             }
         }
@@ -374,16 +400,16 @@ void matching_HEM(Graph *graph, const Options *options)
     for (Int k = 0; k < n; k++)
     {
         /* Check condition 1 */
-        if (graph->matching[k]) continue;
+        if (graph->matching[k])
+            continue;
 
         /* Check condition 2 */
         for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
-            ASSERT (graph->matching[Gi[p]]);
+            ASSERT(graph->matching[Gi[p]]);
         }
     }
 #endif
-
 }
 
 } // end namespace Mongoose

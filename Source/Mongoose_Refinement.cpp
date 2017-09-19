@@ -1,7 +1,7 @@
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_Refinement.hpp"
 #include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_ImproveFM.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Logger.hpp"
 
 namespace Mongoose
@@ -11,37 +11,43 @@ Graph *refine(Graph *graph, const Options *options)
 {
     Logger::tic(RefinementTiming);
 
-    Graph *P = graph->parent;
-    Int cn = graph->n;
-    bool *cPartition = graph->partition;
-    double *fGains = P->vertexGains;
+    Graph *P             = graph->parent;
+    Int cn               = graph->n;
+    bool *cPartition     = graph->partition;
+    double *fGains       = P->vertexGains;
     Int *fExternalDegree = P->externalDegree;
 
     /* Transfer cut costs and partition details upwards. */
-    P->heuCost = graph->heuCost;
-    P->cutCost = graph->cutCost;
-    P->W0 = graph->W0;
-    P->W1 = graph->W1;
+    P->heuCost   = graph->heuCost;
+    P->cutCost   = graph->cutCost;
+    P->W0        = graph->W0;
+    P->W1        = graph->W1;
     P->imbalance = graph->imbalance;
 
     /* For each vertex in the coarse graph. */
     for (Int k = 0; k < cn; k++)
     {
         /* Load up the inverse matching */
-        Int v[3] = {-1, -1, -1};
-        v[0] = P->invmatchmap[k];
-        v[1] = P->getMatch(v[0]);
-        if (v[0] == v[1]) { v[1] = -1; }
+        Int v[3] = { -1, -1, -1 };
+        v[0]     = P->invmatchmap[k];
+        v[1]     = P->getMatch(v[0]);
+        if (v[0] == v[1])
+        {
+            v[1] = -1;
+        }
         else
         {
             v[2] = P->getMatch(v[1]);
-            if (v[0] == v[2]) { v[2] = -1; }
+            if (v[0] == v[2])
+            {
+                v[2] = -1;
+            }
         }
         /* Transfer the partition choices to the fine level. */
         bool cp = cPartition[k];
         for (Int i = 0; i < 3 && v[i] != -1; i++)
         {
-            Int vertex = v[i];
+            Int vertex           = v[i];
             P->partition[vertex] = cp;
         }
     }
@@ -53,7 +59,7 @@ Graph *refine(Graph *graph, const Options *options)
     {
         /* Get the appropriate heap's data. */
         Int *heap = graph->bhHeap[h];
-        Int size = graph->bhSize[h];
+        Int size  = graph->bhSize[h];
 
         /* Go through all the boundary nodes. */
         for (Int hpos = 0; hpos < size; hpos++)
@@ -62,14 +68,20 @@ Graph *refine(Graph *graph, const Options *options)
             Int k = heap[hpos];
 
             /* Load up the inverse matching */
-            Int v[3] = {-1, -1, -1};
-            v[0] = P->invmatchmap[k];
-            v[1] = P->getMatch(v[0]);
-            if (v[0] == v[1]) { v[1] = -1; }
+            Int v[3] = { -1, -1, -1 };
+            v[0]     = P->invmatchmap[k];
+            v[1]     = P->getMatch(v[0]);
+            if (v[0] == v[1])
+            {
+                v[1] = -1;
+            }
             else
             {
                 v[2] = P->getMatch(v[1]);
-                if (v[0] == v[2]) { v[2] = -1; }
+                if (v[0] == v[2])
+                {
+                    v[2] = -1;
+                }
             }
 
             /* Relax the boundary constraint. */
@@ -85,7 +97,7 @@ Graph *refine(Graph *graph, const Options *options)
                 if (externalDegree > 0)
                 {
                     fExternalDegree[vertex] = externalDegree;
-                    fGains[vertex] = gain;
+                    fGains[vertex]          = gain;
                     bhInsert(P, vertex);
                 }
             }

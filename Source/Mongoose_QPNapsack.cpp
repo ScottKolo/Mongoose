@@ -43,12 +43,12 @@
     The solution technique is to start with an initial guess lambda for
     mu and search for a zero of L'. We have the following cases:
 
-    1. lambda >= 0, L'(lambda+) >= 0: mu >= lambda. If L' = 0, then done. 
+    1. lambda >= 0, L'(lambda+) >= 0: mu >= lambda. If L' = 0, then done.
                                     Otherwise, increase lambda using napup until
                                     slope vanishes
 
-    2. lambda <= 0, L'(lambda-) <= 0: mu <= lambda. If L' = 0, then done. 
-                                    Otherwise, decrease lambda using napdown 
+    2. lambda <= 0, L'(lambda-) <= 0: mu <= lambda. If L' = 0, then done.
+                                    Otherwise, decrease lambda using napdown
                                     until slope vanishes
 
     3. lambda >= 0, L'(lambda+)  < 0: If L' (0-) < 0, then mu < 0. Call napdown
@@ -81,66 +81,79 @@
     routine.
    ========================================================================== */
 
+#include "Mongoose_Debug.hpp"
 #include "Mongoose_Internal.hpp"
+#include "Mongoose_Logger.hpp"
 #include "Mongoose_QPNapDown.hpp"
 #include "Mongoose_QPNapUp.hpp"
-#include "Mongoose_Debug.hpp"
-#include "Mongoose_Logger.hpp"
 
 namespace Mongoose
 {
 
 #ifndef NDEBUG
-void checkatx (double *x, double *a, Int n, double lo, double hi, double tol)
+void checkatx(double *x, double *a, Int n, double lo, double hi, double tol)
 {
-    double atx = 0. ; 
-    int ok = 1 ;
-    for (Int k = 0 ; k < n ; k++)
+    double atx = 0.;
+    int ok     = 1;
+    for (Int k = 0; k < n; k++)
     {
-        if (x [k] < 0.) { ok = 0 ; PR (("x [%ld] = %g < 0!\n", k, x [k])) ; }
-        if (x [k] > 1.) { ok = 0 ; PR (("x [%ld] = %g > 1!\n", k, x [k])) ; }
+        if (x[k] < 0.)
+        {
+            ok = 0;
+            PR(("x [%ld] = %g < 0!\n", k, x[k]));
+        }
+        if (x[k] > 1.)
+        {
+            ok = 0;
+            PR(("x [%ld] = %g > 1!\n", k, x[k]));
+        }
         if (a != NULL)
         {
-            PR(("a'x = %g * %g = %g\n", a[k], x[k], a[k]*x[k]));
-            atx += a [k] * x [k] ;
+            PR(("a'x = %g * %g = %g\n", a[k], x[k], a[k] * x[k]));
+            atx += a[k] * x[k];
         }
         else
         {
             PR(("a'x = %g * %g = %g\n", 1, x[k], x[k]));
-            atx += x [k] ;
+            atx += x[k];
         }
     }
-    if (atx < lo - tol) { ok = 0 ; }
-    if (atx > hi + tol) { ok = 0 ; }
+    if (atx < lo - tol)
+    {
+        ok = 0;
+    }
+    if (atx > hi + tol)
+    {
+        ok = 0;
+    }
     if (!ok)
     {
-        PR (("tol = %g\n", tol));
-        PR (("napsack error! lo %g a'x %g hi %g\n", lo, atx, hi)) ;
-        FFLUSH ;
-        ASSERT (0) ;
+        PR(("tol = %g\n", tol));
+        PR(("napsack error! lo %g a'x %g hi %g\n", lo, atx, hi));
+        FFLUSH;
+        ASSERT(0);
     }
 }
 #endif
 
-double QPNapsack        /* return the final lambda */
-(
-        double *x,      /* holds y on input, and the solution x on output */
-        Int n,          /* size of x, constraint lo <= a'x <= hi */
-        double lo,      /* partition lower bound */
-        double hi,      /* partition upper bound */
-        double *Gw,     /* vector of nodal weights */
-        double Lambda,  /* initial guess for lambda */
-        const Int *FreeSet_status,
-               /* FreeSet_status [i] = +1,-1, or 0 on input,
-                  for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
-        double *w,      /* work array of size n   */
-        Int *heap1,     /* work array of size n+1 */
-        Int *heap2,     /* work array of size n+1 */
-        double tol      /* Gradient projection tolerance */
-)
+double QPNapsack    /* return the final lambda */
+    (double *x,     /* holds y on input, and the solution x on output */
+     Int n,         /* size of x, constraint lo <= a'x <= hi */
+     double lo,     /* partition lower bound */
+     double hi,     /* partition upper bound */
+     double *Gw,    /* vector of nodal weights */
+     double Lambda, /* initial guess for lambda */
+     const Int *FreeSet_status,
+     /* FreeSet_status [i] = +1,-1, or 0 on input,
+        for 3 cases: x_i =1,0, or 0< x_i< 1.  Not modified. */
+     double *w,  /* work array of size n   */
+     Int *heap1, /* work array of size n+1 */
+     Int *heap2, /* work array of size n+1 */
+     double tol  /* Gradient projection tolerance */
+    )
 {
     double lambda = Lambda;
-    PR (("QPNapsack start [\n")) ;
+    PR(("QPNapsack start [\n"));
 
     /* ---------------------------------------------------------------------- */
     /* compute starting guess if FreeSet_status is provided and lambda != 0 */
@@ -148,7 +161,7 @@ double QPNapsack        /* return the final lambda */
 
     if ((FreeSet_status != NULL) && (lambda != 0))
     {
-        double asum = (lambda > 0 ? -hi : -lo);
+        double asum  = (lambda > 0 ? -hi : -lo);
         double a2sum = 0.;
 
         for (Int k = 0; k < n; k++)
@@ -165,7 +178,8 @@ double QPNapsack        /* return the final lambda */
             }
         }
 
-        if (a2sum != 0.) lambda = asum / a2sum;
+        if (a2sum != 0.)
+            lambda = asum / a2sum;
     }
 
     /* ---------------------------------------------------------------------- */
@@ -185,34 +199,35 @@ double QPNapsack        /* return the final lambda */
             slope += Gw[k] * xi;
         }
     }
-    PR (("slope %g lo %g hi %g\n", slope, lo, hi)) ;
+    PR(("slope %g lo %g hi %g\n", slope, lo, hi));
 
-    /* remember: must still adjust slope by "-hi" or "-lo" for its final value */
+    /* remember: must still adjust slope by "-hi" or "-lo" for its final value
+     */
 
     if ((lambda >= 0.) && (slope >= hi)) /* case 1 */
     {
         if (slope > hi)
         {
-            PR (("napsack case 1 up\n")) ;
+            PR(("napsack case 1 up\n"));
             lambda = QPNapUp(x, n, lambda, Gw, hi, w, heap1, heap2);
             lambda = std::max(0., lambda);
         }
         else
         {
-            PR (("napsack case 1 nothing\n")) ;
+            PR(("napsack case 1 nothing\n"));
         }
     }
     else if ((lambda <= 0.) && (slope <= lo)) /* case 2 */
     {
         if (slope < lo)
         {
-            PR (("napsack case 2 down\n")) ;
+            PR(("napsack case 2 down\n"));
             lambda = QPNapDown(x, n, lambda, Gw, lo, w, heap1, heap2);
             lambda = std::min(lambda, 0.);
         }
         else
         {
-            PR (("napsack case 2 nothing\n")) ;
+            PR(("napsack case 2 nothing\n"));
         }
     }
     else /* case 3 or 4 */
@@ -237,20 +252,22 @@ double QPNapsack        /* return the final lambda */
             {
                 if (slope0 < lo)
                 {
-                    PR (("napsack case 3a down\n")) ;
+                    PR(("napsack case 3a down\n"));
                     lambda = 0.;
                     lambda = QPNapDown(x, n, lambda, Gw, lo, w, heap1, heap2);
-                    if (lambda > 0.) lambda = 0.;
+                    if (lambda > 0.)
+                        lambda = 0.;
                 }
                 else if (slope0 > hi)
                 {
-                    PR (("napsack case 3b down\n")) ;
+                    PR(("napsack case 3b down\n"));
                     lambda = QPNapDown(x, n, lambda, Gw, hi, w, heap1, heap2);
-                    if (lambda < 0.) lambda = 0.;
+                    if (lambda < 0.)
+                        lambda = 0.;
                 }
                 else
                 {
-                    PR (("napsack case 3c nothing\n")) ;
+                    PR(("napsack case 3c nothing\n"));
                     lambda = 0.;
                 }
             }
@@ -258,20 +275,20 @@ double QPNapsack        /* return the final lambda */
             {
                 if (slope0 > hi)
                 {
-                    PR (("napsack case 4a up\n")) ;
+                    PR(("napsack case 4a up\n"));
                     lambda = 0.;
                     lambda = QPNapUp(x, n, lambda, Gw, hi, w, heap1, heap2);
                     lambda = std::max(lambda, 0.);
                 }
                 else if (slope0 < lo)
                 {
-                    PR (("napsack case 4b up\n")) ;
+                    PR(("napsack case 4b up\n"));
                     lambda = QPNapUp(x, n, lambda, Gw, lo, w, heap1, heap2);
                     lambda = std::min(0., lambda);
                 }
                 else
                 {
-                    PR (("napsack case 4c nothing\n")) ;
+                    PR(("napsack case 4c nothing\n"));
                     lambda = 0.;
                 }
             }
@@ -282,26 +299,26 @@ double QPNapsack        /* return the final lambda */
             {
                 if (slope < lo)
                 {
-                    PR (("napsack case 3d down\n")) ;
+                    PR(("napsack case 3d down\n"));
                     lambda = QPNapDown(x, n, lambda, Gw, lo, w, heap1, heap2);
                     lambda = std::min(0., lambda);
                 }
                 else
                 {
-                    PR (("napsack case 3e nothing\n")) ;
+                    PR(("napsack case 3e nothing\n"));
                 }
             }
             else /* ( slope > lo )                    case 4 */
             {
                 if (slope > hi)
                 {
-                    PR (("napsack case 4d up\n")) ;
+                    PR(("napsack case 4d up\n"));
                     lambda = QPNapUp(x, n, lambda, Gw, hi, w, heap1, heap2);
                     lambda = std::max(lambda, 0.);
                 }
                 else
                 {
-                    PR (("napsack case 4e nothing\n")) ;
+                    PR(("napsack case 4e nothing\n"));
                 }
             }
         }
@@ -311,8 +328,8 @@ double QPNapsack        /* return the final lambda */
     /* replace x by x (lambda) */
     /* ---------------------------------------------------------------------- */
 
-    PR (("lambda %g\n", lambda)) ;
-    double atx = 0;
+    PR(("lambda %g\n", lambda));
+    double atx    = 0;
     Int last_move = 0;
     for (Int k = 0; k < n; k++)
     {
@@ -327,10 +344,10 @@ double QPNapsack        /* return the final lambda */
         }
         else
         {
-            x[k] = xi;
+            x[k]      = xi;
             last_move = k;
         }
-// todo
+        // todo
         double newatx = atx + Gw[k] * x[k];
 
         // Correction step if we go too far
@@ -338,10 +355,10 @@ double QPNapsack        /* return the final lambda */
         {
             double diff = hi - atx;
             // Need diff = Gw[k] * x[k], so...
-            x[k] = diff / Gw[k];
+            x[k]   = diff / Gw[k];
             newatx = atx + Gw[k] * x[k];
         }
-        atx = newatx ;
+        atx = newatx;
     }
 
     // Correction step if we didn't go far enough
@@ -353,19 +370,19 @@ double QPNapsack        /* return the final lambda */
         // Need diff = Gw[k] * x[k], so...
         x[k] = std::min(1., diff / Gw[k]);
         atx += Gw[k] * x[k];
-        last_move = (k+1) % n;
+        last_move = (k + 1) % n;
     }
 
 #ifndef NDEBUG
     // Define check tolerance by lambda values
-    double atx_tol = log10(std::max(fabs(lambda), fabs(Lambda)) /
-        (1e-9 + std::min(fabs(lambda), fabs(Lambda))));
-    atx_tol = std::max(atx_tol, tol);
+    double atx_tol = log10(std::max(fabs(lambda), fabs(Lambda))
+                           / (1e-9 + std::min(fabs(lambda), fabs(Lambda))));
+    atx_tol        = std::max(atx_tol, tol);
 
-    checkatx (x, Gw, n, lo, hi, atx_tol);
+    checkatx(x, Gw, n, lo, hi, atx_tol);
 #endif
 
-    PR (("QPNapsack done ]\n")) ;
+    PR(("QPNapsack done ]\n"));
 
     return lambda;
 }

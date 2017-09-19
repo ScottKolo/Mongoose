@@ -1,7 +1,7 @@
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_Waterdance.hpp"
 #include "Mongoose_ImproveFM.hpp"
 #include "Mongoose_ImproveQP.hpp"
+#include "Mongoose_Internal.hpp"
 
 namespace Mongoose
 {

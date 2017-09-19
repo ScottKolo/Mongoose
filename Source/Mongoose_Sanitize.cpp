@@ -1,12 +1,13 @@
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_Sanitize.hpp"
+#include "Mongoose_Internal.hpp"
 
 using namespace std;
 
 namespace Mongoose
 {
 
-cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular, bool makeEdgeWeightsBinary)
+cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular,
+                   bool makeEdgeWeightsBinary)
 {
     cs *cleanMatrix;
     if (symmetricTriangular)
@@ -15,8 +16,8 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular, bool makeEdgeWeig
     }
     else
     {
-        cs* A_transpose = cs_transpose(compressed_A, 1);
-        cleanMatrix = cs_add(compressed_A, A_transpose, 0.5, 0.5);
+        cs *A_transpose = cs_transpose(compressed_A, 1);
+        cleanMatrix     = cs_add(compressed_A, A_transpose, 0.5, 0.5);
         cs_spfree(A_transpose);
     }
 
@@ -27,14 +28,14 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular, bool makeEdgeWeig
 
     removeDiagonal(cleanMatrix);
 
-    cs *cleanMatrix_transpose = cs_transpose (cleanMatrix, 1);
+    cs *cleanMatrix_transpose = cs_transpose(cleanMatrix, 1);
     cs_spfree(cleanMatrix);
 
-    if(!cleanMatrix_transpose)
+    if (!cleanMatrix_transpose)
     {
         return NULL;
     }
-    cleanMatrix = cs_transpose (cleanMatrix_transpose, 1);
+    cleanMatrix = cs_transpose(cleanMatrix_transpose, 1);
     cs_spfree(cleanMatrix_transpose);
     if (!cleanMatrix)
     {
@@ -63,14 +64,16 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular, bool makeEdgeWeig
 
 void removeDiagonal(cs *A)
 {
-    Int n = A->n;
-    Int *Ap = A->p; Int *Ai = A->i; double *Ax = A->x;
-    Int nz = 0;
+    Int n      = A->n;
+    Int *Ap    = A->p;
+    Int *Ai    = A->i;
+    double *Ax = A->x;
+    Int nz     = 0;
     Int old_Ap = Ap[0];
 
     for (Int j = 0; j < n; j++)
     {
-        for (Int p = old_Ap; p < Ap[j+1]; p++)
+        for (Int p = old_Ap; p < Ap[j + 1]; p++)
         {
             if (Ai[p] != j)
             {
@@ -79,27 +82,33 @@ void removeDiagonal(cs *A)
                 nz++;
             }
         }
-        old_Ap = Ap[j+1];
-        Ap[j+1] = nz;
+        old_Ap    = Ap[j + 1];
+        Ap[j + 1] = nz;
     }
 }
 
 // Requires A to be a triangular matrix with no diagonal.
 cs *mirrorTriangular(cs *A)
 {
-    Int A_n = A->n; Int A_nz = A->p[A_n];
-    Int B_nz = 2*A_nz;
+    Int A_n  = A->n;
+    Int A_nz = A->p[A_n];
+    Int B_nz = 2 * A_nz;
 
-    cs *B = cs_spalloc (A_n, A_n, B_nz, 1, 1);
-    if (!B) return NULL;
+    cs *B = cs_spalloc(A_n, A_n, B_nz, 1, 1);
+    if (!B)
+        return NULL;
 
-    Int *Ap = A->p; Int *Ai = A->i; double *Ax = A->x;
-    Int *Bp = B->p; Int *Bi = B->i; double *Bx = B->x;
-    Int nz = 0;
+    Int *Ap    = A->p;
+    Int *Ai    = A->i;
+    double *Ax = A->x;
+    Int *Bp    = B->p;
+    Int *Bi    = B->i;
+    double *Bx = B->x;
+    Int nz     = 0;
 
     for (Int j = 0; j < A_n; j++)
     {
-        for (Int p = Ap[j]; p < Ap[j+1]; p++)
+        for (Int p = Ap[j]; p < Ap[j + 1]; p++)
         {
             Bi[nz] = Ai[p];
             Bp[nz] = j;
@@ -112,7 +121,7 @@ cs *mirrorTriangular(cs *A)
         }
     }
     B->nz = nz;
-    cs* C = cs_compress(B);
+    cs *C = cs_compress(B);
     cs_spfree(B);
 
     return C;

@@ -1,10 +1,10 @@
-#include "Mongoose_Internal.hpp"
+#include "Mongoose_EdgeSeparator.hpp"
 #include "Mongoose_Coarsening.hpp"
 #include "Mongoose_GuessCut.hpp"
+#include "Mongoose_Internal.hpp"
+#include "Mongoose_Random.hpp"
 #include "Mongoose_Refinement.hpp"
 #include "Mongoose_Waterdance.hpp"
-#include "Mongoose_EdgeSeparator.hpp"
-#include "Mongoose_Random.hpp"
 
 #include <algorithm>
 
@@ -18,24 +18,28 @@ void cleanup(Graph *graph, const Options *options);
 int ComputeEdgeSeparator(Graph *graph)
 {
     // use default options if not present
-    Options *options = Options::Create ( ) ;
-    if (!options) return (EXIT_FAILURE) ;
-    int result = ComputeEdgeSeparator(graph, options) ;
-    SuiteSparse_free (options) ;
-    return (result) ;
+    Options *options = Options::Create();
+    if (!options)
+        return (EXIT_FAILURE);
+    int result = ComputeEdgeSeparator(graph, options);
+    SuiteSparse_free(options);
+    return (result);
 }
 
 int ComputeEdgeSeparator(Graph *graph, const Options *options)
 {
     // Check inputs
-    if (!optionsAreValid(options)) return (EXIT_FAILURE) ;
+    if (!optionsAreValid(options))
+        return (EXIT_FAILURE);
 
     setRandomSeed(options->randomSeed);
 
-    if (!graph) return EXIT_FAILURE;
+    if (!graph)
+        return EXIT_FAILURE;
 
     /* Finish initialization */
-    if (!graph->initialize(options)) return EXIT_FAILURE;
+    if (!graph->initialize(options))
+        return EXIT_FAILURE;
 
     /* Keep track of what the current graph is at any stage */
     Graph *current = graph;
@@ -97,32 +101,32 @@ bool optionsAreValid(const Options *options)
     if (!options)
     {
         // Error!
-        return (false) ;
+        return (false);
     }
     if (options->targetSplit < 0 || options->targetSplit > 1)
     {
         // Error!
-        return (false) ;
+        return (false);
     }
     if (options->softSplitTolerance < 0)
     {
         // Error!
-        return (false) ;
+        return (false);
     }
-    return (true) ;
+    return (true);
 }
 
 void cleanup(Graph *G, const Options *options)
 {
-    Int cutSize = 0;
-    double cutCost = 0;
+    Int cutSize        = 0;
+    double cutCost     = 0;
     double part_weight = 0;
-    for(Int i = 0; i < G->n; i++)
+    for (Int i = 0; i < G->n; i++)
     {
         if (G->partition[i])
         {
             part_weight += (G->w) ? G->w[i] : 1;
-            for(Int j = G->p[i]; j < G->p[i+1]; j++)
+            for (Int j = G->p[i]; j < G->p[i + 1]; j++)
             {
                 if (i != j && (!G->partition[G->i[j]]))
                 {
@@ -132,7 +136,8 @@ void cleanup(Graph *G, const Options *options)
             }
         }
     }
-    G->imbalance = options->targetSplit - std::min(part_weight, G->W-part_weight) / G->W;
+    G->imbalance = options->targetSplit
+                   - std::min(part_weight, G->W - part_weight) / G->W;
     G->cutCost = cutCost;
     G->cutSize = cutSize;
 }

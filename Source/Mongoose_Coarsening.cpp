@@ -3,13 +3,13 @@
  *
  * In order to operate on extremely large graphs, a pre-processing is
  * done to reduce the size of the graph while maintaining its overall structure.
- * Given a matching of vertices with other vertices (e.g. heavy edge matching, 
+ * Given a matching of vertices with other vertices (e.g. heavy edge matching,
  * random, etc.), coarsening constructs the new, coarsened graph.
  */
 
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_Coarsening.hpp"
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Logger.hpp"
 
 namespace Mongoose
@@ -43,54 +43,63 @@ Graph *coarsen(Graph *graph, const Options *options)
 
     Logger::tic(CoarseningTiming);
 
-    Int cn = graph->cn;
-    Int *Gp = graph->p;
-    Int *Gi = graph->i;
+    Int cn     = graph->cn;
+    Int *Gp    = graph->p;
+    Int *Gi    = graph->i;
     double *Gx = graph->x;
     double *Gw = graph->w;
 
-    Int *matchmap = graph->matchmap;
+    Int *matchmap    = graph->matchmap;
     Int *invmatchmap = graph->invmatchmap;
 
     /* Build the coarse graph */
     Graph *coarseGraph = Graph::Create(graph);
-    if (!coarseGraph) return NULL;
+    if (!coarseGraph)
+        return NULL;
 
-    Int *Cp = coarseGraph->p;
-    Int *Ci = coarseGraph->i;
-    double *Cx = coarseGraph->x;
-    double *Cw = coarseGraph->w;
+    Int *Cp       = coarseGraph->p;
+    Int *Ci       = coarseGraph->i;
+    double *Cx    = coarseGraph->x;
+    double *Cw    = coarseGraph->w;
     double *gains = coarseGraph->vertexGains;
-    Int munch = 0;
-    double X = 0.0;
+    Int munch     = 0;
+    double X      = 0.0;
 
     /* Hashtable stores column pointer values. */
-    Int *htable = (Int*) SuiteSparse_malloc(static_cast<size_t>(cn), sizeof(Int));
+    Int *htable
+        = (Int *)SuiteSparse_malloc(static_cast<size_t>(cn), sizeof(Int));
     if (!htable)
     {
         coarseGraph->~Graph();
         SuiteSparse_free(coarseGraph);
         return NULL;
     }
-    for (Int i = 0; i < cn; i++) htable[i] = -1;
+    for (Int i = 0; i < cn; i++)
+        htable[i] = -1;
 
     /* For each vertex in the coarse graph. */
     for (Int k = 0; k < cn; k++)
     {
         /* Load up the inverse matching */
-        Int v[3] = {-1, -1, -1};
-        v[0] = invmatchmap[k];
-        v[1] = graph->getMatch(v[0]);
-        if (v[0] == v[1]) { v[1] = -1; }
+        Int v[3] = { -1, -1, -1 };
+        v[0]     = invmatchmap[k];
+        v[1]     = graph->getMatch(v[0]);
+        if (v[0] == v[1])
+        {
+            v[1] = -1;
+        }
         else
         {
             v[2] = graph->getMatch(v[1]);
-            if (v[0] == v[2]) { v[2] = -1; }
+            if (v[0] == v[2])
+            {
+                v[2] = -1;
+            }
         }
 
-        Int ps = Cp[k] = munch;     /* The munch start for this column */
+        Int ps = Cp[k] = munch; /* The munch start for this column */
 
-        double nodeWeight = 0.0;
+        double nodeWeight     = 0.0;
         double sumEdgeWeights = 0.0;
         for (Int i = 0; i < 3 && v[i] != -1; i++)
         {
@@ -98,22 +107,24 @@ Graph *coarsen(Graph *graph, const Options *options)
             Int vertex = v[i];
             nodeWeight += Gw[vertex];
 
-            for (Int p = Gp[vertex]; p < Gp[vertex+1]; p++)
+            for (Int p = Gp[vertex]; p < Gp[vertex + 1]; p++)
             {
                 Int toCoarsened = matchmap[Gi[p]];
-                if (toCoarsened == k) continue;         /* Delete self-edges */
+                if (toCoarsened == k)
+                    continue; /* Delete self-edges */
 
-                /* Read the edge weight and accumulate the sum of edge weights. */
+                /* Read the edge weight and accumulate the sum of edge weights.
+                 */
                 double edgeWeight = Gx[p];
                 sumEdgeWeights += Gx[p];
 
                 /* Check the hashtable before scattering. */
                 Int cp = htable[toCoarsened];
-                if (cp < ps)             /* Hasn't been seen yet this column */
+                if (cp < ps) /* Hasn't been seen yet this column */
                 {
                     htable[toCoarsened] = munch;
-                    Ci[munch] = toCoarsened;
-                    Cx[munch] = edgeWeight;
+                    Ci[munch]           = toCoarsened;
+                    Cx[munch]           = edgeWeight;
                     munch++;
                 }
                 /* If the entry already exists & we have edge weights,
@@ -134,7 +145,7 @@ Graph *coarsen(Graph *graph, const Options *options)
     }
 
     /* Set the last column pointer */
-    Cp[cn] = munch;
+    Cp[cn]          = munch;
     coarseGraph->nz = munch;
 
     /* Save the sum of edge weights on the graph. */
@@ -154,7 +165,7 @@ Graph *coarsen(Graph *graph, const Options *options)
     {
         W += Cw[k];
     }
-    ASSERT (W == coarseGraph->W) ;
+    ASSERT(W == coarseGraph->W);
 #endif
 
     Logger::toc(CoarseningTiming);

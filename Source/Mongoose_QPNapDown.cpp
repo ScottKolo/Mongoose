@@ -12,54 +12,53 @@
    x_i (lambda) increases. Hence, the only bound variables that can become
    free are those with x_i (lambda) <= 0 */
 
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_QPNapDown.hpp"
-#include "Mongoose_QPMaxHeap.hpp"
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Logger.hpp"
+#include "Mongoose_QPMaxHeap.hpp"
 
 namespace Mongoose
 {
 
-double QPNapDown            /* return lambda */
-        (
-                const double *x,        /* holds y on input, not modified */
-                const Int n,            /* size of x */
-                double lambda,          /* initial guess for the shift */
-                const double *a,        /* input constraint vector */
-                double b,               /* input constraint scalar */
-                double *breakpts,       /* break points */
-                Int *bound_heap,        /* work array */
-                Int *free_heap          /* work array */
-        )
+double QPNapDown       /* return lambda */
+    (const double *x,  /* holds y on input, not modified */
+     const Int n,      /* size of x */
+     double lambda,    /* initial guess for the shift */
+     const double *a,  /* input constraint vector */
+     double b,         /* input constraint scalar */
+     double *breakpts, /* break points */
+     Int *bound_heap,  /* work array */
+     Int *free_heap    /* work array */
+    )
 {
     ASSERT(a != NULL);
     Int i, k, e, maxsteps, n_bound, n_free;
     double ai, asum, a2sum, maxbound, maxfree, t;
 
     maxbound = -INFINITY;
-    maxfree = -INFINITY;
+    maxfree  = -INFINITY;
 
     /* -------------------------------------------------------------- */
     /* construct the heaps */
     /* -------------------------------------------------------------- */
 
     n_bound = 0;
-    n_free = 0;
-    asum = 0.;
-    a2sum = 0.;
+    n_free  = 0;
+    asum    = 0.;
+    a2sum   = 0.;
 
     for (i = 0; i < n; i++)
     {
-        ai = a[i];
+        ai        = a[i];
         double xi = x[i] - ai * lambda;
         if (xi < 0.)
         {
             n_bound++;
             bound_heap[n_bound] = i;
 
-            t = x[i] / ai;
-            maxbound = std::max(maxbound, t);
+            t           = x[i] / ai;
+            maxbound    = std::max(maxbound, t);
             breakpts[i] = t;
         }
         else if (xi < 1.)
@@ -68,8 +67,8 @@ double QPNapDown            /* return lambda */
             free_heap[n_free] = i;
             asum += x[i] * ai;
             a2sum += ai * ai;
-            t = (x[i] - 1.) / ai;
-            maxfree = std::max(maxfree, t);
+            t           = (x[i] - 1.) / ai;
+            maxfree     = std::max(maxfree, t);
             breakpts[i] = t;
         }
         else
@@ -87,7 +86,7 @@ double QPNapDown            /* return lambda */
     for (k = 1; k <= maxsteps; k++)
     {
         double new_break = std::max(maxfree, maxbound);
-        double s = asum - new_break * a2sum;
+        double s         = asum - new_break * a2sum;
         if ((s >= b) || (new_break == -INFINITY)) /* done */
         {
             if (a2sum != 0.)
@@ -129,12 +128,12 @@ double QPNapDown            /* return lambda */
             while (breakpts[e = bound_heap[1]] >= lambda)
             {
                 n_bound = QPMaxHeap_delete(bound_heap, n_bound, breakpts);
-                ai = a[e];
+                ai      = a[e];
                 a2sum += ai * ai;
                 asum += ai * x[e];
-                t = (x[e] - 1.) / ai;
+                t           = (x[e] - 1.) / ai;
                 breakpts[e] = t;
-                n_free = QPMaxHeap_add(e, free_heap, breakpts, n_free);
+                n_free      = QPMaxHeap_add(e, free_heap, breakpts, n_free);
                 if (n_bound == 0)
                     break;
             }
@@ -144,12 +143,12 @@ double QPNapDown            /* return lambda */
         /* get the biggest entry in each heap */
         /*------------------------------------------------------------------- */
 
-        maxfree = (n_free > 0 ? breakpts[free_heap[1]] : -INFINITY);
+        maxfree  = (n_free > 0 ? breakpts[free_heap[1]] : -INFINITY);
         maxbound = (n_bound > 0 ? breakpts[bound_heap[1]] : -INFINITY);
     }
 
     /* This should never happen */
-    ASSERT (false) ;
+    ASSERT(false);
     lambda = 0.;
     return lambda;
 }

@@ -1,33 +1,29 @@
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_ImproveQP.hpp"
 #include "Mongoose_BoundaryHeap.hpp"
-#include "Mongoose_ImproveFM.hpp"
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_ImproveFM.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Logger.hpp"
-#include "Mongoose_QPNapsack.hpp"
-#include "Mongoose_QPLinks.hpp"
 #include "Mongoose_QPBoundary.hpp"
+#include "Mongoose_QPLinks.hpp"
+#include "Mongoose_QPNapsack.hpp"
 
 namespace Mongoose
 {
 
-bool improveCutUsingQP
-(
-    Graph *graph,
-    const Options *options,
-    bool isInitial
-)
+bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
 {
-    if (!options->useQPGradProj) return false;
+    if (!options->useQPGradProj)
+        return false;
 
     Logger::tic(QPTiming);
 
     /* Unpack structure fields */
-    Int n = graph->n;
-    Int *Gp = graph->p;
-    double *Gx = graph->x;              // edge weights
-    double *Gw = graph->w;              // node weights
-    double *gains = graph->vertexGains;
+    Int n               = graph->n;
+    Int *Gp             = graph->p;
+    double *Gx          = graph->x; // edge weights
+    double *Gw          = graph->w; // node weights
+    double *gains       = graph->vertexGains;
     Int *externalDegree = graph->externalDegree;
 
     /* Create workspaces */
@@ -39,25 +35,26 @@ bool improveCutUsingQP
     }
 
     // set the QP parameters
-    double tol = options->softSplitTolerance;
-    double targetSplit = options->targetSplit ;
-    if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
+    double tol         = options->softSplitTolerance;
+    double targetSplit = options->targetSplit;
+    if (targetSplit > 0.5)
+        targetSplit = 1. - targetSplit;
 
     // ensure targetSplit and tolerance are valid.  These conditions were
     // already checked on input to Mongoose, in optionsAreValid.
-    ASSERT (tol >= 0);
-    ASSERT (targetSplit >= 0 && targetSplit <= 0.5);
+    ASSERT(tol >= 0);
+    ASSERT(targetSplit >= 0 && targetSplit <= 0.5);
 
     // QP upper and lower bounds.  targetSplit +/- tol is in the range 0 to 1,
     // and then this factor is multiplied by the sum of all node weights
     // (graph->W) to get the QP lo and hi.
     QP->lo = graph->W * std::max(0., targetSplit - tol);
     QP->hi = graph->W * std::min(1., targetSplit + tol);
-    ASSERT (QP->lo <= QP->hi);
+    ASSERT(QP->lo <= QP->hi);
 
     /* Convert the guess from discrete to continuous. */
-    double *D = QP->D;
-    double *guess = QP->x;
+    double *D       = QP->D;
+    double *guess   = QP->x;
     bool *partition = graph->partition;
     for (Int k = 0; k < n; k++)
     {
@@ -77,7 +74,7 @@ bool improveCutUsingQP
             }
         }
         double maxWeight = 0;
-        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
             maxWeight = std::max(maxWeight, Gx[p]);
         }
@@ -90,8 +87,8 @@ bool improveCutUsingQP
     if (QP->b < QP->lo || QP->b > QP->hi)
     {
         QP->lambda = QPNapsack(guess, n, QP->lo, QP->hi, graph->w, QP->lambda,
-                               QP->FreeSet_status,
-                               QP->wx[1], QP->wi[0], QP->wi[1], options->gradProjTolerance);
+                               QP->FreeSet_status, QP->wx[1], QP->wi[0],
+                               QP->wi[1], options->gradProjTolerance);
     }
 
     // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi
@@ -111,9 +108,9 @@ bool improveCutUsingQP
 
     /* Use the CutCost to keep track of impacts to the cut cost. */
     CutCost cost;
-    cost.cutCost = graph->cutCost;
-    cost.W[0] = graph->W0;
-    cost.W[1] = graph->W1;
+    cost.cutCost   = graph->cutCost;
+    cost.W[0]      = graph->W0;
+    cost.W[1]      = graph->W1;
     cost.imbalance = graph->imbalance;
 
     /* Do the recommended swaps and compute the new cut cost. */
@@ -128,8 +125,8 @@ bool improveCutUsingQP
             cost.cutCost -= 2 * gains[k];
             cost.W[oldPartition] -= Gw[k];
             cost.W[newPartition] += Gw[k];
-            cost.imbalance = targetSplit -
-                std::min(cost.W[0], cost.W[1]) / graph->W;
+            cost.imbalance
+                = targetSplit - std::min(cost.W[0], cost.W[1]) / graph->W;
 
             Int bhVertexPosition = graph->BH_getIndex(k);
 
@@ -139,19 +136,15 @@ bool improveCutUsingQP
              * this vertex to the boundary already. */
             if (bhVertexPosition != -1)
             {
-                bhRemove(graph, options, k, gains[k], partition[k], bhVertexPosition);
+                bhRemove(graph, options, k, gains[k], partition[k],
+                         bhVertexPosition);
             }
 
             /* Swap the partition and compute the impact on neighbors. */
-            fmSwap
-            (
-                graph, options,
-                k,
-                gains[k],
-                partition[k]
-            );
+            fmSwap(graph, options, k, gains[k], partition[k]);
 
-            if (externalDegree[k] > 0) bhInsert(graph, k);
+            if (externalDegree[k] > 0)
+                bhInsert(graph, k);
         }
     }
 
@@ -163,13 +156,15 @@ bool improveCutUsingQP
     SuiteSparse_free(QP);
 
     /* Write the cut cost back to the graph. */
-    graph->cutCost = cost.cutCost;
-    graph->W0 = cost.W[0];
-    graph->W1 = cost.W[1];
-    graph->imbalance = cost.imbalance;
+    graph->cutCost      = cost.cutCost;
+    graph->W0           = cost.W[0];
+    graph->W1           = cost.W[1];
+    graph->imbalance    = cost.imbalance;
     double absImbalance = fabs(graph->imbalance);
-    graph->heuCost = graph->cutCost +
-                 (absImbalance > options->softSplitTolerance ? absImbalance * graph->H : 0.0);
+    graph->heuCost      = graph->cutCost
+                     + (absImbalance > options->softSplitTolerance
+                            ? absImbalance * graph->H
+                            : 0.0);
 
     Logger::toc(QPTiming);
 

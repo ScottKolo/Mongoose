@@ -6,7 +6,8 @@
 namespace Mongoose
 {
 
-cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular, bool makeEdgeWeightsBinary);
+cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular,
+                   bool makeEdgeWeightsBinary);
 void removeDiagonal(cs *A);
 // Requires A to be a triangular matrix with no diagonal.
 cs *mirrorTriangular(cs *A);

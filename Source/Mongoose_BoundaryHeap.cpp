@@ -1,7 +1,7 @@
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_BoundaryHeap.hpp"
 #include "Mongoose_CutCost.hpp"
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Logger.hpp"
 
 namespace Mongoose
@@ -13,21 +13,21 @@ namespace Mongoose
 void bhLoad(Graph *graph, const Options *options)
 {
     /* Load the boundary heaps. */
-    Int n = graph->n;
-    Int *Gp = graph->p;
-    Int *Gi = graph->i;
-    double *Gx = graph->x;
-    double *Gw = graph->w;
-    bool *partition = graph->partition;
-    double *gains = graph->vertexGains;
+    Int n               = graph->n;
+    Int *Gp             = graph->p;
+    Int *Gi             = graph->i;
+    double *Gx          = graph->x;
+    double *Gw          = graph->w;
+    bool *partition     = graph->partition;
+    double *gains       = graph->vertexGains;
     Int *externalDegree = graph->externalDegree;
 
     /* Keep track of the cut cost. */
     CutCost cost;
-    cost.heuCost = 0.0;
-    cost.cutCost = 0.0;
-    cost.W[0] = 0.0;
-    cost.W[1] = 0.0;
+    cost.heuCost   = 0.0;
+    cost.cutCost   = 0.0;
+    cost.W[0]      = 0.0;
+    cost.W[1]      = 0.0;
     cost.imbalance = 0.0;
 
     /* Compute the gains & discover if the vertex is on the boundary. */
@@ -37,11 +37,11 @@ void bhLoad(Graph *graph, const Options *options)
         cost.W[kPartition] += Gw[k];
 
         double gain = 0.0;
-        Int exD = 0;
-        for (Int p = Gp[k]; p < Gp[k+1]; p++)
+        Int exD     = 0;
+        for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
             double edgeWeight = Gx[p];
-            bool onSameSide = (kPartition == partition[Gi[p]]);
+            bool onSameSide   = (kPartition == partition[Gi[p]]);
             gain += (onSameSide ? -edgeWeight : edgeWeight);
             if (!onSameSide)
             {
@@ -49,23 +49,26 @@ void bhLoad(Graph *graph, const Options *options)
                 cost.cutCost += edgeWeight;
             }
         }
-        gains[k] = gain;
+        gains[k]          = gain;
         externalDegree[k] = exD;
-        if (exD > 0) bhInsert(graph, k);
+        if (exD > 0)
+            bhInsert(graph, k);
     }
 
     /* Save the cut cost to the graph. */
     graph->cutCost = cost.cutCost;
-    graph->W0 = cost.W[0];
-    graph->W1 = cost.W[1];
+    graph->W0      = cost.W[0];
+    graph->W1      = cost.W[1];
 
-    double targetSplit = options->targetSplit ;
-    if (targetSplit > 0.5) targetSplit = 1. - targetSplit ;
+    double targetSplit = options->targetSplit;
+    if (targetSplit > 0.5)
+        targetSplit = 1. - targetSplit;
 
     graph->imbalance = targetSplit - std::min(graph->W0, graph->W1) / graph->W;
-    graph->heuCost = (graph->cutCost + (fabs(graph->imbalance) > options->softSplitTolerance
-                                ? fabs(graph->imbalance) * graph->H
-                                : 0.0));
+    graph->heuCost   = (graph->cutCost
+                      + (fabs(graph->imbalance) > options->softSplitTolerance
+                             ? fabs(graph->imbalance) * graph->H
+                             : 0.0));
 }
 
 //-----------------------------------------------------------------------------
@@ -74,9 +77,9 @@ void bhLoad(Graph *graph, const Options *options)
 void bhInsert(Graph *graph, Int vertex)
 {
     /* Unpack structures */
-    Int vp = graph->partition[vertex];
-    Int *bhHeap = graph->bhHeap[vp];
-    Int size = graph->bhSize[vp];
+    Int vp        = graph->partition[vertex];
+    Int *bhHeap   = graph->bhHeap[vp];
+    Int size      = graph->bhSize[vp];
     double *gains = graph->vertexGains;
 
     bhHeap[size] = vertex;
@@ -85,7 +88,7 @@ void bhInsert(Graph *graph, Int vertex)
     heapifyUp(graph, bhHeap, gains, vertex, size, gains[vertex]);
 
     /* Save the size. */
-    graph->bhSize[vp] = size+1;
+    graph->bhSize[vp] = size + 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -93,26 +96,23 @@ void bhInsert(Graph *graph, Int vertex)
 // To do this, we swap the last element in the heap with the element we
 // want to remove. Then we heapify up and heapify down.
 //-----------------------------------------------------------------------------
-void bhRemove
-(
-    Graph *graph,
-    const Options *options,
-    Int vertex,
-    double gain,
-    bool partition,
-    Int bhPosition
-)
+void bhRemove(Graph *graph, const Options *options, Int vertex, double gain,
+              bool partition, Int bhPosition)
 {
     (void)options; // Unused variable
     (void)gain;    // Unused variable
 
     double *gains = graph->vertexGains;
-    Int *bhIndex = graph->bhIndex;
-    Int *bhHeap = graph->bhHeap[partition];
-    Int size = (--graph->bhSize[partition]);
+    Int *bhIndex  = graph->bhIndex;
+    Int *bhHeap   = graph->bhHeap[partition];
+    Int size      = (--graph->bhSize[partition]);
 
     /* If we removed the last position in the heap, there's nothing to do. */
-    if (bhPosition == size) { bhIndex[vertex] = 0; return; }
+    if (bhPosition == size)
+    {
+        bhIndex[vertex] = 0;
+        return;
+    }
 
     /* Replace the vertex with the last element in the heap. */
     Int v = bhHeap[bhPosition] = bhHeap[size];
@@ -131,27 +131,21 @@ void bhRemove
 //-----------------------------------------------------------------------------
 // Starting at a position, this function will heapify from a vertex upwards
 //-----------------------------------------------------------------------------
-void heapifyUp
-(
-    Graph *graph,
-    Int *bhHeap,
-    double *gains,
-    Int vertex,
-    Int position,
-    double gain
-)
+void heapifyUp(Graph *graph, Int *bhHeap, double *gains, Int vertex,
+               Int position, double gain)
 {
-    if (position == 0) return;
+    if (position == 0)
+        return;
 
     Int posParent = graph->BH_getParent(position);
-    Int pVertex = bhHeap[posParent];
-    double pGain = gains[pVertex];
+    Int pVertex   = bhHeap[posParent];
+    double pGain  = gains[pVertex];
 
     /* If we need to swap this node with the parent then: */
     if (pGain < gain)
     {
         bhHeap[posParent] = vertex;
-        bhHeap[position] = pVertex;
+        bhHeap[position]  = pVertex;
         graph->BH_putIndex(vertex, posParent);
         graph->BH_putIndex(pVertex, position);
         heapifyUp(graph, bhHeap, gains, vertex, posParent, gain);
@@ -161,18 +155,11 @@ void heapifyUp
 //-----------------------------------------------------------------------------
 // Starting at a position, this function will heapify from a vertex downwards
 //-----------------------------------------------------------------------------
-void heapifyDown
-(
-    Graph *graph,
-    Int *bhHeap,
-    Int size,
-    double *gains,
-    Int vertex,
-    Int position,
-    double gain
-)
+void heapifyDown(Graph *graph, Int *bhHeap, Int size, double *gains, Int vertex,
+                 Int position, double gain)
 {
-    if (position >= size) return;
+    if (position >= size)
+        return;
 
     Int lp = graph->BH_getLeftChild(position);
     Int rp = graph->BH_getRightChild(position);

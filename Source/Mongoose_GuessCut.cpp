@@ -1,6 +1,6 @@
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_GuessCut.hpp"
 #include "Mongoose_ImproveQP.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Random.hpp"
 #include "Mongoose_Waterdance.hpp"
 
@@ -14,34 +14,34 @@ bool guessCut(Graph *graph, const Options *options)
 {
     switch (options->guessCutType)
     {
-        case GuessQP:
-            for (Int k = 0; k < graph->n; k++)
-            {
-                graph->partition[k] = false;
-            }
-            graph->partition[0] = true;
+    case GuessQP:
+        for (Int k = 0; k < graph->n; k++)
+        {
+            graph->partition[k] = false;
+        }
+        graph->partition[0] = true;
 
-            bhLoad(graph, options);
-            if (!improveCutUsingQP(graph, options, true))
-            {
-                return false;
-                // Error - QP Failure
-            }
-            break;
-        case GuessRandom:
-            for (Int k = 0; k < graph->n; k++)
-            {
-                graph->partition[k] = (random() % 2 == 0);
-            }
+        bhLoad(graph, options);
+        if (!improveCutUsingQP(graph, options, true))
+        {
+            return false;
+            // Error - QP Failure
+        }
+        break;
+    case GuessRandom:
+        for (Int k = 0; k < graph->n; k++)
+        {
+            graph->partition[k] = (random() % 2 == 0);
+        }
 
-            bhLoad(graph, options);
-            break;
-        case GuessNaturalOrder:
-            for (Int k = 0; k < graph->n; k++)
-            {
-                graph->partition[k] = (k < graph->n/2);
-            }
-            break;
+        bhLoad(graph, options);
+        break;
+    case GuessNaturalOrder:
+        for (Int k = 0; k < graph->n; k++)
+        {
+            graph->partition[k] = (k < graph->n / 2);
+        }
+        break;
     }
 
     /* Do the waterdance refinement. */

@@ -14,9 +14,9 @@
 #include <cstdlib>
 
 /* Dependencies */
+#include "math.h"
 #include "stddef.h"
 #include "stdlib.h"
-#include "math.h"
 
 /* Memory Management */
 #include "SuiteSparse_config.h"
@@ -33,26 +33,25 @@ typedef SuiteSparse_long Int;
 /* Enumerations */
 enum MatchingStrategy
 {
-    Random = 0,
-    HEM = 1,
-    HEMPA = 2,
+    Random     = 0,
+    HEM        = 1,
+    HEMPA      = 2,
     HEMDavisPA = 3
 };
 
 enum GuessCutType
 {
-    GuessQP = 0,
-    GuessRandom = 1,
+    GuessQP           = 0,
+    GuessRandom       = 1,
     GuessNaturalOrder = 2
 };
 
 enum MatchType
 {
-    MatchType_Orphan = 0,
-    MatchType_Standard = 1,
+    MatchType_Orphan    = 0,
+    MatchType_Standard  = 1,
     MatchType_Brotherly = 2,
     MatchType_Community = 3
 };
 
 } // end namespace Mongoose
-

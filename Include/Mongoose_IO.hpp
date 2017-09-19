@@ -10,8 +10,8 @@
 #pragma once
 
 #include "Mongoose_CSparse.hpp"
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_Graph.hpp"
+#include "Mongoose_Internal.hpp"
 #include <string>
 
 extern "C" {
@@ -21,9 +21,9 @@ extern "C" {
 namespace Mongoose
 {
 
-/** 
+/**
  * Generate a Graph from a Matrix Market file.
- * 
+ *
  * Generate a Graph class instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
@@ -31,12 +31,12 @@ namespace Mongoose
  * discarded. If a diagonal is present, it will be removed.
  *
  * @param filename the filename or path to the Matrix Market File.
- */ 
-Graph *readGraph (const std::string &filename);
+ */
+Graph *readGraph(const std::string &filename);
 
-/** 
+/**
  * Generate a CSparse matrix from a Matrix Market file.
- * 
+ *
  * Generate a cs struct instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
@@ -45,12 +45,12 @@ Graph *readGraph (const std::string &filename);
  *
  * @param filename the filename or path to the Matrix Market File.
  * @param matcode the four character Matrix Market type code.
- */ 
-cs *readMatrix (const std::string &filename, MM_typecode &matcode);
+ */
+cs *readMatrix(const std::string &filename, MM_typecode &matcode);
 
-/** 
+/**
  * Generate a Graph from a Matrix Market file.
- * 
+ *
  * Generate a Graph class instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
@@ -58,12 +58,12 @@ cs *readMatrix (const std::string &filename, MM_typecode &matcode);
  * discarded. If a diagonal is present, it will be removed.
  *
  * @param filename the filename or path to the Matrix Market File.
- */ 
-Graph *readGraph (const char* filename);
+ */
+Graph *readGraph(const char *filename);
 
-/** 
+/**
  * Generate a CSparse matrix from a Matrix Market file.
- * 
+ *
  * Generate a cs struct instance from a Matrix Market file. The matrix
  * contained in the file must be sparse, real, and square. If the matrix
  * is not symmetric, it will be made symmetric with (A+A')/2. If the matrix has
@@ -72,7 +72,7 @@ Graph *readGraph (const char* filename);
  *
  * @param filename the filename or path to the Matrix Market File.
  * @param matcode the four character Matrix Market type code.
- */ 
-cs *readMatrix (const char* filename, MM_typecode &matcode);
+ */
+cs *readMatrix(const char *filename, MM_typecode &matcode);
 
 } // end namespace Mongoose

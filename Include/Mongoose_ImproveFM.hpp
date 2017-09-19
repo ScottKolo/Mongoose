@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Mongoose_Internal.hpp"
-#include "Mongoose_Graph.hpp"
-#include "Mongoose_Options.hpp"
 #include "Mongoose_CutCost.hpp"
+#include "Mongoose_Graph.hpp"
+#include "Mongoose_Internal.hpp"
+#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {
@@ -19,36 +19,24 @@ struct SwapCandidate
     Int bhPosition;
     double imbalance;
 
-    SwapCandidate(){
-        vertex = 0;
-        partition = false;
+    SwapCandidate()
+    {
+        vertex     = 0;
+        partition  = false;
         nodeWeight = 0.0;
-        gain = -INFINITY;
-        heuCost = INFINITY;
+        gain       = -INFINITY;
+        heuCost    = INFINITY;
         bhPosition = -1;
-        imbalance = 0.0;
+        imbalance  = 0.0;
     }
 };
 
-void improveCutUsingFM(Graph*, const Options*);
+void improveCutUsingFM(Graph *, const Options *);
 
-void fmSwap
-(
-    Graph*,
-    const Options*,
-    Int vertex,
-    double gain,
-    bool oldPartition
-);
+void fmSwap(Graph *, const Options *, Int vertex, double gain,
+            bool oldPartition);
 
-void calculateGain
-(
-    Graph*,
-    const Options*,
-    Int vertex,
-    double *out_gain,
-    Int *out_externalDegree
-);
+void calculateGain(Graph *, const Options *, Int vertex, double *out_gain,
+                   Int *out_externalDegree);
 
 } // end namespace Mongoose
-

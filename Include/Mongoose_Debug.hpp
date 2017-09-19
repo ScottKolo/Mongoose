@@ -4,19 +4,19 @@
 
 #pragma once
 
-#include "Mongoose_Graph.hpp"
 #include "Mongoose_CSparse.hpp"
-#include "Mongoose_QPDelta.hpp"
+#include "Mongoose_Graph.hpp"
 #include "Mongoose_Options.hpp"
+#include "Mongoose_QPDelta.hpp"
 
-#include <cstdio>
 #include <cassert>
+#include <cstdio>
 
 // Mongoose Logic Macros
-#undef  IMPLIES
-#define IMPLIES(p,q)    (!(p) || ((p) && (q)))
-#undef  IFF
-#define IFF(p,q)        (IMPLIES(p,q) && IMPLIES(q,p))
+#undef IMPLIES
+#define IMPLIES(p, q) (!(p) || ((p) && (q)))
+#undef IFF
+#define IFF(p, q) (IMPLIES(p, q) && IMPLIES(q, p))
 
 // turn off debugging
 #ifndef NDEBUG
@@ -39,8 +39,8 @@
 // where x is required to be positive.  An error occurs if x <= 0.
 #undef ASSERT
 #ifndef NDEBUG
-#define ASSERT(expression) (assert (expression))
-#define ASSERT_TEXT(expression, text) (assert (expression && text))
+#define ASSERT(expression) (assert(expression))
+#define ASSERT_TEXT(expression, text) (assert(expression &&text))
 #else
 #define ASSERT(expression)
 #define ASSERT_TEXT(expression, text)
@@ -51,7 +51,11 @@
 #undef FFLUSH
 #ifndef NPRINT
 #define PR(s) printf s
-#define FFLUSH { fflush (stdout) ; fflush (stderr) ; }
+#define FFLUSH                                                                 \
+    {                                                                          \
+        fflush(stdout);                                                        \
+        fflush(stderr);                                                        \
+    }
 #else
 #define PR(s)
 #define FFLUSH
@@ -77,19 +81,10 @@ void print(cs *G);
 
 void print(Graph *G);
 
-void QPcheckCom
-(
-    Graph *G,
-    const Options *O,
-    QPDelta *QP,
-    bool check_b,
-    Int nFreeSet,
-    double b
-) ;
+void QPcheckCom(Graph *G, const Options *O, QPDelta *QP, bool check_b,
+                Int nFreeSet, double b);
 
-void FreeSet_dump (const char *where,
-    Int n, Int *FreeSet_list, Int nFreeSet, Int *FreeSet_status,
-    Int verbose, double *x) ;
+void FreeSet_dump(const char *where, Int n, Int *FreeSet_list, Int nFreeSet,
+                  Int *FreeSet_status, Int verbose, double *x);
 
 } // end namespace Mongoose
-

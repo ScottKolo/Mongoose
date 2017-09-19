@@ -2,42 +2,42 @@
 /* === maxheap ============================================================== */
 /* ========================================================================== */
 
-#include "Mongoose_Internal.hpp"
 #include "Mongoose_QPMaxHeap.hpp"
+#include "Mongoose_Internal.hpp"
 
 namespace Mongoose
 {
 
 /* ========================================================================== */
-/* === QPMaxHeap_build ======================================================== */
+/* === QPMaxHeap_build ========================================================
+ */
 /* ========================================================================== */
 
 /* build a max heap in heap [1..nheap] */
 
-void QPMaxHeap_build
-        (
-                Int *heap,  /* on input, an unsorted set of elements */
-                Int size,   /* number of elements to build into the heap */
-                double *x
-        )
+void QPMaxHeap_build(Int *heap, /* on input, an unsorted set of elements */
+                     Int size,  /* number of elements to build into the heap */
+                     double *x)
 {
-    for (Int p = size/2; p >= 1; p--) QPMaxHeapify(p, heap, size, x);
+    for (Int p = size / 2; p >= 1; p--)
+        QPMaxHeapify(p, heap, size, x);
 }
 
 /* ========================================================================== */
-/* === QPMaxHeap_delete ====================================================== */
+/* === QPMaxHeap_delete ======================================================
+ */
 /* ========================================================================== */
 
 /* delete the top element in a max heap */
 
-Int QPMaxHeap_delete    /* return new size of heap */
-        (
-                Int *heap,   /* containing indices into x, 1..n on input */
-                Int size,    /* number of items in heap */
-                const double *x    /* not modified */
-        )
+Int QPMaxHeap_delete /* return new size of heap */
+    (Int *heap,      /* containing indices into x, 1..n on input */
+     Int size,       /* number of items in heap */
+     const double *x /* not modified */
+    )
 {
-    if (size <= 1) return 0;
+    if (size <= 1)
+        return 0;
 
     /* Replace top element with last element. */
     heap[1] = heap[size];
@@ -47,30 +47,29 @@ Int QPMaxHeap_delete    /* return new size of heap */
 }
 
 /* ========================================================================== */
-/* === QPMaxHeap_add ========================================================= */
+/* === QPMaxHeap_add =========================================================
+ */
 /* ========================================================================== */
 
 /* add a new leaf to a max heap */
 
-Int QPMaxHeap_add
-        (
-                Int leaf,    /* the new leaf */
-                Int *heap,   /* size n, containing indices into x */
-                const double *x,   /* not modified */
-                Int size     /* number of elements in heap not counting new one */
-        )
+Int QPMaxHeap_add(Int leaf,        /* the new leaf */
+                  Int *heap,       /* size n, containing indices into x */
+                  const double *x, /* not modified */
+                  Int size /* number of elements in heap not counting new one */
+)
 {
     Int l, lnew, lold;
     double xold;
 
     size++;
-    lold = size;
+    lold       = size;
     heap[lold] = leaf;
-    xold = x[leaf];
+    xold       = x[leaf];
     while (lold > 1)
     {
-        lnew = lold / 2;
-        l = heap[lnew];
+        lnew        = lold / 2;
+        l           = heap[lnew];
         double xnew = x[l];
 
         /* swap new and old */
@@ -91,30 +90,29 @@ Int QPMaxHeap_add
 }
 
 /* ========================================================================== */
-/* === QPMaxHeapify =========================================================== */
+/* === QPMaxHeapify ===========================================================
+ */
 /* ========================================================================== */
 
 /* heapify starting at node p.  On input, the heap at node p satisfies the */
 /* heap property, except for heap [p] itself.  On output, the whole heap */
 /* satisfies the heap property. */
 
-void QPMaxHeapify
-        (
-                Int p,                       /* start at node p in the heap */
-                Int *heap,                   /* size n, containing indices into x */
-                Int size,                    /* heap [ ... nheap] is in use */
-                const double *x              /* not modified */
-        )
+void QPMaxHeapify(Int p,          /* start at node p in the heap */
+                  Int *heap,      /* size n, containing indices into x */
+                  Int size,       /* heap [ ... nheap] is in use */
+                  const double *x /* not modified */
+)
 {
     Int left, right, e, hleft, hright;
     double xe, xleft, xright;
 
-    e = heap[p];
+    e  = heap[p];
     xe = x[e];
 
     while (true)
     {
-        left = p * 2;
+        left  = p * 2;
         right = left + 1;
 
         if (right <= size)
@@ -129,7 +127,7 @@ void QPMaxHeapify
                 if (xe < xleft)
                 {
                     heap[p] = hleft;
-                    p = left;
+                    p       = left;
                 }
                 else
                 {
@@ -142,7 +140,7 @@ void QPMaxHeapify
                 if (xe < xright)
                 {
                     heap[p] = hright;
-                    p = right;
+                    p       = right;
                 }
                 else
                 {
@@ -160,7 +158,7 @@ void QPMaxHeapify
                 if (xe < xleft)
                 {
                     heap[p] = hleft;
-                    p = left;
+                    p       = left;
                 }
             }
             heap[p] = e;
