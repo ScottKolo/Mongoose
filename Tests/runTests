@@ -5,6 +5,7 @@ import os       # For filesystem access
 import sys      # For sys.exit()
 import argparse # For parsing command-line arguments
 import urllib   # For downloading the ssget index
+import ssl
 import tarfile  # For un-tar/unzipping matrix files
 import csv      # For reading the ssget index
 import shutil   # For using 'which'
@@ -61,7 +62,8 @@ def runTests(args):
                         else:
                             # Download matrix if it doesn't exist
                             print("Downloading " + matrix_name)
-                            testfile = urllib.URLopener()
+                            sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+                            testfile = urllib.URLopener(context=sslcontext)
                             testfile.retrieve("https://sparse.tamu.edu/MM/" + matrix_name, gzip_path)
                             tar = tarfile.open(gzip_path, mode='r:gz')
                             tar.extractall(path=matrix_dir) # Extract the matrix from the tar.gz file
@@ -142,7 +144,8 @@ def getMatrixDirectory(args):
     return matrix_dir
 
 def downloadStatsFile(matrix_dir):
-    downloader = urllib.URLopener()
+    sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    downloader = urllib.URLopener(context=sslcontext)
     downloader.retrieve(
         "https://sparse.tamu.edu/files/ssstats.csv",
         matrix_dir + "/ssstats.csv")
