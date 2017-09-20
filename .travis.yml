@@ -434,21 +434,7 @@ matrix:
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
-      - brew upgrade python # Need more recent Python for SSL-TLS
-
-  - os: osx
-    osx_image: xcode7.1
-    before_script:
-      - brew update
-      - brew install cmake || brew upgrade cmake
-      - brew upgrade python # Need more recent Python for SSL-TLS
-
-  - os: osx
-    osx_image: xcode7.2
-    before_script:
-      - brew update
-      - brew install cmake || brew upgrade cmake
-      - brew upgrade python # Need more recent Python for SSL-TLS
+      - brew install python || brew upgrade python # Need more recent Python for SSL-TLS
 
   - os: osx
     osx_image: xcode7.3
@@ -459,6 +445,34 @@ matrix:
 
   - os: osx
     osx_image: xcode8
+    before_script:
+      - brew update
+      - brew install cmake || brew upgrade cmake
+      - brew upgrade python # Need more recent Python for SSL-TLS
+
+  - os: osx
+    osx_image: xcode8.1
+    before_script:
+      - brew update
+      - brew install cmake || brew upgrade cmake
+      - brew upgrade python # Need more recent Python for SSL-TLS
+
+  - os: osx
+    osx_image: xcode8.2
+    before_script:
+      - brew update
+      - brew install cmake || brew upgrade cmake
+      - brew upgrade python # Need more recent Python for SSL-TLS
+
+  - os: osx
+    osx_image: xcode8.3
+    before_script:
+      - brew update
+      - brew install cmake || brew upgrade cmake
+      - brew upgrade python # Need more recent Python for SSL-TLS
+
+  - os: osx
+    osx_image: xcode9
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
