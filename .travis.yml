@@ -1,5 +1,5 @@
 sudo: false
-dist: precise
+dist: trusty
 
 language: cpp
 
@@ -23,6 +23,7 @@ matrix:
         - gcc-4.6
         - g++-4.6
         - lcov
+        - python
     install:
       - pip install --user gcovr
     before_script:
@@ -51,6 +52,7 @@ matrix:
         - gcc-6
         - g++-6
         - valgrind
+        - python
     before_script:
       - export CXX=g++-6
       - export CC=gcc-6
@@ -104,6 +106,7 @@ matrix:
         - cmake-data
         - gcc-6
         - g++-6
+        - python
     before_script:
       - export CXX=g++-6
       - export CC=gcc-6
@@ -125,6 +128,7 @@ matrix:
         - cmake-data
         - gcc-6
         - g++-6
+        - python
     before_script:
       - export CXX=g++-6
       - export CC=gcc-6
@@ -165,6 +169,7 @@ matrix:
         - cmake-data
         - gcc-4.9
         - g++-4.9
+        - python
     before_script:
       - export CXX=g++-4.9
       - export CC=gcc-4.9
@@ -185,6 +190,7 @@ matrix:
         - cmake-data
         - gcc-4.8
         - g++-4.8
+        - python
     before_script:
       - export CXX=g++-4.8
       - export CC=gcc-4.8
@@ -205,6 +211,7 @@ matrix:
         - cmake-data
         - gcc-4.7
         - g++-4.7
+        - python
     before_script:
       - export CXX=g++-4.7
       - export CC=gcc-4.7
@@ -225,6 +232,7 @@ matrix:
         - cmake-data
         - gcc-4.6
         - g++-4.6
+        - python
     before_script:
       - export CXX=g++-4.6
       - export CC=gcc-4.6
@@ -245,6 +253,7 @@ matrix:
         - cmake-data
         - gcc-4.5
         - g++-4.5
+        - python
     before_script:
       - export CXX=g++-4.5
       - export CC=gcc-4.5
@@ -265,6 +274,7 @@ matrix:
         - cmake-data
         - gcc-4.4
         - g++-4.4
+        - python
     before_script:
       - export CXX=g++-4.4
       - export CC=gcc-4.4
@@ -307,6 +317,7 @@ matrix:
         - cmake-data
         - clang-3.8
         - clang++-3.8
+        - python
     before_script:
       - export CXX=clang++-3.8
       - export CC=clang-3.8
@@ -328,6 +339,7 @@ matrix:
         - cmake-data
         - clang-3.7
         - clang++-3.7
+        - python
     before_script:
       - export CXX=clang++-3.7
       - export CC=clang-3.7
@@ -349,6 +361,7 @@ matrix:
         - cmake-data
         - clang-3.6
         - clang++-3.6
+        - python
     before_script:
       - export CXX=clang++-3.6
       - export CC=clang-3.6
@@ -370,6 +383,7 @@ matrix:
         - cmake-data
         - clang-3.5
         - clang++-3.5
+        - python
     before_script:
       - export CXX=clang++-3.5
       - export CC=clang-3.5
@@ -391,6 +405,7 @@ matrix:
         - cmake-data
         - clang-3.4
         - clang++-3.4
+        - python
 
   # macOS
   - os: osx
@@ -398,30 +413,35 @@ matrix:
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install python # Need more recent Python for SSL-TLS
 
   - os: osx
     osx_image: xcode7.1
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install python # Need more recent Python for SSL-TLS
 
   - os: osx
     osx_image: xcode7.2
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install python # Need more recent Python for SSL-TLS
 
   - os: osx
     osx_image: xcode7.3
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install python # Need more recent Python for SSL-TLS
 
   - os: osx
     osx_image: xcode8
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install python # Need more recent Python for SSL-TLS
 
 script:
   # show OS/compiler version
