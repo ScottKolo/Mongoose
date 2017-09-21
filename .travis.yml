@@ -248,28 +248,6 @@ matrix:
       - export CXX=g++-4.6
       - export CC=gcc-4.6
 
-  # Linux GCC 4.5 build
-  - os: linux
-    compiler: gcc
-    env:
-      - CXX=g++-4.5
-      - CC=gcc-4.5
-    addons:
-      apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        - george-edison55-precise-backports
-        packages:
-        - cmake
-        - cmake-data
-        - gcc-4.5
-        - g++-4.5
-    before_script:
-      - pyenv install 2.7.10
-      - pyenv global 2.7.10
-      - export CXX=g++-4.5
-      - export CC=gcc-4.5
-
   # Linux GCC 4.4 build
   - os: linux
     compiler: gcc
@@ -434,13 +412,17 @@ matrix:
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
-      - brew install python || brew upgrade python # Need more recent Python for SSL-TLS
+      - brew install openssl
+      - brew install python --with-brewed-openssl
+      - brew upgrade python # Need more recent Python for SSL-TLS
 
   - os: osx
     osx_image: xcode7.3
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install openssl
+      - brew install python --with-brewed-openssl
       - brew upgrade python # Need more recent Python for SSL-TLS
 
   - os: osx
@@ -448,6 +430,8 @@ matrix:
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install openssl
+      - brew install python --with-brewed-openssl
       - brew upgrade python # Need more recent Python for SSL-TLS
 
   - os: osx
@@ -455,6 +439,8 @@ matrix:
     before_script:
       - brew update
       - brew install cmake || brew upgrade cmake
+      - brew install openssl
+      - brew install python --with-brewed-openssl
       - brew upgrade python # Need more recent Python for SSL-TLS
 
   - os: osx
@@ -484,6 +470,7 @@ script:
   - $CXX --version
   - $CC --version
   - python --version
+  - python -c "import ssl; print ssl.OPENSSL_VERSION"
 
   # compile
   - mkdir _build
