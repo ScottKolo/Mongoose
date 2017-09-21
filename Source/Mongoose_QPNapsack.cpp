@@ -347,7 +347,7 @@ double QPNapsack    /* return the final lambda */
             x[k]      = xi;
             last_move = k;
         }
-        // todo
+
         double newatx = atx + Gw[k] * x[k];
 
         // Correction step if we go too far
