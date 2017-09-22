@@ -434,63 +434,42 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade openssl
-        - brew uninstall python
-        - brew install python --with-brewed-openssl
 
     - os: osx
       osx_image: xcode7.3
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade openssl
-        - brew uninstall python
-        - brew install python --with-brewed-openssl
 
     - os: osx
       osx_image: xcode8
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade openssl
-        - brew uninstall python
-        - brew install python --with-brewed-openssl
 
     - os: osx
       osx_image: xcode8.1
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade openssl
-        - brew uninstall python
-        - brew install python --with-brewed-openssl
 
     - os: osx
       osx_image: xcode8.2
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade openssl
-        - brew uninstall python
-        - brew install python --with-brewed-openssl
 
     - os: osx
       osx_image: xcode8.3
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade openssl
-        - brew uninstall python
-        - brew install python --with-brewed-openssl
 
     - os: osx
       osx_image: xcode9
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade openssl
-        - brew uninstall python
-        - brew install python --with-brewed-openssl
 
 script:
   # show OS/compiler version
