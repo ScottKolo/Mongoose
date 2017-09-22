@@ -434,7 +434,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew install openssl || brew upgrade openssl
+        - brew upgrade openssl
         - brew uninstall python
         - brew install python --with-brewed-openssl
 
@@ -443,7 +443,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew install openssl || brew upgrade openssl
+        - brew upgrade openssl
         - brew uninstall python
         - brew install python --with-brewed-openssl
 
@@ -452,7 +452,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew install openssl || brew upgrade openssl
+        - brew upgrade openssl
         - brew uninstall python
         - brew install python --with-brewed-openssl
 
@@ -461,7 +461,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew install openssl || brew upgrade openssl
+        - brew upgrade openssl
         - brew uninstall python
         - brew install python --with-brewed-openssl
 
@@ -470,7 +470,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew install openssl || brew upgrade openssl
+        - brew upgrade openssl
         - brew uninstall python
         - brew install python --with-brewed-openssl
 
@@ -479,7 +479,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew install openssl || brew upgrade openssl
+        - brew upgrade openssl
         - brew uninstall python
         - brew install python --with-brewed-openssl
 
@@ -488,7 +488,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew install openssl || brew upgrade openssl
+        - brew upgrade openssl
         - brew uninstall python
         - brew install python --with-brewed-openssl
 
