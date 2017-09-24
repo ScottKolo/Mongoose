@@ -464,12 +464,14 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew upgrade python
 
     - os: osx
       osx_image: xcode9
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew upgrade python
 
 script:
   # show OS/compiler version
