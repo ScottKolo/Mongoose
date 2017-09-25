@@ -25,8 +25,6 @@ matrix:
             - lcov
       before_script:
         - pip install --user gcovr
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-4.6
         - export CC=gcc-4.6
         - gcovr --version
@@ -53,8 +51,6 @@ matrix:
             - g++-6
             - valgrind
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-6
         - export CC=gcc-6
       after_success:
@@ -80,8 +76,6 @@ matrix:
             # libpcre3-dev is needed to build a recent cppcheck
             - libpcre3-dev
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-6
         - export CC=gcc-6
         - curl -OL https://github.com/danmar/cppcheck/archive/1.79.tar.gz
@@ -110,8 +104,6 @@ matrix:
             - gcc-6
             - g++-6
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-6
         - export CC=gcc-6
         - "sed -i 's:// #undef NDEBUG:#undef NDEBUG:' ./Include/Mongoose_Debug.hpp"
@@ -133,8 +125,6 @@ matrix:
             - gcc-6
             - g++-6
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-6
         - export CC=gcc-6
 
@@ -155,8 +145,6 @@ matrix:
             - gcc-5
             - g++-5
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-5
         - export CC=gcc-5
 
@@ -177,8 +165,6 @@ matrix:
             - gcc-4.9
             - g++-4.9
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-4.9
         - export CC=gcc-4.9
 
@@ -199,8 +185,6 @@ matrix:
             - gcc-4.8
             - g++-4.8
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-4.8
         - export CC=gcc-4.8
 
@@ -221,8 +205,6 @@ matrix:
             - gcc-4.7
             - g++-4.7
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-4.7
         - export CC=gcc-4.7
 
@@ -243,8 +225,6 @@ matrix:
             - gcc-4.6
             - g++-4.6
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-4.6
         - export CC=gcc-4.6
 
@@ -265,8 +245,6 @@ matrix:
             - gcc-4.4
             - g++-4.4
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=g++-4.4
         - export CC=gcc-4.4
 
@@ -287,8 +265,6 @@ matrix:
            - clang-5.0
            - clang++-5.0
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=clang++-5.0
         - export CC=clang-5.0
 
@@ -309,8 +285,6 @@ matrix:
            - clang-4.0
            - clang++-4.0
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=clang++-4.0
         - export CC=clang-4.0
 
@@ -330,9 +304,8 @@ matrix:
             - cmake-data
             - clang-3.9
             - clang++-3.9
+            - llvm-3.9
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=clang++-3.9
         - export CC=clang-3.9
 
@@ -354,8 +327,6 @@ matrix:
             - clang-3.8
             - clang++-3.8
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=clang++-3.8
         - export CC=clang-3.8
 
@@ -377,8 +348,6 @@ matrix:
             - clang-3.7
             - clang++-3.7
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=clang++-3.7
         - export CC=clang-3.7
 
@@ -400,8 +369,6 @@ matrix:
             - clang-3.6
             - clang++-3.6
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=clang++-3.6
         - export CC=clang-3.6
 
@@ -423,8 +390,6 @@ matrix:
             - clang-3.5
             - clang++-3.5
       before_script:
-        - pyenv install 2.7.10
-        - pyenv global 2.7.10
         - export CXX=clang++-3.5
         - export CC=clang-3.5
 
@@ -464,14 +429,12 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade python
 
     - os: osx
       osx_image: xcode9
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
-        - brew upgrade python
 
 script:
   # show OS/compiler version
