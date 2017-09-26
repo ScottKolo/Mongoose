@@ -435,6 +435,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew install pyenv || brew upgrade pyenv
         - pyenv install -s 2.7.13
         - pyenv global 2.7.13
         - eval "$(pyenv init -)"
@@ -444,6 +445,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew install pyenv || brew upgrade pyenv
         - pyenv install -s 2.7.13
         - pyenv global 2.7.13
         - eval "$(pyenv init -)"
@@ -453,6 +455,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew install pyenv || brew upgrade pyenv
         - pyenv install -s 2.7.13
         - pyenv global 2.7.13
         - eval "$(pyenv init -)"
@@ -462,15 +465,17 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew install pyenv || brew upgrade pyenv
         - pyenv install -s 2.7.13
-                - pyenv global 2.7.13
-                - eval "$(pyenv init -)"
+        - pyenv global 2.7.13
+        - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode8.2
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew install pyenv || brew upgrade pyenv
         - pyenv install -s 2.7.13
         - pyenv global 2.7.13
         - eval "$(pyenv init -)"
@@ -480,6 +485,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew install pyenv || brew upgrade pyenv
         - pyenv install -s 2.7.13
         - pyenv global 2.7.13
         - eval "$(pyenv init -)"
@@ -489,6 +495,7 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - brew install pyenv || brew upgrade pyenv
         - pyenv install -s 2.7.13
         - pyenv global 2.7.13
         - eval "$(pyenv init -)"
