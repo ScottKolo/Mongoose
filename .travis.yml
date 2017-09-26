@@ -314,28 +314,28 @@ matrix:
         - export CXX=clang++-4.0
         - export CC=clang-4.0
 
-    # Linux Clang 3.9 build
-    - os: linux
-      compiler: clang
-      env:
-        - CXX=clang++-3.9
-        - CC=clang-3.9
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-3.9
-          packages:
-            - cmake
-            - cmake-data
-            - clang-3.9
-            - clang++-3.9
-            - binutils
-      before_script:
-        - pyenv install -s 2.7.13
-        - pyenv global 2.7.13
-        - export CXX=clang++-3.9
-        - export CC=clang-3.9
+#    # Linux Clang 3.9 build
+#    - os: linux
+#      compiler: clang
+#      env:
+#        - CXX=clang++-3.9
+#        - CC=clang-3.9
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-trusty-3.9
+#          packages:
+#            - cmake
+#            - cmake-data
+#            - clang-3.9
+#            - clang++-3.9
+#            - binutils-2.26
+#      before_script:
+#        - pyenv install -s 2.7.13
+#        - pyenv global 2.7.13
+#        - export CXX=clang++-3.9
+#        - export CC=clang-3.9
 
     # Linux Clang 3.8 build
     - os: linux
@@ -435,42 +435,63 @@ matrix:
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - pyenv install -s 2.7.13
+        - pyenv global 2.7.13
+        - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode7.3
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - pyenv install -s 2.7.13
+        - pyenv global 2.7.13
+        - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode8
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - pyenv install -s 2.7.13
+                - pyenv global 2.7.13
+                - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode8.1
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - pyenv install -s 2.7.13
+                - pyenv global 2.7.13
+                - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode8.2
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - pyenv install -s 2.7.13
+                - pyenv global 2.7.13
+                - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode8.3
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - pyenv install -s 2.7.13
+        - pyenv global 2.7.13
+        - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode9
       before_script:
         - brew update
         - brew install cmake || brew upgrade cmake
+        - pyenv install -s 2.7.13
+        - pyenv global 2.7.13
+        - eval "$(pyenv init -)"
 
 script:
   # show OS/compiler version
