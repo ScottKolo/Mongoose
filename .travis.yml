@@ -454,8 +454,8 @@ matrix:
         - brew update
         - brew install cmake || brew upgrade cmake
         - pyenv install -s 2.7.13
-                - pyenv global 2.7.13
-                - eval "$(pyenv init -)"
+        - pyenv global 2.7.13
+        - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode8.1
@@ -472,8 +472,8 @@ matrix:
         - brew update
         - brew install cmake || brew upgrade cmake
         - pyenv install -s 2.7.13
-                - pyenv global 2.7.13
-                - eval "$(pyenv init -)"
+        - pyenv global 2.7.13
+        - eval "$(pyenv init -)"
 
     - os: osx
       osx_image: xcode8.3
