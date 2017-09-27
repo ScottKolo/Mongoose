@@ -119,6 +119,7 @@ function comparisonData = compareAll(trials)
                 comparisonData(j).problem_kind = Prob.kind;
                 comparisonData(j).problem_nnz = nnz(A);
                 comparisonData(j).problem_n = n_cols;
+                comparisonData(j).useWeights = use_weights;
                 comparisonData(j).mongoose = 0;
                 comparisonData(j).time = trimmean(metis_times(j, 1:k), 40);
                 comparisonData(j).cutWeight = trimmean(metis_cut_weight(j, 1:k), 40);
