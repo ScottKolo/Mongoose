@@ -12,10 +12,14 @@ function comparisonData = compareAll(trials)
     end
     
     index = UFget;
+    % Sort by nnz
+    nnzs = index.nnz;
+    [~,ids] = sortrows(nnzs');
+    ids = unique(ids);
     
-    for i = (lastMatrixCompleted+1):length(index.nrows)
-        if (index.isReal(i))
-            
+    for i = ids'
+        found = ID_present(comparisonData,i);
+        if (index.isReal(i) & ~found)
             Prob = UFget(i);
             A = Prob.A;
             
@@ -133,7 +137,16 @@ function comparisonData = compareAll(trials)
     end
 
     % Write data to file for future comparisons
-    if(git_found)
-        writetable(struct2table(comparisonData), 'mongoose_data.csv');
+    writetable(struct2table(comparisonData), 'mongoose_data.csv');
+end
+
+function found = ID_present(comparisonData, id)
+    found = 0;
+    for i = 1:length(comparisonData)
+        if (comparisonData(i).problem_id == id)
+            found = 1;
+            return;
+        end
     end
 end
+    
