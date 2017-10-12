@@ -15,11 +15,10 @@ function comparisonData = compareAll(trials)
     % Sort by nnz
     nnzs = index.nnz;
     [~,ids] = sortrows(nnzs');
-    ids = unique(ids);
     
     for i = ids'
         found = ID_present(comparisonData,i);
-        if (index.isReal(i) & ~found)
+        if (index.isReal(i) && ~found)
             Prob = UFget(i);
             A = Prob.A;
             
@@ -67,7 +66,7 @@ function comparisonData = compareAll(trials)
                                 fprintf('use_weights = %d\n', use_weights);
                                 fprintf('guessCutType = %d\n', guessCutType);
                                 fprintf('doCommunityMatching = %d\n', guessCutType);
-                                fprintf('matchingStrategy = %d\n9', matchingStrategy);
+                                fprintf('matchingStrategy = %d\n', matchingStrategy);
                                 fprintf('coarsenLimit = %d\n', coarsenLimit);
                                 
                                 for k = 1:trials
