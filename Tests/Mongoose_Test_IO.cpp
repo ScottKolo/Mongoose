@@ -18,7 +18,6 @@ void runIOTest(const std::string &inputFile, bool validGraph)
         assert(G->p != NULL); // Column pointers should not be null
         assert(G->i != NULL); // Row numbers should not be null
         G->~Graph();
-        SuiteSparse_free(G);
     }
     else
     {
@@ -36,7 +35,6 @@ void runIOTest(const std::string &inputFile, bool validGraph)
         assert(G2->p != NULL); // Column pointers should not be null
         assert(G2->i != NULL); // Row numbers should not be null
         G2->~Graph();
-        SuiteSparse_free(G2);
     }
     else
     {

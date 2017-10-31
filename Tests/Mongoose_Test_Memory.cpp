@@ -129,7 +129,6 @@ int RunTest (
 
     ComputeEdgeSeparator(U, O);
     U->~Graph();
-    SuiteSparse_free(U);
 
     return AllowedMallocs;
 }

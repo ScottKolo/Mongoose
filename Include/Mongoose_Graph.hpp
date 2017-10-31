@@ -69,7 +69,6 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    Graph();
     static Graph *Create(Int _n, Int _nz);
     static Graph *Create(Graph *_parent);
     ~Graph();
@@ -138,6 +137,7 @@ public:
     bool isMarked(Int index);
 
 private:
+    Graph();
     /** Mark Data ************************************************************/
     Int *markArray; /** O(n) mark array                 */
     Int markValue;  /** Mark array can be cleared in O(k)

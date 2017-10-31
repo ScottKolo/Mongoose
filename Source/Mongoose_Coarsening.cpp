@@ -71,7 +71,6 @@ Graph *coarsen(Graph *graph, const Options *options)
     if (!htable)
     {
         coarseGraph->~Graph();
-        SuiteSparse_free(coarseGraph);
         return NULL;
     }
     for (Int i = 0; i < cn; i++)

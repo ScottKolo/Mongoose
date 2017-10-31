@@ -78,7 +78,6 @@ void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit
     }
 
     G->~Graph();
-    SuiteSparse_free(G);
     SuiteSparse_free(options);
 
     LogTest("Edge Separator Test Completed Successfully");

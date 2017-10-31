@@ -100,7 +100,6 @@ Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
         returner->i = NULL;
         returner->x = NULL;
         returner->~Graph();
-        SuiteSparse_free(returner);
         return NULL;
     }
 

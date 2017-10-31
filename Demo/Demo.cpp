@@ -50,7 +50,7 @@ int main(int argn, const char **argv)
         Graph *graph = readGraph("../Matrix/" + demo_files[k]);
         if (!graph)
         {
-            free(options);
+            SuiteSparse_free(options);
             return 1;
         }
 

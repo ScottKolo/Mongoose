@@ -106,7 +106,6 @@ Graph *refine(Graph *graph, const Options *options)
 
     /* Now that we're done with the coarse graph, we can release it. */
     graph->~Graph();
-    SuiteSparse_free(graph);
 
     Logger::toc(RefinementTiming);
 

@@ -29,27 +29,22 @@ int main(int argn, char** argv)
     // Nonexistent file
     G = readGraph("../Tests/Matrix/no_such_file.mtx");        
     assert (G == NULL);
-    SuiteSparse_free(G);
 
     // Bad header 
     G = readGraph("../Tests/Matrix/bad_header.mtx");        
     assert (G == NULL);
-    SuiteSparse_free(G);
-    
+
     // Bad matrix type
     G = readGraph("../Tests/Matrix/bad_matrix_type.mtx");
     assert (G == NULL);
-    SuiteSparse_free(G);
 
     // Bad dimensions
     G = readGraph("../Tests/Matrix/bad_dimensions.mtx");
     assert (G == NULL);
-    SuiteSparse_free(G);
       
     // Rectangular matrix     
     G = readGraph("../Tests/Matrix/Trec4.mtx");
     assert (G == NULL);
-    SuiteSparse_free(G);
 
     // C-style string filename
     MM_typecode matcode;
@@ -62,6 +57,7 @@ int main(int argn, char** argv)
     {
         assert(binaryM->x[j] == 0 || binaryM->x[j] == 1);
     }
+    SuiteSparse_free(M);
 
     SuiteSparse_finish();
 

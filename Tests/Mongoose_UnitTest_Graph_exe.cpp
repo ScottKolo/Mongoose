@@ -51,9 +51,6 @@ int main(int argn, char** argv)
     Logger::setDebugLevel(All);
     Logger::setTimingFlag(false);
 
-    // Test default constructor
-    Graph G1;
-
     // Test Graph(n, nz) static constructor
     Graph *G2 = Graph::Create(10, 20);
 
@@ -82,9 +79,7 @@ int main(int argn, char** argv)
     M4->x = NULL;
     Graph *G7 = CSparse3ToGraph(M4, 0, 0);
     assert(G7 != NULL);
-    SuiteSparse_free(G7);
-
-    cs *M5 = readMatrix("../Matrix/bcspwr02.mtx", matcode);
+    G7->~Graph();
 
     // Tests to increase coverage
     /* Override SuiteSparse memory management with custom testers. */
@@ -97,28 +92,23 @@ int main(int argn, char** argv)
     AllowedMallocs = 2;
     cs *M3 = GraphToCSparse3(G2, true);
     assert(M3 == NULL);
-    SuiteSparse_free(M3);
-    SuiteSparse_free(G2);
+    G2->~Graph();
 
     AllowedMallocs = 0;
     Graph *G3 = Graph::Create(10, 20);
     assert(G3 == NULL);
-    SuiteSparse_free(G3);
 
     AllowedMallocs = 4;
     Graph *G4 = Graph::Create(10, 20);
     assert(G4 == NULL);
-    SuiteSparse_free(G4);
 
     AllowedMallocs = 8;
     Graph *G5 = Graph::Create(10, 20);
     assert(G5 == NULL);
-    SuiteSparse_free(G5);
 
     AllowedMallocs = 14;
     Graph *G6 = Graph::Create(10, 20);
     assert(G6 == NULL);
-    SuiteSparse_free(G6);
 
     SuiteSparse_finish();
 

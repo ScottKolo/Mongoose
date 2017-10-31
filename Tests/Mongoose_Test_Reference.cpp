@@ -97,6 +97,5 @@ void runReferenceTest(const std::string &inputFile)
     }
 
     G->~Graph();
-    SuiteSparse_free(G);
     SuiteSparse_free(options);
 }

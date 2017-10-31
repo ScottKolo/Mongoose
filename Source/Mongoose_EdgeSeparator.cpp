@@ -57,7 +57,6 @@ int ComputeEdgeSeparator(Graph *graph, const Options *options)
             {
                 next = current->parent;
                 current->~Graph();
-                SuiteSparse_free(current);
                 current = next;
             }
             return EXIT_FAILURE;
@@ -76,7 +75,6 @@ int ComputeEdgeSeparator(Graph *graph, const Options *options)
         {
             Graph *next = current->parent;
             current->~Graph();
-            SuiteSparse_free(current);
             current = next;
         }
         return EXIT_FAILURE;

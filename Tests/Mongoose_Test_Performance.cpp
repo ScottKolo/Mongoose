@@ -29,7 +29,6 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
         // Ran out of memory
         LogTest("Error reading Graph from file in Performance Test");
         SuiteSparse_free(options);
-        SuiteSparse_free(G);
         assert(false);
     }
 
@@ -43,7 +42,7 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
         // Error occurred
         LogTest("Error computing edge separator in Performance Test");
         SuiteSparse_free(options);
-        SuiteSparse_free(G);
+        G->~Graph();
         assert(false);
     }
     else
@@ -78,6 +77,5 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
     }
 
     G->~Graph();
-    SuiteSparse_free(G);
     SuiteSparse_free(options);
 }

@@ -1,6 +1,8 @@
 #include "Mongoose_Graph.hpp"
 #include "Mongoose_Internal.hpp"
 
+#include <new>
+
 namespace Mongoose
 {
 
@@ -44,147 +46,143 @@ Graph::Graph()
 
 Graph *Graph::Create(const Int _n, const Int _nz)
 {
-    Graph *ret = static_cast<Graph *>(SuiteSparse_calloc(1, sizeof(Graph)));
-    if (!ret)
+    void *memoryLocation = SuiteSparse_malloc(1, sizeof(Graph));
+    if (!memoryLocation)
         return NULL;
+
+    // Placement new
+    Graph *graph = new (memoryLocation) Graph();
 
     size_t n = static_cast<size_t>(_n);
-    ret->n = ret->cs_n = ret->cs_m = _n;
+    graph->n = graph->cs_n = graph->cs_m = _n;
 
     size_t nz = static_cast<size_t>(_nz);
-    ret->nz = ret->cs_nzmax = _nz;
+    graph->nz = graph->cs_nzmax = _nz;
 
-    ret->cs_nz = -1; /* Compressed Column Format */
-    ret->p     = (Int *)SuiteSparse_malloc(n + 1, sizeof(Int));
-    ret->i     = (Int *)SuiteSparse_malloc(nz, sizeof(Int));
-    ret->x     = (double *)SuiteSparse_malloc(nz, sizeof(double));
-    ret->w     = (double *)SuiteSparse_malloc(n, sizeof(double));
-    ret->X     = 0.0;
-    ret->W     = 0.0;
-    ret->H     = 0.0;
-    if (!ret->p || !ret->i || !ret->x || !ret->w)
+    graph->cs_nz = -1; /* Compressed Column Format */
+    graph->p     = (Int *)SuiteSparse_malloc(n + 1, sizeof(Int));
+    graph->i     = (Int *)SuiteSparse_malloc(nz, sizeof(Int));
+    graph->x     = (double *)SuiteSparse_malloc(nz, sizeof(double));
+    graph->w     = (double *)SuiteSparse_malloc(n, sizeof(double));
+    graph->X     = 0.0;
+    graph->W     = 0.0;
+    graph->H     = 0.0;
+    if (!graph->p || !graph->i || !graph->x || !graph->w)
     {
-        ret->~Graph();
-        SuiteSparse_free(ret);
+        graph->~Graph();
         return NULL;
     }
 
-    ret->partition      = (bool *)SuiteSparse_malloc(n, sizeof(bool));
-    ret->vertexGains    = (double *)SuiteSparse_malloc(n, sizeof(double));
-    ret->externalDegree = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->bhIndex        = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->bhHeap[0]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->bhHeap[1]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->bhSize[0] = ret->bhSize[1] = 0;
-    if (!ret->partition || !ret->vertexGains || !ret->externalDegree
-        || !ret->bhIndex || !ret->bhHeap[0] || !ret->bhHeap[1])
+    graph->partition      = (bool *)SuiteSparse_malloc(n, sizeof(bool));
+    graph->vertexGains    = (double *)SuiteSparse_malloc(n, sizeof(double));
+    graph->externalDegree = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->bhIndex        = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->bhHeap[0]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->bhHeap[1]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->bhSize[0] = graph->bhSize[1] = 0;
+    if (!graph->partition || !graph->vertexGains || !graph->externalDegree
+        || !graph->bhIndex || !graph->bhHeap[0] || !graph->bhHeap[1])
     {
-        ret->~Graph();
-        SuiteSparse_free(ret);
+        graph->~Graph();
         return NULL;
     }
 
-    ret->heuCost   = 0.0;
-    ret->cutCost   = 0.0;
-    ret->W0        = 0.0;
-    ret->W1        = 0.0;
-    ret->imbalance = 0.0;
+    graph->heuCost   = 0.0;
+    graph->cutCost   = 0.0;
+    graph->W0        = 0.0;
+    graph->W1        = 0.0;
+    graph->imbalance = 0.0;
 
-    ret->parent      = NULL;
-    ret->clevel      = 0;
-    ret->cn          = 0;
-    ret->matching    = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->matchmap    = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->invmatchmap = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->matchtype   = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->markArray   = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->markValue   = 1;
-    if (!ret->matching || !ret->matchmap || !ret->invmatchmap || !ret->markArray
-        || !ret->matchtype)
+    graph->parent      = NULL;
+    graph->clevel      = 0;
+    graph->cn          = 0;
+    graph->matching    = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->matchmap    = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->invmatchmap = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->matchtype   = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->markArray   = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->markValue   = 1;
+    if (!graph->matching || !graph->matchmap || !graph->invmatchmap || !graph->markArray
+        || !graph->matchtype)
     {
-        ret->~Graph();
-        SuiteSparse_free(ret);
+        graph->~Graph();
         return NULL;
     }
 
-    return ret;
+    return graph;
 }
 
 Graph *Graph::Create(Graph *_parent)
 {
-    Graph *ret = static_cast<Graph *>(SuiteSparse_calloc(1, sizeof(Graph)));
-    if (!ret)
+    void *memoryLocation = SuiteSparse_malloc(1, sizeof(Graph));
+    if (!memoryLocation)
         return NULL;
-    // new (ret) Graph();
 
-    ret->n = ret->cs_n = ret->cs_m = _parent->cn;
-    size_t n                       = static_cast<size_t>(ret->n);
+    // Placement new
+    Graph *graph = new (memoryLocation) Graph();
 
-    ret->nz = ret->cs_nzmax = _parent->nz;
-    size_t nz               = static_cast<size_t>(ret->nz);
+    graph->n = graph->cs_n = graph->cs_m = _parent->cn;
+    size_t n                       = static_cast<size_t>(graph->n);
 
-    ret->cs_nz = -1; /* Compressed Column Format */
-    ret->p     = (Int *)SuiteSparse_malloc((n + 1), sizeof(Int));
-    ret->i     = (Int *)SuiteSparse_malloc(nz, sizeof(Int));
-    ret->x     = (double *)SuiteSparse_malloc(nz, sizeof(double));
-    ret->w     = (double *)SuiteSparse_malloc(n, sizeof(double));
-    ret->X     = 0.0;
-    ret->W     = _parent->W;
-    ret->H     = 0.0;
-    if (!ret->p || !ret->i || !ret->x || !ret->w)
+    graph->nz = graph->cs_nzmax = _parent->nz;
+    size_t nz               = static_cast<size_t>(graph->nz);
+
+    graph->cs_nz = -1; /* Compressed Column Format */
+    graph->p     = (Int *)SuiteSparse_malloc((n + 1), sizeof(Int));
+    graph->i     = (Int *)SuiteSparse_malloc(nz, sizeof(Int));
+    graph->x     = (double *)SuiteSparse_malloc(nz, sizeof(double));
+    graph->w     = (double *)SuiteSparse_malloc(n, sizeof(double));
+    graph->X     = 0.0;
+    graph->W     = _parent->W;
+    graph->H     = 0.0;
+    if (!graph->p || !graph->i || !graph->x || !graph->w)
     {
-        ret->~Graph();
-        SuiteSparse_free(ret);
+        graph->~Graph();
         return NULL;
     }
 
-    ret->partition      = (bool *)SuiteSparse_malloc(n, sizeof(bool));
-    ret->vertexGains    = (double *)SuiteSparse_malloc(n, sizeof(double));
-    ret->externalDegree = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->bhIndex        = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->bhHeap[0]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->bhHeap[1]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->bhSize[0] = ret->bhSize[1] = 0;
-    if (!ret->partition || !ret->vertexGains || !ret->externalDegree
-        || !ret->bhIndex || !ret->bhHeap[0] || !ret->bhHeap[1])
+    graph->partition      = (bool *)SuiteSparse_malloc(n, sizeof(bool));
+    graph->vertexGains    = (double *)SuiteSparse_malloc(n, sizeof(double));
+    graph->externalDegree = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->bhIndex        = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->bhHeap[0]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->bhHeap[1]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->bhSize[0] = graph->bhSize[1] = 0;
+    if (!graph->partition || !graph->vertexGains || !graph->externalDegree
+        || !graph->bhIndex || !graph->bhHeap[0] || !graph->bhHeap[1])
     {
-        ret->~Graph();
-        SuiteSparse_free(ret);
+        graph->~Graph();
         return NULL;
     }
 
-    ret->heuCost   = 0.0;
-    ret->cutCost   = 0.0;
-    ret->W0        = 0.0;
-    ret->W1        = 0.0;
-    ret->imbalance = 0.0;
+    graph->heuCost   = 0.0;
+    graph->cutCost   = 0.0;
+    graph->W0        = 0.0;
+    graph->W1        = 0.0;
+    graph->imbalance = 0.0;
 
-    ret->parent      = _parent;
-    ret->clevel      = ret->parent->clevel + 1;
-    ret->cn          = 0;
-    ret->matching    = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->matchmap    = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->invmatchmap = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->singleton   = -1;
-    ret->matchtype   = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    ret->markArray   = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    ret->markValue   = 1;
-    if (!ret->matching || !ret->matchmap || !ret->invmatchmap || !ret->markArray
-        || !ret->matchtype)
+    graph->parent      = _parent;
+    graph->clevel      = graph->parent->clevel + 1;
+    graph->cn          = 0;
+    graph->matching    = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->matchmap    = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->invmatchmap = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->singleton   = -1;
+    graph->matchtype   = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->markArray   = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->markValue   = 1;
+    if (!graph->matching || !graph->matchmap || !graph->invmatchmap || !graph->markArray
+        || !graph->matchtype)
     {
-        ret->~Graph();
-        SuiteSparse_free(ret);
+        graph->~Graph();
         return NULL;
     }
 
-    return ret;
+    return graph;
 }
 
 Graph::~Graph()
 {
-    this->n = cs_n = cs_m = 0;
-    this->nz = cs_nz = cs_nzmax = 0;
-
     p = (Int *)SuiteSparse_free(p);
     i = (Int *)SuiteSparse_free(i);
     x = (double *)SuiteSparse_free(x);
@@ -196,22 +194,14 @@ Graph::~Graph()
     bhIndex        = (Int *)SuiteSparse_free(bhIndex);
     bhHeap[0]      = (Int *)SuiteSparse_free(bhHeap[0]);
     bhHeap[1]      = (Int *)SuiteSparse_free(bhHeap[1]);
-
-    cutCost   = 0.0;
-    W0        = 0.0;
-    W1        = 0.0;
-    imbalance = 0.0;
-
-    clevel      = 0;
-    cn          = 0;
     matching    = (Int *)SuiteSparse_free(matching);
     matchmap    = (Int *)SuiteSparse_free(matchmap);
     invmatchmap = (Int *)SuiteSparse_free(invmatchmap);
     matchtype   = (Int *)SuiteSparse_free(matchtype);
-    singleton   = 0;
 
     markArray = (Int *)SuiteSparse_free(markArray);
-    markValue = 1;
+
+    SuiteSparse_free(this);
 }
 
 /* Initialize a top level graph with a a set of options. */
