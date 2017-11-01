@@ -125,7 +125,6 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    Graph();
     static Graph *Create(Int _n, Int _nz);
     static Graph *Create(Graph *_parent);
     ~Graph();

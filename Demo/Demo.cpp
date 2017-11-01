@@ -64,7 +64,6 @@ int main(int argn, const char **argv)
         cout << "Trial Time:    " << trial_duration*1000 << "ms" << endl;
 
         graph->~Graph();
-        SuiteSparse_free(graph);
         SuiteSparse_free(options);
     }
 

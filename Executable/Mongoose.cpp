@@ -117,7 +117,6 @@ int main(int argn, const char **argv)
     }
 
     G->~Graph();
-    SuiteSparse_free(G);
     SuiteSparse_free(options);
 
     SuiteSparse_finish();
