@@ -48,6 +48,18 @@ function comparisonData = compareAll(trials)
                     for doCommunityMatching = 0:1
                         
                         for matchingStrategy = 0:3
+                            % Community matching does not affect matching
+                            % strategies Random or HEM
+                            if (doCommunityMatching == 1 && (matchingStrategy == 0 || matchingStrategy == 1))
+                                continue;
+                            end
+                            
+                            % if highest degree > 16*sqrt(n), skip Random/HEM
+                            if (max(sum(sign(A))) > 16*sqrt(n))
+                                if (matchingStrategy == 0 || matchingStrategy == 1)
+                                    continue;
+                                end
+                            end
                             
                             for coarsenLimit = [64, 256, 1024]
                                 comparisonData(j).mongoose = 1;
@@ -65,7 +77,7 @@ function comparisonData = compareAll(trials)
                                 fprintf('name = %s\n', Prob.name);
                                 fprintf('use_weights = %d\n', use_weights);
                                 fprintf('guessCutType = %d\n', guessCutType);
-                                fprintf('doCommunityMatching = %d\n', guessCutType);
+                                fprintf('doCommunityMatching = %d\n', doCommunityMatching);
                                 fprintf('matchingStrategy = %d\n', matchingStrategy);
                                 fprintf('coarsenLimit = %d\n', coarsenLimit);
                                 
@@ -81,6 +93,7 @@ function comparisonData = compareAll(trials)
                                     tic;
                                     partition = mongoose_computeEdgeSeparator(A,O);
                                     t = toc;
+                                    
                                     fprintf('Mongoose: %0.2f\n', t);
                                     mongoose_times(j, k) = t;
                                     part_A = find(partition);
@@ -91,6 +104,11 @@ function comparisonData = compareAll(trials)
                                     mongoose_cut_weight(j, k) = sum(sum(A_perm((p+1):n_cols, 1:p)));
                                     mongoose_cut_size(j, k) = sum(sum(sign(A_perm((p+1):n_cols, 1:p))));
                                     mongoose_imbalance(j, k) = abs(0.5-(length(part_A)/(length(part_A) + length(part_B))));
+                                    % If it took more than 30 minutes, only
+                                    % run once.
+                                    if (t > 1800)
+                                        break;
+                                    end
                                 end
                                 
                                 comparisonData(j).time = trimmean(mongoose_times(j, 1:k), 40);
