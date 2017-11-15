@@ -11,7 +11,7 @@ function comparisonData = compareAll(trials)
         j = 1;
     end
     
-    index = UFget;
+    index = ssget;
     % Sort by nnz
     nnzs = index.nnz;
     [~,ids] = sortrows(nnzs');
@@ -39,7 +39,9 @@ function comparisonData = compareAll(trials)
 
                 % If the sanitization removed all vertices, skip this matrix
                 if nnz(A) < 2
-                    continue
+                    comparisonData(j).problem_id = Prob.id;
+                    j = j+1;
+                    continue;
                 end
 
                 % Run Mongoose with various options to partition the graph.
@@ -55,7 +57,7 @@ function comparisonData = compareAll(trials)
                             end
                             
                             % if highest degree > 16*sqrt(n), skip Random/HEM
-                            if (max(sum(sign(A))) > 16*sqrt(n))
+                            if (max(sum(sign(A))) > 16*sqrt(n_cols))
                                 if (matchingStrategy == 0 || matchingStrategy == 1)
                                     continue;
                                 end
