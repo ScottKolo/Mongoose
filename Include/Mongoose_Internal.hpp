@@ -10,13 +10,11 @@
 #define CPP11_OR_LATER false
 #endif
 
-#include <climits>
-#include <cstdlib>
-
 /* Dependencies */
-#include "math.h"
-#include "stddef.h"
-#include "stdlib.h"
+#include <cmath>
+#include <cstddef>
+#include <cstdlib>
+#include <climits>
 
 /* Memory Management */
 #include "SuiteSparse_config.h"

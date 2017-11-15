@@ -55,18 +55,18 @@ cs *GraphToCSparse3(Graph *G, bool copy)
 /* Create a new Mongoose Graph from an existing CSparse3 matrix. */
 Graph *CSparse3ToGraph(cs *G, bool resetEW, bool resetNW)
 {
-    Graph *returner
-        = static_cast<Graph *>(SuiteSparse_calloc(1, sizeof(Graph)));
-    if (!returner)
+    Graph *returner = Graph::Create(std::max(G->n, G->m), G->p[G->n], false);
+    if(!returner)
+    {
         return NULL;
+    }
 
     /* Brain-transplant the graph to the new representation. */
     returner->cs_n     = G->n;
     returner->cs_m     = G->m;
     returner->cs_nz    = G->nz;
     returner->cs_nzmax = G->nzmax;
-    returner->n        = std::max(G->n, G->m);
-    returner->nz       = G->p[G->n];
+
     returner->p        = G->p;
     returner->i        = G->i;
     returner->x        = G->x;

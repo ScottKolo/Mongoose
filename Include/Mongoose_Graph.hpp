@@ -69,7 +69,7 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    static Graph *Create(Int _n, Int _nz);
+    static Graph *Create(Int _n, Int _nz, bool allocate);
     static Graph *Create(Graph *_parent);
     ~Graph();
     bool initialize(const Options *options);
