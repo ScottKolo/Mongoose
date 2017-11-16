@@ -43,7 +43,7 @@ Graph::Graph()
     markValue = 1;
 }
 
-Graph *Graph::Create(const Int _n, const Int _nz, const bool allocate = true)
+Graph *Graph::Create(const Int _n, const Int _nz, const bool allocate)
 {
     void *memoryLocation = SuiteSparse_malloc(1, sizeof(Graph));
     if (!memoryLocation)
