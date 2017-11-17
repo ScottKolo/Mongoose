@@ -39,6 +39,5 @@ void mexFunction
     G->i = NULL;
     G->x = NULL;
     G->~Graph();
-    free(G);
 }
 

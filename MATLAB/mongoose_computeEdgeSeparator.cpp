@@ -44,7 +44,5 @@ void mexFunction
 
     /* Cleanup */
     G->~Graph();
-    SuiteSparse_free(G);
-
     SuiteSparse_free(O);
 }

@@ -46,14 +46,12 @@ void mexFunction
     G->x = NULL;
     G->w = NULL;
     G->~Graph();
-    SuiteSparse_free(G);
     G_coarse->i = NULL;
     G_coarse->p = NULL;
     G_coarse->x = NULL;
     G_coarse->w = NULL;
     G_coarse->matchmap = NULL;
     G_coarse->~Graph();
-    SuiteSparse_free(G_coarse);
     O->~Options();
     SuiteSparse_free(O);
 }
