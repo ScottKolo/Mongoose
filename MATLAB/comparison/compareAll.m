@@ -49,7 +49,7 @@ function comparisonData = compareAll(trials)
                     
                     for doCommunityMatching = 0:1
                         
-                        for matchingStrategy = 0:3
+                        for matchingStrategy = 3:-1:0
                             % Community matching does not affect matching
                             % strategies Random or HEM
                             if (doCommunityMatching == 1 && (matchingStrategy == 0 || matchingStrategy == 1))
