@@ -56,8 +56,8 @@ function comparisonData = compareAll(trials)
                                 continue;
                             end
                             
-                            % if highest degree > 16*sqrt(n), skip Random/HEM
-                            if (max(sum(sign(A))) > 16*sqrt(n_cols))
+                            % if highest degree > 10*sqrt(n), skip Random/HEM
+                            if (max(sum(sign(A))) > 10*sqrt(n_cols))
                                 if (matchingStrategy == 0 || matchingStrategy == 1)
                                     continue;
                                 end
