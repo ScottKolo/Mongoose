@@ -9,11 +9,11 @@ function mongoose_exhaustiveTest
 
             % Sanitize the matrix: remove diagonal elements, check for positive edge
             % weights, and make sure it is symmetric.
-            A = mongoose_sanitizeMatrix(A);
+            A = sanitize(A);
 
             % Run Mongoose to partition the graph.
             tic
-            partition = mongoose_computeEdgeSeparator(A);
+            partition = edgecut(A);
             toc
             fprintf('\n');
         end

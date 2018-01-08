@@ -1,5 +1,5 @@
 function mongoose_make (run_demo)
-%MONGOOSE_MAKE compiles the GP mexFunctions
+%MONGOOSE_MAKE compiles the Mongoose mex functions
 
 if (nargin < 1)
     run_demo = 1;
@@ -9,20 +9,23 @@ details = 0 ;	    % 1 if details of each command are to be printed
 
 v = getversion ;
 
-d = '' ;
+flags = '' ;
 is64 = (~isempty (strfind (computer, '64'))) ;
 if (is64)
     % 64-bit MATLAB
-    d = '-largeArrayDims' ;
+    flags = '-largeArrayDims' ;
 end
 
 include = '-I. -I../Include -I../External/Include -I../SuiteSparse_config' ;
 
 % Linux/Unix require these flags for large file support
-include = [include ' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE'] ;
+flags = [flags ' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE'] ;
 
 % We're compiling this from within a mex function.
-include = [include ' -DGP_MEX_FUNCTION'] ;
+flags = [flags ' -DGP_MEX_FUNCTION'] ;
+
+% Append optimization and 64-bit flags
+flags = [flags ' -DDLONG -O -silent'];
 
 lib = '-L../Lib' ;
 cpp_flags = '' ;
@@ -47,7 +50,7 @@ lib = strrep (lib, '/', filesep) ;
 config_src = {
     '../SuiteSparse_config/SuiteSparse_config' };
 
-gp_src = {
+mongoose_src = {
     '../Source/Mongoose_BoundaryHeap', ...
     '../Source/Mongoose_Coarsening', ...
     '../Source/Mongoose_CSparse', ...
@@ -72,65 +75,50 @@ gp_src = {
     '../Source/Mongoose_QPNapsack', ...
     '../Source/Mongoose_ImproveQP', ...
     '../Source/Mongoose_Interop', ...
-    '../Source/Mongoose_Sanitize', ...
-    './mex_get_graph', ...
-    './mex_get_options', ...
-    './mex_getput_vector', ...
-    './mex_put_options', ...
-    './mex_struct_util' } ;
+    '../Source/Mongoose_Sanitize'};
 
-gp_mex_src = { 'mongoose_getDefaultOptions', ...
-               'mongoose_computeEdgeSeparator', ...
-               'mongoose_coarsen_mex', ...
-               'mongoose_exportGraph', ...
-               'mongoose_sanitizeMatrix' } ;
+mex_util_src = {
+    './mex_util/mex_get_graph', ...
+    './mex_util/mex_get_options', ...
+    './mex_util/mex_getput_vector', ...
+    './mex_util/mex_put_options', ...
+    './mex_util/mex_struct_util' } ;
 
-obj_extension = '.o' ;
+mongoose_mex_src = { 
+    'defaultoptions', ...
+    'edgecut', ...
+    'coarsen', ...
+    'sanitize' } ;
 
-% compile each library source file
-obj = '' ;
-
-kk = 1 ;
+% Keep track of object files
+obj_list = '' ;
 
 fprintf('\n\nBuilding Mongoose') ;
-for f = config_src
-    ff = strrep (f{1}, '/', filesep) ;
-    slash = strfind (ff, filesep) ;
-    if (isempty (slash))
-        slash = 1 ;
-    else
-        slash = slash (end) + 1 ;
-    end
-    o = ff (slash:end) ;
-    obj = [obj ' ' o obj_extension] ;
-    s = sprintf ('mex %s %s -DDLONG -O -silent %s -c %s.c', cpp_flags, d, include, ff) ;
-    kk = do_cmd (s, kk, details) ;
-end
 
-for f = gp_src
-    ff = strrep (f{1}, '/', filesep) ;
-    slash = strfind (ff, filesep) ;
-    if (isempty (slash))
-        slash = 1 ;
-    else
-        slash = slash (end) + 1 ;
-    end
-    o = ff (slash:end) ;
-    obj = [obj ' ' o obj_extension] ;
-    s = sprintf ('mex %s -DDLONG -O -silent %s -c %s.cpp', d, include, ff) ;
-    kk = do_cmd (s, kk, details) ;
-end
+% Build SuiteSparse config
+obj_files = mex_compile(config_src, 'c', flags, include, details);
+obj_list = [obj_list obj_files];
+
+% Build Mongoose
+obj_files = mex_compile(mongoose_src, 'cpp', [cpp_flags flags], include, details);
+obj_list = [obj_list obj_files];
+
+fprintf('\nBuilding MEX Utilities') ;
+
+obj_files = mex_compile(mex_util_src, 'cpp', [cpp_flags flags], include, details);
+obj_list = [obj_list obj_files];
 
 fprintf('\nBuilding Mongoose MEX functions');
-for f = gp_mex_src
-    s = sprintf ('mex %s -DDLONG -O -silent %s %s.cpp', d, include, f{1}) ;
-    s = [s obj ' ' lib] ;
-    kk = do_cmd (s, kk, details) ;
+for f = mongoose_mex_src
+    s = sprintf ('mex %s %s %s.cpp', [cpp_flags flags], include, f{1}) ;
+    s = [s obj_list ' ' lib] ;
+    kk = do_cmd (s, 1, details) ;
 end
 
-% clean up
-s = ['delete ' obj] ;
-do_cmd (s, kk, details) ;
+% Clean up
+fprintf('\nCleaning up');
+s = ['delete ' obj_list] ;
+do_cmd (s, 1, details) ;
 fprintf ('\nMongoose successfully compiled\n') ;
 
 % Run the demo if needed
@@ -140,6 +128,24 @@ if (run_demo)
     fprintf ('\nMongoose demo completed successfully\n') ;
 end
 
+%-------------------------------------------------------------------------------
+function obj_files = mex_compile (files, ext, flags, include, details)
+%MEX_COMPILE: compile C/C++ files using mex and return list of obj files
+kk = 1;
+obj_files = '';
+for f = files
+    ff = strrep (f{1}, '/', filesep) ;
+    slash = strfind (ff, filesep) ;
+    if (isempty (slash))
+        slash = 1 ;
+    else
+        slash = slash (end) + 1 ;
+    end
+    o = ff (slash:end) ;
+    obj_files = [obj_files ' ' o '.o'] ;
+    s = sprintf ('mex %s %s -c %s.%s', flags, include, ff, ext) ;
+    kk = do_cmd (s, kk, details) ;
+end
 
 %-------------------------------------------------------------------------------
 function kk = do_cmd (s, kk, details)

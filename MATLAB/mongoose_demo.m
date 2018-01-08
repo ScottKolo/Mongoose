@@ -9,10 +9,10 @@ A = Prob.A;
 
 % Sanitize the matrix: remove diagonal elements, check for positive edge
 % weights, and make sure it is symmetric.
-A = mongoose_sanitizeMatrix(A);
+A = sanitize(A);
 
 % Run Mongoose to partition the graph.
-part = mongoose_computeEdgeSeparator(A);
+part = edgecut(A);
 
 % Create a Graphviz plot of the graph and solution
 if (has_graphviz)
@@ -25,7 +25,7 @@ figure('Position', [100, 100, 1000, 400]);
 
 if (viz)
     plotname = sanitize_plotname(Prob.name);
-    mongoose_separator_plot(A, part, 1-part, plotname);
+    mongoose_plot(A, part, 1-part, plotname);
     subplot(1, 2+viz, 1);
     img = imread([plotname '.png']);
     imshow(img)

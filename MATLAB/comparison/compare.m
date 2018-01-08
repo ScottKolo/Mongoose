@@ -53,7 +53,7 @@ function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_we
             A = abs(A); % Edit for graph comparison
 
             % Sanitize the matrix (remove diagonal, take largest scc)
-            A = mongoose_sanitizeMatrix(A, ~use_weights);
+            A = sanitize(A, ~use_weights);
             
             % If the sanitization removed all vertices, skip this matrix
             if nnz(A) < 2
@@ -70,11 +70,11 @@ function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_we
             comparisonData(j).problem_n = n_cols;
             
             % Run Mongoose with default options to partition the graph.
-            O = mongoose_getDefaultOptions();
+            O = defaultoptions();
             O.randomSeed = 123456789;
             for k = 1:trials
                 tic;
-                partition = mongoose_computeEdgeSeparator(A,O);
+                partition = edgecut(A,O);
                 t = toc;
                 fprintf('Mongoose: %0.2f\n', t);
                 mongoose_times(j,k) = t;

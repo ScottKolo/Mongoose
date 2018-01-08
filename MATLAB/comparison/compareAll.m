@@ -7,6 +7,7 @@ function comparisonData = compareAll(trials)
         load('mongoose_data.mat');
     catch fileNotFound
         save('mongoose_data.mat');
+        comparisonData = {};
         lastMatrixCompleted = 0;
         j = 1;
     end
@@ -17,6 +18,11 @@ function comparisonData = compareAll(trials)
     [~,ids] = sortrows(nnzs');
     
     for i = ids'
+        % Skip specific problematic matrices
+        if (i == 1772 || i == 2177 || i == 2249)
+            continue;
+        end
+
         found = ID_present(comparisonData,i);
         if (index.isReal(i) && ~found)
             Prob = UFget(i);
@@ -35,7 +41,7 @@ function comparisonData = compareAll(trials)
             for use_weights = 0:1
                 
                 % Sanitize the matrix (remove diagonal, take largest scc)
-                A = mongoose_sanitizeMatrix(A, ~use_weights);
+                A = sanitize(A, ~use_weights);
 
                 % If the sanitization removed all vertices, skip this matrix
                 if nnz(A) < 2
@@ -85,7 +91,7 @@ function comparisonData = compareAll(trials)
                                 
                                 for k = 1:trials
                                     % Set up options struct for this run
-                                    O = mongoose_getDefaultOptions();
+                                    O = defaultoptions();
                                     O.randomSeed = 123456789;
                                     O.guessCutType = guessCutType;
                                     O.doCommunityMatching = doCommunityMatching;
@@ -93,7 +99,7 @@ function comparisonData = compareAll(trials)
                                     O.coarsenLimit = coarsenLimit;
                                     
                                     tic;
-                                    partition = mongoose_computeEdgeSeparator(A,O);
+                                    partition = edgecut(A,O);
                                     t = toc;
                                     
                                     fprintf('Mongoose: %0.2f\n', t);
