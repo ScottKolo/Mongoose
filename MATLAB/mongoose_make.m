@@ -1,4 +1,4 @@
-function mongoose_make (run_demo)
+function mongoose_make (run_test)
 %MONGOOSE_MAKE compiles the Mongoose mex functions
 
 if (nargin < 1)
@@ -122,10 +122,10 @@ do_cmd (s, 1, details) ;
 fprintf ('\nMongoose successfully compiled\n') ;
 
 % Run the demo if needed
-if (run_demo)
-    fprintf ('\nRunning Mongoose demo...\n') ;
-    mongoose_demo
-    fprintf ('\nMongoose demo completed successfully\n') ;
+if (run_test)
+    fprintf ('\nRunning Mongoose test...\n') ;
+    mongoose_test
+    fprintf ('\nMongoose test completed successfully\n') ;
 end
 
 %-------------------------------------------------------------------------------

@@ -1,45 +1,76 @@
 % A simple demo to demonstrate Mongoose. Reads in a matrix, sanitizes it,
-% partitions it, and displays the results.
+% and partitions it several different ways.
 function mongoose_demo
 
-% Obtain the matrix
+% Obtain the adjacency matrix
 matfile_data = matfile('494_bus.mat');
 Prob = matfile_data.Problem;
 A = Prob.A;
+[m ~] = size(A);
 
-% Sanitize the matrix: remove diagonal elements, check for positive edge
-% weights, and make sure it is symmetric.
+% Sanitize the adjacency matrix: remove diagonal elements, make edge weights 
+% positive, and make sure it is symmetric. If the matrix is not symmetric 
+% or square, a symmetric matrix (A+A')/2 is built.
 A = sanitize(A);
 
-% Run Mongoose to partition the graph.
-part = edgecut(A);
+% Create a node weight vector and create a heavy node
+V = ones(1,m);
+V(10) = 300;
 
-% Create a Graphviz plot of the graph and solution
-if (has_graphviz)
-    viz = 1;
-else
-    viz = 0;
-end
+% Create a set of default options and modify the target balance
+O = defaultoptions();
+O.targetSplit = 0.3;
+
+% Run Mongoose to partition the graph with edge and node weights.
+partNode = edgecut(A, O, V);
+
+fprintf('\n\nPartitioning graph with edge and node weights\n\n');
+fprintf('=== Cut Info ===\n');
+fprintf('Cut Size:   %d\n', full(sum(partNode .* sum(sign(A)))));
+fprintf('Cut Weight: %d\n\n', full(sum(partNode .* sum(A))));
+fprintf('=== Balance Info ===\n');
+fprintf('Target Split:     0.3\n');
+fprintf('Actual Split:     %1.4f\n', sum(partNode .* V) / sum(V));
+fprintf('Unweighted Split: %1.4f\n', sum(partNode) / m);
+
+% Run Mongoose to partition the graph with no vertex weights.
+
+partEdge = edgecut(A, O);
+
+fprintf('\n\nPartitioning graph with only edge weights\n\n');
+fprintf('=== Cut Info ===\n');
+fprintf('Cut Size:   %d\n', full(sum(partEdge .* sum(sign(A)))));
+fprintf('Cut Weight: %d\n\n', full(sum(partEdge .* sum(A))));
+fprintf('=== Balance Info ===\n');
+fprintf('Target Split: 0.5\n');
+fprintf('Actual Split: %1.4f\n', sum(partEdge) / m);
+
+% Remove edge weights
+A = sanitize(A, 1);
+
+% Run Mongoose to partition the graph with no edge weights.
+% Note that only the graph is passed as an argument, so default
+% options are assumed.
+partPattern = edgecut(A);
+
+fprintf('\n\nPartitioning graph with only edge weights\n\n');
+fprintf('=== Cut Info ===\n');
+fprintf('Cut Size:   %d\n', full(sum(partPattern .* sum(sign(A)))));
+fprintf('Cut Weight: %d\n\n', full(sum(partPattern .* sum(A))));
+fprintf('=== Balance Info ===\n');
+fprintf('Target Split: 0.5\n');
+fprintf('Actual Split: %1.4f\n', sum(partPattern) / m);
 
 figure('Position', [100, 100, 1000, 400]);
 
-if (viz)
-    plotname = sanitize_plotname(Prob.name);
-    mongoose_plot(A, part, 1-part, plotname);
-    subplot(1, 2+viz, 1);
-    img = imread([plotname '.png']);
-    imshow(img)
-    title('Graphviz Visualization')
-end
-
 % Plot the original matrix before permutation
-subplot(1, 2+viz, 1+viz);
+subplot(1, 2, 1);
 spy(A)
 title('Before Partitioning')
 
 % Plot the matrix after the permutation
-subplot(1, 2+viz, 2+viz);
-perm = [find(part) find(1-part)];
+subplot(1, 2, 2);
+perm = [find(partEdge) find(1-partEdge)];
 A_perm = A(perm, perm); % Permute the matrix
 spy(A_perm)
 title('After Partitioning')
@@ -47,22 +78,4 @@ title('After Partitioning')
 % Set overall title
 suptitle('HB/494\_bus')
 
-end
-
-% Sanitize the plot name - neato does not like slashes or dashes.
-function new_plotname = sanitize_plotname(old_plotname)
-    new_plotname = strrep(old_plotname, '/', '_');
-    new_plotname = strrep(new_plotname, '-', '_');
-end
-
-% Check if Graphviz (specifically neato) is installed.
-function bool = has_graphviz
-    if (ismac)
-        where = '/usr/local/bin/' ;
-    else
-        where = '/usr/bin/' ;
-    end
-    command = 'neato -V';
-    [status, ~] = system(sprintf('%s%s', where, command));
-    bool = (status == 0);
 end

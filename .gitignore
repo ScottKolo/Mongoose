@@ -6,6 +6,5 @@ Matrix/*.csv
 .DS_Store
 MATLAB/plots/*
 MATLAB/*.png
-MATLAB/*/*
 .idea/*
 cmake-build-debug*
