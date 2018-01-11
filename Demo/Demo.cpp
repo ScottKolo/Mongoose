@@ -54,14 +54,15 @@ int main(int argn, const char **argv)
             return 1;
         }
 
-        ComputeEdgeSeparator (graph, options);
+        ComputeEdgeSeparator(graph, options);
 
         cout << "Partitioning Complete!" << endl;
-        cout << "Cut Cost:      " << setprecision(2) << graph->cutCost << endl;
-        cout << "Cut Imbalance: " << setprecision(2) << fabs(100*graph->imbalance) << "%" << endl;
+        cout << "Cut Cost:       " << setprecision(2) << graph->cutCost << endl;
+        cout << "Cut Imbalance:  " << setprecision(2) << 100*(graph->imbalance) << "%" << endl;
+        cout << "Normalized Cut: " << setprecision(3) << graph->normCut << endl;
 
         double trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
-        cout << "Trial Time:    " << trial_duration*1000 << "ms" << endl;
+        cout << "Trial Time:     " << trial_duration*1000 << "ms" << endl;
 
         graph->~Graph();
         SuiteSparse_free(options);
@@ -70,7 +71,7 @@ int main(int argn, const char **argv)
     duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
 
     cout << "**************************************************" << endl;
-    cout << "Total Demo Time: " << setprecision(2) << duration << endl;
+    cout << "Total Demo Time:  " << setprecision(2) << duration << "s" << endl;
 
     cout << endl;
     cout << "**************************************************" << endl;

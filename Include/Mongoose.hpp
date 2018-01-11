@@ -91,6 +91,7 @@ public:
     double W;  /** Sum of node weights             */
 
     double H; /** Heuristic max penalty to assess */
+    double worstCaseRatio;
 
     /** Partition Data *******************************************************/
     bool *partition;     /** T/F denoting partition side     */
@@ -104,11 +105,13 @@ public:
     /** Cut Cost Metrics *****************************************************/
     double heuCost;   /** cutCost + balance penalty       */
     double cutCost;   /** Sum of edge weights in cut set  */
+    Int cutSize;      /** Number of edges in cut set      */
     double W0;        /** Sum of partition 0 node weights */
     double W1;        /** Sum of partition 1 node weights */
     double imbalance; /** Degree to which the partitioning
                           is imbalanced, and this is
                           computed as (0.5 - W0/W).       */
+    double normCut;   /* Normalized cut metric. */
 
     /** Matching Data ********************************************************/
     Graph *parent;    /** Link to the parent graph        */

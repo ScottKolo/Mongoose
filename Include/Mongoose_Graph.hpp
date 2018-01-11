@@ -53,6 +53,7 @@ public:
     double imbalance; /** Degree to which the partitioning
                           is imbalanced, and this is
                           computed as (0.5 - W0/W).       */
+    double normCut;   /* Normalized cut metric. */
 
     /** Matching Data ********************************************************/
     Graph *parent;    /** Link to the parent graph        */
