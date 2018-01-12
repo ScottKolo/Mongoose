@@ -61,8 +61,8 @@ void bhLoad(Graph *graph, const Options *options)
     graph->W1      = cost.W[1];
 
     double targetSplit = options->targetSplit;
-    if (targetSplit > 0.5)
-        targetSplit = 1. - targetSplit;
+    ASSERT(targetSplit > 0);
+    ASSERT(targetSplit <= 0.5);
 
     graph->imbalance = targetSplit - std::min(graph->W0, graph->W1) / graph->W;
     graph->heuCost   = (graph->cutCost

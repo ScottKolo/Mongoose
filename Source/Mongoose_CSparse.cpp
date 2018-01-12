@@ -42,8 +42,8 @@ cs *cs_transpose(const cs *A, csi values)
     csi p, q, j, *Cp, *Ci, n, m, *Ap, *Ai, *w;
     double *Cx, *Ax;
     cs *C;
-    if (!CS_CSC(A))
-        return (NULL); /* check inputs */
+    ASSERT(A != NULL);
+    ASSERT(CS_CSC(A));
     m  = A->m;
     n  = A->n;
     Ap = A->p;
@@ -54,6 +54,7 @@ cs *cs_transpose(const cs *A, csi values)
                                   sizeof(csi)); /* get workspace */
     if (!C || !w)
         return (cs_done(C, w, NULL, 0)); /* out of memory */
+
     Cp = C->p;
     Ci = C->i;
     Cx = C->x;
@@ -97,13 +98,12 @@ cs *cs_add(const cs *A, const cs *B, double alpha, double beta)
     csi p, j, nz = 0, anz, *Cp, *Ci, *Bp, m, n, bnz, *w, values;
     double *x, *Bx, *Cx;
     cs *C;
-    if (!CS_CSC(A) || !CS_CSC(B)) /* check inputs */
-    {
-        LogError("Error: Cannot add uncompressed matrices");
-        return (NULL);
-    }
-    if (A->m != B->m || A->n != B->n)
-        return (NULL);
+    ASSERT(A != NULL);
+    ASSERT(CS_CSC(A));
+    ASSERT(B != NULL);
+    ASSERT(CS_CSC(B));
+    ASSERT(A->m == B->m);
+    ASSERT(A->n == B->n);
     m      = A->m;
     anz    = A->p[A->n];
     n      = B->n;
@@ -156,8 +156,7 @@ cs *cs_compress(const cs *T)
     csi m, n, nz, k, *Cp, *Ci, *w, *Ti, *Tj;
     double *Cx, *Tx;
     cs *C;
-    if (!CS_TRIPLET(T))
-        return (NULL); /* check inputs */
+    ASSERT(CS_TRIPLET(T));
     m  = T->m;
     n  = T->n;
     Ti = T->i;
@@ -200,8 +199,8 @@ double cs_cumsum(csi *p, csi *c, csi n)
 {
     csi i, nz = 0;
     double nz2 = 0;
-    if (!p || !c)
-        return (-1); /* check inputs */
+    ASSERT(p != NULL);
+    ASSERT(c != NULL);
     for (i = 0; i < n; i++)
     {
         p[i] = nz;
@@ -221,8 +220,9 @@ csi cs_scatter(const cs *A, csi j, double beta, csi *w, double *x, csi mark,
 {
     csi p, *Ap, *Ai, *Ci;
     double *Ax;
-    if (!CS_CSC(A) || !w || !CS_CSC(C))
-        return (-1); /* check inputs */
+    ASSERT(CS_CSC(A));
+    ASSERT(CS_CSC(C));
+    ASSERT(w != NULL);
     Ap = A->p;
     Ai = A->i;
     Ax = A->x;

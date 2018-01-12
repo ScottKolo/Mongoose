@@ -17,7 +17,11 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular,
     else
     {
         cs *A_transpose = cs_transpose(compressed_A, 1);
-        cleanMatrix     = cs_add(compressed_A, A_transpose, 0.5, 0.5);
+        if (!A_transpose)
+        {
+            return NULL;
+        }
+        cleanMatrix = cs_add(compressed_A, A_transpose, 0.5, 0.5);
         cs_spfree(A_transpose);
     }
 
