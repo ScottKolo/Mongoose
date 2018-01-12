@@ -9,8 +9,8 @@ matrix:
     - os: linux
       compiler: gcc
       env:
-        - CXX=g++-4.6
-        - CC=gcc-4.6
+        - CXX=g++-4.8
+        - CC=gcc-4.8
         - SPECIAL=codecov
       addons:
         apt:
@@ -20,15 +20,15 @@ matrix:
           packages:
             - cmake
             - cmake-data
-            - gcc-4.6
-            - g++-4.6
+            - gcc-4.8
+            - g++-4.8
             - lcov
       before_script:
         - pip install --user gcovr
         - pyenv install -s 2.7.13
         - pyenv global 2.7.13
-        - export CXX=g++-4.6
-        - export CC=gcc-4.6
+        - export CXX=g++-4.8
+        - export CC=gcc-4.8
         - gcovr --version
       after_success:
         - gcov -o ./CMakeFiles/mongoose_dbg.dir/Source ../Source/*.cpp
