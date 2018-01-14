@@ -6,7 +6,7 @@
 
 using namespace Mongoose;
 
-void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
+int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
 {
     LogTest("Running Edge Separator Test on " << inputFile);
         
@@ -20,7 +20,7 @@ void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit
         // Ran out of memory
         LogTest("Error creating Options struct in Edge Separator Test");
         SuiteSparse_free(options);
-        assert(false);
+        return EXIT_FAILURE;
     }
 
     options->targetSplit = targetSplit;
@@ -34,7 +34,7 @@ void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit
         LogTest("Error reading Graph from file in Edge Separator Test");
         SuiteSparse_free(options);
         SuiteSparse_free(G);
-        assert(false);
+        return EXIT_FAILURE;
     }
 
     // An edge separator should be computed with default options
@@ -44,7 +44,7 @@ void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit
     {
         // Error occurred
         LogTest("Error computing edge separator in Edge Separator Test");
-        assert(false);
+        return EXIT_FAILURE;
     }
     else
     {
@@ -81,4 +81,6 @@ void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit
     SuiteSparse_free(options);
 
     LogTest("Edge Separator Test Completed Successfully");
+
+    return EXIT_SUCCESS;
 }

@@ -19,7 +19,7 @@ int main(int argn, const char **argv)
     {
         // Wrong number of arguments - return error
         SuiteSparse_finish();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // Read in input file name
@@ -29,9 +29,9 @@ int main(int argn, const char **argv)
     Logger::setDebugLevel(Test);
 
     // Run the memory test
-    runMemoryTest(inputFile);
+    int status = runMemoryTest(inputFile);
 
     SuiteSparse_finish();
     
-    return 0;
+    return status;
 }

@@ -23,7 +23,7 @@ int main(int argn, char** argv)
         // Wrong number of arguments - return error
         LogError("Usage: mongoose_test_io <MM-input-file.mtx> <1 for valid graph, 0 for invalid>");
         SuiteSparse_finish();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // Read in input file name
@@ -33,9 +33,9 @@ int main(int argn, char** argv)
     bool validGraph = static_cast<bool>(atoi(argv[2]));
 
     // Run the I/O test
-    runIOTest(inputFile, validGraph);
+    int status = runIOTest(inputFile, validGraph);
 
     SuiteSparse_finish();
 
-    return 0;
+    return status;
 }

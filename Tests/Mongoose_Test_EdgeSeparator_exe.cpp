@@ -19,7 +19,7 @@ int main(int argn, char** argv)
     {
         // Wrong number of arguments - return error
         SuiteSparse_finish();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     double targetSplit;
@@ -44,9 +44,9 @@ int main(int argn, char** argv)
     Logger::setTimingFlag(true);
 
     // Run the Edge Separator test
-    runEdgeSeparatorTest(inputFile, targetSplit);
+    int status = runEdgeSeparatorTest(inputFile, targetSplit);
 
     SuiteSparse_finish();
 
-    return 0;
+    return status;
 }

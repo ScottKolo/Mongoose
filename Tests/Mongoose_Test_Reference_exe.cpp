@@ -19,7 +19,7 @@ int main(int argn, const char **argv)
     {
         // Wrong number of arguments - return error
         SuiteSparse_finish();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // Read in input file name
@@ -32,9 +32,9 @@ int main(int argn, const char **argv)
     Logger::setTimingFlag(true);
 
     // Run the Reference performance test
-    runReferenceTest(inputFile);
+    int status = runReferenceTest(inputFile);
 
     SuiteSparse_finish();
     
-    return 0;
+    return status;
 }

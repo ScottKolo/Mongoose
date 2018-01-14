@@ -6,7 +6,7 @@
 
 using namespace Mongoose;
 
-void runReferenceTest(const std::string &inputFile)
+int runReferenceTest(const std::string &inputFile)
 {
     // Given a symmetric matrix
     Options *options;
@@ -20,7 +20,7 @@ void runReferenceTest(const std::string &inputFile)
         // Ran out of memory
         LogTest("Error creating Options struct in Performance Test");
         SuiteSparse_free(options);
-        assert(false);
+        return (EXIT_FAILURE);
     }
 
     G = readGraph(inputFile);
@@ -30,6 +30,7 @@ void runReferenceTest(const std::string &inputFile)
         // Ran out of memory
         SuiteSparse_free(options);
         SuiteSparse_free(G);
+        return (EXIT_FAILURE);
     }
 
     // An edge separator should be computed with default options

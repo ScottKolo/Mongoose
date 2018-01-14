@@ -19,7 +19,7 @@ int main(int argn, const char **argv)
     {
         // Wrong number of arguments - return error
         SuiteSparse_finish();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // Read in input file name
@@ -39,9 +39,9 @@ int main(int argn, const char **argv)
     Logger::setTimingFlag(true);
 
     // Run the Edge Separator test
-    runPerformanceTest(inputFile, outputFile);
+    int status = runPerformanceTest(inputFile, outputFile);
 
     SuiteSparse_finish();
     
-    return 0;
+    return status;
 }

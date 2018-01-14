@@ -6,7 +6,7 @@
 
 using namespace Mongoose;
 
-void RunAllTests (
+int RunAllTests (
     const std::string &inputFile,
     Options *O
 );
@@ -46,14 +46,14 @@ void myFree(void *ptr)
     if(ptr != NULL) free(ptr);
 }
 
-void runMemoryTest(const std::string &inputFile)
+int runMemoryTest(const std::string &inputFile)
 {
     Options *O = Options::Create();
     if(!O)
     {
         LogTest("Error creating Options struct in Memory Test");
         SuiteSparse_finish();
-        return; // Return early if we failed.
+        return EXIT_FAILURE; // Return early if we failed.
     }
 
     /* Override SuiteSparse memory management with custom testers. */
@@ -62,13 +62,15 @@ void runMemoryTest(const std::string &inputFile)
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
 
-    RunAllTests(inputFile, O);
+    int status = RunAllTests(inputFile, O);
 
     O->~Options();
     SuiteSparse_free(O);
+
+    return status;
 }
 
-void RunAllTests (
+int RunAllTests (
     const std::string &inputFile,
     Options *O
 )
@@ -102,7 +104,7 @@ void RunAllTests (
                         {
                             // Error!
                             LogTest("Terminating Memory Test Early");
-                            return;
+                            return EXIT_FAILURE;
                         }
                         m += 1;
                     } while (remainingMallocs < 1);
@@ -112,6 +114,7 @@ void RunAllTests (
     }
 
     LogTest("Memory Test Completed Successfully");
+    return EXIT_SUCCESS;
 }
 
 int RunTest (

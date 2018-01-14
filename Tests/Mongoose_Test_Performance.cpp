@@ -6,7 +6,7 @@
 
 using namespace Mongoose;
 
-void runPerformanceTest(const std::string &inputFile, const std::string &outputFile)
+int runPerformanceTest(const std::string &inputFile, const std::string &outputFile)
 {
     Options *options;
     Graph *G;
@@ -19,7 +19,7 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
         // Ran out of memory
         LogTest("Error creating Options struct in Performance Test");
         SuiteSparse_free(options);
-        assert(false);
+        return EXIT_FAILURE;
     }
 
     G = readGraph(inputFile);
@@ -29,7 +29,7 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
         // Ran out of memory
         LogTest("Error reading Graph from file in Performance Test");
         SuiteSparse_free(options);
-        assert(false);
+        return EXIT_FAILURE;
     }
 
     // An edge separator should be computed with default options
@@ -43,7 +43,7 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
         LogTest("Error computing edge separator in Performance Test");
         SuiteSparse_free(options);
         G->~Graph();
-        assert(false);
+        return EXIT_FAILURE;
     }
     else
     {
@@ -78,4 +78,6 @@ void runPerformanceTest(const std::string &inputFile, const std::string &outputF
 
     G->~Graph();
     SuiteSparse_free(options);
+
+    return EXIT_SUCCESS;
 }

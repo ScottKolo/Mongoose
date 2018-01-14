@@ -15,14 +15,14 @@
 
 #include <string>
 
-void runIOTest(const std::string &inputFile, bool validGraph);
-void runMemoryTest(const std::string &inputFile);
-void runTimingTest(const std::string &inputFile);
-void runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit);
-void runPerformanceTest(const std::string &inputFile, const std::string &outputFile);
+int runIOTest(const std::string &inputFile, bool validGraph);
+int runMemoryTest(const std::string &inputFile);
+int runTimingTest(const std::string &inputFile);
+int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit);
+int runPerformanceTest(const std::string &inputFile, const std::string &outputFile);
 
 // Currently unused
-void runReferenceTest(const std::string &inputFile);
+int runReferenceTest(const std::string &inputFile);
 
 #include "Mongoose_Logger.hpp"
 
