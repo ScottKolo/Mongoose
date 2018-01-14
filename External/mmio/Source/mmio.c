@@ -265,6 +265,9 @@ int mm_write_mtx_array_size(FILE *f, int M, int N)
 int mm_read_mtx_crd_data(FILE *f, long M, long N, long nz, long I[], long J[],
         double val[], MM_typecode matcode)
 {
+    (void)M; // Unused variable
+    (void)N; // Unused variable
+
     long i;
     if (mm_is_complex(matcode))
     {
