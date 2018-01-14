@@ -38,8 +38,7 @@ int ComputeEdgeSeparator(Graph *graph, const Options *options)
         return EXIT_FAILURE;
 
     /* Finish initialization */
-    if (!graph->initialize(options))
-        return EXIT_FAILURE;
+    graph->initialize(options);
 
     /* Keep track of what the current graph is at any stage */
     Graph *current = graph;
