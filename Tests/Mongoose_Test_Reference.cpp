@@ -99,4 +99,6 @@ int runReferenceTest(const std::string &inputFile)
 
     G->~Graph();
     SuiteSparse_free(options);
+
+    return EXIT_SUCCESS;
 }

@@ -23,6 +23,9 @@ int main(int argn, char** argv)
     Logger::setDebugLevel(All);
     Logger::setTimingFlag(false);
 
+    // Test with NULL graph
+    ComputeEdgeSeparator(NULL);
+
     Graph *G = readGraph("../Matrix/bcspwr02.mtx");
 
     // Test with no options struct

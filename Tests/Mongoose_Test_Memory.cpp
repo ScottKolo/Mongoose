@@ -77,6 +77,9 @@ int RunAllTests (
 {
     LogTest("Running Memory Test on " << inputFile);
 
+    int m = 0;
+    int remainingMallocs;
+
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
     GuessCutType guessCutStrategies[3] = {GuessQP, GuessRandom, GuessNaturalOrder};
     Int coarsenLimit[3] = {64, 256, 1024};
@@ -96,8 +99,6 @@ int RunAllTests (
                 {
                     O->coarsenLimit = coarsenLimit[k];
 
-                    int m = 0;
-                    int remainingMallocs;
                     do {
                         remainingMallocs = RunTest(inputFile, O, m);
                         if (remainingMallocs == -1)
@@ -112,6 +113,18 @@ int RunAllTests (
             }
         }
     }
+
+    // Run once with no options struct
+    do {
+        remainingMallocs = RunTest(inputFile, NULL, m);
+        if (remainingMallocs == -1)
+        {
+            // Error!
+            LogTest("Terminating Memory Test Early");
+            return EXIT_FAILURE;
+        }
+        m += 1;
+    } while (remainingMallocs < 1);
 
     LogTest("Memory Test Completed Successfully");
     return EXIT_SUCCESS;
@@ -130,7 +143,15 @@ int RunTest (
     Graph *U = readGraph(inputFile);
     if (!U) return AllowedMallocs;
 
-    ComputeEdgeSeparator(U, O);
+    if (O)
+    {
+        ComputeEdgeSeparator(U, O);
+    }
+    else
+    {
+        ComputeEdgeSeparator(U);
+    }
+
     U->~Graph();
 
     return AllowedMallocs;
