@@ -149,7 +149,7 @@ Graph::~Graph()
 }
 
 /* Initialize a top level graph with a a set of options. */
-bool Graph::initialize(const Options *options)
+void Graph::initialize(const Options *options)
 {
     (void)options; // Unused variable
 
@@ -187,8 +187,6 @@ bool Graph::initialize(const Options *options)
 
     // May need to correct tolerance for very ill-conditioned problems
     worstCaseRatio = max / (1E-9 + min);
-
-    return true;
 }
 
 void Graph::clearMarkArray()

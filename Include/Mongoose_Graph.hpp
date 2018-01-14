@@ -73,7 +73,7 @@ public:
     static Graph *Create(Int _n, Int _nz, bool allocate=true);
     static Graph *Create(Graph *_parent);
     ~Graph();
-    bool initialize(const Options *options);
+    void initialize(const Options *options);
 
     /** Matching Functions ****************************************************/
     inline bool isMatched(Int vertex) { return (matching[vertex] > 0); }
