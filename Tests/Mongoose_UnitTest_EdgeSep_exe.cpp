@@ -45,6 +45,15 @@ int main(int argn, char** argv)
     O->softSplitTolerance = -1;
     ComputeEdgeSeparator(G, O);
 
+    // Test with no QP
+    O->useQPGradProj = false;
+    ComputeEdgeSeparator(G, O);
+
+    // Test with no FM
+    O->useQPGradProj = true;
+    O->useFM = false;
+    ComputeEdgeSeparator(G, O);
+
     G->~Graph();
     SuiteSparse_free(O);
 
