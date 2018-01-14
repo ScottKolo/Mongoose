@@ -98,7 +98,7 @@ int RunAllTests (
                 for(int k = 0; k < 3; k++)
                 {
                     O->coarsenLimit = coarsenLimit[k];
-
+                    m = 0;
                     do {
                         remainingMallocs = RunTest(inputFile, O, m);
                         if (remainingMallocs == -1)
@@ -115,6 +115,7 @@ int RunAllTests (
     }
 
     // Run once with no options struct
+    m = 0;
     do {
         remainingMallocs = RunTest(inputFile, NULL, m);
         if (remainingMallocs == -1)
