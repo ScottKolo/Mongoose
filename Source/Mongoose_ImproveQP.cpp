@@ -37,8 +37,6 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     // set the QP parameters
     double tol         = options->softSplitTolerance;
     double targetSplit = options->targetSplit;
-    if (targetSplit > 0.5)
-        targetSplit = 1. - targetSplit;
 
     // ensure targetSplit and tolerance are valid.  These conditions were
     // already checked on input to Mongoose, in optionsAreValid.
