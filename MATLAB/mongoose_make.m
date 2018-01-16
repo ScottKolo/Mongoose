@@ -2,7 +2,7 @@ function mongoose_make (run_test)
 %MONGOOSE_MAKE compiles the Mongoose mex functions
 
 if (nargin < 1)
-    run_demo = 1;
+    run_test = 1;
 end
 
 details = 0 ;	    % 1 if details of each command are to be printed
