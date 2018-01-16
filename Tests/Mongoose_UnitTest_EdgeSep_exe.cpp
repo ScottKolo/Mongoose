@@ -45,6 +45,8 @@ int main(int argn, char** argv)
     O->softSplitTolerance = -1;
     ComputeEdgeSeparator(G, O);
 
+    O->softSplitTolerance = 0.01;
+
     // Test with no QP
     O->useQPGradProj = false;
     ComputeEdgeSeparator(G, O);

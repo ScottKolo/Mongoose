@@ -29,7 +29,7 @@ bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
     // FreeSet is empty
     Int nFreeSet = 0;
 
-    double s = 0.;
+    double s = 0.; // a'x
 
     for (Int k = 0; k < n; k++)
     {
@@ -69,10 +69,14 @@ bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
     }
 
     QP->nFreeSet = nFreeSet;
-    QP->b        = s;
+    QP->b        = s; // a'x
 
     DEBUG(FreeSet_dump("QPLinks:done", n, FreeSet_list, nFreeSet,
                        FreeSet_status, 1, x));
+
+    // Adjust bounds to force feasibility
+    if (s > QP->hi) QP->hi = s;
+    if (s < QP->lo) QP->lo = s;
 
     // Note that b can be less than lo or greater than hi.
     // b starts between: lo < b < hi

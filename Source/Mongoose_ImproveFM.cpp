@@ -8,8 +8,6 @@
 namespace Mongoose
 {
 
-void fmRefine_worker(Graph *graph, const Options *options);
-
 //-----------------------------------------------------------------------------
 // Wrapper for Fidducia-Mattheyes cut improvement.
 //-----------------------------------------------------------------------------

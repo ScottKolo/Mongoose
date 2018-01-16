@@ -99,6 +99,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     // lo <= a'x <= hi now holds (lo and hi are modified as needed in QPLinks)
 
     /* Do one run of gradient projection. */
+    fmRefine_worker(graph, options);
     QPGradProj(graph, options, QP);
     QPBoundary(graph, options, QP);
     QPGradProj(graph, options, QP);

@@ -35,7 +35,7 @@ void improveCutUsingFM(Graph *, const Options *);
 
 void fmSwap(Graph *, const Options *, Int vertex, double gain,
             bool oldPartition);
-
+void fmRefine_worker(Graph *graph, const Options *options);
 void calculateGain(Graph *, const Options *, Int vertex, double *out_gain,
                    Int *out_externalDegree);
 
