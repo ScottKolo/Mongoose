@@ -109,6 +109,8 @@ Graph *Graph::Create(const Int _n, const Int _nz, const bool allocate)
         return NULL;
     }
 
+    graph->initialized = false;
+
     return graph;
 }
 
@@ -153,6 +155,36 @@ void Graph::initialize(const Options *options)
 {
     (void)options; // Unused variable
 
+    if (initialized)
+    {
+        // Graph has been previously initialized. We need to clear some extra
+        // data structures to be able to reuse it.
+
+        X     = 0.0;
+        W     = 0.0;
+        H     = 0.0;
+
+        bhSize[0] = bhSize[1] = 0;
+
+        heuCost   = 0.0;
+        cutCost   = 0.0;
+        W0        = 0.0;
+        W1        = 0.0;
+        imbalance = 0.0;
+
+        clevel      = 0;
+        cn          = 0;
+        for (Int i = 0; i < n; i++)
+        {
+            externalDegree[i] = 0;
+            bhIndex[i]        = 0;
+            matching[i]       = 0;
+        }
+        singleton   = -1;
+
+        clearMarkArray();
+    }
+
     Int *Gp    = p;
     double *Gx = x;
     double *Gw = w;
@@ -187,6 +219,8 @@ void Graph::initialize(const Options *options)
 
     // May need to correct tolerance for very ill-conditioned problems
     worstCaseRatio = max / (1E-9 + min);
+
+    initialized = true;
 }
 
 void Graph::clearMarkArray()

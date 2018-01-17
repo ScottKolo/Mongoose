@@ -146,6 +146,7 @@ private:
                         Implicitly, a mark value less than
                         markValue is unmarked.          */
     void resetMarkArray();
+    bool initialized; // Used to mark if the graph has been initialized previously.
 };
 
 } // end namespace Mongoose
