@@ -13,7 +13,7 @@ flags = '' ;
 is64 = (~isempty (strfind (computer, '64'))) ;
 if (is64)
     % 64-bit MATLAB
-    flags = '-largeArrayDims' ;
+    flags = ' -largeArrayDims' ;
 end
 
 include = '-I. -I../Include -I../External/Include -I../SuiteSparse_config' ;
