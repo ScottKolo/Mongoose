@@ -174,11 +174,11 @@ void Graph::initialize(const Options *options)
 
         clevel      = 0;
         cn          = 0;
-        for (Int i = 0; i < n; i++)
+        for (Int k = 0; k < n; k++)
         {
-            externalDegree[i] = 0;
-            bhIndex[i]        = 0;
-            matching[i]       = 0;
+            externalDegree[k] = 0;
+            bhIndex[k]        = 0;
+            matching[k]       = 0;
         }
         singleton   = -1;
 
