@@ -22,7 +22,6 @@ int ComputeEdgeSeparator(Graph *graph)
     if (!options)
         return (EXIT_FAILURE);
     int result = ComputeEdgeSeparator(graph, options);
-    SuiteSparse_free(options);
     return (result);
 }
 

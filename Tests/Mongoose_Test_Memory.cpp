@@ -48,8 +48,8 @@ void myFree(void *ptr)
 
 int runMemoryTest(const std::string &inputFile)
 {
-    Options *O = Options::Create();
-    if(!O)
+    Options *options = Options::Create();
+    if(!options)
     {
         LogTest("Error creating Options struct in Memory Test");
         SuiteSparse_finish();
@@ -62,10 +62,7 @@ int runMemoryTest(const std::string &inputFile)
     SuiteSparse_config.realloc_func = myRealloc;
     SuiteSparse_config.free_func = myFree;
 
-    int status = RunAllTests(inputFile, O);
-
-    O->~Options();
-    SuiteSparse_free(O);
+    int status = RunAllTests(inputFile, options);
 
     return status;
 }

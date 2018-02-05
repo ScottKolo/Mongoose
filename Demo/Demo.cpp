@@ -50,8 +50,7 @@ int main(int argn, const char **argv)
         Graph *graph = readGraph("../Matrix/" + demo_files[k]);
         if (!graph)
         {
-            SuiteSparse_free(options);
-            return 1;
+            return EXIT_FAILURE;
         }
 
         ComputeEdgeSeparator(graph, options);
@@ -65,7 +64,6 @@ int main(int argn, const char **argv)
         cout << "Trial Time:     " << trial_duration*1000 << "ms" << endl;
 
         graph->~Graph();
-        SuiteSparse_free(options);
     }
 
     duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
@@ -80,5 +78,5 @@ int main(int argn, const char **argv)
     cout << endl;
 
     /* Return success */
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -41,6 +41,7 @@ struct Options
 
     /* Constructor & Destructor */
     static Options *Create();
+    ~Options();
 };
 
 } // end namespace Mongoose

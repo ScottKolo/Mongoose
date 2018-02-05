@@ -40,4 +40,9 @@ Options *Options::Create()
     return ret;
 }
 
+Options::~Options()
+{
+    SuiteSparse_free(this);
+}
+
 } // end namespace Mongoose

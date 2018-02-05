@@ -18,7 +18,6 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
     {
         // Ran out of memory
         LogTest("Error creating Options struct in Performance Test");
-        SuiteSparse_free(options);
         return EXIT_FAILURE;
     }
 
@@ -28,7 +27,6 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
     {
         // Ran out of memory
         LogTest("Error reading Graph from file in Performance Test");
-        SuiteSparse_free(options);
         return EXIT_FAILURE;
     }
 
@@ -41,7 +39,6 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
     {
         // Error occurred
         LogTest("Error computing edge separator in Performance Test");
-        SuiteSparse_free(options);
         G->~Graph();
         return EXIT_FAILURE;
     }
@@ -77,7 +74,6 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
     }
 
     G->~Graph();
-    SuiteSparse_free(options);
 
     return EXIT_SUCCESS;
 }

@@ -19,7 +19,6 @@ int runReferenceTest(const std::string &inputFile)
     {
         // Ran out of memory
         LogTest("Error creating Options struct in Performance Test");
-        SuiteSparse_free(options);
         return (EXIT_FAILURE);
     }
 
@@ -28,8 +27,6 @@ int runReferenceTest(const std::string &inputFile)
     if (!G)
     {
         // Ran out of memory
-        SuiteSparse_free(options);
-        SuiteSparse_free(G);
         return (EXIT_FAILURE);
     }
 
@@ -98,7 +95,6 @@ int runReferenceTest(const std::string &inputFile)
     }
 
     G->~Graph();
-    SuiteSparse_free(options);
 
     return EXIT_SUCCESS;
 }

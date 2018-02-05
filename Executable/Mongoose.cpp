@@ -22,7 +22,7 @@ int main(int argn, const char **argv)
         // Wrong number of arguments - return error
         LogError("Usage: Demo <MM-input-file.mtx> [output-file]");
         SuiteSparse_finish();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // Read in input file name
@@ -46,8 +46,7 @@ int main(int argn, const char **argv)
     {
         // Ran out of memory
         LogError("Error creating Options struct");
-        SuiteSparse_free(options);
-        return 1;
+        return EXIT_FAILURE;
     }
 
     Graph *G = readGraph(inputFile);
@@ -56,9 +55,7 @@ int main(int argn, const char **argv)
     {
         // Ran out of memory or problem reading the graph from file
         LogError("Error reading Graph from file");
-        SuiteSparse_free(options);
-        SuiteSparse_free(G);
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // An edge separator should be computed with default options
@@ -70,9 +67,8 @@ int main(int argn, const char **argv)
     {
         // Error occurred
         LogError("Error computing edge separator");
-        SuiteSparse_free(options);
-        SuiteSparse_free(G);
-        return 1;
+        G->~Graph();
+        return EXIT_FAILURE;
     }
     else
     {
@@ -117,7 +113,6 @@ int main(int argn, const char **argv)
     }
 
     G->~Graph();
-    SuiteSparse_free(options);
 
     SuiteSparse_finish();
 

@@ -19,7 +19,6 @@ int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
     {
         // Ran out of memory
         LogTest("Error creating Options struct in Edge Separator Test");
-        SuiteSparse_free(options);
         return EXIT_FAILURE;
     }
 
@@ -32,8 +31,6 @@ int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
     {
         // Ran out of memory
         LogTest("Error reading Graph from file in Edge Separator Test");
-        SuiteSparse_free(options);
-        SuiteSparse_free(G);
         return EXIT_FAILURE;
     }
 
@@ -78,7 +75,6 @@ int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
     }
 
     G->~Graph();
-    SuiteSparse_free(options);
 
     LogTest("Edge Separator Test Completed Successfully");
 
