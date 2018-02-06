@@ -21,7 +21,7 @@ int main(int argn, const char **argv)
         SuiteSparse_finish();
         return EXIT_FAILURE;
     }
-    
+
     // Read in input file name
     std::string inputFile = std::string(argv[1]);
 

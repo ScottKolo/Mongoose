@@ -69,6 +69,7 @@ struct Options
 
     /* Constructor & Destructor */
     static Options *Create();
+    ~Options();
 };
 
 class Graph
