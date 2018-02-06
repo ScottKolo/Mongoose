@@ -14,14 +14,18 @@ namespace Mongoose
 bool optionsAreValid(const Options *options);
 void cleanup(Graph *graph, const Options *options);
 
-/* The input must be a single connected component. */
 int ComputeEdgeSeparator(Graph *graph)
 {
     // use default options if not present
     Options *options = Options::Create();
+
     if (!options)
         return (EXIT_FAILURE);
+
     int result = ComputeEdgeSeparator(graph, options);
+
+    options->~Options();
+
     return (result);
 }
 

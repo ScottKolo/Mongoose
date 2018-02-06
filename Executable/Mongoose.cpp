@@ -49,25 +49,29 @@ int main(int argn, const char **argv)
         return EXIT_FAILURE;
     }
 
-    Graph *G = readGraph(inputFile);
+    Graph *graph = readGraph(inputFile);
 
-    if (!G)
+    if (!graph)
     {
         // Ran out of memory or problem reading the graph from file
         LogError("Error reading Graph from file");
+
+        options->~Options();
+
         return EXIT_FAILURE;
     }
 
     // An edge separator should be computed with default options
     t = clock();
-    int error = ComputeEdgeSeparator(G, options);
+    int error = ComputeEdgeSeparator(graph, options);
     t = clock() - t;
 
     if (error)
     {
         // Error occurred
         LogError("Error computing edge separator");
-        G->~Graph();
+        options->~Options();
+        graph->~Graph();
         return EXIT_FAILURE;
     }
     else
@@ -76,9 +80,9 @@ int main(int argn, const char **argv)
         std::cout << "Total Edge Separator Time: " << test_time << "s\n";
         Logger::printTimingInfo();
         std::cout << "Cut Properties:\n";
-        std::cout << " Cut Size:  " << G->cutSize << "\n";
-        std::cout << " Cut Cost:  " << G->cutCost << "\n";
-        std::cout << " Imbalance: " << G->imbalance << "\n";
+        std::cout << " Cut Size:  " << graph->cutSize << "\n";
+        std::cout << " Cut Cost:  " << graph->cutCost << "\n";
+        std::cout << " Imbalance: " << graph->imbalance << "\n";
 
         // Write results to file
         if (!outputFile.empty())
@@ -96,15 +100,15 @@ int main(int argn, const char **argv)
             ofs << "    \"QP\": " << Logger::getTime(QPTiming) << "," << std::endl;
             ofs << "    \"IO\": " << Logger::getTime(IOTiming) << std::endl;
             ofs << "  }," << std::endl;
-            ofs << "  \"CutSize\": " << G->cutSize << "," << std::endl;
-            ofs << "  \"CutCost\": " << G->cutCost << "," << std::endl;
-            ofs << "  \"Imbalance\": " << G->imbalance << std::endl;
+            ofs << "  \"CutSize\": " << graph->cutSize << "," << std::endl;
+            ofs << "  \"CutCost\": " << graph->cutCost << "," << std::endl;
+            ofs << "  \"Imbalance\": " << graph->imbalance << std::endl;
             ofs << "}" << std::endl;
 
             ofs << std::endl;
-            for (Int i = 0; i < G->n; i++)
+            for (Int i = 0; i < graph->n; i++)
             {
-                ofs << i << " " << G->partition[i] << std::endl;
+                ofs << i << " " << graph->partition[i] << std::endl;
             }
             ofs << std::endl;
 
@@ -112,7 +116,8 @@ int main(int argn, const char **argv)
         }
     }
 
-    G->~Graph();
+    options->~Options();
+    graph->~Graph();
 
     SuiteSparse_finish();
 

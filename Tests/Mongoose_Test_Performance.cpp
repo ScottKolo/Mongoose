@@ -9,7 +9,7 @@ using namespace Mongoose;
 int runPerformanceTest(const std::string &inputFile, const std::string &outputFile)
 {
     Options *options;
-    Graph *G;
+    Graph *graph;
     clock_t t;
     
     options = Options::Create();
@@ -21,9 +21,9 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
         return EXIT_FAILURE;
     }
 
-    G = readGraph(inputFile);
+    graph = readGraph(inputFile);
 
-    if (!G)
+    if (!graph)
     {
         // Ran out of memory
         LogTest("Error reading Graph from file in Performance Test");
@@ -32,14 +32,14 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
 
     // An edge separator should be computed with default options
     t = clock();
-    int error = ComputeEdgeSeparator(G, options);
+    int error = ComputeEdgeSeparator(graph, options);
     t = clock() - t;
 
     if (error)
     {
         // Error occurred
         LogTest("Error computing edge separator in Performance Test");
-        G->~Graph();
+        graph->~Graph();
         return EXIT_FAILURE;
     }
     else
@@ -48,8 +48,8 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
         LogTest("Total Edge Separator Time: " << test_time << "s");
         Logger::printTimingInfo();
         LogTest("Cut Properties:");
-        LogTest(" Cut Cost:  " << G->cutCost);
-        LogTest(" Imbalance: " << G->imbalance);
+        LogTest(" Cut Cost:  " << graph->cutCost);
+        LogTest(" Imbalance: " << graph->imbalance);
         
         if (!outputFile.empty())
         {
@@ -66,14 +66,15 @@ int runPerformanceTest(const std::string &inputFile, const std::string &outputFi
             ofs << "    \"QP\": " << Logger::getTime(QPTiming) << "," << std::endl;
             ofs << "    \"IO\": " << Logger::getTime(IOTiming) << std::endl;
             ofs << "  }," << std::endl;
-            ofs << "  \"CutSize\": " << G->cutCost << "," << std::endl;
-            ofs << "  \"Imbalance\": " << G->imbalance << std::endl;
+            ofs << "  \"CutSize\": " << graph->cutCost << "," << std::endl;
+            ofs << "  \"Imbalance\": " << graph->imbalance << std::endl;
             ofs << "}" << std::endl;
             ofs.close();
         }
     }
 
-    G->~Graph();
+    options->~Options();
+    graph->~Graph();
 
     return EXIT_SUCCESS;
 }

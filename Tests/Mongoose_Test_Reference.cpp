@@ -10,7 +10,7 @@ int runReferenceTest(const std::string &inputFile)
 {
     // Given a symmetric matrix
     Options *options;
-    Graph *G;
+    Graph *graph;
     clock_t t;
     
     options = Options::Create();
@@ -22,9 +22,9 @@ int runReferenceTest(const std::string &inputFile)
         return (EXIT_FAILURE);
     }
 
-    G = readGraph(inputFile);
+    graph = readGraph(inputFile);
 
-    if (!G)
+    if (!graph)
     {
         // Ran out of memory
         return (EXIT_FAILURE);
@@ -32,7 +32,7 @@ int runReferenceTest(const std::string &inputFile)
 
     // An edge separator should be computed with default options
     t = clock();
-    int error = ComputeEdgeSeparator(G, options);
+    int error = ComputeEdgeSeparator(graph, options);
     t = clock() - t;
 
     if (error)
@@ -44,13 +44,13 @@ int runReferenceTest(const std::string &inputFile)
         std::ofstream ofs ((inputFile + "_result.txt").c_str(), std::ofstream::out);
         ofs << "InputFile: " << inputFile << std::endl;
         ofs << "TotalTime: " << ((double) t)/CLOCKS_PER_SEC << std::endl;
-        ofs << "CutSize: " << G->cutCost << std::endl;
-        ofs << "Imbalance: " << G->imbalance << std::endl;
+        ofs << "CutSize: " << graph->cutCost << std::endl;
+        ofs << "Imbalance: " << graph->imbalance << std::endl;
 
-        for (int i = 0; i < G->n; i++)
+        for (int i = 0; i < graph->n; i++)
         {
             ofs << i << " ";
-            if (G->partition[i] == 0)
+            if (graph->partition[i] == 0)
             {
                 ofs << "A" << std::endl;
             }
@@ -83,18 +83,19 @@ int runReferenceTest(const std::string &inputFile)
         ifs.ignore(200, ' ');
         ifs >> input;
         double ref_cut_size = strtod(input.c_str(), NULL);
-        std::cout << "Test Cut Size: "      << G->cutCost    << std::endl;
+        std::cout << "Test Cut Size: "      << graph->cutCost    << std::endl;
         std::cout << "Reference Cut Size: " <<  ref_cut_size << std::endl;
 
         ifs.close();
 
         assert(test_time <= 2*ref_time && 
             "FAIL: Run time significantly exceeds reference run time");
-        assert(fabs(G->cutCost) <= 1.1*fabs(ref_cut_size) && 
+        assert(fabs(graph->cutCost) <= 1.1*fabs(ref_cut_size) &&
             "FAIL: Cut cost significantly exceeds reference cut size");
     }
 
-    G->~Graph();
+    options->~Options();
+    graph->~Graph();
 
     return EXIT_SUCCESS;
 }

@@ -43,6 +43,6 @@ void mexFunction
     if(matNodeWeights != NULL) G->w = NULL;
 
     /* Cleanup */
+    O->~Options();
     G->~Graph();
-    SuiteSparse_free(O);
 }

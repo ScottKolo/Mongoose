@@ -63,6 +63,7 @@ int main(int argn, const char **argv)
         double trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
         cout << "Trial Time:     " << trial_duration*1000 << "ms" << endl;
 
+        options->~Options();
         graph->~Graph();
     }
 

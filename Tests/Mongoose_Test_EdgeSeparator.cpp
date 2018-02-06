@@ -12,7 +12,7 @@ int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
         
     // Given a symmetric matrix...
     Options *options;
-    Graph *G;
+    Graph *graph;
     
     options = Options::Create();
     if (!options)
@@ -25,17 +25,20 @@ int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
     options->targetSplit = targetSplit;
     
     // Read graph from file
-    G = readGraph(inputFile);
+    graph = readGraph(inputFile);
 
-    if (!G)
+    if (!graph)
     {
         // Ran out of memory
         LogTest("Error reading Graph from file in Edge Separator Test");
+        options->~Options();
         return EXIT_FAILURE;
     }
 
     // An edge separator should be computed with default options
-    int error = ComputeEdgeSeparator(G, options);
+    int error = ComputeEdgeSeparator(graph, options);
+
+    options->~Options();
 
     if (error)
     {
@@ -46,18 +49,18 @@ int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
     else
     {
         // The graph should be partitioned
-        assert (G->partition != NULL);
+        assert (graph->partition != NULL);
         int count = 0;
-        for (int i = 0; i < G->n; i++)
+        for (int i = 0; i < graph->n; i++)
         {
-            bool equals_0 = (G->partition[i] == 0);
-            bool equals_1 = (G->partition[i] == 1);
+            bool equals_0 = (graph->partition[i] == 0);
+            bool equals_1 = (graph->partition[i] == 1);
             assert(equals_0 != equals_1);
 
-            count += G->partition[i];
+            count += graph->partition[i];
         }
 
-        double split = (double) count / (double) G->n;
+        double split = (double) count / (double) graph->n;
         double target = targetSplit;
         if (split > 0.5)
         {
@@ -70,11 +73,11 @@ int runEdgeSeparatorTest(const std::string &inputFile, const double targetSplit)
 
         Logger::printTimingInfo();
         LogTest("Cut Properties:");
-        LogTest("  Cut Cost:  " << G->cutCost);
-        LogTest("  Imbalance: " << G->imbalance);
+        LogTest("  Cut Cost:  " << graph->cutCost);
+        LogTest("  Imbalance: " << graph->imbalance);
     }
 
-    G->~Graph();
+    graph->~Graph();
 
     LogTest("Edge Separator Test Completed Successfully");
 

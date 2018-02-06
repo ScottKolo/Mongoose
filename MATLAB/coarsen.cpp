@@ -17,17 +17,22 @@ void mexFunction
     const mxArray *matGraph = pargin[0];
     const mxArray *matOptions = (nargin >= 2 ? pargin[1] : NULL);
     const mxArray *matNodeWeights = (nargin >= 3 ? pargin[2] : NULL);
-    
+
+    /* Get the options from the MATLAB inputs. */
+    Options *O = mex_get_options(matOptions);
+    if(!O)
+    {
+        mexErrMsgTxt("Unable to get Options struct");
+    }
+
     /* Get the graph from the MATLAB inputs. */
     Graph *G = mex_get_graph(matGraph, matNodeWeights);
     
     if(!G)
+    {
+        O->~Options();
         mexErrMsgTxt("Unable to get Graph struct");
-    
-    /* Get the options from the MATLAB inputs. */
-    Options *O = mex_get_options(matOptions);
-    if(!O)
-        mexErrMsgTxt("Unable to get Options struct");
+    }
 
     G->initialize(O);
     match(G, O);
@@ -53,5 +58,4 @@ void mexFunction
     G_coarse->matchmap = NULL;
     G_coarse->~Graph();
     O->~Options();
-    SuiteSparse_free(O);
 }

@@ -56,8 +56,8 @@ int main(int argn, char** argv)
     O->useFM = false;
     ComputeEdgeSeparator(G, O);
 
+    O->~Options();
     G->~Graph();
-    SuiteSparse_free(O);
 
     SuiteSparse_finish();
 

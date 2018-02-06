@@ -6,16 +6,9 @@
 
 using namespace Mongoose;
 
-int RunAllTests (
-    const std::string &inputFile,
-    Options *O
-);
+int RunAllTests(const std::string &inputFile, Options*);
 
-int RunTest (
-    const std::string &inputFile,
-    Options *O,
-    int allowedMallocs
-);
+int RunTest(const std::string &inputFile, const Options*, int allowedMallocs);
 
 /* Custom memory management functions allow for memory testing. */
 int AllowedMallocs;
@@ -49,10 +42,10 @@ void myFree(void *ptr)
 int runMemoryTest(const std::string &inputFile)
 {
     Options *options = Options::Create();
+
     if(!options)
     {
         LogTest("Error creating Options struct in Memory Test");
-        SuiteSparse_finish();
         return EXIT_FAILURE; // Return early if we failed.
     }
 
@@ -64,13 +57,12 @@ int runMemoryTest(const std::string &inputFile)
 
     int status = RunAllTests(inputFile, options);
 
+    options->~Options();
+
     return status;
 }
 
-int RunAllTests (
-    const std::string &inputFile,
-    Options *O
-)
+int RunAllTests (const std::string &inputFile, Options *options)
 {
     LogTest("Running Memory Test on " << inputFile);
 
@@ -83,21 +75,21 @@ int RunAllTests (
 
     for(int c = 0; c < 2; c++)
     {
-        O->doCommunityMatching = static_cast<bool>(c);
+        options->doCommunityMatching = static_cast<bool>(c);
 
         for(int i = 0; i < 4; i++)
         {
-            O->matchingStrategy = matchingStrategies[i];
+            options->matchingStrategy = matchingStrategies[i];
 
             for(int j = 0; j < 3; j++)
             {
-                O->guessCutType = guessCutStrategies[j];
+                options->guessCutType = guessCutStrategies[j];
                 for(int k = 0; k < 3; k++)
                 {
-                    O->coarsenLimit = coarsenLimit[k];
+                    options->coarsenLimit = coarsenLimit[k];
                     m = 0;
                     do {
-                        remainingMallocs = RunTest(inputFile, O, m);
+                        remainingMallocs = RunTest(inputFile, options, m);
                         if (remainingMallocs == -1)
                         {
                             // Error!
@@ -128,11 +120,7 @@ int RunAllTests (
     return EXIT_SUCCESS;
 }
 
-int RunTest (
-    const std::string &inputFile,
-    Options *O,
-    int allowedMallocs
-)
+int RunTest (const std::string &inputFile, const Options *O, int allowedMallocs)
 {
     /* Set the # of mallocs that we're allowed. */
     AllowedMallocs = allowedMallocs;

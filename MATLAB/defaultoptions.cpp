@@ -19,5 +19,5 @@ void mexFunction
         mexErrMsgTxt("Out of memory encountered while creating default Options");
 
     pargout[0] = mex_put_options(ret);
-    SuiteSparse_free(ret);
+    ret->~Options();
 }
