@@ -85,8 +85,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
 
                 /* The balance penalty is the penalty to assess for the move. */
                 double nodeWeight = Gw[v];
-                double imbalance  = workingCost.imbalance
-                                   + (h ? -1.0 : 1.0) * (nodeWeight / W);
+                double imbalance  = workingCost.imbalance + (nodeWeight / W);
                 double absImbalance = fabs(imbalance);
                 double imbalanceDelta
                     = absImbalance - fabs(workingCost.imbalance);
@@ -134,7 +133,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
 
             /* Update the cut cost. */
             workingCost.cutCost
-                -= 2.0 * bestCandidate.gain; /* x2 because of symmetry */
+                -= bestCandidate.gain;
             workingCost.W[bestCandidate.partition] -= bestCandidate.nodeWeight;
             workingCost.W[!bestCandidate.partition] += bestCandidate.nodeWeight;
             workingCost.imbalance = bestCandidate.imbalance;

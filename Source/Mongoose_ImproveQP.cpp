@@ -37,6 +37,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     // set the QP parameters
     double tol         = options->softSplitTolerance;
     double targetSplit = options->targetSplit;
+    targetSplit = std::min(targetSplit, 1 - targetSplit);
 
     // ensure targetSplit and tolerance are valid.  These conditions were
     // already checked on input to Mongoose, in optionsAreValid.
@@ -120,7 +121,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
         if (newPartition != oldPartition)
         {
             /* Update the cut cost. */
-            cost.cutCost -= 2 * gains[k];
+            cost.cutCost -= gains[k];
             cost.W[oldPartition] -= Gw[k];
             cost.W[newPartition] += Gw[k];
             cost.imbalance

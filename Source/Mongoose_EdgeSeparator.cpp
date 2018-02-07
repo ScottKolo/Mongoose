@@ -7,13 +7,11 @@
 #include "Mongoose_Waterdance.hpp"
 #include "Mongoose_Logger.hpp"
 
-#include <algorithm>
-
 namespace Mongoose
 {
 
 bool optionsAreValid(const Options *options);
-void cleanup(Graph *graph, const Options *options);
+void cleanup(Graph *graph);
 
 int ComputeEdgeSeparator(Graph *graph)
 {
@@ -92,7 +90,7 @@ int ComputeEdgeSeparator(Graph *graph, const Options *options)
         waterdance(current, options);
     }
 
-    cleanup(current, options);
+    cleanup(current);
 
     return EXIT_SUCCESS;
 }
@@ -168,33 +166,26 @@ bool optionsAreValid(const Options *options)
     return (true);
 }
 
-void cleanup(Graph *G, const Options *options)
+void cleanup(Graph *G)
 {
-    Int cutSize        = 0;
-    double cutCost     = 0;
-    double part_weight = 0;
+    Int cutSize  = 0;
     double assoc = 0;
+
     for (Int i = 0; i < G->n; i++)
     {
         if (G->partition[i])
         {
-            part_weight += (G->w) ? G->w[i] : 1;
+            cutSize += G->externalDegree[i];
+
             for (Int j = G->p[i]; j < G->p[i + 1]; j++)
             {
                 assoc += (G->x) ? G->x[j] : 1;
-                if (i != j && (!G->partition[G->i[j]]))
-                {
-                    cutSize += 1;
-                    cutCost += (G->x) ? G->x[j] : 1;
-                }
             }
         }
     }
-    G->imbalance = options->targetSplit
-                   - std::min(part_weight, G->W - part_weight) / G->W;
-    G->cutCost = cutCost;
+
     G->cutSize = cutSize;
-    G->normCut = cutCost/assoc + cutCost/(G->X - assoc);
+    G->normCut = G->cutCost/assoc + G->cutCost/(G->X - assoc);
 }
 
 } // end namespace Mongoose

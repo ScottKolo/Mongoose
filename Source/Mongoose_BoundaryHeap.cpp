@@ -46,7 +46,10 @@ void bhLoad(Graph *graph, const Options *options)
             if (!onSameSide)
             {
                 exD++;
-                cost.cutCost += edgeWeight;
+                if (kPartition)
+                {
+                    cost.cutCost += edgeWeight;
+                }
             }
         }
         gains[k]          = gain;
@@ -61,6 +64,7 @@ void bhLoad(Graph *graph, const Options *options)
     graph->W1      = cost.W[1];
 
     double targetSplit = options->targetSplit;
+    targetSplit = std::min(targetSplit, 1 - targetSplit);
     ASSERT(targetSplit > 0);
     ASSERT(targetSplit <= 0.5);
 
