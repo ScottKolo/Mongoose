@@ -20,7 +20,7 @@ int main(int argn, const char **argv)
     if (argn < 2 || argn > 3)
     {
         // Wrong number of arguments - return error
-        LogError("Usage: Demo <MM-input-file.mtx> [output-file]");
+        LogError("Usage: mongoose <MM-input-file.mtx> [output-file]");
         SuiteSparse_finish();
         return EXIT_FAILURE;
     }
@@ -80,9 +80,10 @@ int main(int argn, const char **argv)
         std::cout << "Total Edge Separator Time: " << test_time << "s\n";
         Logger::printTimingInfo();
         std::cout << "Cut Properties:\n";
-        std::cout << " Cut Size:  " << graph->cutSize << "\n";
-        std::cout << " Cut Cost:  " << graph->cutCost << "\n";
-        std::cout << " Imbalance: " << graph->imbalance << "\n";
+        std::cout << " Cut Size:       " << graph->cutSize << "\n";
+        std::cout << " Cut Cost:       " << graph->cutCost << "\n";
+        std::cout << " Normalized Cut: " << graph->normCut << "\n";
+        std::cout << " Imbalance:      " << graph->imbalance << "\n";
 
         // Write results to file
         if (!outputFile.empty())
@@ -102,6 +103,7 @@ int main(int argn, const char **argv)
             ofs << "  }," << std::endl;
             ofs << "  \"CutSize\": " << graph->cutSize << "," << std::endl;
             ofs << "  \"CutCost\": " << graph->cutCost << "," << std::endl;
+            ofs << "  \"NormCut\": " << graph->normCut << "," << std::endl;
             ofs << "  \"Imbalance\": " << graph->imbalance << std::endl;
             ofs << "}" << std::endl;
 
