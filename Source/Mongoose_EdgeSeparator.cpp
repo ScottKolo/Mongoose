@@ -5,6 +5,7 @@
 #include "Mongoose_Random.hpp"
 #include "Mongoose_Refinement.hpp"
 #include "Mongoose_Waterdance.hpp"
+#include "Mongoose_Logger.hpp"
 
 #include <algorithm>
 
@@ -100,19 +101,70 @@ bool optionsAreValid(const Options *options)
 {
     if (!options)
     {
-        // Error!
+        LogError("Fatal Error: options struct cannot be NULL.");
         return (false);
     }
+
+    if (options->coarsenLimit < 1)
+    {
+        LogError("Fatal Error: options->coarsenLimit cannot be less than one.");
+        return (false);
+    }
+
+    if (options->davisBrotherlyThreshold < 0)
+    {
+        LogError("Fatal Error: options->davisBrotherlyThreshold cannot be less than zero.");
+        return (false);
+    }
+
+    if (options->numDances < 0)
+    {
+        LogError("Fatal Error: options->numDances cannot be less than zero.");
+        return (false);
+    }
+
+    if (options->fmSearchDepth < 0)
+    {
+        LogError("Fatal Error: options->fmSearchDepth cannot be less than zero.");
+        return (false);
+    }
+
+    if (options->fmConsiderCount < 0)
+    {
+        LogError("Fatal Error: options->fmConsiderCount cannot be less than zero.");
+        return (false);
+    }
+
+    if (options->fmMaxNumRefinements < 0)
+    {
+        LogError("Fatal Error: options->fmMaxNumRefinements cannot be less than zero.");
+        return (false);
+    }
+
+    if (options->gradProjTolerance < 0)
+    {
+        LogError("Fatal Error: options->gradProjTolerance cannot be less than zero.");
+        return (false);
+    }
+
+    if (options->gradprojIterationLimit < 0)
+    {
+        LogError("Fatal Error: options->gradProjIterationLimit cannot be less than zero.");
+        return (false);
+    }
+
     if (options->targetSplit < 0 || options->targetSplit > 1)
     {
-        // Error!
+        LogError("Fatal Error: options->targetSplit must be in the range [0, 1].");
         return (false);
     }
+
     if (options->softSplitTolerance < 0)
     {
-        // Error!
+        LogError("Fatal Error: options->softSplitTolerance cannot be less than zero.");
         return (false);
     }
+
     return (true);
 }
 

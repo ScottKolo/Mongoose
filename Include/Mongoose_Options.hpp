@@ -23,10 +23,10 @@ struct Options
                       at any one coarsening level. */
 
     /**** Fidducia-Mattheyes Options *****************************************/
-    bool useFM;              /* Flag governing the use of FM             */
-    Int fmSearchDepth;       /* The # of non-positive gain move to make  */
-    Int fmConsiderCount;     /* The # of heap entries to consider        */
-    Int fmMaxNumRefinements; /* Max # of times to run FidduciaMattheyes  */
+    bool useFM;              /* Flag governing the use of FM               */
+    Int fmSearchDepth;       /* The # of non-positive gain move to make    */
+    Int fmConsiderCount;     /* The # of heap entries to consider          */
+    Int fmMaxNumRefinements; /* Max # of times to run Fiduccia-Mattheyses  */
 
     /**** Quadratic Programming Options **************************************/
     bool useQPGradProj;         /* Flag governing the use of gradproj       */
