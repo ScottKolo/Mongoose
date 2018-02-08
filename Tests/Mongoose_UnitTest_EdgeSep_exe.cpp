@@ -35,8 +35,50 @@ int main(int argn, char** argv)
     Options *O = NULL;
     ComputeEdgeSeparator(G, O);
 
-    // Test with invalid targetSplit
+
     O = Options::Create();
+
+    // Test with invalid coarsenLimit
+    O->coarsenLimit = 0;
+    ComputeEdgeSeparator(G, O);
+    O->coarsenLimit = 50;
+
+    // Test with invalid davisBrotherlyThreshold
+    O->davisBrotherlyThreshold = -1;
+    ComputeEdgeSeparator(G, O);
+    O->davisBrotherlyThreshold = 2.0;
+
+    // Test with invalid numDances
+    O->numDances = -1;
+    ComputeEdgeSeparator(G, O);
+    O->numDances = 1;
+
+    // Test with invalid fmSearchDepth
+    O->fmSearchDepth = -1;
+    ComputeEdgeSeparator(G, O);
+    O->fmSearchDepth = 50;
+
+    // Test with invalid fmConsiderCount
+    O->fmConsiderCount = -1;
+    ComputeEdgeSeparator(G, O);
+    O->fmConsiderCount = 3;
+
+    // Test with invalid fmMaxNumRefinements
+    O->fmMaxNumRefinements = -1;
+    ComputeEdgeSeparator(G, O);
+    O->fmMaxNumRefinements = 20;
+
+    // Test with invalid gradProjTolerance
+    O->gradProjTolerance = -1;
+    ComputeEdgeSeparator(G, O);
+    O->gradProjTolerance = 0.001;
+
+    // Test with invalid gradProjIterationLimit
+    O->gradprojIterationLimit = -1;
+    ComputeEdgeSeparator(G, O);
+    O->gradprojIterationLimit = 50;
+
+    // Test with invalid targetSplit
     O->targetSplit = 1.2;
     ComputeEdgeSeparator(G, O);
     O->targetSplit = 0.4;
@@ -44,15 +86,14 @@ int main(int argn, char** argv)
     // Test with invalid tolerance
     O->softSplitTolerance = -1;
     ComputeEdgeSeparator(G, O);
-
     O->softSplitTolerance = 0.01;
 
     // Test with no QP
     O->useQPGradProj = false;
     ComputeEdgeSeparator(G, O);
+    O->useQPGradProj = true;
 
     // Test with no FM
-    O->useQPGradProj = true;
     O->useFM = false;
     ComputeEdgeSeparator(G, O);
 
