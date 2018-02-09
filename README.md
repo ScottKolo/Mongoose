@@ -4,7 +4,11 @@
 
 
 Mongoose is a graph partitioning library. Currently, Mongoose only supports 
-edge partitioning, but in the future a vertex separator will be added.
+edge partitioning, but in the future a vertex separator extension will be added.
+
+## Prerequisites and Dependencies
+
+Mongoose requires CMake 2.8 and any ISO/IEC 14882:1998 compliant C++ compiler. Mongoose has been tested to work with GNU GCC 4.4+ and LLVM Clang 3.5+ on Linux, and Apple Xcode 6.4+ on macOS.
 
 ## Installation
 
@@ -19,21 +23,18 @@ cmake ..     # Use CMake to create the Makefiles
 make         # Build Mongoose
 ```
 
+After compilation, the Mongoose demo can be run from the `_build` directory using `./bin/Demo`.
+
 ## Usage
 
-TODO: Write usage instructions
+You can use Mongoose in one of three ways:
 
-## Contributing
+1. **The `mongoose` executable.** Once built, the `mongoose` executable will be located in `_build/bin/mongoose`. This executable can read a Matrix Market file containing an adjacency matrix and output timing and partitioning information to a plain-text file. Simply call it with the following syntax: `mongoose <MM-input-file.mtx> [output-file]`
+2. **The C++ API.** A static library is built at `_build/lib/libmongoose.a`. Include the header file `Include/Mongoose.hpp` and link to this library to access the C++ API.
+3. **The MATLAB API.** From MATLAB, navigate to the `Mongoose/MATLAB/` directory and build the Mongoose MEX functions by calling `mongoose_make`. This will build Mongoose, run a demo, and allows access to the MATLAB API.
 
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
+For more details about the specific APIs and their available functionality, see the Mongoose user guide located at [`Doc/UserGuide.pdf`](https://raw.githubusercontent.com/ScottKolo/Mongoose/edgesep/Doc/UserGuide.pdf).
 
-## History
-
-TODO: Write history
 
 ## Credits
 
@@ -46,4 +47,4 @@ The following people have made significant contributions to Mongoose:
 
 ## License
 
-TODO: Write license
+Mongoose is licensed under the GNU Public License, version 3. For commercial license inquiries, please contact Dr. Tim Davis at davis@tamu.edu. The specific text of the license can be found in the LICENSE file.
