@@ -40,7 +40,7 @@ void bhLoad(Graph *graph, const Options *options)
         Int exD     = 0;
         for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
-            double edgeWeight = Gx[p];
+            double edgeWeight = (Gx) ? Gx[p] : 1;
             bool onSameSide   = (kPartition == partition[Gi[p]]);
             gain += (onSameSide ? -edgeWeight : edgeWeight);
             if (!onSameSide)
