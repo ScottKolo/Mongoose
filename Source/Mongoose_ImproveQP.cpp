@@ -74,7 +74,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
         double maxWeight = 0;
         for (Int p = Gp[k]; p < Gp[k + 1]; p++)
         {
-            maxWeight = std::max(maxWeight, Gx[p]);
+            maxWeight = std::max(maxWeight, (Gx) ? Gx[p] : 1);
         }
         D[k] = maxWeight;
     }

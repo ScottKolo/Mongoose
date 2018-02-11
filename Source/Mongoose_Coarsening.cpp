@@ -114,8 +114,8 @@ Graph *coarsen(Graph *graph, const Options *options)
 
                 /* Read the edge weight and accumulate the sum of edge weights.
                  */
-                double edgeWeight = Gx[p];
-                sumEdgeWeights += Gx[p];
+                double edgeWeight = (Gx) ? Gx[p] : 1;
+                sumEdgeWeights += (Gx) ? Gx[p] : 1;
 
                 /* Check the hashtable before scattering. */
                 Int cp = htable[toCoarsened];

@@ -258,8 +258,8 @@ void QPcheckCom(Graph *G, const Options *O, QPDelta *QP, bool check_b,
             t = 0.;
             for (k = Ep[j]; k < Ep[j + 1]; k++)
             {
-                gtemp[Ei[k]] += s * Ex[k];
-                t += Ex[k] * x[Ei[k]];
+                gtemp[Ei[k]] += s * ((Ex) ? Ex[k] : 1);
+                t += ((Ex) ? Ex[k] : 1) * x[Ei[k]];
             }
             newcost += (t + x[j] * D[j]) * (1. - x[j]);
         }

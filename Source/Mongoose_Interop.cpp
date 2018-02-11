@@ -45,7 +45,7 @@ cs *GraphToCSparse3(Graph *G, bool copy)
         for (Int p = 0; p < nz; p++)
         {
             A->i[p] = (ptrdiff_t)G->i[p];
-            A->x[p] = G->x[p];
+            A->x[p] = (G->x) ? G->x[p] : 1;
         }
     }
 

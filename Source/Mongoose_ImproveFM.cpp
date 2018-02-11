@@ -78,7 +78,9 @@ void fmRefine_worker(Graph *graph, const Options *options)
                 /* Read the vertex, and if it's marked, try the next one. */
                 Int v = heap[c];
                 if (graph->isMarked(v))
+                {
                     continue;
+                }
 
                 /* Read the gain for the vertex. */
                 double gain = gains[v];
@@ -235,7 +237,7 @@ void fmSwap(Graph *graph, const Options *options, Int vertex, double gain,
             exD++;
 
         /* Update the neighbor's gain. */
-        double edgeWeight   = Gx[p];
+        double edgeWeight   = (Gx) ? Gx[p] : 1;
         double neighborGain = gains[neighbor];
         neighborGain += 2 * (sameSide ? -edgeWeight : edgeWeight);
         gains[neighbor] = neighborGain;

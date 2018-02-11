@@ -91,11 +91,25 @@ int main(int argn, char** argv)
     // Test with no QP
     O->useQPGradProj = false;
     ComputeEdgeSeparator(G, O);
+    assert(G->partition != NULL);
     O->useQPGradProj = true;
 
     // Test with no FM
     O->useFM = false;
     ComputeEdgeSeparator(G, O);
+    assert(G->partition != NULL);
+    O->useFM = true;
+
+    // Test with no coarsening
+    O->coarsenLimit = 1E15;
+    ComputeEdgeSeparator(G,O);
+    assert(G->partition != NULL);
+
+    // Test with x = NULL (assume pattern matrix)
+    G->x = NULL;
+    ComputeEdgeSeparator(G,O);
+    assert(G->partition != NULL);
+    O->coarsenLimit = 50;
 
     O->~Options();
     G->~Graph();

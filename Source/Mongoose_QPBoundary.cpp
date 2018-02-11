@@ -171,7 +171,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
             // x [k] has dropped by delta_xk, so update the gradient
             for (Int p = Ep[k]; p < Ep[k + 1]; p++)
             {
-                grad[Ei[p]] += delta_xk * Ex[p];
+                grad[Ei[p]] += delta_xk * ((Ex) ? Ex[p] : 1);
             }
             grad[k] += delta_xk * D[k];
         }
@@ -239,7 +239,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
             {
                 for (Int p = Ep[k]; p < Ep[k + 1]; p++)
                 {
-                    grad[Ei[p]] += Ex[p];
+                    grad[Ei[p]] += (Ex) ? Ex[p] : 1;
                 }
                 grad[k] += D[k];
             }
@@ -247,7 +247,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
             {
                 for (Int p = Ep[k]; p < Ep[k + 1]; p++)
                 {
-                    grad[Ei[p]] -= Ex[p];
+                    grad[Ei[p]] -= (Ex) ? Ex[p] : 1;
                 }
                 grad[k] -= D[k];
             }
@@ -404,11 +404,11 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
 
                 for (Int p = Ep[j]; p < Ep[j + 1]; p++)
                 {
-                    grad[Ei[p]] -= Ex[p] * dxj;
+                    grad[Ei[p]] -= ((Ex) ? Ex[p] : 1) * dxj;
                 }
                 for (Int p = Ep[i]; p < Ep[i + 1]; p++)
                 {
-                    grad[Ei[p]] -= Ex[p] * dxi;
+                    grad[Ei[p]] -= ((Ex) ? Ex[p] : 1) * dxi;
                 }
                 grad[j] -= D[j] * dxj;
                 grad[i] -= D[i] * dxi;
@@ -569,11 +569,11 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
 
         for (Int k = Ep[j]; k < Ep[j + 1]; k++)
         {
-            grad[Ei[k]] -= Ex[k] * dxj;
+            grad[Ei[k]] -= ((Ex) ? Ex[k] : 1) * dxj;
         }
         for (Int k = Ep[i]; k < Ep[i + 1]; k++)
         {
-            grad[Ei[k]] -= Ex[k] * dxi;
+            grad[Ei[k]] -= ((Ex) ? Ex[k] : 1) * dxi;
         }
         grad[j] -= D[j] * dxj;
         grad[i] -= D[i] * dxi;
@@ -715,7 +715,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
         {
             for (Int p = Ep[j]; p < Ep[j + 1]; p++)
             {
-                grad[Ei[p]] -= Ex[p] * dxj;
+                grad[Ei[p]] -= ((Ex) ? Ex[p] : 1) * dxj;
             }
             grad[j] -= D[j] * dxj;
         }

@@ -256,7 +256,9 @@ double QPNapsack    /* return the final lambda */
                     lambda = 0.;
                     lambda = QPNapDown(x, n, lambda, Gw, lo, w, heap1, heap2);
                     if (lambda > 0.)
+                    {
                         lambda = 0.;
+                    }
                 }
                 else if (slope0 > hi)
                 {

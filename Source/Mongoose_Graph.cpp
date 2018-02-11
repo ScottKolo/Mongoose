@@ -191,8 +191,8 @@ void Graph::initialize(const Options *options)
 
     /* Compute worst-case gains, and compute X. */
     double *gains = vertexGains;
-    double min    = fabs(Gx[0]);
-    double max    = fabs(Gx[0]);
+    double min    = fabs( (Gx) ? Gx[0] : 1 );
+    double max    = fabs( (Gx) ? Gx[0] : 1 );
     for (Int k = 0; k < n; k++)
     {
         W += Gw[k];
@@ -200,15 +200,16 @@ void Graph::initialize(const Options *options)
 
         for (Int j = Gp[k]; j < Gp[k + 1]; j++)
         {
-            sumEdgeWeights += Gx[j];
+            double Gxj = (Gx) ? Gx[j] : 1;
+            sumEdgeWeights += Gxj;
 
-            if (fabs(Gx[j]) < min)
+            if (fabs(Gxj) < min)
             {
-                min = fabs(Gx[j]);
+                min = fabs(Gxj);
             }
-            if (fabs(Gx[j]) > max)
+            if (fabs(Gxj) > max)
             {
-                max = fabs(Gx[j]);
+                max = fabs(Gxj);
             }
         }
 

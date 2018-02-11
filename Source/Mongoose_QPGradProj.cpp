@@ -134,7 +134,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
                 double r = 0.5 - xk;
                 for (Int p = Ep[k]; p < Ep[k + 1]; p++)
                 {
-                    mygrad[Ei[p]] += r * Ex[p];
+                    mygrad[Ei[p]] += r * ((Ex) ? Ex[p] : 1);
                 }
             }
             double maxerr = 0.;
@@ -195,7 +195,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
             double s = grad[i];
             for (Int p = Ep[i]; p < Ep[i + 1]; p++)
             {
-                Dgrad[Ei[p]] -= s * Ex[p];
+                Dgrad[Ei[p]] -= s * ((Ex) ? Ex[p] : 1);
             }
             Dgrad[i] -= s * D[i];
         }
@@ -249,7 +249,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j + 1]; p++)
                 {
-                    Dgrad[Ei[p]] -= Ex[p] * t;
+                    Dgrad[Ei[p]] -= ((Ex) ? Ex[p] : 1) * t;
                 }
                 Dgrad[j] -= D[j] * t;
             }
@@ -274,7 +274,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
                 nc++;
                 for (Int p = Ep[j]; p < Ep[j + 1]; p++)
                 {
-                    Dgrad[Ei[p]] -= Ex[p] * t;
+                    Dgrad[Ei[p]] -= ((Ex) ? Ex[p] : 1) * t;
                 }
                 Dgrad[j] -= D[j] * t;
             }

@@ -179,7 +179,7 @@ void matching_PA(Graph *graph, const Options *options)
             Int neighbor = Gi[p];
 
             /* Keep track of the heaviest. */
-            double x = Gx[p];
+            double x = (Gx) ? Gx[p] : 1;
             if (x > heaviestWeight)
             {
                 heaviestWeight   = x;
@@ -377,7 +377,7 @@ void matching_HEM(Graph *graph, const Options *options)
                 continue;
 
             /* Keep track of the heaviest. */
-            double x = Gx[p];
+            double x = (Gx) ? Gx[p] : 1;
             if (x > heaviestWeight)
             {
                 heaviestWeight   = x;

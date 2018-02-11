@@ -49,7 +49,7 @@ bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
         double r = 0.5 - xk;
         for (Int p = Ep[k]; p < Ep[k + 1]; p++)
         {
-            grad[Ei[p]] += r * Ex[p];
+            grad[Ei[p]] += r * ((Ex) ? Ex[p] : 1);
         }
         if (xk >= 1.)
         {
