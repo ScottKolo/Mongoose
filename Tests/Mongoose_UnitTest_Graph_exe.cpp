@@ -89,6 +89,10 @@ int main(int argn, char** argv)
     SuiteSparse_config.free_func = myFree;
 
     // Simulate failure to allocate return arrays
+    AllowedMallocs = 0;
+    cs *M5 = GraphToCSparse3(G2, true);
+    assert(M5 == NULL);
+
     AllowedMallocs = 2;
     cs *M3 = GraphToCSparse3(G2, true);
     assert(M3 == NULL);
