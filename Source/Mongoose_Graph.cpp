@@ -1,5 +1,6 @@
 #include "Mongoose_Graph.hpp"
 
+#include <algorithm>
 #include <new>
 
 namespace Mongoose
@@ -8,7 +9,6 @@ namespace Mongoose
 /* Constructor & Destructor */
 Graph::Graph()
 {
-    cs_n = cs_m = cs_nz = cs_nzmax = 0;
     n = nz = 0;
     p      = NULL;
     i      = NULL;
@@ -53,12 +53,11 @@ Graph *Graph::Create(const Int _n, const Int _nz, const bool allocate)
     Graph *graph = new (memoryLocation) Graph();
 
     size_t n = static_cast<size_t>(_n);
-    graph->n = graph->cs_n = graph->cs_m = _n;
+    graph->n = _n;
 
     size_t nz = static_cast<size_t>(_nz);
-    graph->nz = graph->cs_nzmax = _nz;
+    graph->nz = _nz;
 
-    graph->cs_nz = -1; /* Compressed Column Format */
     graph->p     = (allocate) ? (Int *)SuiteSparse_malloc(n + 1, sizeof(Int)) : NULL;
     graph->i     = (allocate) ? (Int *)SuiteSparse_malloc(nz, sizeof(Int)) : NULL;
     graph->x     = (allocate) ? (double *)SuiteSparse_malloc(nz, sizeof(double)) : NULL;
@@ -123,6 +122,38 @@ Graph *Graph::Create(Graph *_parent)
     graph->W           = _parent->W;
     graph->parent      = _parent;
     graph->clevel      = graph->parent->clevel + 1;
+
+    return graph;
+}
+
+Graph *Graph::Create(cs *matrix)
+{
+    Graph *graph = Create(std::max(matrix->n, matrix->m), matrix->p[matrix->n], false);
+    if(!graph)
+    {
+        return NULL;
+    }
+
+    graph->p = matrix->p;
+    graph->i = matrix->i;
+    graph->x = matrix->x;
+    graph->w = (double *)SuiteSparse_malloc(static_cast<size_t>(graph->n),
+                                                         sizeof(double));
+
+    /* If we failed to attach weights, free the graph and return. */
+    if (!graph->w)
+    {
+        /* Undo the brain transplant, free the Graph skeleton, and return. */
+        graph->p = NULL;
+        graph->i = NULL;
+        graph->x = NULL;
+        graph->~Graph();
+        return NULL;
+    }
+
+    // Initialize vertex weights
+    for (Int k = 0; k < graph->n; k++)
+        graph->w[k] = 1.0;
 
     return graph;
 }

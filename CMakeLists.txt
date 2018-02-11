@@ -22,7 +22,6 @@ set(MONGOOSE_FILES
     Include/Mongoose_ImproveFM.hpp
     Include/Mongoose_ImproveQP.hpp
     Include/Mongoose_Internal.hpp
-    Include/Mongoose_Interop.hpp
     Include/Mongoose_IO.hpp
     Include/Mongoose_Logger.hpp
     Include/Mongoose_Matching.hpp
@@ -39,7 +38,6 @@ set(MONGOOSE_FILES
     Source/Mongoose_GuessCut.cpp
     Source/Mongoose_ImproveFM.cpp
     Source/Mongoose_ImproveQP.cpp
-    Source/Mongoose_Interop.cpp
     Source/Mongoose_IO.cpp
     Source/Mongoose_Logger.cpp
     Source/Mongoose_Matching.cpp

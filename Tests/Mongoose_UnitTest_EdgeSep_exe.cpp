@@ -7,7 +7,6 @@
 #include "Mongoose_Test.hpp"
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_IO.hpp"
-#include "Mongoose_Interop.hpp"
 #include "Mongoose_EdgeSeparator.hpp"
 
 using namespace Mongoose;

@@ -9,7 +9,6 @@
 
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_Interop.hpp"
 #include "Mongoose_Sanitize.hpp"
 #include <iostream>
 extern "C" {
@@ -48,7 +47,7 @@ Graph *readGraph(const char *filename)
     if (!sanitized_A)
         return NULL;
 
-    Graph *G = CSparse3ToGraph(sanitized_A);
+    Graph *G = Graph::Create(sanitized_A);
 
     if (!G)
     {

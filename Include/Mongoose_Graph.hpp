@@ -9,6 +9,7 @@
 
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Options.hpp"
+#include "Mongoose_CSparse.hpp"
 
 namespace Mongoose
 {
@@ -16,12 +17,6 @@ namespace Mongoose
 class Graph
 {
 public:
-    /** CSparse3 Interoperability ********************************************/
-    Int cs_n;     /** # columns                       */
-    Int cs_m;     /** # rows                          */
-    Int cs_nz;    /** # triplet entries or -1         */
-    Int cs_nzmax; /** max # nonzeros                  */
-
     /** Graph Data ***********************************************************/
     Int n;     /** # vertices                      */
     Int nz;    /** # edges                         */
@@ -72,6 +67,7 @@ public:
     /* Constructor & Destructor */
     static Graph *Create(Int _n, Int _nz, bool allocate=true);
     static Graph *Create(Graph *_parent);
+    static Graph *Create(cs *matrix);
     ~Graph();
     void initialize(const Options *options);
 

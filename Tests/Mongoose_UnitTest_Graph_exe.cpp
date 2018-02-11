@@ -7,7 +7,6 @@
 #include "Mongoose_Test.hpp"
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_IO.hpp"
-#include "Mongoose_Interop.hpp"
 
 using namespace Mongoose;
 
@@ -62,22 +61,12 @@ int main(int argn, char** argv)
     G2->clearMarkArray();
     markValue = G2->getMarkValue();
     assert(markValue == 1);
-
-    cs *M1 = GraphToCSparse3(G2, false);
-    assert(M1 != NULL);
-    cs *M2 = GraphToCSparse3(G2, true);
-    assert(M2 != NULL);
-
-    SuiteSparse_free(M1);
-    M2->x = NULL;
-    M2->p = NULL;
-    M2->i = NULL;
-    SuiteSparse_free(M2);
+    G2->~Graph();
 
     MM_typecode matcode;
     cs *M4 = readMatrix("../Matrix/bcspwr01.mtx", matcode);
     M4->x = NULL;
-    Graph *G7 = CSparse3ToGraph(M4, 0, 0);
+    Graph *G7 = Graph::Create(M4);
     assert(G7 != NULL);
     G7->~Graph();
 
@@ -89,15 +78,6 @@ int main(int argn, char** argv)
     SuiteSparse_config.free_func = myFree;
 
     // Simulate failure to allocate return arrays
-    AllowedMallocs = 0;
-    cs *M5 = GraphToCSparse3(G2, true);
-    assert(M5 == NULL);
-
-    AllowedMallocs = 2;
-    cs *M3 = GraphToCSparse3(G2, true);
-    assert(M3 == NULL);
-    G2->~Graph();
-
     AllowedMallocs = 0;
     Graph *G3 = Graph::Create(10, 20, true);
     assert(G3 == NULL);
