@@ -177,6 +177,7 @@ void cleanup(Graph *G, const Options *options)
     }
     G->imbalance = fabs(G->imbalance);
     G->cutSize = cutSize / 2;
+    G->cutCost = G->cutCost / 2;
 }
 
 } // end namespace Mongoose

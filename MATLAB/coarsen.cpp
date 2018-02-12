@@ -38,7 +38,10 @@ void mexFunction
     match(G, O);
     Graph *G_coarse = coarsen(G, O);
 
-    cs *G_matrix = GraphToCSparse3(G_coarse, false);
+    cs *G_matrix = cs_spalloc(G->n, G->n, G->nz, 0, 0);
+    G_matrix->i = G_coarse->i;
+    G_matrix->p = G_coarse->p;
+    G_matrix->x = G_coarse->x;
 
     /* Copy the coarsened graph back to MATLAB. */
     pargout[0] = cs_mex_put_sparse(&G_matrix);

@@ -120,7 +120,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
         if (newPartition != oldPartition)
         {
             /* Update the cut cost. */
-            cost.cutCost -= gains[k];
+            cost.cutCost -= 2 * gains[k];
             cost.W[oldPartition] -= Gw[k];
             cost.W[newPartition] += Gw[k];
             cost.imbalance

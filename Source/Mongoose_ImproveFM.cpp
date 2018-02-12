@@ -136,7 +136,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
 
             /* Update the cut cost. */
             workingCost.cutCost
-                -= bestCandidate.gain;
+                -= 2.0 * bestCandidate.gain;
             workingCost.W[bestCandidate.partition] -= bestCandidate.nodeWeight;
             workingCost.W[!bestCandidate.partition] += bestCandidate.nodeWeight;
             workingCost.imbalance = bestCandidate.imbalance;
