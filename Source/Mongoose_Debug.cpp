@@ -25,11 +25,17 @@ void print(cs *G)
 // print a Mongoose graph
 void print(Graph *G)
 {
-    cs *A;
     ASSERT(G);
-    A = GraphToCSparse3(G, false);
-    print(A);
-    cs_spfree(A);
+    Int *Gp    = G->p;
+    Int *Gi    = G->i;
+    double *Gx = G->x;
+    for (Int j = 0; j < G->n; j++)
+    {
+        for (int p = Gp[j]; p < Gp[j + 1]; p++)
+        {
+            PR(("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p]));
+        }
+    }
 }
 
 //------------------------------------------------------------------------------

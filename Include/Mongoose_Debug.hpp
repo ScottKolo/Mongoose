@@ -70,7 +70,6 @@
 #endif
 
 #ifndef NDEBUG
-#include "Mongoose_Interop.hpp"
 #include <algorithm>
 #endif
 
