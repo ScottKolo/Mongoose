@@ -75,12 +75,6 @@ struct Options
 class Graph
 {
 public:
-    /** CSparse3 Interoperability ********************************************/
-    Int cs_n;     /** # columns                       */
-    Int cs_m;     /** # rows                          */
-    Int cs_nz;    /** # triplet entries or -1         */
-    Int cs_nzmax; /** max # nonzeros                  */
-
     /** Graph Data ***********************************************************/
     Int n;     /** # vertices                      */
     Int nz;    /** # edges                         */
@@ -112,7 +106,6 @@ public:
     double imbalance; /** Degree to which the partitioning
                           is imbalanced, and this is
                           computed as (0.5 - W0/W).       */
-    double normCut;   /* Normalized cut metric. */
 
     /** Matching Data ********************************************************/
     Graph *parent;    /** Link to the parent graph        */

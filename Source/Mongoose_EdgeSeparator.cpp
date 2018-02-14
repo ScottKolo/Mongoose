@@ -171,10 +171,15 @@ bool optionsAreValid(const Options *options)
 void cleanup(Graph *G, const Options *options)
 {
     Int cutSize = 0;
-    for (Int i = 0; i < G->n; i++)
+    for (Int p = 0; p < 2; p++)
     {
-        cutSize += G->externalDegree[i];
+        Int *bhHeap = G->bhHeap[p];
+        for (Int i = 0; i < G->bhSize[p]; i++)
+        {
+            cutSize += G->externalDegree[bhHeap[i]];
+        }
     }
+
     G->imbalance = fabs(G->imbalance);
     G->cutSize = cutSize / 2;
     G->cutCost = G->cutCost / 2;

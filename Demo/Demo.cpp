@@ -58,7 +58,6 @@ int main(int argn, const char **argv)
         cout << "Partitioning Complete!" << endl;
         cout << "Cut Cost:       " << setprecision(2) << graph->cutCost << endl;
         cout << "Cut Imbalance:  " << setprecision(2) << 100*(graph->imbalance) << "%" << endl;
-        cout << "Normalized Cut: " << setprecision(3) << graph->normCut << endl;
 
         double trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
         cout << "Trial Time:     " << trial_duration*1000 << "ms" << endl;
