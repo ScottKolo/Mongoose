@@ -1,19 +1,27 @@
 function partition = safe_edgecut(G,O,A)
-%SAFE_EDGECUT compute an edge cut of a graph after attempting to sanitize it.
-%   safe_coarsen(G) computes a matching of vertices in the graph G
-%   and then coarsens the graph by combining all matched vertices into
-%   supervertices. With no option struct specified, the coarsening is done 
-%   using a combination of heavy-edge matching and other more aggressive
-%   techniques to avoid stalling. An optional vertex weight vector A can 
-%   also be specified, and a fine-to-coarse mapping of vertices can also
-%   be obtained (e.g. map(vertex_fine) = vertex_coarse.
+%SAFE_EDGECUT sanitizes and computes an edge cut of a graph.
+%   safe_edgecut sanitizes the graph adjacency matrix by removing its diagonal
+%   and attempting to form a symmetric matrix from the input. After
+%   sanitization, an edge cut of the graph is computed and returned as a binary
+%   array.
+%
+%   partition = SAFE_EDGECUT(G) assumes default options and no vertex weights (i.e.
+%   all vertex weights are 1). The partition is returned as a binary array.
+%
+%   partition = SAFE_EDGECUT(G, O) uses the options struct to define how the edge
+%   cut algorithms are run.
+%
+%   partition = SAFE_EDGECUT(G, O, A) initializes the graph with vertex weights
+%   provided in the array A such that A(i) is the vertex weight of vertex i.
 %
 %   Example:
-%       Prob = UFget('DNVS/troll'); G = Prob.A;
-%       G_coarse = safe_coarsen(G);
-%       spy(G_coarse);
+%       Prob = ssget('HB/494_bus'); A = Prob.A;
+%       part = safe_edgecut(A);
+%       perm = [find(part) find(1-part)];
+%       A_perm = A(perm, perm); % Permute the matrix
+%       spy(A_perm);
 %
-%   See also EDGECUT.
+%   See also EDGECUT, DEFAULTOPTIONS.
 
 G_safe = sanitize(G);
 

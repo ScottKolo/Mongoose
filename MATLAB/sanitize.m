@@ -1,18 +1,15 @@
 function A_safe = sanitize (A)
-%SANITIZE sanitize a sparse matrix.
-%   partition = mongoose_computeEdgeSeparator(G) uses a multilevel hybrid
-%   combinatoric and quadratic programming algorithm to compute a partitioning 
-%   of the graph G. With no option struct specified, the target is for each 
-%   part to contain 50% of the graph's vertices, and the coarsening is done 
-%   using a combination of heavy-edge matching and other more aggressive
-%   techniques to avoid stalling.
+%SANITIZE sanitize a sparse adjacency matrix for graph partitioning.
+%   A_safe = sanitize(A) sanitizes an adjacency matrix by removing its diagonal
+%   and attempting to form a symmetric matrix (i.e. an undirected graph). If the
+%   input matrix is not symmetric, a symmetric matrix is formed using
+%   A_safe = (A + A')/2.
 %
 %   Example:
-%       Prob = UFget('DNVS/troll'); A = Prob.A;
-%       part = edgecut(A);
-%       part_a = find(part); part_b = find(1-part);
-%       cspy (A (part_a,part_b)) ;
+%       Prob = ssget('HB/west0479'); A = Prob.A;
+%       A_safe = sanitize(A);
+%       subplot(1,2,1); spy(A); subplot(1,2,2); spy(A_safe);
 %
-%   See also DEFAULTOPTIONS.
+%   See also SAFE_EDGECUT, SAFE_COARSEN.
 
 error ('sanitize mexFunction not found') ;

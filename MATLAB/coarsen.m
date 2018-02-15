@@ -17,6 +17,6 @@ function [G_coarse, A_coarse, map] = coarsen (G, (O, A))
 %       G_coarse = coarsen(G);
 %       spy(G_coarse);
 %
-%   See also MONGOOSE_COARSEN.
+%   See also COARSEN, DEFAULTOPTIONS.
 
-error ('mongoose_coarsen_mex mexFunction not found') ;
+error ('coarsen mexFunction not found') ;

@@ -1,17 +1,16 @@
 function options = defaultoptions()
 %DEFAULTOPTIONS create a struct of default options.
-%   partition = mongoose_computeEdgeSeparator(G) uses a multilevel hybrid
-%   combinatoric and quadratic programming algorithm to compute a partitioning 
-%   of the graph G. With no option struct specified, the target is for each 
-%   part to contain 50% of the graph's vertices, and the coarsening is done 
-%   using a combination of heavy-edge matching and other more aggressive
-%   techniques to avoid stalling.
+%   options = defaultoptions() returns an options struct with defaults set.
+%   If modifications to the default options are needed to modify how EDGECUT
+%   functions, call DEFAULTOPTIONS and modify the struct as needed.
 %
 %   Example:
-%       Prob = UFget('DNVS/troll'); A = Prob.A;
-%       part = mongoose_computeEdgeSeparator(A);
-%       part_a = find(part); part_b = find(1-part);
-%       cspy (A (part_a,part_b)) ;
+%       options = defaultoptions();
+%       options.targetSplit = 0.3;
+%       options.matchingStrategy = 0;   % Random matching
+%       Prob = ssget('DNVS/troll'); A = Prob.A;
+%       part = edgecut(A, O);
+%       sum(part)/length(part)    % 0.3000
 %
 %   See also EDGECUT.
 
