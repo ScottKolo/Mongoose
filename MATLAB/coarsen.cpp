@@ -16,7 +16,7 @@ void mexFunction
     
     const mxArray *matGraph = pargin[0];
     const mxArray *matOptions = (nargin >= 2 ? pargin[1] : NULL);
-    const mxArray *matNodeWeights = (nargin >= 3 ? pargin[2] : NULL);
+    const mxArray *matNodeWeights = (nargin == 3 ? pargin[2] : NULL);
 
     /* Get the options from the MATLAB inputs. */
     Options *O = mex_get_options(matOptions);
@@ -38,7 +38,7 @@ void mexFunction
     match(G, O);
     Graph *G_coarse = coarsen(G, O);
 
-    cs *G_matrix = cs_spalloc(G->n, G->n, G->nz, 0, 0);
+    cs *G_matrix = cs_spalloc(G_coarse->n, G_coarse->n, G_coarse->nz, 0, 0);
     G_matrix->i = G_coarse->i;
     G_matrix->p = G_coarse->p;
     G_matrix->x = G_coarse->x;
