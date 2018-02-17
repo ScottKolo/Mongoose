@@ -60,7 +60,7 @@ int main(int argn, char** argv)
     G2->clearMarkArray(LONG_MAX-1);
     G2->clearMarkArray();
     markValue = G2->getMarkValue();
-    assert(markValue == 1);
+    assert(markValue >= 1);
     G2->~Graph();
 
     MM_typecode matcode;

@@ -258,7 +258,7 @@ void Graph::initialize(const Options *options)
 void Graph::clearMarkArray()
 {
     markValue += 1;
-    if (markValue < 0)
+    if (markValue < 0 || markValue > LONG_MAX-1)
     {
         resetMarkArray();
     }
@@ -267,7 +267,7 @@ void Graph::clearMarkArray()
 void Graph::clearMarkArray(Int incrementBy)
 {
     markValue += incrementBy;
-    if (markValue < 0)
+    if (markValue < 0 || markValue > LONG_MAX-1)
     {
         resetMarkArray();
     }
