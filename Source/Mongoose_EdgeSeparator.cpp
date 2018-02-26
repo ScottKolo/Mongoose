@@ -13,7 +13,7 @@ namespace Mongoose
 {
 
 bool optionsAreValid(const Options *options);
-void cleanup(Graph *graph, const Options *options);
+void cleanup(Graph *graph);
 
 int ComputeEdgeSeparator(Graph *graph)
 {
@@ -92,7 +92,7 @@ int ComputeEdgeSeparator(Graph *graph, const Options *options)
         waterdance(current, options);
     }
 
-    cleanup(current, options);
+    cleanup(current);
 
     return EXIT_SUCCESS;
 }
@@ -168,7 +168,7 @@ bool optionsAreValid(const Options *options)
     return (true);
 }
 
-void cleanup(Graph *G, const Options *options)
+void cleanup(Graph *G)
 {
     Int cutSize = 0;
     for (Int p = 0; p < 2; p++)
