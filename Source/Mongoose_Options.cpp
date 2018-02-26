@@ -15,12 +15,12 @@ Options *Options::Create()
     {
         ret->randomSeed = 0;
 
-        ret->coarsenLimit            = 50;
-        ret->matchingStrategy        = HEMDavisPA;
+        ret->coarsenLimit            = 64;
+        ret->matchingStrategy        = HEMPA;
         ret->doCommunityMatching     = false;
         ret->davisBrotherlyThreshold = 2.0;
 
-        ret->guessCutType = GuessQP;
+        ret->guessCutType = GuessRandom;
 
         ret->numDances = 1;
 
