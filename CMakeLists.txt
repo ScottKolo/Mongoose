@@ -264,27 +264,27 @@ add_test(Unit_Test_EdgeSep ./tests/mongoose_unit_test_edgesep)
 message(STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # using Clang
-    SET(CMAKE_CXX_FLAGS "-O3")
+    SET(CMAKE_CXX_FLAGS "-O3 -fwrapv")
     # Debug flags for Clang
-    SET(CMAKE_CXX_FLAGS_DEBUG "--coverage -g")
+    SET(CMAKE_CXX_FLAGS_DEBUG "--coverage -g -fwrapv")
     SET(CMAKE_C_FLAGS_DEBUG "--coverage -g")
     SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "--coverage -g")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
-    SET(CMAKE_CXX_FLAGS "-O3")
+    SET(CMAKE_CXX_FLAGS "-O3 -fwrapv")
     # Debug flags for GCC
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.6")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
         message(WARNING "${BoldRed} WARNING:${ColourReset} Your compiler does not support the C++11 ISO standard. Future versions of Mongoose will require a compiler with C++11 support. We recommend you upgrade to at least GCC 4.6.")
     endif ()
-    SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -W -Wshadow -Wunused-variable -Wunused-parameter -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated -Woverloaded-virtual -Wwrite-strings -fprofile-arcs -ftest-coverage")
-    SET(CMAKE_C_FLAGS_DEBUG "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
+    SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -fwrapv -W -Wshadow -Wunused-variable -Wunused-parameter -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated -Woverloaded-virtual -Wwrite-strings -fprofile-arcs -ftest-coverage")
+    SET(CMAKE_C_FLAGS_DEBUG "-g -O0 -Wall -fwrapv -W -fprofile-arcs -ftest-coverage")
     SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
-    SET(CMAKE_CXX_FLAGS "-O3 -no-prec-div -xHOST -ipo")
+    SET(CMAKE_CXX_FLAGS "-O3 -no-prec-div -xHOST -ipo -fwrapv")
     # Debug flags for Intel
-    SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall")
+    SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -fwrapv")
     SET(CMAKE_C_FLAGS_DEBUG "-g -O0 -Wall")
     #elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # using Visual Studio C++
@@ -313,6 +313,12 @@ set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1) # Necessary for gcov - prevents file.c
 file(COPY Tests/runTests DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY Tests/runCompare DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY Tests/runStats DESTINATION ${CMAKE_BINARY_DIR})
+
+add_custom_command(TARGET mongoose
+                   POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mongoose> ${PROJECT_SOURCE_DIR}/Lib
+                   COMMENT "Copying libmongoose to root Lib directory"
+        )
 
 add_custom_target(purge
         COMMAND rm -rf ${CMAKE_BINARY_DIR}/*
