@@ -1,9 +1,18 @@
+/* ========================================================================== */
+/* === Source/Mongoose_QPGradProj.cpp ======================================= */
+/* ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * Mongoose Graph Partitioning Library  Copyright (C) 2017-2018,
+ * Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
+ * Mongoose is licensed under Version 3 of the GNU General Public License.
+ * Mongoose is also available under other licenses; contact authors for details.
+ * -------------------------------------------------------------------------- */
+
 /**
- * @file Mongoose_QPGradProj.cpp
- * @author S. Nuri Yeralan
- * @brief Gradient projection algorithm
+ * Gradient projection algorithm
  *
- * @details Apply gradient projection algorithm to the quadratic program which
+ * Apply gradient projection algorithm to the quadratic program which
  * arises in graph partitioning:
  *
  * min (1-x)'(D+A)x subject to lo <= b <= hi, a'x = b, 0 <= x <= 1

@@ -1,7 +1,18 @@
 /* ========================================================================== */
+/* === Source/Mongoose_QPNapsack.cpp ======================================== */
+/* ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * Mongoose Graph Partitioning Library  Copyright (C) 2017-2018,
+ * Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
+ * Mongoose is licensed under Version 3 of the GNU General Public License.
+ * Mongoose is also available under other licenses; contact authors for details.
+ * -------------------------------------------------------------------------- */
+
+/* ========================================================================== */
 /* === QPNapsack ============================================================ */
-/* ==========================================================================
-    Find x that minimizes ||x-y|| while satisfying 0 <= x <= 1,
+/* ========================================================================== */
+/*  Find x that minimizes ||x-y|| while satisfying 0 <= x <= 1,
     a'x = b, lo <= b <= hi.  It is assumed that the column vector a is strictly
     positive since, in our application, the vector a is the node weights, which
     are >= 1. If a is NULL, then it is assumed that a is identically 1.

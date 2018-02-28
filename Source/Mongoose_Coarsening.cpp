@@ -1,3 +1,14 @@
+/* ========================================================================== */
+/* === Source/Mongoose_Coarsening.cpp ======================================= */
+/* ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * Mongoose Graph Partitioning Library  Copyright (C) 2017-2018,
+ * Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
+ * Mongoose is licensed under Version 3 of the GNU General Public License.
+ * Mongoose is also available under other licenses; contact authors for details.
+ * -------------------------------------------------------------------------- */
+
 /**
  * Coarsening of a graph given a previously determined matching
  *
