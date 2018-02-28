@@ -136,12 +136,16 @@ public:
     inline Int BH_getIndex(Int v) { return (bhIndex[v] - 1); }
 
     /** Mark Array Functions **************************************************/
+    inline void mark(Int index) { markArray[index] = markValue; }
+
+    inline void unmark(Int index) { markArray[index] = 0; }
+
+    inline bool isMarked(Int index) { return markArray[index] == markValue; }
+
+    inline Int getMarkValue() { return markValue; }
+
     void clearMarkArray();
     void clearMarkArray(Int incrementBy);
-    void mark(Int index);
-    void unmark(Int index);
-    Int getMarkValue();
-    bool isMarked(Int index);
 
 private:
     Graph();
