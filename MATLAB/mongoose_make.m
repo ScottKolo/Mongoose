@@ -25,16 +25,11 @@ flags = [flags ' -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE'] ;
 flags = [flags ' -DGP_MEX_FUNCTION'] ;
 
 % Append optimization and 64-bit flags
-flags = [flags ' -DDLONG -O -silent'];
+flags = [flags ' -DDLONG -O -silent COPTIMFLAGS="-O3 -fwrapv"'];
 
-lib = '-L../Lib' ;
 cpp_flags = '' ;
+lib = '';
 if (isunix)
-    % Check for ICC - use that if possible
-    [no_icc_found, icc_path] = system('which icc');
-    if(~no_icc_found)
-        cpp_flags = [cpp_flags ' GCC=''' strtrim(icc_path) ''''];
-    end
     if(~ismac)
         % Mac doesn't need librt
         lib = [lib ' -lrt'];
@@ -92,15 +87,27 @@ mongoose_mex_src = {
 % Keep track of object files
 obj_list = '' ;
 
-fprintf('\n\nBuilding Mongoose') ;
-
 % Build SuiteSparse config
+fprintf('\n\nBuilding SuiteSparse_config');
 obj_files = mex_compile(config_src, 'c', flags, include, details);
 obj_list = [obj_list obj_files];
 
 % Build Mongoose
-obj_files = mex_compile(mongoose_src, 'cpp', [cpp_flags flags], include, details);
-obj_list = [obj_list obj_files];
+% Check if library is built already
+fprintf('\n\nSearching for Mongoose...');
+location = fileparts(mfilename('fullpath'));
+if (exist([location '/../Lib/libmongoose.a'], 'file') == 2)
+    fprintf('\nMongoose static library found! Using static linking.\n');
+    lib = [lib ' -L../Lib -lmongoose'];
+else
+    fprintf('\nMongoose static library not found! Compiling Mongoose using mex.\n');
+
+    % Compile Mongoose
+    fprintf('\n\nBuilding Mongoose');
+    obj_files = mex_compile(mongoose_src, 'cpp', [cpp_flags flags], include, details);
+    obj_list = [obj_list obj_files];
+end
+    
 
 fprintf('\nBuilding MEX Utilities') ;
 
