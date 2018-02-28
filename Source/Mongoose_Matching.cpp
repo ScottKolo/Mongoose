@@ -88,7 +88,21 @@ void matching_Cleanup(Graph *graph, const Options *options)
             else
             {
                 // Not a singleton
-                graph->createMatch(k, k, MatchType_Orphan);
+                if (options->doCommunityMatching)
+                {
+                    int i;
+                    for (i = 0; i < graph->n; i++)
+                    {
+                        if (graph->matchtype[i] != MatchType_Community)
+                            break;
+                    }
+                    graph->createCommunityMatch(i, k,
+                                                MatchType_Community);
+                }
+                else
+                {
+                    graph->createMatch(k, k, MatchType_Orphan);
+                }
             }
         }
     }
@@ -97,8 +111,75 @@ void matching_Cleanup(Graph *graph, const Options *options)
     {
         // Leftover singleton
         Int k = graph->singleton;
-        graph->createMatch(k, k, MatchType_Orphan);
+        if (options->doCommunityMatching)
+        {
+            int i;
+            for (i = 0; i < graph->n; i++)
+            {
+                if (graph->matchtype[i] != MatchType_Community)
+                    break;
+            }
+            graph->createCommunityMatch(i, k,
+                                        MatchType_Community);
+        }
+        else
+        {
+            graph->createMatch(k, k, MatchType_Orphan);
+        }
     }
+
+#ifndef NDEBUG
+    /* Every vertex must be matched in no more than a 3-way matching. */
+    for (Int k = 0; k < n; k++)
+    {
+        if (options->doCommunityMatching)
+        {
+            if (!graph->isMatched(k))
+                PR(("%ld is unmatched\n", k));
+            ASSERT(graph->isMatched(k));
+        }
+
+        /* Load matching. */
+        Int v[3] = { -1, -1, -1 };
+        v[0]     = k;
+        v[1]     = graph->getMatch(v[0]);
+
+        if (v[1] == v[0])
+        {
+            v[1] = -1;
+        }
+
+        if (v[1] != -1)
+        {
+            v[2] = graph->getMatch(v[1]);
+            if (v[2] == v[0])
+                v[2] = -1;
+        }
+
+        if (options->doCommunityMatching)
+        {
+            if (v[2] != -1)
+            {
+                ASSERT(graph->getMatch(v[2]) == v[0]);
+            }
+            else
+            {
+                ASSERT(graph->getMatch(v[1]) == v[0]);
+            }
+        }
+        else
+        {
+            if (v[1] != -1)
+            {
+                ASSERT(graph->getMatch(v[1]) == v[0]);
+            }
+            else
+            {
+                ASSERT(graph->getMatch(v[0]) == v[0]);
+            }
+        }
+    }
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -235,55 +316,6 @@ void matching_PA(Graph *graph, const Options *options)
             }
         }
     }
-
-#ifndef NDEBUG
-    /* Every vertex must be matched in no more than a 3-way matching. */
-    for (Int k = 0; k < n; k++)
-    {
-        if (options->doCommunityMatching)
-        {
-            if (!graph->isMatched(k))
-                PR(("%ld is unmatched\n", k));
-            ASSERT(graph->isMatched(k));
-        }
-
-        /* Load matching. */
-        Int v[3] = { -1, -1, -1 };
-        v[0]     = k;
-        v[1]     = graph->getMatch(v[0]);
-        if (v[1] == v[0])
-            v[1] = -1;
-        if (v[1] != -1)
-        {
-            v[2] = graph->getMatch(v[1]);
-            if (v[2] == v[0])
-                v[2] = -1;
-        }
-
-        if (options->doCommunityMatching)
-        {
-            if (v[2] != -1)
-            {
-                ASSERT(graph->getMatch(v[2]) == v[0]);
-            }
-            else
-            {
-                ASSERT(graph->getMatch(v[1]) == v[0]);
-            }
-        }
-        else
-        {
-            if (v[1] != -1)
-            {
-                ASSERT(graph->getMatch(v[1]) == v[0]);
-            }
-            else
-            {
-                ASSERT(graph->getMatch(v[0]) == v[0]);
-            }
-        }
-    }
-#endif
 }
 
 //-----------------------------------------------------------------------------
