@@ -31,7 +31,7 @@ function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_we
                             'problem_nnz', [], ...
                             'problem_n', []);
     for i = 1:length(index.nrows)
-        if (index.isReal(i) && index.nnz(i) < 1E8)
+        if (index.isReal(i))
             
             % For comparing graph performance
             % if (~index.isGraph(i))
