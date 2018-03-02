@@ -164,6 +164,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Build the Mongoose library
 add_library(mongoose ${MONGOOSE_LIB_FILES})
+set_property(TARGET mongoose PROPERTY POSITION_INDEPENDENT_CODE ON)
 if (EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
     target_link_libraries(mongoose ${SUITESPARSE_CONFIG_LIBRARY})
 endif ()
