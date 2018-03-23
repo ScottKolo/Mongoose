@@ -125,7 +125,7 @@ void checkatx(double *x, double *a, Int n, double lo, double hi, double tol)
         }
         else
         {
-            PR(("a'x = %g * %g = %g\n", 1, x[k], x[k]));
+            PR(("a'x = %g * %g = %g\n", 1.0, x[k], x[k]));
             atx += x[k];
         }
     }
@@ -163,6 +163,7 @@ double QPNapsack    /* return the final lambda */
      double tol  /* Gradient projection tolerance */
     )
 {
+    (void)tol; // unused variable except during debug
     double lambda = Lambda;
     PR(("QPNapsack start [\n"));
 
@@ -347,6 +348,7 @@ double QPNapsack    /* return the final lambda */
     for (Int k = 0; k < n; k++)
     {
         double xi = x[k] - Gw[k] * lambda;
+        
         if (xi < 0)
         {
             x[k] = 0;
@@ -366,7 +368,7 @@ double QPNapsack    /* return the final lambda */
         // Correction step if we go too far
         if (newatx > hi)
         {
-            double diff = hi - atx;
+            double diff = hi - atx - 1E-8;
             // Need diff = Gw[k] * x[k], so...
             x[k]   = diff / Gw[k];
             newatx = atx + Gw[k] * x[k];
