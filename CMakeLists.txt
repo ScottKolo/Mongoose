@@ -1,14 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 include(CMake/cmake_colors.cmake)
 
-project(Mongoose)
-
-set(MONGOOSE_VERSION_MAJOR "1")
-set(MONGOOSE_VERSION_MINOR "0")
-set(MONGOOSE_VERSION_PATCH "4")
-set(MONGOOSE_VERSION "${MONGOOSE_VERSION_MAJOR}.
-                      ${MONGOOSE_VERSION_MINOR}.
-                      ${MONGOOSE_VERSION_PATCH}")
+cmake_policy(SET CMP0048 NEW)
+project(Mongoose
+        VERSION 1.0.0
+        LANGUAGES CXX C)
 
 set(MONGOOSE_FILES
         Include/Mongoose_BoundaryHeap.hpp
