@@ -32,12 +32,19 @@ int main(int argn, const char **argv)
         "troll.mtx"
     };
 
+    cout << "********************************************************************************" << endl;
+    cout << "Mongoose Graph Partitioning Library, Version " << mongooseVersion() << endl;
+    cout << "Copyright (C) 2017-2018" << endl;
+    cout << "Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager" << endl;
+    cout << "Mongoose is licensed under Version 3 of the GNU General Public License." << endl;
+    cout << "Mongoose is also available under other licenses; contact authors for details." << endl;
+
     clock_t start = clock();
     double duration;
 
     for (int k = 0; k < 12; k++)
     {
-        cout << "**************************************************" << endl;
+        cout << "********************************************************************************" << endl;
         cout << "Computing an edge cut for " << demo_files[k] << "..." << endl;
         
         clock_t trial_start = clock();
@@ -68,13 +75,13 @@ int main(int argn, const char **argv)
 
     duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
 
-    cout << "**************************************************" << endl;
+    cout << "********************************************************************************" << endl;
     cout << "Total Demo Time:  " << setprecision(2) << duration << "s" << endl;
 
     cout << endl;
-    cout << "**************************************************" << endl;
-    cout << "***************** Demo Complete! *****************" << endl;
-    cout << "**************************************************" << endl;
+    cout << "               **************************************************               " << endl;
+    cout << "               ***************** Demo Complete! *****************               " << endl;
+    cout << "               **************************************************               " << endl;
     cout << endl;
 
     /* Return success */

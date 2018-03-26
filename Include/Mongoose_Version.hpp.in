@@ -1,0 +1,14 @@
+#include "Mongoose_Internal.hpp"
+#include <string>
+
+// Configuration information from CMake
+#define Mongoose_VERSION_MAJOR @Mongoose_VERSION_MAJOR@
+#define Mongoose_VERSION_MINOR @Mongoose_VERSION_MINOR@
+#define Mongoose_VERSION_PATCH @Mongoose_VERSION_PATCH@
+
+#define Mongoose_COMPILE_DATE @Mongoose_COMPILE_DATE@
+
+int majorVersion();
+int minorVersion();
+int patchVersion();
+std::string mongooseVersion();

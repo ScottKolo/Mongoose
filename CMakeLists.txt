@@ -6,6 +6,13 @@ project(Mongoose
         VERSION 1.0.0
         LANGUAGES CXX C)
 
+# Configure a header file to pass CMake information
+configure_file (
+        "Include/Mongoose_Version.hpp.in"
+        "${PROJECT_BINARY_DIR}/Mongoose_Version.hpp"
+)
+include_directories("${PROJECT_BINARY_DIR}")
+
 set(MONGOOSE_FILES
         Include/Mongoose_BoundaryHeap.hpp
         Include/Mongoose_Coarsening.hpp
@@ -25,6 +32,7 @@ set(MONGOOSE_FILES
         Include/Mongoose_Random.hpp
         Include/Mongoose_Refinement.hpp
         Include/Mongoose_Sanitize.hpp
+        Include/Mongoose_Version.hpp
         Include/Mongoose_Waterdance.hpp
         Source/Mongoose_BoundaryHeap.cpp
         Source/Mongoose_Coarsening.cpp
@@ -39,10 +47,11 @@ set(MONGOOSE_FILES
         Source/Mongoose_Logger.cpp
         Source/Mongoose_Matching.cpp
         Source/Mongoose_Options.cpp
+        Source/Mongoose_Random.cpp
         Source/Mongoose_Refinement.cpp
         Source/Mongoose_Sanitize.cpp
+        Source/Mongoose_Version.cpp
         Source/Mongoose_Waterdance.cpp
-        Source/Mongoose_Random.cpp
         )
 
 set(NAPHEAP_FILES

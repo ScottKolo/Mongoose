@@ -168,4 +168,10 @@ Graph *readGraph(const char *filename);
 int ComputeEdgeSeparator(Graph *);
 int ComputeEdgeSeparator(Graph *, const Options *);
 
+/* Version information */
+int majorVersion();
+int minorVersion();
+int patchVersion();
+std::string mongooseVersion();
+
 } // end namespace Mongoose
