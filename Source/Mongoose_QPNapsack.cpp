@@ -98,6 +98,8 @@
 #include "Mongoose_QPNapDown.hpp"
 #include "Mongoose_QPNapUp.hpp"
 
+#include <cfloat>
+
 namespace Mongoose
 {
 
@@ -368,7 +370,7 @@ double QPNapsack    /* return the final lambda */
         // Correction step if we go too far
         if (newatx > hi)
         {
-            double diff = hi - atx - 1E-8;
+            double diff = hi - atx - FLT_MIN;
             // Need diff = Gw[k] * x[k], so...
             x[k]   = diff / Gw[k];
             newatx = atx + Gw[k] * x[k];
