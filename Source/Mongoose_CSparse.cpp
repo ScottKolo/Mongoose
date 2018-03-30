@@ -14,7 +14,7 @@
  *
  * A subset of the CSparse library is used for its sparse matrix data
  * structure and efficient fundamental matrix operations, such as adding,
- * permuting, and finding strongly connected components.
+ * transposing, and converting from triplet to CSC form.
  */
 #include "Mongoose_CSparse.hpp"
 #include "Mongoose_Debug.hpp"

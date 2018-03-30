@@ -27,7 +27,7 @@ void print(cs *G)
     {
         for (int p = Gp[j]; p < Gp[j + 1]; p++)
         {
-            PR(("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p]));
+            PR(("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p])); // FIXME
         }
     }
 }
@@ -43,7 +43,7 @@ void print(Graph *G)
     {
         for (int p = Gp[j]; p < Gp[j + 1]; p++)
         {
-            PR(("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p]));
+            PR(("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p])); // FIXME
         }
     }
 }
@@ -274,8 +274,9 @@ void QPcheckCom(Graph *G, const Options *O, QPDelta *QP, bool check_b,
             t = 0.;
             for (k = Ep[j]; k < Ep[j + 1]; k++)
             {
-                gtemp[Ei[k]] += s * ((Ex) ? Ex[k] : 1);
-                t += ((Ex) ? Ex[k] : 1) * x[Ei[k]];
+                /* Ex is not NULL */
+                gtemp[Ei[k]] += s * Ex[k] ;
+                t += Ex[k] * x[Ei[k]];
             }
             newcost += (t + x[j] * D[j]) * (1. - x[j]);
         }

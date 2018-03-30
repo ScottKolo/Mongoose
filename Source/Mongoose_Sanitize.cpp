@@ -93,7 +93,7 @@ void removeDiagonal(cs *A)
             if (Ai[p] != j)
             {
                 Ai[nz] = Ai[p];
-                Ax[nz] = Ax[p];
+                if (Ax) Ax[nz] = Ax[p];
                 nz++;
             }
         }
@@ -121,17 +121,19 @@ cs *mirrorTriangular(cs *A)
     double *Bx = B->x;
     Int nz     = 0;
 
+    bool values = (Ax != NULL) && (Bx != NULL) ;        // TODO check this
+
     for (Int j = 0; j < A_n; j++)
     {
         for (Int p = Ap[j]; p < Ap[j + 1]; p++)
         {
             Bi[nz] = Ai[p];
             Bp[nz] = j;
-            Bx[nz] = Ax[p];
+            if (values) Bx[nz] = Ax[p];
             nz++;
             Bi[nz] = j;
             Bp[nz] = Ai[p];
-            Bx[nz] = Ax[p];
+            if (values) Bx[nz] = Ax[p];
             nz++;
         }
     }

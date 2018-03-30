@@ -1,0 +1,50 @@
+
+
+Add LaTeX source to Doc/UserGuide.pdf
+
+User Guide:
+    Create:  from what?  need to show how to construct a Graph from a CSC data
+    structure, like mex_get_graph, but in a user C++ program (not using 
+    readgraph from a file, but from a user CSC data structure)
+
+    code: in SuiteSparse
+    http://suitesparse.com
+
+    no Graph Create (_parent) in C++ API
+    
+    describe Graph
+        p
+        i
+        x
+        w
+        p, i, x, w, shallow or not?
+
+        can w be null?
+        can x be null?
+
+    use ternary for Gx and Gw
+
+SuiteSparse_config: update with latest version ../SuiteSparse_config
+
+cs_*:
+
+    do we just make Mongoose depend on CSparse/CXSparse?  OK, maybe not...
+    since it's too embedded.
+
+    delete "finding strongly connected components" from comments:
+
+        /**
+         * Fundamental sparse matrix operations.
+         *
+         * A subset of the CSparse library is used for its sparse matrix data
+         * structure and efficient fundamental matrix operations, such as adding,
+         * permuting, and finding strongly connected components.
+         */
+        #include "Mongoose_CSparse.hpp"
+        #include "Mongoose_Debug.hpp"
+        #include "Mongoose_Internal.hpp"
+        #include "Mongoose_Logger.hpp"
+
+remove mongoose_scc from MATLAB/mongoose_plot (commented out)
+
+user guide: add cite to ACM TOMS "Algo XXX: ..."

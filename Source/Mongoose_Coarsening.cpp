@@ -76,6 +76,10 @@ Graph *coarsen(Graph *graph, const Options *options)
     Int munch     = 0;
     double X      = 0.0;
 
+    /* edge and node weights always appear in a coarse graph */
+    ASSERT (Cx != NULL) ;
+    ASSERT (Cw != NULL) ;
+
     /* Hashtable stores column pointer values. */
     Int *htable
         = (Int *)SuiteSparse_malloc(static_cast<size_t>(cn), sizeof(Int));
