@@ -14,7 +14,7 @@
  *
  * A subset of the CSparse library is used for its sparse matrix data
  * structure and efficient fundamental matrix operations, such as adding,
- * permuting, and finding strongly connected components.  This version
+ * transposing, and converting from triplet to CSC form.  This version
  * uses the same integer (csi or SuiteSparse_long) as the Int in Mongoose.
  */
 
