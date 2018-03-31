@@ -69,7 +69,7 @@ int RunAllTests (const std::string &inputFile, Options *options)
     int m = 0;
     int remainingMallocs;
 
-    MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMPA, HEMDavisPA};
+    MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMSR, HEMSRdeg};
     GuessCutType guessCutStrategies[3] = {GuessQP, GuessRandom, GuessNaturalOrder};
     Int coarsenLimit[3] = {64, 256, 1024};
 

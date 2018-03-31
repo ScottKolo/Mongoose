@@ -42,14 +42,14 @@ void match(Graph *graph, const Options *options)
         matching_HEM(graph, options);
         break;
 
-    case HEMPA:
+    case HEMSR:
         matching_HEM(graph, options);
-        matching_PA(graph, options);
+        matching_SR(graph, options);
         break;
 
-    case HEMDavisPA:
+    case HEMSRdeg:
         matching_HEM(graph, options);
-        matching_DavisPA(graph, options);
+        matching_SRdeg(graph, options);
         break;
     }
     matching_Cleanup(graph, options);
@@ -234,9 +234,9 @@ void matching_Random(Graph *graph, const Options *options)
 }
 
 //-----------------------------------------------------------------------------
-// This is the implementation of passive-aggressive matching
+// This is the implementation of stall-reducing matching
 //-----------------------------------------------------------------------------
-void matching_PA(Graph *graph, const Options *options)
+void matching_SR(Graph *graph, const Options *options)
 {
     Int n      = graph->n;
     Int *Gp    = graph->p;
@@ -319,17 +319,18 @@ void matching_PA(Graph *graph, const Options *options)
 }
 
 //-----------------------------------------------------------------------------
-// This uses the Davis style passive-aggressive matching where we only try
-// PA matching if the problem is some percent unmatched.
+// This uses the stall-reducing matching where we only try SR matching
+// with vertices with degree above a user-defined threshold.
 //-----------------------------------------------------------------------------
-void matching_DavisPA(Graph *graph, const Options *options)
+void matching_SRdeg(Graph *graph, const Options *options)
 {
     Int n   = graph->n;
     Int *Gp = graph->p;
     Int *Gi = graph->i;
 
-    /* The brotherly threshold is the Davis constant times average degree. */
-    double bt = options->davisBrotherlyThreshold
+    /* The brotherly threshold is the minimum degree a "high degree" vertex.
+     * It is the options->degreeThreshold times the average degree. */
+    double bt = options->highDegreeThreshold
                 * ((double)graph->nz / (double)graph->n);
 
 #ifndef NDEBUG

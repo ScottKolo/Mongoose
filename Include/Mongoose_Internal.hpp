@@ -42,8 +42,8 @@ enum MatchingStrategy
 {
     Random     = 0,
     HEM        = 1,
-    HEMPA      = 2,
-    HEMDavisPA = 3
+    HEMSR      = 2,
+    HEMSRdeg   = 3
 };
 
 enum GuessCutType

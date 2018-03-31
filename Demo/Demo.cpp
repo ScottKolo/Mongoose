@@ -51,7 +51,7 @@ int main(int argn, const char **argv)
         Options *options = Options::Create();
         if (!options) return EXIT_FAILURE; // Return an error if we failed.
 
-        options->matchingStrategy = HEMDavisPA;
+        options->matchingStrategy = HEMSRdeg;
         options->guessCutType = GuessQP;
 
         Graph *graph = readGraph("../Matrix/" + demo_files[k]);

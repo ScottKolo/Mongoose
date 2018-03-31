@@ -122,9 +122,9 @@ bool optionsAreValid(const Options *options)
         return (false);
     }
 
-    if (options->davisBrotherlyThreshold < 0)
+    if (options->highDegreeThreshold < 0)
     {
-        LogError("Fatal Error: options->davisBrotherlyThreshold cannot be less than zero.");
+        LogError("Fatal Error: options->highDegreeThreshold cannot be less than zero.");
         return (false);
     }
 

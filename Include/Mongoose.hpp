@@ -25,8 +25,8 @@ enum MatchingStrategy
 {
     Random,
     HEM,
-    HEMPA,
-    HEMDavisPA
+    HEMSR,
+    HEMSRdeg
 };
 
 enum GuessCutType
@@ -52,7 +52,7 @@ struct Options
     Int coarsenLimit;
     MatchingStrategy matchingStrategy;
     bool doCommunityMatching;
-    double davisBrotherlyThreshold;
+    double highDegreeThreshold;
 
     /** Guess Partitioning Options *******************************************/
     GuessCutType guessCutType; /* The guess cut type to use */
@@ -134,7 +134,6 @@ public:
 
     /* Constructor & Destructor */
     static Graph *Create(Int _n, Int _nz);
-    static Graph *Create(Graph *_parent);
     ~Graph();
     bool initialize(const Options *options);
 };

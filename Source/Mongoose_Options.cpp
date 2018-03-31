@@ -26,9 +26,9 @@ Options *Options::Create()
         ret->randomSeed = 0;
 
         ret->coarsenLimit            = 64;
-        ret->matchingStrategy        = HEMPA;
+        ret->matchingStrategy        = HEMSR;
         ret->doCommunityMatching     = false;
-        ret->davisBrotherlyThreshold = 2.0;
+        ret->highDegreeThreshold     = 2.0;
 
         ret->guessCutType = GuessRandom;
 

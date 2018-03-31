@@ -24,7 +24,7 @@ struct Options
     Int coarsenLimit;
     MatchingStrategy matchingStrategy;
     bool doCommunityMatching;
-    double davisBrotherlyThreshold;
+    double highDegreeThreshold;
 
     /** Guess Partitioning Options *******************************************/
     GuessCutType guessCutType; /* The guess cut type to use */

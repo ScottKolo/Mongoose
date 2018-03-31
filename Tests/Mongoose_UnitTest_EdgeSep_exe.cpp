@@ -42,10 +42,10 @@ int main(int argn, char** argv)
     ComputeEdgeSeparator(G, O);
     O->coarsenLimit = 50;
 
-    // Test with invalid davisBrotherlyThreshold
-    O->davisBrotherlyThreshold = -1;
+    // Test with invalid highDegreeThreshold
+    O->highDegreeThreshold = -1;
     ComputeEdgeSeparator(G, O);
-    O->davisBrotherlyThreshold = 2.0;
+    O->highDegreeThreshold = 2.0;
 
     // Test with invalid numDances
     O->numDances = -1;
