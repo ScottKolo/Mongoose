@@ -49,16 +49,6 @@ if (nnz (G-G') > 0)
     G = (G + G') / 2 ;
 end
 
-% get the connected components
-% [p r] = mongoose_scc (G) ;
-% rsize = diff (r) ;
-% [ignore k] = max (rsize) ;
-% G = G (p,p) ;
-% x_vec = x_vec(p);
-% y_vec = y_vec(p);
-
-% s = r (k) : (r (k+1)-1) ;
-% G = G (s,s) ;
 norig = n ;
 [m n] = size (G) ;
 if (DEBUG)
