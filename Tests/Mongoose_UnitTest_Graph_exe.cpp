@@ -51,7 +51,7 @@ int main(int argn, char** argv)
     Logger::setTimingFlag(false);
 
     // Test Graph(n, nz) static constructor
-    Graph *G2 = Graph::Create(10, 20, true);
+    Graph *G2 = Graph::Create(10, 20);
 
     G2->clearMarkArray(LONG_MAX);
     Int markValue = G2->getMarkValue();
@@ -79,19 +79,19 @@ int main(int argn, char** argv)
 
     // Simulate failure to allocate return arrays
     AllowedMallocs = 0;
-    Graph *G3 = Graph::Create(10, 20, true);
+    Graph *G3 = Graph::Create(10, 20);
     assert(G3 == NULL);
 
-    AllowedMallocs = 4;
-    Graph *G4 = Graph::Create(10, 20, true);
+    AllowedMallocs = 1;
+    Graph *G4 = Graph::Create(10, 20);
     assert(G4 == NULL);
 
-    AllowedMallocs = 8;
-    Graph *G5 = Graph::Create(10, 20, true);
+    AllowedMallocs = 5;
+    Graph *G5 = Graph::Create(10, 20);
     assert(G5 == NULL);
 
-    AllowedMallocs = 14;
-    Graph *G6 = Graph::Create(10, 20, true);
+    AllowedMallocs = 10;
+    Graph *G6 = Graph::Create(10, 20);
     assert(G6 == NULL);
 
     SuiteSparse_finish();

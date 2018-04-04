@@ -54,7 +54,7 @@ Graph::Graph()
     markValue = 1;
 }
 
-Graph *Graph::Create(const Int _n, const Int _nz, const bool allocate)
+Graph *Graph::Create(const Int _n, const Int _nz, Int *_p, Int *_i, double *_x, double *_w)
 {
     void *memoryLocation = SuiteSparse_malloc(1, sizeof(Graph));
     if (!memoryLocation)
@@ -63,20 +63,25 @@ Graph *Graph::Create(const Int _n, const Int _nz, const bool allocate)
     // Placement new
     Graph *graph = new (memoryLocation) Graph();
 
+    graph->shallow_p = (_p != NULL);
+    graph->shallow_i = (_i != NULL);
+    graph->shallow_x = (_x != NULL);
+    graph->shallow_w = (_w != NULL);
+
     size_t n = static_cast<size_t>(_n);
     graph->n = _n;
 
     size_t nz = static_cast<size_t>(_nz);
     graph->nz = _nz;
 
-    graph->p     = (allocate) ? (Int *)SuiteSparse_malloc(n + 1, sizeof(Int)) : NULL;
-    graph->i     = (allocate) ? (Int *)SuiteSparse_malloc(nz, sizeof(Int)) : NULL;
-    graph->x     = (allocate) ? (double *)SuiteSparse_malloc(nz, sizeof(double)) : NULL;
-    graph->w     = (allocate) ? (double *)SuiteSparse_malloc(n, sizeof(double)) : NULL;
+    graph->p     = (graph->shallow_p) ? _p : (Int *)SuiteSparse_calloc(n + 1, sizeof(Int));
+    graph->i     = (graph->shallow_i) ? _i : (Int *)SuiteSparse_malloc(nz, sizeof(Int));
+    graph->x     = _x;
+    graph->w     = _w;
     graph->X     = 0.0;
     graph->W     = 0.0;
     graph->H     = 0.0;
-    if (allocate && (!graph->p || !graph->i || !graph->x || !graph->w))
+    if (!graph->p || !graph->i)
     {
         graph->~Graph();
         return NULL;
@@ -126,9 +131,19 @@ Graph *Graph::Create(const Int _n, const Int _nz, const bool allocate)
 
 Graph *Graph::Create(Graph *_parent)
 {
-    Graph *graph = Create(_parent->cn, _parent->nz, true);
+    Graph *graph = Create(_parent->cn, _parent->nz);
+
     if (!graph)
         return NULL;
+
+    graph->x = (double *)SuiteSparse_malloc(_parent->nz, sizeof(double));
+    graph->w = (double *)SuiteSparse_malloc(_parent->cn, sizeof(double));
+
+    if (!graph->x || !graph->w)
+    {
+        graph->~Graph();
+        return NULL;
+    }
 
     graph->W           = _parent->W;
     graph->parent      = _parent;
@@ -139,42 +154,21 @@ Graph *Graph::Create(Graph *_parent)
 
 Graph *Graph::Create(cs *matrix)
 {
-    Graph *graph = Create(std::max(matrix->n, matrix->m), matrix->p[matrix->n], false);
+    Graph *graph = Create(std::max(matrix->n, matrix->m), matrix->p[matrix->n], matrix->p, matrix->i, matrix->x);
     if(!graph)
     {
         return NULL;
     }
-
-    graph->p = matrix->p;
-    graph->i = matrix->i;
-    graph->x = matrix->x;
-    graph->w = (double *)SuiteSparse_malloc(static_cast<size_t>(graph->n),
-                                                         sizeof(double));
-
-    /* If we failed to attach weights, free the graph and return. */
-    if (!graph->w)
-    {
-        /* Undo the brain transplant, free the Graph skeleton, and return. */
-        graph->p = NULL;
-        graph->i = NULL;
-        graph->x = NULL;
-        graph->~Graph();
-        return NULL;
-    }
-
-    // Initialize vertex weights
-    for (Int k = 0; k < graph->n; k++)
-        graph->w[k] = 1.0;
 
     return graph;
 }
 
 Graph::~Graph()
 {
-    p = (Int *)SuiteSparse_free(p);
-    i = (Int *)SuiteSparse_free(i);
-    x = (double *)SuiteSparse_free(x);
-    w = (double *)SuiteSparse_free(w);
+    p = (shallow_p) ? NULL : (Int *)SuiteSparse_free(p);
+    i = (shallow_i) ? NULL : (Int *)SuiteSparse_free(i);
+    x = (shallow_x) ? NULL : (double *)SuiteSparse_free(x);
+    w = (shallow_w) ? NULL : (double *)SuiteSparse_free(w);
 
     partition      = (bool *)SuiteSparse_free(partition);
     vertexGains    = (double *)SuiteSparse_free(vertexGains);
@@ -237,7 +231,7 @@ void Graph::initialize(const Options *options)
     double max    = fabs( (Gx) ? Gx[0] : 1 );
     for (Int k = 0; k < n; k++)
     {
-        W += Gw[k];
+        W += (Gw) ? Gw[k] : 1;
         double sumEdgeWeights = 0.0;
 
         for (Int j = Gp[k]; j < Gp[k + 1]; j++)

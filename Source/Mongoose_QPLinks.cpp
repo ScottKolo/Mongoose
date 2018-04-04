@@ -55,7 +55,7 @@ bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
             return false;
         }
 
-        s += a[k] * xk;
+        s += ((a) ? a[k] : 1) * xk;
         double r = 0.5 - xk;
         for (Int p = Ep[k]; p < Ep[k + 1]; p++)
         {

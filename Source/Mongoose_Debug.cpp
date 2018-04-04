@@ -27,7 +27,7 @@ void print(cs *G)
     {
         for (int p = Gp[j]; p < Gp[j + 1]; p++)
         {
-            PR(("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p])); // FIXME
+            PR(("G(%ld,%ld) = %g\n", Gi[p], j, (Gx) ? Gx[p] : 1));
         }
     }
 }
@@ -43,7 +43,7 @@ void print(Graph *G)
     {
         for (int p = Gp[j]; p < Gp[j + 1]; p++)
         {
-            PR(("G(%ld,%ld) = %g\n", Gi[p], j, Gx[p])); // FIXME
+            PR(("G(%ld,%ld) = %g\n", Gi[p], j, (Gx) ? Gx[p] : 1));
         }
     }
 }

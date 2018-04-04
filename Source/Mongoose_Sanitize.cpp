@@ -57,20 +57,22 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular,
         return NULL;
     }
 
-    for (Int p = 0; p < cleanMatrix->p[cleanMatrix->n]; p++)
+    if (cleanMatrix->x)
     {
-        if (makeEdgeWeightsBinary)
+        for (Int p = 0; p < cleanMatrix->p[cleanMatrix->n]; p++)
         {
-            // Make edge weights binary
-            if (cleanMatrix->x[p] != 0)
+            if (makeEdgeWeightsBinary)
             {
-                cleanMatrix->x[p] = 1;
+                // Make edge weights binary
+                if (cleanMatrix->x[p] != 0)
+                {
+                    cleanMatrix->x[p] = 1;
+                }
+            } else
+            {
+                // Force edge weights to be positive
+                cleanMatrix->x[p] = fabs(cleanMatrix->x[p]);
             }
-        }
-        else
-        {
-            // Force edge weights to be positive
-            cleanMatrix->x[p] = fabs(cleanMatrix->x[p]);
         }
     }
 

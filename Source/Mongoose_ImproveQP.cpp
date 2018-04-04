@@ -132,8 +132,8 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
         {
             /* Update the cut cost. */
             cost.cutCost -= 2 * gains[k];
-            cost.W[oldPartition] -= Gw[k];
-            cost.W[newPartition] += Gw[k];
+            cost.W[oldPartition] -= (Gw) ? Gw[k] : 1;
+            cost.W[newPartition] += (Gw) ? Gw[k] : 1;
             cost.imbalance
                 = targetSplit - std::min(cost.W[0], cost.W[1]) / graph->W;
 

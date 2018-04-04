@@ -45,7 +45,7 @@ void bhLoad(Graph *graph, const Options *options)
     for (Int k = 0; k < n; k++)
     {
         bool kPartition = partition[k];
-        cost.W[kPartition] += Gw[k];
+        cost.W[kPartition] += (Gw) ? Gw[k] : 1;
 
         double gain = 0.0;
         Int exD     = 0;

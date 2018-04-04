@@ -122,8 +122,9 @@ void checkatx(double *x, double *a, Int n, double lo, double hi, double tol)
         }
         if (a != NULL)
         {
-            PR(("a'x = %g * %g = %g\n", a[k], x[k], a[k] * x[k]));
-            atx += a[k] * x[k];
+            double ak = (a) ? a[k] : 1;
+            PR(("a'x = %g * %g = %g\n", ak, x[k], ak * x[k]));
+            atx += ak * x[k];
         }
         else
         {
@@ -182,11 +183,11 @@ double QPNapsack    /* return the final lambda */
         {
             if (FreeSet_status[k] == 1)
             {
-                asum += Gw[k];
+                asum += (Gw) ? Gw[k] : 1;
             }
             else if (FreeSet_status[k] == 0)
             {
-                double ai = Gw[k];
+                double ai = (Gw) ? Gw[k] : 1;
                 asum += x[k] * ai;
                 a2sum += ai * ai;
             }
@@ -203,14 +204,14 @@ double QPNapsack    /* return the final lambda */
     double slope = 0;
     for (Int k = 0; k < n; k++)
     {
-        double xi = x[k] - Gw[k] * lambda;
+        double xi = x[k] - ((Gw) ? Gw[k] : 1) * lambda;
         if (xi >= 1.)
         {
-            slope += Gw[k];
+            slope += ((Gw) ? Gw[k] : 1);
         }
         else if (xi > 0.)
         {
-            slope += Gw[k] * xi;
+            slope += ((Gw) ? Gw[k] : 1) * xi;
         }
     }
     PR(("slope %g lo %g hi %g\n", slope, lo, hi));
@@ -254,11 +255,11 @@ double QPNapsack    /* return the final lambda */
                 double xi = x[k];
                 if (xi >= 1.)
                 {
-                    slope0 += Gw[k];
+                    slope0 += ((Gw) ? Gw[k] : 1);
                 }
                 else if (xi > 0.)
                 {
-                    slope0 += Gw[k] * xi;
+                    slope0 += ((Gw) ? Gw[k] : 1) * xi;
                 }
             }
 
@@ -349,7 +350,7 @@ double QPNapsack    /* return the final lambda */
     Int last_move = 0;
     for (Int k = 0; k < n; k++)
     {
-        double xi = x[k] - Gw[k] * lambda;
+        double xi = x[k] - ((Gw) ? Gw[k] : 1) * lambda;
         
         if (xi < 0)
         {
@@ -365,15 +366,15 @@ double QPNapsack    /* return the final lambda */
             last_move = k;
         }
 
-        double newatx = atx + Gw[k] * x[k];
+        double newatx = atx + ((Gw) ? Gw[k] : 1) * x[k];
 
         // Correction step if we go too far
         if (newatx > hi)
         {
             double diff = hi - atx - FLT_MIN;
             // Need diff = Gw[k] * x[k], so...
-            x[k]   = diff / Gw[k];
-            newatx = atx + Gw[k] * x[k];
+            x[k]   = diff / ((Gw) ? Gw[k] : 1);
+            newatx = atx + ((Gw) ? Gw[k] : 1) * x[k];
         }
         atx = newatx;
     }
@@ -382,11 +383,11 @@ double QPNapsack    /* return the final lambda */
     for (Int kk = 0; kk < n && atx < lo; kk++)
     {
         Int k = last_move;
-        atx -= Gw[k] * x[k];
+        atx -= ((Gw) ? Gw[k] : 1) * x[k];
         double diff = lo - atx;
         // Need diff = Gw[k] * x[k], so...
-        x[k] = std::min(1., diff / Gw[k]);
-        atx += Gw[k] * x[k];
+        x[k] = std::min(1., diff / ((Gw) ? Gw[k] : 1));
+        atx += ((Gw) ? Gw[k] : 1) * x[k];
         last_move = (k + 1) % n;
     }
 

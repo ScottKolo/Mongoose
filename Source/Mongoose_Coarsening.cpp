@@ -119,7 +119,7 @@ Graph *coarsen(Graph *graph, const Options *options)
         {
             /* Read the matched vertex and accumulate the node weight. */
             Int vertex = v[i];
-            nodeWeight += Gw[vertex];
+            nodeWeight += (Gw) ? Gw[vertex] : 1;
 
             for (Int p = Gp[vertex]; p < Gp[vertex + 1]; p++)
             {

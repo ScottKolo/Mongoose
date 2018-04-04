@@ -52,6 +52,7 @@ bool guessCut(Graph *graph, const Options *options)
         {
             graph->partition[k] = (k < graph->n / 2);
         }
+        bhLoad(graph, options);
         break;
     }
 

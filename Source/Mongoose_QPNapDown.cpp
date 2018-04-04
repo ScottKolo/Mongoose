@@ -43,7 +43,6 @@ double QPNapDown       /* return lambda */
      Int *free_heap    /* work array */
     )
 {
-    ASSERT(a != NULL);
     Int i, k, e, maxsteps, n_bound, n_free;
     double ai, asum, a2sum, maxbound, maxfree, t;
 
@@ -61,7 +60,7 @@ double QPNapDown       /* return lambda */
 
     for (i = 0; i < n; i++)
     {
-        ai        = a[i];
+        ai        = (a) ? a[i] : 1;
         double xi = x[i] - ai * lambda;
         if (xi < 0.)
         {
@@ -122,7 +121,7 @@ double QPNapDown       /* return lambda */
         {
             while (breakpts[e = free_heap[1]] >= lambda)
             {
-                ai = a[e];
+                ai = (a) ? a[e] : 1;
                 a2sum -= ai * ai;
                 asum += ai * (1. - x[e]);
                 n_free = QPMaxHeap_delete(free_heap, n_free, breakpts);
@@ -139,7 +138,7 @@ double QPNapDown       /* return lambda */
             while (breakpts[e = bound_heap[1]] >= lambda)
             {
                 n_bound = QPMaxHeap_delete(bound_heap, n_bound, breakpts);
-                ai      = a[e];
+                ai      = (a) ? a[e] : 1;
                 a2sum += ai * ai;
                 asum += ai * x[e];
                 t           = (x[e] - 1.) / ai;

@@ -124,7 +124,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
         if (ib == 0)
         {
             double delta_xk;
-            double ak = a[k];
+            double ak = (a) ? a[k] : 1;
             if (grad[k] > 0.0)
             {
                 // decrease x [k]
@@ -212,7 +212,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
 
         // k not in FreeSet, so no changes here to FreeSet
 
-        double ak = a[k];
+        double ak = (a) ? a[k] : 1;
         if (FreeSet_status_k > 0) /* try changing x_k from 1 to 0 */
         {
             if (b - ak >= lo)
@@ -328,8 +328,8 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
             if (!graph->isMarked(i))
             {
                 // node i is not adjacent to j in the graph G
-                double aj = a[j];
-                double ai = a[i];
+                double aj = (a) ? a[j] : 1;
+                double ai = (a) ? a[i] : 1;
                 double xi = x[i];
                 double xj = x[j];
 
@@ -522,8 +522,8 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
         Int i = FreeSet_list[nFreeSet - 2];
         ASSERT(FreeSet_status[i] == 0);
 
-        double ai = a[i];
-        double aj = a[j];
+        double ai = (a) ? a[i] : 1;
+        double aj = (a) ? a[j] : 1;
         double xi = x[i];
         double xj = x[j];
 
@@ -644,7 +644,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
         PR(("ONE AND ONLY!! j = %ld x[j] %g\n", j, x[j]));
 
         Int bind1  = 0;
-        double aj  = a[j];
+        double aj  = (a) ? a[j] : 1;
         double dxj = (hi - b) / aj;
         PR(("dxj %g  x[j] %g  (1-x[j]): %g\n", dxj, x[j], 1 - x[j]));
         if (dxj < 1. - x[j])

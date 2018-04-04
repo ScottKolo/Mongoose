@@ -75,7 +75,11 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    static Graph *Create(Int _n, Int _nz, bool allocate=true);
+    static Graph *Create(const Int _n, const Int _nz,
+                         Int *_p = NULL,
+                         Int *_i = NULL,
+                         double *_x = NULL,
+                         double *_w = NULL);
     static Graph *Create(Graph *_parent);
     static Graph *Create(cs *matrix);
     ~Graph();
@@ -149,7 +153,14 @@ public:
 
 private:
     Graph();
-    /** Mark Data ************************************************************/
+
+    /** Memory Management Flags ***********************************************/
+    bool shallow_p;
+    bool shallow_i;
+    bool shallow_x;
+    bool shallow_w;
+
+    /** Mark Data *************************************************************/
     Int *markArray; /** O(n) mark array                 */
     Int markValue;  /** Mark array can be cleared in O(k)
                         by incrementing markValue.

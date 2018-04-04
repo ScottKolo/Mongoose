@@ -96,7 +96,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
                 double gain = gains[v];
 
                 /* The balance penalty is the penalty to assess for the move. */
-                double nodeWeight = Gw[v];
+                double nodeWeight = (Gw) ? Gw[v] : 1;
                 double imbalance  = workingCost.imbalance
                                    + (h ? -1.0 : 1.0) * (nodeWeight / W);
                 double absImbalance = fabs(imbalance);

@@ -47,7 +47,7 @@ inline void saveContext(Graph *graph, QPDelta *QP, Int it, double err,
     else
     {
         for (Int k = 0; k < graph->n; k++)
-            b += graph->w[k] * QP->x[k];
+            b += ((graph->w) ? graph->w[k] : 1) * QP->x[k];
     }
     QP->ib = ib;
     QP->b  = b;
@@ -139,7 +139,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
             for (Int k = 0; k < n; k++)
             {
                 double xk = x[k];
-                s += Ew[k] * xk;
+                s += ((Ew) ? Ew[k] : 1) * xk;
                 double r = 0.5 - xk;
                 for (Int p = Ep[k]; p < Ep[k + 1]; p++)
                 {
@@ -308,8 +308,8 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
             double aty = 0., atx = 0.;
             for (Int j = 0; j < n; j++)
             {
-                aty += Ew[j] * y[j];
-                atx += Ew[j] * x[j];
+                aty += ((Ew) ? Ew[j] : 1) * y[j];
+                atx += ((Ew) ? Ew[j] : 1) * x[j];
             }
             bool good_aty = ((aty - lo) / (lo + tol) >= -tol)
                             && ((hi - aty) / (hi + tol) >= -tol);
