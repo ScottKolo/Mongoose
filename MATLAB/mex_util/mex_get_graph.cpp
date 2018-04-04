@@ -15,8 +15,8 @@ Graph *mex_get_graph
     Int n = mxGetN(Gmatlab);
     Int *Gp = (Int*) mxGetJc(Gmatlab);
     Int *Gi = (Int*) mxGetIr(Gmatlab);
-    double *Gx =  (double*) mxGetPr(Gmatlab);
-    double *Gw =  (double*) mxGetPr(Amatlab);
+    double *Gx = (double*) mxGetPr(Gmatlab);
+    double *Gw = (Amatlab) ? (double*) mxGetPr(Amatlab) : NULL;
     Int nz = Gp[n];
     
     Graph *returner = Graph::Create(n, nz, Gp, Gi, Gx, Gw);
