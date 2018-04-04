@@ -24,7 +24,7 @@ Options *mex_get_options
     MEX_STRUCT_READINT(coarsenLimit);
     MEX_STRUCT_READENUM(matchingStrategy, MatchingStrategy);
     MEX_STRUCT_READBOOL(doCommunityMatching);
-    MEX_STRUCT_READDOUBLE(davisBrotherlyThreshold);
+    MEX_STRUCT_READDOUBLE(highDegreeThreshold);
     
     /** Guess Partitioning Options *******************************************/
     MEX_STRUCT_READENUM(guessCutType, GuessCutType);

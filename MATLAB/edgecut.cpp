@@ -29,6 +29,7 @@ void mexFunction
     
     /* Get the options from the matlab inputs. */
     Options *O = mex_get_options(matOptions);
+
     if(!O)
         mexErrMsgTxt("Unable to get Options struct");
 
@@ -36,11 +37,6 @@ void mexFunction
     
     /* Copy the partition choices back to matlab. */
     pargout[0] = gp_mex_put_logical(G->partition, G->n) ;
-
-    G->p = NULL;
-    G->i = NULL;
-    G->x = NULL;
-    if(matNodeWeights != NULL) G->w = NULL;
 
     /* Cleanup */
     O->~Options();

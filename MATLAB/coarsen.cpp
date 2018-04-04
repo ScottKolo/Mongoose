@@ -49,10 +49,6 @@ void mexFunction
     pargout[2] = gp_mex_put_int(G->matchmap, G->n, 1, 0);
 
     /* Cleanup */
-    G->i = NULL;
-    G->p = NULL;
-    G->x = NULL;
-    G->w = NULL;
     G->~Graph();
     G_coarse->i = NULL;
     G_coarse->p = NULL;

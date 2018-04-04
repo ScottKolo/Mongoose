@@ -16,7 +16,7 @@ mxArray *mex_put_options
     MEX_STRUCT_PUT(coarsenLimit);
     MEX_STRUCT_PUT(matchingStrategy);
     MEX_STRUCT_PUT(doCommunityMatching);
-    MEX_STRUCT_PUT(davisBrotherlyThreshold);
+    MEX_STRUCT_PUT(highDegreeThreshold);
     
     /** Guess Partitioning Options *******************************************/
     MEX_STRUCT_PUT(guessCutType);
