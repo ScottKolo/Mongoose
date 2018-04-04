@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 include(CMake/cmake_colors.cmake)
 
-if (policy CMP0048)
+if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
-endif (policy CMP0048)
+endif (POLICY CMP0048)
 
 project(Mongoose
         VERSION 1.0.0
