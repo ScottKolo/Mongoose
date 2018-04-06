@@ -40,7 +40,7 @@ function comparisonData = compareAll(trials)
             
             for use_weights = 0:1
                 
-                % Sanitize the matrix (remove diagonal, take largest scc)
+                % Sanitize the matrix (remove diagonal, make symmetric)
                 A = sanitize(A, ~use_weights);
 
                 % If the sanitization removed all vertices, skip this matrix
