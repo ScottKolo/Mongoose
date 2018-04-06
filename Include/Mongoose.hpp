@@ -20,6 +20,17 @@ namespace Mongoose
 /* Type definitions */
 typedef SuiteSparse_long Int;
 
+typedef struct cs_sparse /* matrix in compressed-column or triplet form */
+{
+    Int nzmax; /* maximum number of entries */
+    Int m;     /* number of rows */
+    Int n;     /* number of columns */
+    Int *p;    /* column pointers (size n+1) or col indices (size nzmax) */
+    Int *i;    /* row indices, size nzmax */
+    double *x; /* numerical values, size nzmax */
+    Int nz;    /* # of entries in triplet matrix, -1 for compressed-col */
+} cs;
+
 /* Enumerations */
 enum MatchingStrategy
 {
@@ -133,7 +144,12 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    static Graph *Create(Int _n, Int _nz);
+    static Graph *Create(const Int _n, const Int _nz,
+                         Int *_p = NULL,
+                         Int *_i = NULL,
+                         double *_x = NULL,
+                         double *_w = NULL);
+    static Graph *Create(cs *matrix);
     ~Graph();
     bool initialize(const Options *options);
 };
