@@ -5,6 +5,7 @@
 #define Mongoose_VERSION_MAJOR @Mongoose_VERSION_MAJOR@
 #define Mongoose_VERSION_MINOR @Mongoose_VERSION_MINOR@
 #define Mongoose_VERSION_PATCH @Mongoose_VERSION_PATCH@
+#define Mongoose_DATE @Mongoose_DATE@
 
 #define Mongoose_COMPILE_DATE @Mongoose_COMPILE_DATE@
 

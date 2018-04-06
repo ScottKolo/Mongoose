@@ -30,6 +30,7 @@ int patchVersion()
     return Mongoose_VERSION_PATCH;
 }
 
+// TODO add date. as "Mongoose 1.0.0, Apr 6, 2018"
 std::string mongooseVersion()
 {
     std::ostringstream stringStream;

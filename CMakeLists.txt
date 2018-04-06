@@ -5,6 +5,7 @@ if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
 endif (POLICY CMP0048)
 
+set(Mongoose_DATE "Apr 6, 2018")
 if(CMAKE_MAJOR_VERSION GREATER 2)
 project(Mongoose
         VERSION 1.0.0
