@@ -8,3 +8,14 @@ MATLAB/plots/*
 MATLAB/*.png
 .idea/*
 cmake-build-debug*
+Doc/Figures/BrotherlyMatching-eps-converted-to.pdf
+Doc/Figures/CommunityMatching-eps-converted-to.pdf
+Doc/Figures/MultilevelOverview-eps-converted-to.pdf
+Doc/UserGuide.aux
+Doc/UserGuide.bbl
+Doc/UserGuide.blg
+Doc/UserGuide.idx
+Doc/UserGuide.log
+Doc/UserGuide.out
+Doc/UserGuide.toc
+
