@@ -27,6 +27,7 @@
 \usepackage{bm}
 \usepackage{makeidx}
 \usepackage{url}
+\usepackage[pdfborder={0 0 0}]{hyperref}
 
 \usepackage{sourcecodepro}
 
@@ -102,7 +103,7 @@
 
 \section{Overview}
 % What is the problem we're solving? What does this package do?
-Mongoose is a graph partitioning library that can quickly compute edge cuts in arbitrary graphs. Given a graph with a vertex set $V$ and edge set $E$, an edge cut is a partitioning of the graph into two subgraphs that are balanced (contain the same number of vertices) and the connectivity between the subgraphs is minimized (few edges are in the cut).
+Mongoose is a graph partitioning library that can quickly compute edge cuts in arbitrary graphs \cite{MongooseTOMS}. Given a graph with a vertex set $V$ and edge set $E$, an edge cut is a partitioning of the graph into two subgraphs that are balanced (contain the same number of vertices) and the connectivity between the subgraphs is minimized (few edges are in the cut).
 \\
 
 Finding high quality edge cuts quickly is an important part of circuit simulation, parallel and distributed computing, and sparse matrix algorithms.
@@ -179,32 +180,36 @@ make         # Build Mongoose
 
 After compilation, the Mongoose demo can be run using \texttt{./bin/Demo}:\\
 
-\begin{lstlisting}[numbers=none,xleftmargin=.2\textwidth, xrightmargin=.2\textwidth,keywordstyle=\color{black}]
+\begin{lstlisting}[numbers=none,xleftmargin=.09\textwidth, xrightmargin=.09\textwidth,keywordstyle=\color{black}]
 ./bin/Demo
-**************************************************
+********************************************************************************
+Mongoose Graph Partitioning Library, Version 1.0.0
+Copyright (C) 2017-2018
+Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
+Mongoose is licensed under Version 3 of the GNU General Public License.
+Mongoose is also available under other licenses; contact authors for details.
+********************************************************************************
 Computing an edge cut for bcspwr01.mtx...
 Partitioning Complete!
 Cut Cost:       3
 Cut Imbalance:  1.3%
-Normalized Cut: 0.13
-Trial Time:     1ms
-**************************************************
+Trial Time:     0.58ms
+********************************************************************************
 
 ...
 
-**************************************************
+********************************************************************************
 Computing an edge cut for troll.mtx...
 Partitioning Complete!
-Cut Cost:       4.1e+04
+Cut Cost:       3.7e+04
 Cut Imbalance:  0.00023%
-Normalized Cut: 0.014
-Trial Time:     3.28e+03ms
-**************************************************
+Trial Time:     3.4e+03ms
+********************************************************************************
 Total Demo Time:  3.4s
 
-**************************************************
-***************** Demo Complete! *****************
-**************************************************
+               **************************************************               
+               ***************** Demo Complete! *****************               
+               **************************************************  
 \end{lstlisting}
 
 To run the complete test suite, the command \texttt{make test} can be used. Note that Python 2.7+ must be installed.
@@ -274,7 +279,7 @@ The output file name is optional. If omitted, the default is \texttt{mongoose\_o
 
 \subsection{License}
 
-Mongoose is licensed under the GNU Public License version 3 (GPLv3). Full text of the license can be found int \texttt{Mongoose/LICENSE}. For a commercial license, please contact Dr. Timothy A. Davis at davis@tamu.edu.
+Mongoose is licensed under the GNU Public License version 3 (GPLv3). Full text of the license can be found int \texttt{Mongoose/Doc/License.txt}. For a commercial license, please contact Dr. Timothy A. Davis at davis@tamu.edu.
 
 \section{Using Mongoose in C++}
 
@@ -294,7 +299,7 @@ int main(int argn, const char **argv)
     Options *options = Options::Create();
     if (!options) return EXIT_FAILURE; // Return an error if we failed.
 
-    options->matchingStrategy = HEMDavisPA;
+    options->matchingStrategy = HEMSRdeg;
     options->guessCutType = GuessQP;
 
     Graph *graph = readGraph(argv[1]);
@@ -319,6 +324,54 @@ int main(int argn, const char **argv)
 }
 \end{lstlisting}
 
+\subsection{Creating a Graph}
+
+There are several different ways to create a \texttt{Graph} class instance for use in Mongoose.
+
+\subsubsection{Creating a Graph Manually}
+
+To create a graph manually, the following constructor is used: \\
+
+\textbf{\texttt{static Graph *Create(const Int \_n, \\
+\hspace*{4.2cm} const Int \_nz, \\
+\hspace*{4.2cm} Int *\_p = NULL, \\
+\hspace*{4.2cm} Int *\_i = NULL, \\
+\hspace*{4.2cm} double *\_x = NULL, \\
+\hspace*{4.2cm} double *\_w = NULL);}}\\
+\\
+Using the manual constructor, the number of vertices (or dimension of the matrix, \texttt{Int \_n}) and the number of edges (or nonzero entries in the matrix, \texttt{Int \_nz}) must both be specified. The column pointer vector \texttt{Int *\_p} and row index vector \texttt{Int *\_i} must either be specified by the user, or, if left \texttt{NULL}, they will be allocated such that \texttt{\_p = (Int *)SuiteSparse\_calloc(n + 1, sizeof(Int));} and \texttt{\_i = (Int *)SuiteSparse\_malloc(nz, sizeof(Int));}. The edge weights \texttt{double *\_x} and the vertex weights \texttt{double *\_w} can either be specified, or, if left \texttt{NULL}, will be assumed to be one for all edges and vertices, respectively.\\
+
+Here are some examples:
+
+\begin{itemize}
+\item \texttt{Graph::Create(20, 50);} creates a \texttt{Graph} with 20 vertices and 50 edges, but no data. \texttt{Graph->p} and \texttt{Graph->i} are allocated by Mongoose to store exactly 20 columns (vertices) and 50 nonzero elements (edges). This allows the user to populate \texttt{Graph->p} and \texttt{Graph->i} manually. All edge and vertex weights are assumed to be one.
+\item \texttt{Graph::Create(20, 50, \_p, \_i);} creates a \texttt{Graph} with 20 vertices and 50 edges with the pattern specified. \texttt{Graph->p} and \texttt{Graph->i} are shallow copies of the arguments \texttt{\_p} and \texttt{\_i} and will not be freed upon calling the destructor. All edge and vertex weights are assumed to be one.
+\item \texttt{Graph::Create(20, 50, \_p, \_i, \_x);} creates a \texttt{Graph} with 20 vertices and 50 edges with the pattern and edge weights specified. \texttt{Graph->p}, \texttt{Graph->i}, and \texttt{Graph->x} are shallow copies of the arguments \texttt{\_p}, \texttt{\_i}, and \texttt{\_x}, and will not be freed upon calling the destructor. Edge weights are specified by \texttt{\_x}, but vertex weights are assumed to be one.
+\item \texttt{Graph::Create(20, 50, \_p, \_i, \_x, \_w);} creates a \texttt{Graph} with 20 vertices and 50 edges with edge and vertex weights specified. \texttt{Graph->p}, \texttt{Graph->i}, \texttt{Graph->x}, and \texttt{Graph->w} are shallow copies of the arguments \texttt{\_p}, \texttt{\_i}, \texttt{\_x}, and \texttt{\_w}, and will not be freed upon calling the destructor. Edge weights are specified by \texttt{\_x}, and vertex weights are specified by \texttt{\_w}.
+\end{itemize}
+
+
+\subsubsection{Creating a Graph from a Sparse Matrix}
+
+Another way to create a \texttt{Mongoose::Graph} is from a pre-existing \texttt{CSparse} matrix struct.\\
+
+\textbf{\texttt{static Graph *Create(cs *matrix);}}\\
+
+Using this constructor, a \texttt{CSparse} matrix struct can be passed directly, with shallow copies made of \texttt{cs->p}, \texttt{cs->i}, and \texttt{cs->x}. Note that  this constructor is equivalent to calling the following for a \texttt{CSparse} matrix \texttt{cs *A}:\\
+
+\textbf{\texttt{Graph::Create(const Int A->n, A->p[A->n], A->p, A->i, A->x, NULL);}}
+
+\subsubsection{Creating a Graph from a Matrix Market File}
+
+Perhaps the easiest way to create a \texttt{Graph} instance is from a file. Mongoose provides easy file input helpers to read, sanitize, and format a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric by computing $\frac{1}{2}(A+A^T)$. If a diagonal is present, it will be removed.\\
+
+\textbf{\texttt{Graph *readGraph(const std::string \&filename);}}\\
+\textbf{\texttt{Graph *readGraph(const char *filename);}}\\
+
+For example, to read in the Matrix Market file \texttt{jagmesh7.mtx} located in the Mongoose sample matrix directory, the following code can be used:\\
+
+\textbf{\texttt{Mongoose::readGraph(``../Matrix/jagmesh7.mtx");}}
+
 \subsection{C++ API}
 
 The following functions are available in the C++ API. After Mongoose is compiled, a static library version of Mongoose is built at \texttt{Mongoose/\_build/lib/libmongoose.a}. Include the \texttt{Mongoose.hpp} header file located in \texttt{Mongoose/Include} and link with the static library to enable the following API functions.
@@ -340,12 +393,23 @@ The following functions are available in the C++ API. After Mongoose is compiled
 
 \texttt{Mongoose::Options::Create} will return an \texttt{Options} struct with default state (see Section \ref{sec:options} for details about option fields and defaults). To run Mongoose with specific options, call \texttt{Options::Create} and modify the struct as needed.
 \vspace{6pt}
-\item \textbf{\texttt{static Graph *Create(Int \_n, Int \_nz);}}
-\item \textbf{\texttt{static Graph *Create(Graph *\_parent);}}
+\item \textbf{\texttt{static Graph *Create(const Int \_n, \\
+\hspace*{4.2cm} const Int \_nz, \\
+\hspace*{4.2cm} Int *\_p = NULL, \\
+\hspace*{4.2cm} Int *\_i = NULL, \\
+\hspace*{4.2cm} double *\_x = NULL, \\
+\hspace*{4.2cm} double *\_w = NULL);}}
+\item \textbf{\texttt{static Graph *Create(cs *matrix);}}
+
+\texttt{Mongoose::Graph::Create} is the primary constructor for the \texttt{Graph} class. There are two versions: one to manually specify attributes of the \texttt{Graph}, and one to form a \texttt{Graph} from a \texttt{CSparse} struct.
+
+Using the manual constructor, the number of vertices (or dimension of the matrix, \texttt{Int \_n}) and the number of edges (or nonzero entries in the matrix, \texttt{Int \_nz}) must both be specified. The column pointer vector \texttt{Int *\_p} and row index vector \texttt{Int *\_i} must either be specified by the user, or, if left \texttt{NULL}, they will be allocated such that \texttt{\_p = (Int *)SuiteSparse\_calloc(n + 1, sizeof(Int));} and \texttt{\_i = (Int *)SuiteSparse\_malloc(nz, sizeof(Int));}. The edge weights \texttt{double *\_x} and the vertex weights \texttt{double *\_w} can either be specified, or, if left \texttt{NULL}, will be assumed to be one for all edges and vertices, respectively.
+
+Note that Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it).
 
 \vspace{6pt}
-\item \textbf{\texttt{$\sim$Options();}}
-\item \textbf{\texttt{$\sim$Graph();}}
+\item \textbf{\texttt{$\sim$Options();}} is the destructor for the \texttt{Options} struct. If the user creates an \texttt{Options} struct using \texttt{Options::Create}, the user is also responsible for destructing it.
+\item \textbf{\texttt{$\sim$Graph();}} is the destructor for the \texttt{Graph} class. If the user creates a \texttt{Graph} class instance using \texttt{Graph::Create}, the user is also responsible for destructing it.
 
 \end{itemize}
 
@@ -357,6 +421,8 @@ Mongoose uses two primary data structures to pass information: the \texttt{Graph
 \item For each \texttt{Graph::Create}, there should be a matching \texttt{Graph::$\sim$Graph()}.
 \item for each \texttt{Options::Create}, there should be a matching \texttt{Options::$\sim$Options()};
 \end{itemize}
+
+Also note that Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it). Freeing memory referenced by Mongoose prior to Mongoose completing will result in a segmentation fault.
 
 \section{Using Mongoose in MATLAB}
 
@@ -503,7 +569,7 @@ Prior to computing a cut, the input graph is repeatedly coarsened until a suffic
 \begin{tabular}{|l|l|} \hline
 Name & \texttt{matchingStrategy} \\ \hline
 Type & \texttt{MatchingStrategy} (enum) \\ \hline
-Default & \texttt{HEMDavisPA} \\ \hline
+Default & \texttt{HEMSR} \\ \hline
 \end{tabular}\\
 
 During coarsening, a matching of vertices is computed using one of several strategies determined by the \texttt{matchingStrategy} option field. The possible values for this field are described below:
@@ -511,8 +577,8 @@ During coarsening, a matching of vertices is computed using one of several strat
 \begin{itemize}
 \item \texttt{Random}, random matching. Randomly matches unmatched vertices with each other until no more than one unmatched vertex exists.
 \item \texttt{HEM}, heavy edge matching. Matches a given vertex with an unmatched neighbor with the largest weighted edge between them.
-\item \texttt{HEMPA}, heavy edge matching with passive-aggressive matching. A pass of heavy edge matching is followed by a passive-aggressive matching where vertices that have been left unmatched by heavy edge matching are paired with vertices that share a neighbor, but may not be directly connected.
-\item \texttt{HEMDavisPA}, heavy edge matching with passive-aggressive matching subject to a brotherly threshold. Same as \texttt{HEMPA}, but the passive-aggressive step is only attempted on unmatched vertices whose degree is above a threshold, described by $\texttt{Options::davisBrotherlyThreshold}*\text{(average degree of graph)}$. \texttt{davisBrotherlyThreshold} is set to $2.0$ by default, meaning only unmatched vertices with degree greater than or equal to two times the average degree of the graph are considered for passive-aggressive matching.
+\item \texttt{HEMSR}, heavy edge matching with stall-reducing matching. A pass of heavy edge matching is followed by a brotherly, adoption, and community (if enabled) matching where vertices that have been left unmatched by heavy edge matching are paired with vertices that share a neighbor, but may not be directly connected.
+\item \texttt{HEMSRdeg}, heavy edge matching with stall-reducing matching subject to a degree threshold. Same as \texttt{HEMSR}, but the stall-reducing step is only attempted on unmatched vertices whose degree is above a threshold, described by $\texttt{Options::highDegreeThreshold}*\text{(average degree of graph)}$. \texttt{highDegreeThreshold} is set to $2.0$ by default, meaning only unmatched vertices with degree greater than or equal to two times the average degree of the graph are considered for stall-reducing matching.
 \end{itemize}
 
 \vskip 1\baselineskip
@@ -526,15 +592,15 @@ Community matching is a matching option to aggressively match vertices whose nei
 
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{davisBrotherlyThreshold} \\ \hline
+Name & \texttt{highDegreeThreshold} \\ \hline
 Type & \texttt{double} \\ \hline
 Default & \texttt{2.0} \\ \hline
 \end{tabular}\\
 
-When using the \texttt{HEMDavisPA} matching strategy, only vertices satisfying the following inequality are considered for passive-aggressive matching:
+When using the \texttt{HEMSRdeg} matching strategy, only vertices satisfying the following inequality are considered for brotherly, adoption, and community matching:
 
 \[
-\text{degree}(v) \geq \lfloor(\texttt{davisBrotherlyThreshold}) \cdot \left(\frac{nz}{n}\right)\rfloor
+\text{degree}(v) \geq \lfloor(\texttt{highDegreeThreshold}) \cdot \left(\frac{nz}{n}\right)\rfloor
 \]
 
 Note that $\frac{nz}{n}$ is the average degree of the vertices in the graph.
