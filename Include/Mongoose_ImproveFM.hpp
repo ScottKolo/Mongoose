@@ -24,7 +24,7 @@ struct SwapCandidate
 {
     Int vertex;
     bool partition;
-    double nodeWeight;
+    double vertexWeight;
     double gain;
     double heuCost;
     Int bhPosition;
@@ -32,13 +32,13 @@ struct SwapCandidate
 
     SwapCandidate()
     {
-        vertex     = 0;
-        partition  = false;
-        nodeWeight = 0.0;
-        gain       = -INFINITY;
-        heuCost    = INFINITY;
-        bhPosition = -1;
-        imbalance  = 0.0;
+        vertex       = 0;
+        partition    = false;
+        vertexWeight = 0.0;
+        gain         = -INFINITY;
+        heuCost      = INFINITY;
+        bhPosition   = -1;
+        imbalance    = 0.0;
     }
 };
 

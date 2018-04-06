@@ -47,8 +47,8 @@ mxArray *cs_mex_put_sparse (cs **Ahandle);
 
 Graph *mex_get_graph
 (
-    const mxArray *Gmatlab,        /* The sparse matrix            */
-    const mxArray *Amatlab = NULL  /* The real-valued node weights */
+    const mxArray *Gmatlab,        /* The sparse matrix              */
+    const mxArray *Amatlab = NULL  /* The real-valued vertex weights */
 );
 
 Int *gp_mex_get_int

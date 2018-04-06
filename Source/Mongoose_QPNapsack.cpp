@@ -14,8 +14,8 @@
 /* ========================================================================== */
 /*  Find x that minimizes ||x-y|| while satisfying 0 <= x <= 1,
     a'x = b, lo <= b <= hi.  It is assumed that the column vector a is strictly
-    positive since, in our application, the vector a is the node weights, which
-    are >= 1. If a is NULL, then it is assumed that a is identically 1.
+    positive since, in our application, the vector a is the vertex weights,
+    which are >= 1. If a is NULL, then it is assumed that a is identically 1.
     The approach is to solve the dual problem obtained by introducing
     a multiplier lambda for the constraint a'x = b.  The dual function is
 

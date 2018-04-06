@@ -76,7 +76,7 @@ Graph *coarsen(Graph *graph, const Options *options)
     Int munch     = 0;
     double X      = 0.0;
 
-    /* edge and node weights always appear in a coarse graph */
+    /* edge and vertex weights always appear in a coarse graph */
     ASSERT (Cx != NULL) ;
     ASSERT (Cw != NULL) ;
 
@@ -113,13 +113,13 @@ Graph *coarsen(Graph *graph, const Options *options)
 
         Int ps = Cp[k] = munch; /* The munch start for this column */
 
-        double nodeWeight     = 0.0;
+        double vertexWeight   = 0.0;
         double sumEdgeWeights = 0.0;
         for (Int i = 0; i < 3 && v[i] != -1; i++)
         {
-            /* Read the matched vertex and accumulate the node weight. */
+            /* Read the matched vertex and accumulate the vertex weight. */
             Int vertex = v[i];
-            nodeWeight += (Gw) ? Gw[vertex] : 1;
+            vertexWeight += (Gw) ? Gw[vertex] : 1;
 
             for (Int p = Gp[vertex]; p < Gp[vertex + 1]; p++)
             {
@@ -150,8 +150,8 @@ Graph *coarsen(Graph *graph, const Options *options)
             }
         }
 
-        /* Save the node weight. */
-        Cw[k] = nodeWeight;
+        /* Save the vertex weight. */
+        Cw[k] = vertexWeight;
 
         /* Save the sum of edge weights and initialize the gain for k. */
         X += sumEdgeWeights;

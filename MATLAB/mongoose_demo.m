@@ -13,7 +13,7 @@ A = Prob.A;
 % or square, a symmetric matrix (A+A')/2 is built.
 A = sanitize(A);
 
-% Create a node weight vector and create a heavy node
+% Create a vertex weight vector and create a heavy vertex
 V = ones(1,m);
 V(10) = 300;
 
@@ -21,17 +21,17 @@ V(10) = 300;
 O = defaultoptions();
 O.targetSplit = 0.3;
 
-% Run Mongoose to partition the graph with edge and node weights.
-partNode = edgecut(A, O, V);
+% Run Mongoose to partition the graph with edge and vertex weights.
+partVert = edgecut(A, O, V);
 
-fprintf('\n\nPartitioning graph with edge and node weights\n\n');
+fprintf('\n\nPartitioning graph with edge and vertex weights\n\n');
 fprintf('=== Cut Info ===\n');
-fprintf('Cut Size:   %d\n', full(sum(partNode .* sum(sign(A)))));
-fprintf('Cut Weight: %d\n\n', full(sum(partNode .* sum(A))));
+fprintf('Cut Size:   %d\n', full(sum(partVert .* sum(sign(A)))));
+fprintf('Cut Weight: %d\n\n', full(sum(partVert .* sum(A))));
 fprintf('=== Balance Info ===\n');
 fprintf('Target Split:     0.3\n');
-fprintf('Actual Split:     %1.4f\n', sum(partNode .* V) / sum(V));
-fprintf('Unweighted Split: %1.4f\n', sum(partNode) / m);
+fprintf('Actual Split:     %1.4f\n', sum(partVert .* V) / sum(V));
+fprintf('Unweighted Split: %1.4f\n', sum(partVert) / m);
 
 % Run Mongoose to partition the graph with no vertex weights.
 

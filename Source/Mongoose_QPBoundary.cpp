@@ -83,7 +83,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
     /* problem specification for the graph G */
     Int n      = graph->n; /* problem dimension */
     double *Ex = graph->x; /* numerical values for edge weights */
-    Int *Ei    = graph->i; /* adjacent vertices for each node */
+    Int *Ei    = graph->i; /* adjacent vertices for each vertex */
     Int *Ep    = graph->p; /* points into Ex or Ei */
     double *a  = graph->w; /* a'x = b, lo <= b <= hi */
 
@@ -304,7 +304,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
         /* find i and j both free and where a_{ij} = 0 */
         /* -------------------------------------------------------------- */
 
-        // mark all nodes i adjacent to j in the FreeSet
+        // mark all vertices i adjacent to j in the FreeSet
         for (Int p = Ep[j]; p < Ep[j + 1]; p++)
         {
             Int i = Ei[p];
@@ -327,7 +327,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
 
             if (!graph->isMarked(i))
             {
-                // node i is not adjacent to j in the graph G
+                // vertex i is not adjacent to j in the graph G
                 double aj = (a) ? a[j] : 1;
                 double ai = (a) ? a[i] : 1;
                 double xi = x[i];
@@ -454,11 +454,11 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
             }
         }
 
-        // clear the marks from all the nodes
+        // clear the marks from all the vertices
         graph->clearMarkArray();
     }
 
-    // remove deleted nodes from the FreeSet
+    // remove deleted vertices from the FreeSet
     kfree2 = 0;
     for (Int kfree = 0; kfree < nFreeSet; kfree++)
     {
@@ -479,12 +479,12 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
     DEBUG(QPcheckCom(graph, options, QP, 1, nFreeSet, b)); // check b
 
 #ifndef NDEBUG
-    // the nodes in the FreeSet now form a single clique.  Check this.
+    // the vertices in the FreeSet now form a single clique.  Check this.
     // this test is for debug mode only
-    ASSERT(nFreeSet >= 1); // we can have 1 or more nodes still in FreeSet
+    ASSERT(nFreeSet >= 1); // we can have 1 or more vertices still in FreeSet
     for (Int kfree = 0; kfree < nFreeSet; kfree++)
     {
-        // j must be adjacent to all other nodes in the FreeSet
+        // j must be adjacent to all other vertices in the FreeSet
         Int j               = FreeSet_list[kfree];
         Int nfree_neighbors = 0;
         for (Int p = Ep[j]; p < Ep[j + 1]; p++)
@@ -505,13 +505,13 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
     DEBUG(FreeSet_dump("step 4 starts", n, FreeSet_list, nFreeSet,
                        FreeSet_status, 0, x));
 
-    // consider pairs of nodes in the FreeSet, until only one is left
+    // consider pairs of vertices in the FreeSet, until only one is left
     while (nFreeSet > 1)
     {
         /* free variables: 0 < x_j < 1 */
         /* choose s so that first derivative terms decrease */
 
-        // i and j are the last two nodes in the FreeSet_list, as in:
+        // i and j are the last two vertex in the FreeSet_list, as in:
         // FreeSet_list = [ .... i j ]
         // at the end of this iteration, one will be deleted, thus becoming
         // FreeSet_list = [ .... j ]
@@ -617,7 +617,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
             FreeSet_list[nFreeSet - 2] = j;
         }
 
-        // one fewer node in the FreeSet (i or j removed)
+        // one fewer vertex in the FreeSet (i or j removed)
         nFreeSet--;
 
         DEBUG(FreeSet_dump("step 4", n, FreeSet_list, nFreeSet, FreeSet_status,
@@ -743,7 +743,7 @@ void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
     QP->b        = b;
     QP->ib       = ib;
 
-    // clear the marks from all the nodes
+    // clear the marks from all the vertices
     graph->clearMarkArray();
 
     DEBUG(QPcheckCom(graph, options, QP, 1, nFreeSet, b)); // check b

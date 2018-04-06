@@ -84,7 +84,7 @@ void QPcheckCom(Graph *G, const Options *O, QPDelta *QP, bool check_b,
     /* problem specification */
     Int n      = G->n; /* problem dimension */
     double *Ex = G->x; /* numerical values for edge weights */
-    Int *Ei    = G->i; /* adjacent vertices for each node */
+    Int *Ei    = G->i; /* adjacent vertices for each vertex */
     Int *Ep    = G->p; /* points into Ex or Ei */
     double *a  = G->w; /* a'x = b, lo <= b <= hi */
 
