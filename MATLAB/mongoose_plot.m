@@ -52,7 +52,7 @@ end
 norig = n ;
 [m n] = size (G) ;
 if (DEBUG)
-    fprintf ('orig: %d   largest scc: %d\n', norig, n) ;
+    fprintf ('n: %d\n', n) ;
 end
 
 if (penwidth == 0)

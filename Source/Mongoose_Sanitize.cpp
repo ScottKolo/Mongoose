@@ -111,30 +111,31 @@ cs *mirrorTriangular(cs *A)
     Int A_nz = A->p[A_n];
     Int B_nz = 2 * A_nz;
 
-    cs *B = cs_spalloc(A_n, A_n, B_nz, 1, 1);
+    bool values = (Ax != NULL) ;
+
+    // allocate B in triplet form, with values Bx if A has values
+    cs *B = cs_spalloc(A_n, A_n, B_nz, values, 1);
     if (!B)
         return NULL;
 
     Int *Ap    = A->p;
     Int *Ai    = A->i;
     double *Ax = A->x;
-    Int *Bp    = B->p;
+    Int *Bj    = B->p;
     Int *Bi    = B->i;
     double *Bx = B->x;
     Int nz     = 0;
-
-    bool values = (Ax != NULL) && (Bx != NULL) ;        // TODO check this
 
     for (Int j = 0; j < A_n; j++)
     {
         for (Int p = Ap[j]; p < Ap[j + 1]; p++)
         {
             Bi[nz] = Ai[p];
-            Bp[nz] = j;
+            Bj[nz] = j;
             if (values) Bx[nz] = Ax[p];
             nz++;
             Bi[nz] = j;
-            Bp[nz] = Ai[p];
+            Bj[nz] = Ai[p];
             if (values) Bx[nz] = Ax[p];
             nz++;
         }

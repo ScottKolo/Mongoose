@@ -84,12 +84,12 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 
-\newcommand{\m}[1]{{\bf{#1}}}
+\newcommand{\mb}[1]{{\bf{#1}}}
 \newcommand{\tr}{^{\sf T}}
 
-\title{Mongoose User Guide}
-\author{Scott Kolodziej}
-%\date{}
+\title{Mongoose User Guide, Version 1.0.0}
+\author{Scott Kolodziej, Nuri Yeralan, Tim Davis, William W. Hager}
+\date{Apr 6, 2018}
 
 \makeindex
 
@@ -143,12 +143,12 @@ Mongoose is known as a hybrid graph partitioner, as it uses multiple methods in 
 The quadratic program used is shown below. Hager and Krylyuk have proven that the global optimum to this quadratic program yields the solution to the graph partitioning problem (but note that both are NP-hard problems to solve).
 %
 \begin{eqnarray}
-&\displaystyle\min_{\m{x}\in\mathbb{R}^n}\quad  (\m{1} - \m{x})\tr (\m{A} + \m{I})\m{x}
+&\displaystyle\min_{\mb{x}\in\mathbb{R}^n}\quad  (\mb{1} - \mb{x})\tr (\mb{A} + \mb{I})\mb{x}
 & \quad \mbox{subject to}  \quad
-\m{0} \le \m{x} \le \m{1}, \quad \ell \le \m{1}\tr \m{x} \le u, \nonumber
+\mb{0} \le \mb{x} \le \mb{1}, \quad \ell \le \mb{1}\tr \mb{x} \le u, \nonumber
 \end{eqnarray}
 
-$\ell$ and $u$ are lower and upper bounds on the desired size of one partition, and $\m{A}$ is the adjacency matrix of the graph.
+$\ell$ and $u$ are lower and upper bounds on the desired size of one partition, and $\mb{A}$ is the adjacency matrix of the graph.
 
 \subsection{Fiduccia-Mattheyses Algorithm}
 
@@ -163,6 +163,8 @@ Mongoose is available on GitHub at \url{https://github.com/ScottKolo/Mongoose}. 
 \[\text{\texttt{git clone https://github.com/ScottKolo/Mongoose}}\]
 Alternatively, Mongoose can be downloaded as a zip archive from the following URL:
 \[\text{\url{https://github.com/ScottKolo/Mongoose/archive/edgesep.zip}}\] 
+
+Mongoose also appears as a component package of SuiteSparse, \url{http://suitesparse.com}.
 
 \subsection{Prerequisites}
 Mongoose requires CMake 2.8 and any ISO/IEC 14882:1998 compliant C++ compiler. Mongoose has been tested to work with GNU GCC 4.4+ and LLVM Clang 3.5+ on Linux, and Apple Xcode 6.4+ on macOS.
@@ -279,7 +281,7 @@ The output file name is optional. If omitted, the default is \texttt{mongoose\_o
 
 \subsection{License}
 
-Mongoose is licensed under the GNU Public License version 3 (GPLv3). Full text of the license can be found int \texttt{Mongoose/Doc/License.txt}. For a commercial license, please contact Dr. Timothy A. Davis at davis@tamu.edu.
+Mongoose is licensed under the GNU Public License version 3 (GPLv3). Full text of the license can be found int \texttt{Mongoose/Doc/License.txt}. For a commercial license, please contact Dr.~Timothy A.~Davis at davis@tamu.edu.
 
 \section{Using Mongoose in C++}
 
@@ -326,7 +328,33 @@ int main(int argn, const char **argv)
 
 \subsection{Creating a Graph}
 
+TODO define Int
+
 There are several different ways to create a \texttt{Graph} class instance for use in Mongoose.
+
+The input graph to Mongoose is undirected, and can optionally be a weighted
+graph.  The graph is held in compressed-sparse column form, or equivalently
+compressed-sparse row form since the adjacency matrix is symmetric.  The graph
+is represented by the following components:
+
+    \begin{itemize}
+    \item \texttt{Int n}: the number of vertices in the graph.
+    \item \texttt{Int nz}: the number of nonzero entries in the adjacency matrix,
+        which is twice the number edges.
+    \item \texttt{Int p [n+1]}: the column pointer vector of size \texttt{n+1}.
+    \item \texttt{Int i [nz]}: the adjacency lists held in a single array.  The adjacency
+        list of vertex \texttt{j} is held in \texttt{i [p [j] ... p [j+1]-1]}.
+        TODO (check this:)? The vertices in each adjacency list must appear in ascending order.
+        Self-edges must not appear.
+        The graph must be undirected, and so the adjacency matrix must be symmetric.
+    \item \texttt{double x [nz]}: an optional array of edge weights, where
+        \texttt{x [p [j] ... p [j+1]-1]} are the edge weights of the corresponding
+        edges in the adjacency list of vertex \texttt{j}.
+        If \texttt{x} is \texttt{NULL}, then the edges all have weight 1.
+    \item \texttt{double w [n]}: an optional array of vertex weights,
+        where vertex \texttt{j} has weight \texttt{w [j]}.
+        If \texttt{w} is \texttt{NULL}, then the vertices all have weight 1.
+    \end{itemize}
 
 \subsubsection{Creating a Graph Manually}
 
@@ -447,18 +475,18 @@ A = Prob.A;
 % or square, a symmetric matrix (A+A')/2 is built.
 A = sanitize(A);
 
-% Create a node weight vector and create a heavy node
+% Create a vertex weight vector and create a heavy vertex
 V = ones(1,m);
 V(10) = 300;
 
 % Create a set of default options and modify the target balance
-O = defaultoptions();
-O.targetSplit = 0.3;
+Opts = defaultoptions();
+Opts.targetSplit = 0.3;
 
-% Run Mongoose to partition the graph with edge and node weights.
-partNode = edgecut(A, O, V);
+% Run Mongoose to partition the graph with edge and vertex weights.
+partNode = edgecut(A, Opts, V);
 
-fprintf('\n\nPartitioning graph with edge and node weights\n\n');
+fprintf('\n\nPartitioning graph with edge and vertex weights\n\n');
 fprintf('=== Cut Info ===\n');
 fprintf('Cut Size:   %d\n', full(sum(partNode .* sum(sign(A)))));
 fprintf('Cut Weight: %d\n\n', full(sum(partNode .* sum(A))));
@@ -468,7 +496,7 @@ fprintf('Actual Split:     %1.4f\n', sum(partNode .* V) / sum(V));
 fprintf('Unweighted Split: %1.4f\n', sum(partNode) / m);
 
 % Run Mongoose to partition the graph with no vertex weights.
-partEdge = edgecut(A, O);
+partEdge = edgecut(A, Opts);
 
 fprintf('\n\nPartitioning graph with only edge weights\n\n');
 fprintf('=== Cut Info ===\n');
@@ -517,14 +545,14 @@ end
 \subsection{MATLAB API}
 
 \begin{itemize}
-\item \textbf{\texttt{function [G\_coarse, A\_coarse, map] = coarsen (G, \textit{O}, \textit{A})}}\\
-\texttt{coarsen} is used to coarsen an adjacency matrix (\texttt{G}) one level (one round of matching). An optional options struct (\texttt{O}) can be specified, as well as node weights (\texttt{A}).
+\item \textbf{\texttt{function [G\_coarse, A\_coarse, map] = coarsen (G, \textit{Opts}, \textit{A})}}\\
+\texttt{coarsen} is used to coarsen an adjacency matrix (\texttt{G}) one level (one round of matching). An optional options struct (\texttt{Opts}) can be specified, as well as vertex weights (\texttt{A}).
 \\
 \item \textbf{\texttt{function options = defaultoptions()}}\\
 \texttt{defaultoptions()} returns an options struct with defaults set. If modifications to the default options are needed, call \texttt{defaultoptions()} and modify the struct as needed. See section \ref{sec:options} for details on available option fields.
 \\
-\item \textbf{\texttt{function partition = edgecut (G, \textit{O}, \textit{A})}}\\
-\texttt{edgecut} computes an edge cut of the graph \texttt{G} with options \texttt{O} and vertex weights \texttt{A}, such that \texttt{A(i)} = $\text{weight}(v_i)$. The returned array, \texttt{partition}, is a $1 \times n$ binary array such that
+\item \textbf{\texttt{function partition = edgecut (G, \textit{Opts}, \textit{A})}}\\
+\texttt{edgecut} computes an edge cut of the graph \texttt{G} with options \texttt{Opts} and vertex weights \texttt{A}, such that \texttt{A(i)} = $\text{weight}(v_i)$. The returned array, \texttt{partition}, is a $1 \times n$ binary array such that
 \[
 \texttt{partition(i)} = 
   \begin{cases} 
@@ -532,11 +560,11 @@ end
    1 & \text{if } v_i \in \text{part B}
   \end{cases}
 \]
-\item \textbf{\texttt{function [G\_coarse, A\_coarse, map] = safe\_coarsen (G, \textit{O}, \textit{A})}}\\
-\texttt{safe\_coarsen} attempts to coarsen a graph \texttt{G} with options \texttt{O} and vertex weights \texttt{A}. Prior to coarsening, \texttt{safe\_coarsen} first calls \texttt{sanitize(G)} to ensure that the graph is able to be coarsened.
+\item \textbf{\texttt{function [G\_coarse, A\_coarse, map] = safe\_coarsen (G, \textit{Opts}, \textit{A})}}\\
+\texttt{safe\_coarsen} attempts to coarsen a graph \texttt{G} with options \texttt{Opts} and vertex weights \texttt{A}. Prior to coarsening, \texttt{safe\_coarsen} first calls \texttt{sanitize(G)} to ensure that the graph is able to be coarsened.
 \\
-\item \textbf{\texttt{function partition = safe\_edgecut(G, \textit{O}, \textit{A})}}\\
-\texttt{safe\_edgecut} attempts to compute and edge cut for a graph \texttt{G} with options \texttt{O} and vertex weights \texttt{A}. Note that both \texttt{O} and \texttt{A} are optional arguments. \texttt{safe\_edgecut} first calls \texttt{sanitize(G)} to ensure that the graph is formatted correctly.
+\item \textbf{\texttt{function partition = safe\_edgecut(G, \textit{Opts}, \textit{A})}}\\
+\texttt{safe\_edgecut} attempts to compute and edge cut for a graph \texttt{G} with options \texttt{Opts} and vertex weights \texttt{A}. Note that both \texttt{Opts} and \texttt{A} are optional arguments. \texttt{safe\_edgecut} first calls \texttt{sanitize(G)} to ensure that the graph is formatted correctly.
 \\ 
 \item \textbf{\texttt{function A\_safe = sanitize (A, \textit{make\_binary})}}\\
 \texttt{sanitize} attempts to take an adjacency matrix \texttt{A} and convert it to one that Mongoose can read and convert to an undirected graph. Note that \texttt{make\_binary} is optional, with the default being \texttt{false}. \texttt{sanitize} does the following as needed:

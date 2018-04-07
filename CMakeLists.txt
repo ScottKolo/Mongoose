@@ -5,7 +5,7 @@ if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
 endif (POLICY CMP0048)
 
-set(Mongoose_DATE "April 9, 2018")
+set(Mongoose_DATE "Apr 9, 2018")
 set(Mongoose_VERSION_MAJOR 1)
 set(Mongoose_VERSION_MINOR 0)
 set(Mongoose_VERSION_PATCH 0)
