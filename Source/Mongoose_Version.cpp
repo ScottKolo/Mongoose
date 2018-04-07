@@ -34,7 +34,9 @@ int patchVersion()
 std::string mongooseVersion()
 {
     std::ostringstream stringStream;
-    stringStream << majorVersion() << "." << minorVersion() << "." << patchVersion();
+    stringStream << majorVersion() << "."
+                 << minorVersion() << "."
+                 << patchVersion() << " " << Mongoose_DATE;
     return stringStream.str();
 }
 

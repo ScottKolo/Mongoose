@@ -7,8 +7,6 @@
 #define Mongoose_VERSION_PATCH @Mongoose_VERSION_PATCH@
 #define Mongoose_DATE @Mongoose_DATE@
 
-#define Mongoose_COMPILE_DATE @Mongoose_COMPILE_DATE@
-
 int majorVersion();
 int minorVersion();
 int patchVersion();
