@@ -26,7 +26,7 @@ Int QPMaxHeap_delete /* return new size of heap */
      const double *x /* not modified */
     );
 
-void QPMaxHeapify(Int p,          /* start at node p in the heap */
+void QPMaxHeapify(Int p,          /* start at vertex p in the heap */
                   Int *heap,      /* size n, containing indices into x */
                   Int size,       /* heap [ ... nheap] is in use */
                   const double *x /* not modified */

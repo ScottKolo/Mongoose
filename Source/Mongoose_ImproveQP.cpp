@@ -33,7 +33,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     Int n               = graph->n;
     Int *Gp             = graph->p;
     double *Gx          = graph->x; // edge weights
-    double *Gw          = graph->w; // node weights
+    double *Gw          = graph->w; // vertex weights
     double *gains       = graph->vertexGains;
     Int *externalDegree = graph->externalDegree;
 
@@ -55,7 +55,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     ASSERT(targetSplit >= 0 && targetSplit <= 0.5);
 
     // QP upper and lower bounds.  targetSplit +/- tol is in the range 0 to 1,
-    // and then this factor is multiplied by the sum of all node weights
+    // and then this factor is multiplied by the sum of all vertex weights
     // (graph->W) to get the QP lo and hi.
     QP->lo = graph->W * std::max(0., targetSplit - tol);
     QP->hi = graph->W * std::min(1., targetSplit + tol);
@@ -157,7 +157,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
         }
     }
 
-    // clear the marks from all the nodes
+    // clear the marks from all the vertices
     graph->clearMarkArray();
 
     /* Free the QP structure */

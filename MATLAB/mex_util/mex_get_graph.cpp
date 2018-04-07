@@ -6,7 +6,7 @@ namespace Mongoose
 Graph *mex_get_graph
 (
     const mxArray *Gmatlab, /* The sparse matrix            */
-    const mxArray *Amatlab  /* The real-valued node weights */
+    const mxArray *Amatlab  /* The real-valued vertex weights */
 )
 {
     // Check for valid sparse matrix

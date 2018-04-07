@@ -107,11 +107,12 @@ void removeDiagonal(cs *A)
 // Requires A to be a triangular matrix with no diagonal.
 cs *mirrorTriangular(cs *A)
 {
+    if (!A) return NULL;
     Int A_n  = A->n;
     Int A_nz = A->p[A_n];
     Int B_nz = 2 * A_nz;
 
-    bool values = (Ax != NULL) ;
+    bool values = (A->x != NULL);
 
     // allocate B in triplet form, with values Bx if A has values
     cs *B = cs_spalloc(A_n, A_n, B_nz, values, 1);

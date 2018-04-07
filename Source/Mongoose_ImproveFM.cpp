@@ -53,7 +53,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
     double *gains       = graph->vertexGains;
     bool *partition     = graph->partition;
 
-    /* Keep a stack of moved nodes. */
+    /* Keep a stack of moved vertices. */
     Int *stack = graph->matchmap;
     Int head = 0, tail = 0;
 
@@ -96,9 +96,9 @@ void fmRefine_worker(Graph *graph, const Options *options)
                 double gain = gains[v];
 
                 /* The balance penalty is the penalty to assess for the move. */
-                double nodeWeight = (Gw) ? Gw[v] : 1;
+                double vertexWeight = (Gw) ? Gw[v] : 1;
                 double imbalance  = workingCost.imbalance
-                                   + (h ? -1.0 : 1.0) * (nodeWeight / W);
+                                   + (h ? -1.0 : 1.0) * (vertexWeight / W);
                 double absImbalance = fabs(imbalance);
                 double imbalanceDelta
                     = absImbalance - fabs(workingCost.imbalance);
@@ -118,13 +118,13 @@ void fmRefine_worker(Graph *graph, const Options *options)
                 /* If our heuristic value is better than the running one: */
                 if (heuCost < bestCandidate.heuCost)
                 {
-                    bestCandidate.vertex     = v;
-                    bestCandidate.partition  = static_cast<bool>(h);
-                    bestCandidate.nodeWeight = nodeWeight;
-                    bestCandidate.gain       = gain;
-                    bestCandidate.bhPosition = c;
-                    bestCandidate.imbalance  = imbalance;
-                    bestCandidate.heuCost    = heuCost;
+                    bestCandidate.vertex       = v;
+                    bestCandidate.partition    = static_cast<bool>(h);
+                    bestCandidate.vertexWeight = vertexWeight;
+                    bestCandidate.gain         = gain;
+                    bestCandidate.bhPosition   = c;
+                    bestCandidate.imbalance    = imbalance;
+                    bestCandidate.heuCost      = heuCost;
                 }
             }
         }
@@ -147,8 +147,8 @@ void fmRefine_worker(Graph *graph, const Options *options)
             /* Update the cut cost. */
             workingCost.cutCost
                 -= 2.0 * bestCandidate.gain;
-            workingCost.W[bestCandidate.partition] -= bestCandidate.nodeWeight;
-            workingCost.W[!bestCandidate.partition] += bestCandidate.nodeWeight;
+            workingCost.W[bestCandidate.partition] -= bestCandidate.vertexWeight;
+            workingCost.W[!bestCandidate.partition] += bestCandidate.vertexWeight;
             workingCost.imbalance = bestCandidate.imbalance;
             double absImbalance   = fabs(bestCandidate.imbalance);
             workingCost.heuCost
@@ -190,7 +190,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
             bhInsert(graph, vertex);
     }
 
-    // clear the marks from all the nodes
+    // clear the marks from all the vertices
     graph->clearMarkArray();
 
     /* Re-add any vertices that were moved that are still on the boundary. */
@@ -203,7 +203,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
         }
     }
 
-    // clear the marks from all the nodes
+    // clear the marks from all the vertices
     graph->clearMarkArray();
 
     /* Save the best cost back into the graph. */

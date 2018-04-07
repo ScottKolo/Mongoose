@@ -152,7 +152,7 @@ void heapifyUp(Graph *graph, Int *bhHeap, double *gains, Int vertex,
     Int pVertex   = bhHeap[posParent];
     double pGain  = gains[pVertex];
 
-    /* If we need to swap this node with the parent then: */
+    /* If we need to swap this vertex with the parent then: */
     if (pGain < gain)
     {
         bhHeap[posParent] = vertex;

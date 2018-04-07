@@ -72,7 +72,7 @@ Graph *refine(Graph *graph, const Options *options)
         Int *heap = graph->bhHeap[h];
         Int size  = graph->bhSize[h];
 
-        /* Go through all the boundary nodes. */
+        /* Go through all the boundary vertices. */
         for (Int hpos = 0; hpos < size; hpos++)
         {
             /* Get the coarse vertex from the heap. */

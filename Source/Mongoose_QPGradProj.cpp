@@ -85,9 +85,9 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
     /* Unpack the problem's parameters. */
     Int n      = graph->n; /* problem dimension */
     Int *Ep    = graph->p; /* points into Ex or Ei */
-    Int *Ei    = graph->i; /* adjacent vertices for each node */
+    Int *Ei    = graph->i; /* adjacent vertices for each vertex */
     double *Ex = graph->x; /* edge weights */
-    double *Ew = graph->w; /* node weights; a'x = b, lo <= b <= hi */
+    double *Ew = graph->w; /* vertex weights; a'x = b, lo <= b <= hi */
 
     double lo = qpDelta->lo;
     double hi = qpDelta->hi;
@@ -239,7 +239,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
         for (Int j = 0; j < n; j++)
             Dgrad[j] = 0.;
 
-        // consider nodes j in the FreeSet_list
+        // consider vertices j in the FreeSet_list
         for (Int jfree = 0; jfree < nFreeSet; jfree++)
         {
             Int j = FreeSet_list[jfree];
@@ -264,7 +264,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
             }
         }
 
-        // now consider nodes j not in the FreeSet_list
+        // now consider vertices j not in the FreeSet_list
         for (Int j = 0; j < n; j++)
         {
             if (FreeSet_status[j] == 0)

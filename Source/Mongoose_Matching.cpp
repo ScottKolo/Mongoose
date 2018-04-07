@@ -13,8 +13,8 @@
  * For computing vertex matchings
  *
  * During coarsening, a matching of vertices is computed to determine
- * which vertices are combined together into supernodes. This can be done using
- * a number of different strategies, including Heavy Edge Matching and
+ * which vertices are combined together into supervertices. This can be done
+ * using a number of different strategies, including Heavy Edge Matching and
  * Community/Brotherly (similar to 2-hop) Matching.
  */
 
@@ -195,7 +195,7 @@ void matching_Random(Graph *graph, const Options *options)
 
     for (Int k = 0; k < n; k++)
     {
-        /* Consider only unmatched nodes */
+        /* Consider only unmatched vertices */
         if (graph->isMatched(k))
             continue;
 
@@ -215,7 +215,7 @@ void matching_Random(Graph *graph, const Options *options)
     }
 
 #ifndef NDEBUG
-    /* If we want to do expensive checks, make sure that every node is either:
+    /* If we want to do expensive checks, make sure that every vertex is either:
      *     1) matched
      *     2) has no unmatched neighbors
      */
@@ -259,7 +259,7 @@ void matching_SR(Graph *graph, const Options *options)
 
     for (Int k = 0; k < n; k++)
     {
-        /* Consider only unmatched nodes */
+        /* Consider only unmatched vertices */
         if (graph->isMatched(k))
             continue;
 
@@ -349,7 +349,7 @@ void matching_SRdeg(Graph *graph, const Options *options)
 
     for (Int k = 0; k < n; k++)
     {
-        /* Consider only matched nodes */
+        /* Consider only matched vertices */
         if (!graph->isMatched(k))
             continue;
 
@@ -406,7 +406,7 @@ void matching_HEM(Graph *graph, const Options *options)
 
     for (Int k = 0; k < n; k++)
     {
-        /* Consider only unmatched nodes */
+        /* Consider only unmatched vertices */
         if (graph->isMatched(k))
             continue;
 
@@ -437,7 +437,7 @@ void matching_HEM(Graph *graph, const Options *options)
     }
 
 #ifndef NDEBUG
-    /* If we want to do expensive checks, make sure that every node is either:
+    /* If we want to do expensive checks, make sure that every vertex is either:
      *     1) matched
      *     2) has no unmatched neighbors
      */

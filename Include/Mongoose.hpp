@@ -105,7 +105,7 @@ public:
     double *x; /** Edge weight                     */
     double *w; /** Node weight                     */
     double X;  /** Sum of edge weights             */
-    double W;  /** Sum of node weights             */
+    double W;  /** Sum of vertex weights           */
 
     double H; /** Heuristic max penalty to assess */
     double worstCaseRatio;
@@ -120,14 +120,14 @@ public:
     Int bhSize[2];       /** Size of the boundary heap       */
 
     /** Cut Cost Metrics *****************************************************/
-    double heuCost;   /** cutCost + balance penalty       */
-    double cutCost;   /** Sum of edge weights in cut set  */
-    Int cutSize;      /** Number of edges in cut set      */
-    double W0;        /** Sum of partition 0 node weights */
-    double W1;        /** Sum of partition 1 node weights */
+    double heuCost;   /** cutCost + balance penalty         */
+    double cutCost;   /** Sum of edge weights in cut set    */
+    Int cutSize;      /** Number of edges in cut set        */
+    double W0;        /** Sum of partition 0 vertex weights */
+    double W1;        /** Sum of partition 1 vertex weights */
     double imbalance; /** Degree to which the partitioning
                           is imbalanced, and this is
-                          computed as (0.5 - W0/W).       */
+                          computed as (0.5 - W0/W).         */
 
     /** Matching Data ********************************************************/
     Graph *parent;    /** Link to the parent graph        */

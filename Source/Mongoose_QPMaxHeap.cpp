@@ -101,11 +101,11 @@ Int QPMaxHeap_add(Int leaf,        /* the new leaf */
 /* === QPMaxHeapify ========================================================= */
 /* ========================================================================== */
 
-/* heapify starting at node p.  On input, the heap at node p satisfies the */
-/* heap property, except for heap [p] itself.  On output, the whole heap */
+/* heapify starting at vertex p.  On input, the heap at vertex p satisfies   */
+/* the heap property, except for heap [p] itself.  On output, the whole heap */
 /* satisfies the heap property. */
 
-void QPMaxHeapify(Int p,          /* start at node p in the heap */
+void QPMaxHeapify(Int p,          /* start at vertex p in the heap */
                   Int *heap,      /* size n, containing indices into x */
                   Int size,       /* heap [ ... nheap] is in use */
                   const double *x /* not modified */
