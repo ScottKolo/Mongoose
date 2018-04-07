@@ -5,15 +5,16 @@ if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
 endif (POLICY CMP0048)
 
-if(CMAKE_MAJOR_VERSION GREATER 2)
-project(Mongoose
-        VERSION 1.0.0
-        LANGUAGES CXX C)
-else()
-project(Mongoose CXX C)
+set(Mongoose_DATE "April 9, 2018")
 set(Mongoose_VERSION_MAJOR 1)
 set(Mongoose_VERSION_MINOR 0)
 set(Mongoose_VERSION_PATCH 0)
+
+if(CMAKE_MAJOR_VERSION GREATER 2)
+project(Mongoose
+        LANGUAGES CXX C)
+else()
+project(Mongoose CXX C)
 endif()
 
 # Configure a header file to pass CMake information
