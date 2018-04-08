@@ -9,7 +9,6 @@
  * Mongoose is also available under other licenses; contact authors for details.
  * -------------------------------------------------------------------------- */
 
-
 /**
  * Coarsening of a graph given a previously determined matching
  *

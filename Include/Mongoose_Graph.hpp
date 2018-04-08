@@ -18,9 +18,9 @@
 
 #pragma once
 
+#include "Mongoose_CSparse.hpp"
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Options.hpp"
-#include "Mongoose_CSparse.hpp"
 
 namespace Mongoose
 {
@@ -75,20 +75,23 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    static Graph *Create(const Int _n, const Int _nz,
-                         Int *_p = NULL,
-                         Int *_i = NULL,
-                         double *_x = NULL,
-                         double *_w = NULL);
+    static Graph *Create(const Int _n, const Int _nz, Int *_p = NULL,
+                         Int *_i = NULL, double *_x = NULL, double *_w = NULL);
     static Graph *Create(Graph *_parent);
     static Graph *Create(cs *matrix);
     ~Graph();
     void initialize(const Options *options);
 
     /** Matching Functions ****************************************************/
-    inline bool isMatched(Int vertex) { return (matching[vertex] > 0); }
+    inline bool isMatched(Int vertex)
+    {
+        return (matching[vertex] > 0);
+    }
 
-    inline Int getMatch(Int vertex) { return (matching[vertex] - 1); }
+    inline Int getMatch(Int vertex)
+    {
+        return (matching[vertex] - 1);
+    }
 
     inline void createMatch(Int vertexA, Int vertexB, MatchType matchType)
     {
@@ -127,26 +130,56 @@ public:
     }
 
     /** Boundary Heap Functions ***********************************************/
-    inline Int BH_getParent(Int a) { return ((a - 1) / 2); }
+    inline Int BH_getParent(Int a)
+    {
+        return ((a - 1) / 2);
+    }
 
-    inline Int BH_getLeftChild(Int a) { return (2 * a + 1); }
+    inline Int BH_getLeftChild(Int a)
+    {
+        return (2 * a + 1);
+    }
 
-    inline Int BH_getRightChild(Int a) { return (2 * a + 2); }
+    inline Int BH_getRightChild(Int a)
+    {
+        return (2 * a + 2);
+    }
 
-    inline bool BH_inBoundary(Int v) { return (bhIndex[v] > 0); }
+    inline bool BH_inBoundary(Int v)
+    {
+        return (bhIndex[v] > 0);
+    }
 
-    inline void BH_putIndex(Int v, Int pos) { bhIndex[v] = (pos + 1); }
+    inline void BH_putIndex(Int v, Int pos)
+    {
+        bhIndex[v] = (pos + 1);
+    }
 
-    inline Int BH_getIndex(Int v) { return (bhIndex[v] - 1); }
+    inline Int BH_getIndex(Int v)
+    {
+        return (bhIndex[v] - 1);
+    }
 
     /** Mark Array Functions **************************************************/
-    inline void mark(Int index) { markArray[index] = markValue; }
+    inline void mark(Int index)
+    {
+        markArray[index] = markValue;
+    }
 
-    inline void unmark(Int index) { markArray[index] = 0; }
+    inline void unmark(Int index)
+    {
+        markArray[index] = 0;
+    }
 
-    inline bool isMarked(Int index) { return markArray[index] == markValue; }
+    inline bool isMarked(Int index)
+    {
+        return markArray[index] == markValue;
+    }
 
-    inline Int getMarkValue() { return markValue; }
+    inline Int getMarkValue()
+    {
+        return markValue;
+    }
 
     void clearMarkArray();
     void clearMarkArray(Int incrementBy);
@@ -167,7 +200,8 @@ private:
                         Implicitly, a mark value less than
                         markValue is unmarked.          */
     void resetMarkArray();
-    bool initialized; // Used to mark if the graph has been initialized previously.
+    bool initialized; // Used to mark if the graph has been initialized
+                      // previously.
 };
 
 } // end namespace Mongoose

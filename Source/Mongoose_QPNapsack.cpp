@@ -351,7 +351,7 @@ double QPNapsack    /* return the final lambda */
     for (Int k = 0; k < n; k++)
     {
         double xi = x[k] - ((Gw) ? Gw[k] : 1) * lambda;
-        
+
         if (xi < 0)
         {
             x[k] = 0;

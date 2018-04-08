@@ -77,8 +77,8 @@ Graph *coarsen(Graph *graph, const Options *options)
     double X      = 0.0;
 
     /* edge and vertex weights always appear in a coarse graph */
-    ASSERT (Cx != NULL) ;
-    ASSERT (Cw != NULL) ;
+    ASSERT(Cx != NULL);
+    ASSERT(Cw != NULL);
 
     /* Hashtable stores column pointer values. */
     Int *htable

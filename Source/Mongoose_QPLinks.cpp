@@ -85,8 +85,10 @@ bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
                        FreeSet_status, 1, x));
 
     // Adjust bounds to force feasibility
-    if (s > QP->hi) QP->hi = s;
-    if (s < QP->lo) QP->lo = s;
+    if (s > QP->hi)
+        QP->hi = s;
+    if (s < QP->lo)
+        QP->lo = s;
 
     // Note that b can be less than lo or greater than hi.
     // b starts between: lo < b < hi

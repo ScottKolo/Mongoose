@@ -20,10 +20,10 @@
 #endif
 
 /* Dependencies */
+#include <climits>
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
-#include <climits>
 
 /* Memory Management */
 #include "SuiteSparse_config.h"
@@ -40,10 +40,10 @@ typedef SuiteSparse_long Int;
 /* Enumerations */
 enum MatchingStrategy
 {
-    Random     = 0,
-    HEM        = 1,
-    HEMSR      = 2,
-    HEMSRdeg   = 3
+    Random   = 0,
+    HEM      = 1,
+    HEMSR    = 2,
+    HEMSRdeg = 3
 };
 
 enum GuessCutType

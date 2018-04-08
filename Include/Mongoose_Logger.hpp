@@ -70,7 +70,8 @@
 namespace Mongoose
 {
 
-typedef enum DebugType {
+typedef enum DebugType
+{
     None  = 0,
     Error = 1,
     Warn  = 2,
@@ -79,7 +80,8 @@ typedef enum DebugType {
     All   = 15
 } DebugType;
 
-typedef enum TimingType {
+typedef enum TimingType
+{
     MatchingTiming   = 0,
     CoarseningTiming = 1,
     RefinementTiming = 2,
@@ -165,6 +167,9 @@ inline float Logger::getTime(TimingType timingType)
     return times[timingType];
 }
 
-inline int Logger::getDebugLevel() { return debugLevel; }
+inline int Logger::getDebugLevel()
+{
+    return debugLevel;
+}
 
 } // end namespace Mongoose

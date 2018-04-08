@@ -96,8 +96,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
                         if (graph->matchtype[i] != MatchType_Community)
                             break;
                     }
-                    graph->createCommunityMatch(i, k,
-                                                MatchType_Community);
+                    graph->createCommunityMatch(i, k, MatchType_Community);
                 }
                 else
                 {
@@ -119,8 +118,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
                 if (graph->matchtype[i] != MatchType_Community)
                     break;
             }
-            graph->createCommunityMatch(i, k,
-                                        MatchType_Community);
+            graph->createCommunityMatch(i, k, MatchType_Community);
         }
         else
         {
@@ -330,8 +328,8 @@ void matching_SRdeg(Graph *graph, const Options *options)
 
     /* The brotherly threshold is the minimum degree a "high degree" vertex.
      * It is the options->degreeThreshold times the average degree. */
-    double bt = options->highDegreeThreshold
-                * ((double)graph->nz / (double)graph->n);
+    double bt
+        = options->highDegreeThreshold * ((double)graph->nz / (double)graph->n);
 
 #ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,

@@ -68,7 +68,8 @@ cs *sanitizeMatrix(cs *compressed_A, bool symmetricTriangular,
                 {
                     cleanMatrix->x[p] = 1;
                 }
-            } else
+            }
+            else
             {
                 // Force edge weights to be positive
                 cleanMatrix->x[p] = fabs(cleanMatrix->x[p]);
@@ -95,7 +96,8 @@ void removeDiagonal(cs *A)
             if (Ai[p] != j)
             {
                 Ai[nz] = Ai[p];
-                if (Ax) Ax[nz] = Ax[p];
+                if (Ax)
+                    Ax[nz] = Ax[p];
                 nz++;
             }
         }
@@ -107,7 +109,8 @@ void removeDiagonal(cs *A)
 // Requires A to be a triangular matrix with no diagonal.
 cs *mirrorTriangular(cs *A)
 {
-    if (!A) return NULL;
+    if (!A)
+        return NULL;
     Int A_n  = A->n;
     Int A_nz = A->p[A_n];
     Int B_nz = 2 * A_nz;
@@ -133,11 +136,13 @@ cs *mirrorTriangular(cs *A)
         {
             Bi[nz] = Ai[p];
             Bj[nz] = j;
-            if (values) Bx[nz] = Ax[p];
+            if (values)
+                Bx[nz] = Ax[p];
             nz++;
             Bi[nz] = j;
             Bj[nz] = Ai[p];
-            if (values) Bx[nz] = Ax[p];
+            if (values)
+                Bx[nz] = Ax[p];
             nz++;
         }
     }

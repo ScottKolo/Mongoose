@@ -25,7 +25,8 @@
 #include "Mongoose_Internal.hpp"
 #include <string>
 
-extern "C" {
+extern "C"
+{
 #include "mmio.h"
 }
 

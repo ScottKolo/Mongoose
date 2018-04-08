@@ -20,11 +20,9 @@
 
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Internal.hpp"
+#include "Mongoose_Logger.hpp"
 #include "Mongoose_Sanitize.hpp"
 #include <iostream>
-extern "C" {
-}
-#include "Mongoose_Logger.hpp"
 
 using namespace std;
 

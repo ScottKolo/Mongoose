@@ -9,7 +9,6 @@
  * Mongoose is also available under other licenses; contact authors for details.
  * -------------------------------------------------------------------------- */
 
-
 #pragma once
 
 namespace Mongoose

@@ -3,6 +3,8 @@ AlignAfterOpenBracket: 'Align'
 AlignConsecutiveAssignments: 'true'
 AlignOperands: 'true'
 AlignTrailingComments: 'true'
+AllowShortFunctionsOnASingleLine: 'false'
+AllowShortIfStatementsOnASingleLine: 'false'
 BasedOnStyle: WebKit
 BinPackArguments: 'true'
 BinPackParameters: 'true'

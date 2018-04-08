@@ -54,7 +54,8 @@ Graph::Graph()
     markValue = 1;
 }
 
-Graph *Graph::Create(const Int _n, const Int _nz, Int *_p, Int *_i, double *_x, double *_w)
+Graph *Graph::Create(const Int _n, const Int _nz, Int *_p, Int *_i, double *_x,
+                     double *_w)
 {
     void *memoryLocation = SuiteSparse_malloc(1, sizeof(Graph));
     if (!memoryLocation)
@@ -74,13 +75,16 @@ Graph *Graph::Create(const Int _n, const Int _nz, Int *_p, Int *_i, double *_x, 
     size_t nz = static_cast<size_t>(_nz);
     graph->nz = _nz;
 
-    graph->p     = (graph->shallow_p) ? _p : (Int *)SuiteSparse_calloc(n + 1, sizeof(Int));
-    graph->i     = (graph->shallow_i) ? _i : (Int *)SuiteSparse_malloc(nz, sizeof(Int));
-    graph->x     = _x;
-    graph->w     = _w;
-    graph->X     = 0.0;
-    graph->W     = 0.0;
-    graph->H     = 0.0;
+    graph->p = (graph->shallow_p)
+                   ? _p
+                   : (Int *)SuiteSparse_calloc(n + 1, sizeof(Int));
+    graph->i
+        = (graph->shallow_i) ? _i : (Int *)SuiteSparse_malloc(nz, sizeof(Int));
+    graph->x = _x;
+    graph->w = _w;
+    graph->X = 0.0;
+    graph->W = 0.0;
+    graph->H = 0.0;
     if (!graph->p || !graph->i)
     {
         graph->~Graph();
@@ -117,8 +121,8 @@ Graph *Graph::Create(const Int _n, const Int _nz, Int *_p, Int *_i, double *_x, 
     graph->markArray   = (Int *)SuiteSparse_calloc(n, sizeof(Int));
     graph->markValue   = 1;
     graph->singleton   = -1;
-    if (!graph->matching || !graph->matchmap || !graph->invmatchmap || !graph->markArray
-        || !graph->matchtype)
+    if (!graph->matching || !graph->matchmap || !graph->invmatchmap
+        || !graph->markArray || !graph->matchtype)
     {
         graph->~Graph();
         return NULL;
@@ -145,17 +149,18 @@ Graph *Graph::Create(Graph *_parent)
         return NULL;
     }
 
-    graph->W           = _parent->W;
-    graph->parent      = _parent;
-    graph->clevel      = graph->parent->clevel + 1;
+    graph->W      = _parent->W;
+    graph->parent = _parent;
+    graph->clevel = graph->parent->clevel + 1;
 
     return graph;
 }
 
 Graph *Graph::Create(cs *matrix)
 {
-    Graph *graph = Create(std::max(matrix->n, matrix->m), matrix->p[matrix->n], matrix->p, matrix->i, matrix->x);
-    if(!graph)
+    Graph *graph = Create(std::max(matrix->n, matrix->m), matrix->p[matrix->n],
+                          matrix->p, matrix->i, matrix->x);
+    if (!graph)
     {
         return NULL;
     }
@@ -176,10 +181,10 @@ Graph::~Graph()
     bhIndex        = (Int *)SuiteSparse_free(bhIndex);
     bhHeap[0]      = (Int *)SuiteSparse_free(bhHeap[0]);
     bhHeap[1]      = (Int *)SuiteSparse_free(bhHeap[1]);
-    matching    = (Int *)SuiteSparse_free(matching);
-    matchmap    = (Int *)SuiteSparse_free(matchmap);
-    invmatchmap = (Int *)SuiteSparse_free(invmatchmap);
-    matchtype   = (Int *)SuiteSparse_free(matchtype);
+    matching       = (Int *)SuiteSparse_free(matching);
+    matchmap       = (Int *)SuiteSparse_free(matchmap);
+    invmatchmap    = (Int *)SuiteSparse_free(invmatchmap);
+    matchtype      = (Int *)SuiteSparse_free(matchtype);
 
     markArray = (Int *)SuiteSparse_free(markArray);
 
@@ -196,9 +201,9 @@ void Graph::initialize(const Options *options)
         // Graph has been previously initialized. We need to clear some extra
         // data structures to be able to reuse it.
 
-        X     = 0.0;
-        W     = 0.0;
-        H     = 0.0;
+        X = 0.0;
+        W = 0.0;
+        H = 0.0;
 
         bhSize[0] = bhSize[1] = 0;
 
@@ -208,15 +213,15 @@ void Graph::initialize(const Options *options)
         W1        = 0.0;
         imbalance = 0.0;
 
-        clevel      = 0;
-        cn          = 0;
+        clevel = 0;
+        cn     = 0;
         for (Int k = 0; k < n; k++)
         {
             externalDegree[k] = 0;
             bhIndex[k]        = 0;
             matching[k]       = 0;
         }
-        singleton   = -1;
+        singleton = -1;
 
         clearMarkArray();
     }
@@ -227,8 +232,8 @@ void Graph::initialize(const Options *options)
 
     /* Compute worst-case gains, and compute X. */
     double *gains = vertexGains;
-    double min    = fabs( (Gx) ? Gx[0] : 1 );
-    double max    = fabs( (Gx) ? Gx[0] : 1 );
+    double min    = fabs((Gx) ? Gx[0] : 1);
+    double max    = fabs((Gx) ? Gx[0] : 1);
     for (Int k = 0; k < n; k++)
     {
         W += (Gw) ? Gw[k] : 1;

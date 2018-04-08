@@ -31,24 +31,30 @@ bool Logger::timingOn  = false;
 clock_t Logger::clocks[6];
 float Logger::times[6];
 
-void Logger::setDebugLevel(int debugType) { debugLevel = debugType; }
+void Logger::setDebugLevel(int debugType)
+{
+    debugLevel = debugType;
+}
 
-void Logger::setTimingFlag(bool tFlag) { timingOn = tFlag; }
+void Logger::setTimingFlag(bool tFlag)
+{
+    timingOn = tFlag;
+}
 
 void Logger::printTimingInfo()
 {
-    std::cout << " Matching:   "
-              << std::setprecision(4) << times[MatchingTiming] << "s\n";
-    std::cout << " Coarsening: "
-              << std::setprecision(4) << times[CoarseningTiming] << "s\n";
-    std::cout << " Refinement: "
-              << std::setprecision(4) << times[RefinementTiming] << "s\n";
-    std::cout << " FM:         "
-              << std::setprecision(4) << times[FMTiming] << "s\n";
-    std::cout << " QP:         "
-              << std::setprecision(4) << times[QPTiming] << "s\n";
-    std::cout << " IO:         "
-              << std::setprecision(4) << times[IOTiming] << "s\n";
+    std::cout << " Matching:   " << std::setprecision(4)
+              << times[MatchingTiming] << "s\n";
+    std::cout << " Coarsening: " << std::setprecision(4)
+              << times[CoarseningTiming] << "s\n";
+    std::cout << " Refinement: " << std::setprecision(4)
+              << times[RefinementTiming] << "s\n";
+    std::cout << " FM:         " << std::setprecision(4) << times[FMTiming]
+              << "s\n";
+    std::cout << " QP:         " << std::setprecision(4) << times[QPTiming]
+              << "s\n";
+    std::cout << " IO:         " << std::setprecision(4) << times[IOTiming]
+              << "s\n";
 }
 
 } // end namespace Mongoose

@@ -144,11 +144,8 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    static Graph *Create(const Int _n, const Int _nz,
-                         Int *_p = NULL,
-                         Int *_i = NULL,
-                         double *_x = NULL,
-                         double *_w = NULL);
+    static Graph *Create(const Int _n, const Int _nz, Int *_p = NULL,
+                         Int *_i = NULL, double *_x = NULL, double *_w = NULL);
     static Graph *Create(cs *matrix);
     ~Graph();
     bool initialize(const Options *options);
