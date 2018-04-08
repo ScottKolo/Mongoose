@@ -5,7 +5,7 @@ if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
 endif (POLICY CMP0048)
 
-set(Mongoose_DATE "\"Apr 9, 2018\"")
+set(Mongoose_DATE "Apr 9, 2018")
 set(Mongoose_VERSION_MAJOR 1)
 set(Mongoose_VERSION_MINOR 0)
 set(Mongoose_VERSION_PATCH 0)
@@ -23,6 +23,11 @@ configure_file (
         "Include/Mongoose_Version.hpp.in"
         "${PROJECT_BINARY_DIR}/Mongoose_Version.hpp"
 )
+configure_file (
+        "Doc/title-info.tex.in"
+        "${PROJECT_SOURCE_DIR}/Doc/title-info.tex"
+)
+
 include_directories("${PROJECT_BINARY_DIR}")
 
 set(MONGOOSE_FILES
@@ -97,10 +102,10 @@ set(MONGOOSE_LIB_FILES
         ${MMIO_FILES})
 
 set(EXE_FILES
-        Executable/Mongoose.cpp)
+        Executable/mongoose.cpp)
 
 set(DEMO_FILES
-        Demo/Demo.cpp
+        Demo/demo.cpp
         Include/Mongoose.hpp)
 
 # Specify the Include directory for *.hpp files
@@ -180,35 +185,41 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Build the Mongoose library
-add_library(mongoose ${MONGOOSE_LIB_FILES})
-set_property(TARGET mongoose PROPERTY POSITION_INDEPENDENT_CODE ON)
+add_library(mongoose_lib ${MONGOOSE_LIB_FILES})
+set_property(TARGET mongoose_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_target_properties(mongoose_lib
+        PROPERTIES OUTPUT_NAME mongoose)
 if (EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
-    target_link_libraries(mongoose ${SUITESPARSE_CONFIG_LIBRARY})
+    target_link_libraries(mongoose_lib ${SUITESPARSE_CONFIG_LIBRARY})
 endif ()
 
 if (UNIX AND NOT APPLE)
-    target_link_libraries(mongoose rt)
+    target_link_libraries(mongoose_lib rt)
 endif ()
 
 # Build the Mongoose library and all tests with coverage flags
-add_library(mongoose_dbg ${MONGOOSE_LIB_FILES})
+add_library(mongoose_lib_dbg ${MONGOOSE_LIB_FILES})
+set_target_properties(mongoose_lib_dbg
+        PROPERTIES OUTPUT_NAME mongoose_dbg)
 if (EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
-    target_link_libraries(mongoose_dbg ${SUITESPARSE_CONFIG_LIBRARY})
+    target_link_libraries(mongoose_lib_dbg ${SUITESPARSE_CONFIG_LIBRARY})
 endif ()
 
 if (UNIX AND NOT APPLE)
-    target_link_libraries(mongoose_dbg rt)
+    target_link_libraries(mongoose_lib_dbg rt)
 endif ()
 
 # Build the Mongoose executable
 add_executable(mongoose_exe ${EXE_FILES})
 set_target_properties(mongoose_exe
         PROPERTIES OUTPUT_NAME mongoose)
-target_link_libraries(mongoose_exe mongoose)
+target_link_libraries(mongoose_exe mongoose_lib)
 
 # Build the Demo executable
-add_executable(Demo ${DEMO_FILES})
-target_link_libraries(Demo mongoose)
+add_executable(demo_exe ${DEMO_FILES})
+set_target_properties(demo_exe
+        PROPERTIES OUTPUT_NAME demo)
+target_link_libraries(demo_exe mongoose_lib)
 
 # Coverage and Unit Testing Setup
 enable_testing()
@@ -218,7 +229,7 @@ set(TESTING_OUTPUT_PATH ${CMAKE_BINARY_DIR}/tests)
 add_executable(mongoose_test_io
         Tests/Mongoose_Test_IO.cpp
         Tests/Mongoose_Test_IO_exe.cpp)
-target_link_libraries(mongoose_test_io mongoose_dbg)
+target_link_libraries(mongoose_test_io mongoose_lib_dbg)
 set_target_properties(mongoose_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 add_test(IO_Test ./runTests -min 1 -max 15 -t io -k)
@@ -227,7 +238,7 @@ add_test(IO_Test ./runTests -min 1 -max 15 -t io -k)
 add_executable(mongoose_test_edgesep
         Tests/Mongoose_Test_EdgeSeparator.cpp
         Tests/Mongoose_Test_EdgeSeparator_exe.cpp)
-target_link_libraries(mongoose_test_edgesep mongoose_dbg)
+target_link_libraries(mongoose_test_edgesep mongoose_lib_dbg)
 set_target_properties(mongoose_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 add_test(Edge_Separator_Test ./runTests -min 1 -max 15 -t edgesep)
@@ -239,7 +250,7 @@ add_test(Target_Split_Test ./runTests -min 1 -max 15 -t edgesep -s 0.3)
 add_executable(mongoose_test_memory
         Tests/Mongoose_Test_Memory.cpp
         Tests/Mongoose_Test_Memory_exe.cpp)
-target_link_libraries(mongoose_test_memory mongoose_dbg)
+target_link_libraries(mongoose_test_memory mongoose_lib_dbg)
 set_target_properties(mongoose_test_memory PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 add_test(Memory_Test ./runTests -min 1 -max 15 -t memory)
@@ -248,7 +259,7 @@ add_test(Memory_Test ./runTests -min 1 -max 15 -t memory)
 add_executable(mongoose_test_performance
         Tests/Mongoose_Test_Performance.cpp
         Tests/Mongoose_Test_Performance_exe.cpp)
-target_link_libraries(mongoose_test_performance mongoose)
+target_link_libraries(mongoose_test_performance mongoose_lib)
 set_target_properties(mongoose_test_performance PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 add_test(Performance_Test ./runTests -min 1 -max 15 -t performance -p)
 add_test(Performance_Test_2 ./runTests -t performance -i 21 39 1557 1562 353 2468 1470 1380 505 182 201 2331 760 1389 2401 2420 242 250 1530 1533 -p)
@@ -257,25 +268,25 @@ add_test(Performance_Test_2 ./runTests -t performance -i 21 39 1557 1562 353 246
 add_executable(mongoose_test_reference
         Tests/Mongoose_Test_Reference.cpp
         Tests/Mongoose_Test_Reference_exe.cpp)
-target_link_libraries(mongoose_test_reference mongoose)
+target_link_libraries(mongoose_test_reference mongoose_lib)
 set_target_properties(mongoose_test_reference PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 
 # Unit Tests
 add_executable(mongoose_unit_test_io
         Tests/Mongoose_UnitTest_IO_exe.cpp)
-target_link_libraries(mongoose_unit_test_io mongoose_dbg)
+target_link_libraries(mongoose_unit_test_io mongoose_lib_dbg)
 set_target_properties(mongoose_unit_test_io PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 add_test(Unit_Test_IO ./tests/mongoose_unit_test_io)
 
 add_executable(mongoose_unit_test_graph
         Tests/Mongoose_UnitTest_Graph_exe.cpp)
-target_link_libraries(mongoose_unit_test_graph mongoose_dbg)
+target_link_libraries(mongoose_unit_test_graph mongoose_lib_dbg)
 set_target_properties(mongoose_unit_test_graph PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 add_test(Unit_Test_Graph ./tests/mongoose_unit_test_graph)
 
 add_executable(mongoose_unit_test_edgesep
         Tests/Mongoose_UnitTest_EdgeSep_exe.cpp)
-target_link_libraries(mongoose_unit_test_edgesep mongoose_dbg)
+target_link_libraries(mongoose_unit_test_edgesep mongoose_lib_dbg)
 set_target_properties(mongoose_unit_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 add_test(Unit_Test_EdgeSep ./tests/mongoose_unit_test_edgesep)
 
@@ -308,8 +319,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Visual Studio C++
 endif ()
 
-set_target_properties(mongoose_dbg PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
-set_target_properties(mongoose_dbg PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+set_target_properties(mongoose_lib_dbg PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
+set_target_properties(mongoose_lib_dbg PROPERTIES LINK_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 
 # Add debug compile/linker flags
 set_target_properties(mongoose_test_io PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
@@ -332,13 +343,31 @@ file(COPY Tests/runTests DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY Tests/runCompare DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY Tests/runStats DESTINATION ${CMAKE_BINARY_DIR})
 
-add_custom_command(TARGET mongoose
+add_custom_command(TARGET mongoose_lib
                    POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mongoose> ${PROJECT_SOURCE_DIR}/Lib
+                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mongoose_lib> ${PROJECT_SOURCE_DIR}/Lib
                    COMMENT "Copying libmongoose to root Lib directory"
         )
 
 add_custom_target(purge
         COMMAND rm -rf ${CMAKE_BINARY_DIR}/*
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Lib/libmongoose.*
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/title-info.tex
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/title-info.tex.aux
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.pdf
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.idx
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.log
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.out
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.aux
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.toc
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.bbl
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.blg
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Matrix/*.tar.gz
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Matrix/*.csv
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        )
+
+add_custom_target(userguide
+        COMMAND make
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/Doc
         )

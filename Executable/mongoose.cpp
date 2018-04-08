@@ -3,6 +3,7 @@
 #include "Mongoose_EdgeSeparator.hpp"
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Logger.hpp"
+#include "Mongoose_Version.hpp"
 
 #include <fstream>
 
@@ -60,6 +61,15 @@ int main(int argn, const char **argv)
 
         return EXIT_FAILURE;
     }
+
+    // Print version and license information
+    std::cout << "********************************************************************************" << std::endl;
+    std::cout << "Mongoose Graph Partitioning Library, Version " << mongooseVersion() << std::endl;
+    std::cout << "Copyright (C) 2017-2018" << std::endl;
+    std::cout << "Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager" << std::endl;
+    std::cout << "Mongoose is licensed under Version 3 of the GNU General Public License." << std::endl;
+    std::cout << "Mongoose is also available under other licenses; contact authors for details." << std::endl;
+    std::cout << "********************************************************************************" << std::endl;
 
     // An edge separator should be computed with default options
     t = clock();

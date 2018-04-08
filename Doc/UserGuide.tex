@@ -87,9 +87,7 @@
 \newcommand{\mb}[1]{{\bf{#1}}}
 \newcommand{\tr}{^{\sf T}}
 
-\title{Mongoose User Guide, Version 1.0.0}
-\author{Scott Kolodziej, Nuri Yeralan, Tim Davis, William W. Hager}
-\date{Apr 6, 2018}
+\input{title-info.tex}
 
 \makeindex
 
@@ -180,10 +178,10 @@ cmake ..     # Use CMake to create the Makefiles
 make         # Build Mongoose
 \end{lstlisting}
 
-After compilation, the Mongoose demo can be run using \texttt{./bin/Demo}:\\
+After compilation, the Mongoose demo can be run using \texttt{./bin/demo}:\\
 
 \begin{lstlisting}[numbers=none,xleftmargin=.09\textwidth, xrightmargin=.09\textwidth,keywordstyle=\color{black}]
-./bin/Demo
+./bin/demo
 ********************************************************************************
 Mongoose Graph Partitioning Library, Version 1.0.0
 Copyright (C) 2017-2018
@@ -218,7 +216,7 @@ To run the complete test suite, the command \texttt{make test} can be used. Note
 
 \section{Using Mongoose as an Executable}
 
-In addition to the Demo executable, the \texttt{mongoose} executable is built at \texttt{./bin/mongoose}. This executable can be used to partition a graph given a Matrix Market file:
+In addition to the demo executable, the \texttt{mongoose} executable is built at \texttt{./bin/mongoose}. This executable can be used to partition a graph given a Matrix Market file:
 
 \[\text{\texttt{mongoose <MM-input-file.mtx> [output-file]}}\]
 
@@ -318,7 +316,7 @@ int main(int argn, const char **argv)
     cout << "Cut Cost:      " << setprecision(2) << graph->cutCost << endl;
     cout << "Cut Imbalance: " << setprecision(2) << fabs(100*graph->imbalance) << "%" << endl;
 	
-	options->~Options();
+    options->~Options();
     graph->~Graph();
 
     /* Return success */
@@ -327,8 +325,6 @@ int main(int argn, const char **argv)
 \end{lstlisting}
 
 \subsection{Creating a Graph}
-
-TODO define Int
 
 There are several different ways to create a \texttt{Graph} class instance for use in Mongoose.
 
@@ -344,7 +340,6 @@ is represented by the following components:
     \item \texttt{Int p [n+1]}: the column pointer vector of size \texttt{n+1}.
     \item \texttt{Int i [nz]}: the adjacency lists held in a single array.  The adjacency
         list of vertex \texttt{j} is held in \texttt{i [p [j] ... p [j+1]-1]}.
-        TODO (check this:)? The vertices in each adjacency list must appear in ascending order.
         Self-edges must not appear.
         The graph must be undirected, and so the adjacency matrix must be symmetric.
     \item \texttt{double x [nz]}: an optional array of edge weights, where
@@ -355,6 +350,8 @@ is represented by the following components:
         where vertex \texttt{j} has weight \texttt{w [j]}.
         If \texttt{w} is \texttt{NULL}, then the vertices all have weight 1.
     \end{itemize}
+    
+Note that the \texttt{Int} type is generally a 64-bit (long) integer type. It is defined as \texttt{typedef SuiteSparse\_long Int;} which is further defined as \texttt{\#define SuiteSparse\_long long} in SuiteSparse\_config.
 
 \subsubsection{Creating a Graph Manually}
 

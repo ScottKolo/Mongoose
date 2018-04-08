@@ -1,5 +1,5 @@
 /**
- * Demo.cpp
+ * demo.cpp
  * Runs a variety of computations on several input matrices and outputs
  * the results. Does not take any input. This application can be used to
  * test that compilation was successful and that everything is working
