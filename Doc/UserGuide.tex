@@ -212,7 +212,7 @@ Total Demo Time:  3.4s
                **************************************************  
 \end{lstlisting}
 
-To run the complete test suite, the command \texttt{make test} can be used. Note that Python 2.7+ must be installed.
+To run the complete test suite, the command \texttt{make test} can be used. Note that Python 2.7+ must be installed. Additionally, this user guide can be generated from source with the command \texttt{make userguide}. XeLaTeX (commonly included in LaTeX distributions) must be installed.
 
 \section{Using Mongoose as an Executable}
 
@@ -452,7 +452,6 @@ Also note that Mongoose will NOT free pointers passed to it, and that all pointe
 \section{Using Mongoose in MATLAB}
 
 \subsection{Sample MATLAB Program}
-% Without weights, with edge weights, with vertex weights
 
 Below is a sample MATLAB program using the Mongoose MATLAB API. First, it loads in a matrix, sanitizes it, and then partitions it using edge and vertex weights, then only edge weights, and the no weights.
 
