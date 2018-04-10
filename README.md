@@ -23,14 +23,14 @@ cmake ..     # Use CMake to create the Makefiles
 make         # Build Mongoose
 ```
 
-After compilation, the Mongoose demo can be run from the `_build` directory using `./bin/Demo`.
+After compilation, the Mongoose demo can be run from the `_build` directory using `./bin/demo`.
 
 ## Usage
 
 You can use Mongoose in one of three ways:
 
 1. **The `mongoose` executable.** Once built, the `mongoose` executable will be located in `_build/bin/mongoose`. This executable can read a Matrix Market file containing an adjacency matrix and output timing and partitioning information to a plain-text file. Simply call it with the following syntax: `mongoose <MM-input-file.mtx> [output-file]`
-2. **The C++ API.** A static library is built at `_build/lib/libmongoose.a`. Include the header file `Include/Mongoose.hpp` and link to this library to access the C++ API.
+2. **The C++ API.** A static library is built at `Lib/libmongoose.a`. Include the header file `Include/Mongoose.hpp` and link to this library to access the C++ API.
 3. **The MATLAB API.** From MATLAB, navigate to the `Mongoose/MATLAB/` directory and build the Mongoose MEX functions by calling `mongoose_make`. This will build Mongoose, run a demo, and allows access to the MATLAB API.
 
 For more details about the specific APIs and their available functionality, see the Mongoose user guide located at [`Doc/UserGuide.pdf`](Doc/UserGuide.pdf).
@@ -47,4 +47,4 @@ The following people have made significant contributions to Mongoose:
 
 ## License
 
-Mongoose is licensed under the GNU Public License, version 3. For commercial license inquiries, please contact Dr. Tim Davis at davis@tamu.edu. The specific text of the license can be found in the LICENSE file.
+Mongoose is licensed under the GNU Public License, version 3. For commercial license inquiries, please contact Dr. Tim Davis at davis@tamu.edu. The specific text of the license can be found in [`Doc/License.txt`](Doc/License.txt).
