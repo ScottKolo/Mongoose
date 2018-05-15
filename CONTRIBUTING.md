@@ -8,7 +8,7 @@ If you find a bug in Mongoose or would like to request a feature, you can add an
 
 ## Contribute with a Pull Request
 
-If you would like to add to Mongoose by contributing your code, we require that you agree to a Contributor License Agreement located at [`Doc/CONTRIBUTOR-LICEENSE`](Doc/CONTRIBUTOR-LICEENSE). We dual-license Mongoose, so we need your permission to be able to use any contributed code under a commercial license. To automate this, we use CLAHub. To get started, [sign the Contributor License Agreement](https://www.clahub.com/agreements/ScottKolo/Mongoose). After you have signed the CLA, you can submit a pull request by following the usual procedure on GitHub:
+If you would like to add to Mongoose by contributing your code, we require that you agree to a Contributor License Agreement located at [`Doc/CONTRIBUTOR-LICENSE`](Doc/CONTRIBUTOR-LICENSE). We dual-license Mongoose, so we need your permission to be able to use any contributed code under a commercial license. To automate this, we use CLAHub. To get started, [sign the Contributor License Agreement](https://www.clahub.com/agreements/ScottKolo/Mongoose). After you have signed the CLA, you can submit a pull request by following the usual procedure on GitHub:
 
 1. Fork the Mongoose repository.
 2. Make your changes to the code. Be sure to include tests if warranted.
