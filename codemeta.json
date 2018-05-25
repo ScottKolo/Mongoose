@@ -7,8 +7,8 @@
   "codeRepository": "https://github.com/ScottKolo/Mongoose",
   "issueTracker": "https://github.com/ScottKolo/Mongoose/issues",
   "license": "https://spdx.org/licenses/GPL-3.0-only.html",
-  "version": "1.0.0",
-  "softwareVersion": "1.0.0",
+  "version": "1.0.1",
+  "softwareVersion": "1.0.1",
   "author": [
     {
       "@type": "Person",
@@ -65,7 +65,7 @@
     "mathematical software"
   ],
   "dateCreated":"2018-04-09",
-  "datePublished":"2018-05-15",
+  "datePublished":"2018-05-25",
   "programmingLanguage": "C++",
   "programmingLanguage": "MATLAB"
 }
