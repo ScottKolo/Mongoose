@@ -60,7 +60,7 @@ void print(Graph *G)
         ASSERT(0);                                                             \
     }
 
-void QPcheckCom(Graph *G, const Options *O, QPDelta *QP, bool check_b,
+void QPcheckCom(EdgeCutProblem *G, const EdgeCut_Options *O, QPDelta *QP, bool check_b,
                 Int nFreeSet, // use this instead of QP->nFreeSet
                 double b      // use this instead of QP->b
 )
