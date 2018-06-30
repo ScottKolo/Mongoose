@@ -22,9 +22,9 @@
 namespace Mongoose
 {
 
-bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
+bool improveCutUsingQP(EdgeCutProblem *graph, const EdgeCut_Options *options, bool isInitial)
 {
-    if (!options->useQPGradProj)
+    if (!options->use_QP_gradproj)
         return false;
 
     Logger::tic(QPTiming);
@@ -37,7 +37,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     double *gains       = graph->vertexGains;
     Int *externalDegree = graph->externalDegree;
 
-    /* Create workspaces */
+    /* create workspaces */
     QPDelta *QP = QPDelta::Create(n);
     if (!QP)
     {
@@ -46,15 +46,15 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     }
 
     // set the QP parameters
-    double tol         = options->softSplitTolerance;
-    double targetSplit = options->targetSplit;
+    double tol         = options->soft_split_tolerance;
+    double targetSplit = options->target_split;
 
-    // ensure targetSplit and tolerance are valid.  These conditions were
+    // ensure target_split and tolerance are valid.  These conditions were
     // already checked on input to Mongoose, in optionsAreValid.
     ASSERT(tol >= 0);
     ASSERT(targetSplit >= 0 && targetSplit <= 0.5);
 
-    // QP upper and lower bounds.  targetSplit +/- tol is in the range 0 to 1,
+    // QP upper and lower bounds.  target_split +/- tol is in the range 0 to 1,
     // and then this factor is multiplied by the sum of all vertex weights
     // (graph->W) to get the QP lo and hi.
     QP->lo = graph->W * std::max(0., targetSplit - tol);
@@ -97,7 +97,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     {
         QP->lambda = QPNapsack(guess, n, QP->lo, QP->hi, graph->w, QP->lambda,
                                QP->FreeSet_status, QP->wx[1], QP->wi[0],
-                               QP->wi[1], options->gradProjTolerance);
+                               QP->wi[1], options->gradproj_tolerance);
     }
 
     // Build the FreeSet, compute grad, possibly adjust QP->lo and QP->hi
@@ -171,7 +171,7 @@ bool improveCutUsingQP(Graph *graph, const Options *options, bool isInitial)
     graph->imbalance    = cost.imbalance;
     double absImbalance = fabs(graph->imbalance);
     graph->heuCost      = graph->cutCost
-                     + (absImbalance > options->softSplitTolerance
+                     + (absImbalance > options->soft_split_tolerance
                             ? absImbalance * graph->H
                             : 0.0);
 

@@ -11,19 +11,19 @@
 
 #pragma once
 
-#include "Mongoose_Graph.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {
 
-void match(Graph *, const Options *);
+void match(EdgeCutProblem *, const EdgeCut_Options *);
 
-void matching_Random(Graph *, const Options *);
-void matching_HEM(Graph *, const Options *);
-void matching_SR(Graph *, const Options *);
-void matching_SRdeg(Graph *, const Options *);
-void matching_Cleanup(Graph *, const Options *);
+void matching_Random(EdgeCutProblem *, const EdgeCut_Options *);
+void matching_HEM(EdgeCutProblem *, const EdgeCut_Options *);
+void matching_SR(EdgeCutProblem *, const EdgeCut_Options *);
+void matching_SRdeg(EdgeCutProblem *, const EdgeCut_Options *);
+void matching_Cleanup(EdgeCutProblem *, const EdgeCut_Options *);
 
 } // end namespace Mongoose

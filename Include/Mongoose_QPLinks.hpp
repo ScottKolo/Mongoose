@@ -11,14 +11,14 @@
 
 #pragma once
 
-#include "Mongoose_Graph.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_Options.hpp"
 #include "Mongoose_QPDelta.hpp"
 
 namespace Mongoose
 {
 
-bool QPLinks(Graph *, const Options *, QPDelta *);
+bool QPLinks(EdgeCutProblem *, const EdgeCut_Options *, QPDelta *);
 
 } // end namespace Mongoose

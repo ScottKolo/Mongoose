@@ -11,13 +11,13 @@
 
 #pragma once
 
-#include "Mongoose_Graph.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {
 
-void waterdance(Graph *, const Options *);
+void waterdance(EdgeCutProblem *, const EdgeCut_Options *);
 
 } // end namespace Mongoose

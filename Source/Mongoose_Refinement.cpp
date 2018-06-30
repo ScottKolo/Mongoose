@@ -18,11 +18,11 @@
 namespace Mongoose
 {
 
-Graph *refine(Graph *graph, const Options *options)
+EdgeCutProblem *refine(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     Logger::tic(RefinementTiming);
 
-    Graph *P             = graph->parent;
+    EdgeCutProblem *P             = graph->parent;
     Int cn               = graph->n;
     bool *cPartition     = graph->partition;
     double *fGains       = P->vertexGains;
@@ -116,7 +116,7 @@ Graph *refine(Graph *graph, const Options *options)
     }
 
     /* Now that we're done with the coarse graph, we can release it. */
-    graph->~Graph();
+    graph->~EdgeCutProblem();
 
     Logger::toc(RefinementTiming);
 

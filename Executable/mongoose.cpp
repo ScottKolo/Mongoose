@@ -1,6 +1,6 @@
 
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_EdgeCut.hpp"
 #include "Mongoose_IO.hpp"
 #include "Mongoose_Logger.hpp"
 #include "Mongoose_Version.hpp"
@@ -42,7 +42,7 @@ int main(int argn, const char **argv)
     // Turn timing information on
     Logger::setTimingFlag(true);
 
-    Options *options = Options::Create();
+    EdgeCut_Options *options = EdgeCut_Options::create();
     if (!options)
     {
         // Ran out of memory
@@ -50,21 +50,21 @@ int main(int argn, const char **argv)
         return EXIT_FAILURE;
     }
 
-    Graph *graph = readGraph(inputFile);
+    Graph *graph = read_graph(inputFile);
 
     if (!graph)
     {
         // Ran out of memory or problem reading the graph from file
         LogError("Error reading Graph from file");
 
-        options->~Options();
+        options->~EdgeCut_Options();
 
         return EXIT_FAILURE;
     }
 
     // Print version and license information
     std::cout << "********************************************************************************" << std::endl;
-    std::cout << "Mongoose Graph Partitioning Library, Version " << mongooseVersion() << std::endl;
+    std::cout << "Mongoose Graph Partitioning Library, Version " << mongoose_version() << std::endl;
     std::cout << "Copyright (C) 2017-2018" << std::endl;
     std::cout << "Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager" << std::endl;
     std::cout << "Mongoose is licensed under Version 3 of the GNU General Public License." << std::endl;
@@ -73,15 +73,16 @@ int main(int argn, const char **argv)
 
     // An edge separator should be computed with default options
     t = clock();
-    int error = ComputeEdgeSeparator(graph, options);
+    EdgeCut *result = edge_cut(graph, options);
     t = clock() - t;
 
-    if (error)
+    if (!result)
     {
         // Error occurred
         LogError("Error computing edge separator");
-        options->~Options();
+        options->~EdgeCut_Options();
         graph->~Graph();
+        result->~EdgeCut();
         return EXIT_FAILURE;
     }
     else
@@ -90,9 +91,9 @@ int main(int argn, const char **argv)
         std::cout << "Total Edge Separator Time: " << test_time << "s\n";
         Logger::printTimingInfo();
         std::cout << "Cut Properties:\n";
-        std::cout << " Cut Size:       " << graph->cutSize << "\n";
-        std::cout << " Cut Cost:       " << graph->cutCost << "\n";
-        std::cout << " Imbalance:      " << graph->imbalance << "\n";
+        std::cout << " Cut Size:       " << result->cut_size << "\n";
+        std::cout << " Cut Cost:       " << result->cut_cost << "\n";
+        std::cout << " Imbalance:      " << result->imbalance << "\n";
 
         // Write results to file
         if (!outputFile.empty())
@@ -110,15 +111,15 @@ int main(int argn, const char **argv)
             ofs << "    \"QP\": " << Logger::getTime(QPTiming) << "," << std::endl;
             ofs << "    \"IO\": " << Logger::getTime(IOTiming) << std::endl;
             ofs << "  }," << std::endl;
-            ofs << "  \"CutSize\": " << graph->cutSize << "," << std::endl;
-            ofs << "  \"CutCost\": " << graph->cutCost << "," << std::endl;
-            ofs << "  \"Imbalance\": " << graph->imbalance << std::endl;
+            ofs << "  \"CutSize\": " << result->cut_size << "," << std::endl;
+            ofs << "  \"CutCost\": " << result->cut_cost << "," << std::endl;
+            ofs << "  \"Imbalance\": " << result->imbalance << std::endl;
             ofs << "}" << std::endl;
 
             ofs << std::endl;
             for (Int i = 0; i < graph->n; i++)
             {
-                ofs << i << " " << graph->partition[i] << std::endl;
+                ofs << i << " " << result->partition[i] << std::endl;
             }
             ofs << std::endl;
 
@@ -126,8 +127,9 @@ int main(int argn, const char **argv)
         }
     }
 
-    options->~Options();
+    options->~EdgeCut_Options();
     graph->~Graph();
+    result->~EdgeCut();
 
     SuiteSparse_finish();
 

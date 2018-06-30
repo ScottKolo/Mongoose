@@ -6,9 +6,9 @@ if (POLICY CMP0048)
 endif (POLICY CMP0048)
 
 set(Mongoose_DATE "May 25, 2018")
-set(Mongoose_VERSION_MAJOR 1)
+set(Mongoose_VERSION_MAJOR 2)
 set(Mongoose_VERSION_MINOR 0)
-set(Mongoose_VERSION_PATCH 1)
+set(Mongoose_VERSION_PATCH 0)
 
 if(CMAKE_MAJOR_VERSION GREATER 2)
 project(Mongoose
@@ -36,7 +36,9 @@ set(MONGOOSE_FILES
         Include/Mongoose_CSparse.hpp
         Include/Mongoose_CutCost.hpp
         Include/Mongoose_Debug.hpp
-        Include/Mongoose_EdgeSeparator.hpp
+        Include/Mongoose_EdgeCutOptions.hpp
+        Include/Mongoose_EdgeCutProblem.hpp
+        Include/Mongoose_EdgeCut.hpp
         Include/Mongoose_Graph.hpp
         Include/Mongoose_GuessCut.hpp
         Include/Mongoose_ImproveFM.hpp
@@ -45,7 +47,6 @@ set(MONGOOSE_FILES
         Include/Mongoose_IO.hpp
         Include/Mongoose_Logger.hpp
         Include/Mongoose_Matching.hpp
-        Include/Mongoose_Options.hpp
         Include/Mongoose_Random.hpp
         Include/Mongoose_Refinement.hpp
         Include/Mongoose_Sanitize.hpp
@@ -55,7 +56,7 @@ set(MONGOOSE_FILES
         Source/Mongoose_Coarsening.cpp
         Source/Mongoose_CSparse.cpp
         Source/Mongoose_Debug.cpp
-        Source/Mongoose_EdgeSeparator.cpp
+        Source/Mongoose_EdgeCut.cpp
         Source/Mongoose_Graph.cpp
         Source/Mongoose_GuessCut.cpp
         Source/Mongoose_ImproveFM.cpp
@@ -63,7 +64,9 @@ set(MONGOOSE_FILES
         Source/Mongoose_IO.cpp
         Source/Mongoose_Logger.cpp
         Source/Mongoose_Matching.cpp
-        Source/Mongoose_Options.cpp
+        Source/Mongoose_EdgeCutOptions.cpp
+        Source/Mongoose_EdgeCutProblem.cpp
+        Source/Mongoose_EdgeCut.cpp
         Source/Mongoose_Random.cpp
         Source/Mongoose_Refinement.cpp
         Source/Mongoose_Sanitize.cpp

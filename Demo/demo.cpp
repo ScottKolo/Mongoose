@@ -33,7 +33,7 @@ int main(int argn, const char **argv)
     };
 
     cout << "********************************************************************************" << endl;
-    cout << "Mongoose Graph Partitioning Library, Version " << mongooseVersion() << endl;
+    cout << "Mongoose Graph Partitioning Library, Version " << mongoose_version() << endl;
     cout << "Copyright (C) 2017-2018" << endl;
     cout << "Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager" << endl;
     cout << "Mongoose is licensed under Version 3 of the GNU General Public License." << endl;
@@ -48,29 +48,30 @@ int main(int argn, const char **argv)
         cout << "Computing an edge cut for " << demo_files[k] << "..." << endl;
         
         clock_t trial_start = clock();
-        Options *options = Options::Create();
+        EdgeCut_Options *options = EdgeCut_Options::create();
         if (!options) return EXIT_FAILURE; // Return an error if we failed.
 
-        options->matchingStrategy = HEMSRdeg;
-        options->guessCutType = GuessQP;
+        options->matching_strategy = HEMSRdeg;
+        options->initial_cut_type = InitialEdgeCut_QP;
 
-        Graph *graph = readGraph("../Matrix/" + demo_files[k]);
+        Graph *graph = read_graph("../Matrix/" + demo_files[k]);
         if (!graph)
         {
             return EXIT_FAILURE;
         }
 
-        ComputeEdgeSeparator(graph, options);
+        EdgeCut *result = edge_cut(graph, options);
 
         cout << "Partitioning Complete!" << endl;
-        cout << "Cut Cost:       " << setprecision(2) << graph->cutCost << endl;
-        cout << "Cut Imbalance:  " << setprecision(2) << 100*(graph->imbalance) << "%" << endl;
+        cout << "Cut Cost:       " << setprecision(2) << result->cut_cost << endl;
+        cout << "Cut Imbalance:  " << setprecision(2) << 100*(result->imbalance) << "%" << endl;
 
         double trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
         cout << "Trial Time:     " << trial_duration*1000 << "ms" << endl;
 
-        options->~Options();
+        options->~EdgeCut_Options();
         graph->~Graph();
+        result->~EdgeCut();
     }
 
     duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;

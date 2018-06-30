@@ -15,11 +15,11 @@
 #include "Mongoose_CutCost.hpp"
 #include "Mongoose_Graph.hpp"
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_Options.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
 
 namespace Mongoose
 {
 
-bool guessCut(Graph *, const Options *);
+bool guessCut(EdgeCutProblem *, const EdgeCut_Options *);
 
 } // end namespace Mongoose

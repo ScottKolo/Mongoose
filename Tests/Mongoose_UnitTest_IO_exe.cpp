@@ -27,29 +27,29 @@ int main(int argn, char** argv)
     Graph *G;
 
     // Nonexistent file
-    G = readGraph("../Tests/Matrix/no_such_file.mtx");        
+    G = read_graph("../Tests/Matrix/no_such_file.mtx");
     assert (G == NULL);
 
     // Bad header 
-    G = readGraph("../Tests/Matrix/bad_header.mtx");        
+    G = read_graph("../Tests/Matrix/bad_header.mtx");
     assert (G == NULL);
 
     // Bad matrix type
-    G = readGraph("../Tests/Matrix/bad_matrix_type.mtx");
+    G = read_graph("../Tests/Matrix/bad_matrix_type.mtx");
     assert (G == NULL);
 
     // Bad dimensions
-    G = readGraph("../Tests/Matrix/bad_dimensions.mtx");
+    G = read_graph("../Tests/Matrix/bad_dimensions.mtx");
     assert (G == NULL);
       
     // Rectangular matrix     
-    G = readGraph("../Tests/Matrix/Trec4.mtx");
+    G = read_graph("../Tests/Matrix/Trec4.mtx");
     assert (G == NULL);
 
     // C-style string filename
     MM_typecode matcode;
     std::string filename = "../Matrix/bcspwr01.mtx";
-    cs *M = readMatrix(filename, matcode);
+    cs *M = read_matrix(filename, matcode);
     assert(M != NULL);
 
     cs *binaryM = sanitizeMatrix(M, true, true);

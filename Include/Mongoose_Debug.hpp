@@ -12,8 +12,8 @@
 #pragma once
 
 #include "Mongoose_CSparse.hpp"
-#include "Mongoose_Graph.hpp"
-#include "Mongoose_Options.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_QPDelta.hpp"
 
 #include <cassert>
@@ -85,9 +85,9 @@ namespace Mongoose
 
 void print(cs *G);
 
-void print(Graph *G);
+void print(EdgeCutProblem *G);
 
-void QPcheckCom(Graph *G, const Options *O, QPDelta *QP, bool check_b,
+void QPcheckCom(EdgeCutProblem *G, const EdgeCut_Options *O, QPDelta *QP, bool check_b,
                 Int nFreeSet, double b);
 
 void FreeSet_dump(const char *where, Int n, Int *FreeSet_list, Int nFreeSet,

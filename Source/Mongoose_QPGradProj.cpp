@@ -33,7 +33,7 @@ namespace Mongoose
 {
 
 // save the current state of the solution, just before returning from QPGradProj
-inline void saveContext(Graph *graph, QPDelta *QP, Int it, double err,
+inline void saveContext(EdgeCutProblem *graph, QPDelta *QP, Int it, double err,
                         Int nFreeSet, Int ib, double lo, double hi)
 {
     QP->its      = it;
@@ -53,7 +53,7 @@ inline void saveContext(Graph *graph, QPDelta *QP, Int it, double err,
     QP->b  = b;
 }
 
-double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
+double QPGradProj(EdgeCutProblem *graph, const EdgeCut_Options *options, QPDelta *qpDelta)
 {
 
     PR(("\n------- QPGradProj start: [\n"));
@@ -64,7 +64,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
     /* Unpack the relevant structures                                         */
     /* ---------------------------------------------------------------------- */
 
-    double tol  = options->gradProjTolerance;
+    double tol  = options->gradproj_tolerance;
     double *wx1 = qpDelta->wx[0]; /* work array for napsack and here as y */
     double *wx2 = qpDelta->wx[1]; /* work array for napsack and here as Dgrad */
     double *wx3 = qpDelta->wx[2]; /* work array used here for d=y-x */
@@ -95,7 +95,7 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
     double *D = qpDelta->D; /* diagonal of quadratic */
 
     /* gradient projection parameters */
-    Int limit = options->gradprojIterationLimit; /* max number of iterations */
+    Int limit = options->gradproj_iteration_limit; /* max number of iterations */
 
     /* work arrays */
     double *y     = wx1;
@@ -154,8 +154,8 @@ double QPGradProj(Graph *graph, const Options *options, QPDelta *qpDelta)
             }
             // PR (("check grad %g\n", maxerr)) ;
             double adj_tol = std::max(
-                log10(options->gradProjTolerance * graph->worstCaseRatio),
-                options->gradProjTolerance);
+                log10(options->gradproj_tolerance * graph->worstCaseRatio),
+                options->gradproj_tolerance);
             ASSERT(maxerr < adj_tol);
             free(mygrad);
         }

@@ -22,9 +22,9 @@
 namespace Mongoose
 {
 
-int majorVersion();
-int minorVersion();
-int patchVersion();
-std::string mongooseVersion();
+int major_version();
+int minor_version();
+int patch_version();
+std::string mongoose_version();
 
 } // end namespace Mongoose

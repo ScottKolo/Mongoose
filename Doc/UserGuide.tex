@@ -296,13 +296,13 @@ using namespace std;
 
 int main(int argn, const char **argv)
 {
-    Options *options = Options::Create();
+    Options *options = Options::create();
     if (!options) return EXIT_FAILURE; // Return an error if we failed.
 
-    options->matchingStrategy = HEMSRdeg;
-    options->guessCutType = GuessQP;
+    options->matching_strategy = HEMSRdeg;
+    options->initial_cut_type = InitialEdgeCut_QP;
 
-    Graph *graph = readGraph(argv[1]);
+    Graph *graph = read_graph(argv[1]);
     if (!graph)
     {
     	options->~Options();
@@ -310,14 +310,15 @@ int main(int argn, const char **argv)
     }
 	
     // Call Mongoose to compute an edge separator
-    ComputeEdgeSeparator (graph, options);
+    EdgeCut *result = edge_cut(graph, options);
 
     cout << "Partitioning Complete!" << endl;
-    cout << "Cut Cost:      " << setprecision(2) << graph->cutCost << endl;
-    cout << "Cut Imbalance: " << setprecision(2) << fabs(100*graph->imbalance) << "%" << endl;
+    cout << "Cut Cost:      " << setprecision(2) << result->cut_cost << endl;
+    cout << "Cut Imbalance: " << setprecision(2) << fabs(100*result->imbalance) << "%" << endl;
 	
     options->~Options();
     graph->~Graph();
+    result->~EdgeCut();
 
     /* Return success */
     return EXIT_SUCCESS;
@@ -357,7 +358,7 @@ Note that the \texttt{Int} type is generally a 64-bit (long) integer type. It is
 
 To create a graph manually, the following constructor is used: \\
 
-\textbf{\texttt{static Graph *Create(const Int \_n, \\
+\textbf{\texttt{static Graph *create(const Int \_n, \\
 \hspace*{4.2cm} const Int \_nz, \\
 \hspace*{4.2cm} Int *\_p = NULL, \\
 \hspace*{4.2cm} Int *\_i = NULL, \\
@@ -369,10 +370,10 @@ Using the manual constructor, the number of vertices (or dimension of the matrix
 Here are some examples:
 
 \begin{itemize}
-\item \texttt{Graph::Create(20, 50);} creates a \texttt{Graph} with 20 vertices and 50 edges, but no data. \texttt{Graph->p} and \texttt{Graph->i} are allocated by Mongoose to store exactly 20 columns (vertices) and 50 nonzero elements (edges). This allows the user to populate \texttt{Graph->p} and \texttt{Graph->i} manually. All edge and vertex weights are assumed to be one.
-\item \texttt{Graph::Create(20, 50, \_p, \_i);} creates a \texttt{Graph} with 20 vertices and 50 edges with the pattern specified. \texttt{Graph->p} and \texttt{Graph->i} are shallow copies of the arguments \texttt{\_p} and \texttt{\_i} and will not be freed upon calling the destructor. All edge and vertex weights are assumed to be one.
-\item \texttt{Graph::Create(20, 50, \_p, \_i, \_x);} creates a \texttt{Graph} with 20 vertices and 50 edges with the pattern and edge weights specified. \texttt{Graph->p}, \texttt{Graph->i}, and \texttt{Graph->x} are shallow copies of the arguments \texttt{\_p}, \texttt{\_i}, and \texttt{\_x}, and will not be freed upon calling the destructor. Edge weights are specified by \texttt{\_x}, but vertex weights are assumed to be one.
-\item \texttt{Graph::Create(20, 50, \_p, \_i, \_x, \_w);} creates a \texttt{Graph} with 20 vertices and 50 edges with edge and vertex weights specified. \texttt{Graph->p}, \texttt{Graph->i}, \texttt{Graph->x}, and \texttt{Graph->w} are shallow copies of the arguments \texttt{\_p}, \texttt{\_i}, \texttt{\_x}, and \texttt{\_w}, and will not be freed upon calling the destructor. Edge weights are specified by \texttt{\_x}, and vertex weights are specified by \texttt{\_w}.
+\item \texttt{Graph::create(20, 50);} creates a \texttt{Graph} with 20 vertices and 50 edges, but no data. \texttt{Graph->p} and \texttt{Graph->i} are allocated by Mongoose to store exactly 20 columns (vertices) and 50 nonzero elements (edges). This allows the user to populate \texttt{Graph->p} and \texttt{Graph->i} manually. All edge and vertex weights are assumed to be one.
+\item \texttt{Graph::create(20, 50, \_p, \_i);} creates a \texttt{Graph} with 20 vertices and 50 edges with the pattern specified. \texttt{Graph->p} and \texttt{Graph->i} are shallow copies of the arguments \texttt{\_p} and \texttt{\_i} and will not be freed upon calling the destructor. All edge and vertex weights are assumed to be one.
+\item \texttt{Graph::create(20, 50, \_p, \_i, \_x);} creates a \texttt{Graph} with 20 vertices and 50 edges with the pattern and edge weights specified. \texttt{Graph->p}, \texttt{Graph->i}, and \texttt{Graph->x} are shallow copies of the arguments \texttt{\_p}, \texttt{\_i}, and \texttt{\_x}, and will not be freed upon calling the destructor. Edge weights are specified by \texttt{\_x}, but vertex weights are assumed to be one.
+\item \texttt{Graph::create(20, 50, \_p, \_i, \_x, \_w);} creates a \texttt{Graph} with 20 vertices and 50 edges with edge and vertex weights specified. \texttt{Graph->p}, \texttt{Graph->i}, \texttt{Graph->x}, and \texttt{Graph->w} are shallow copies of the arguments \texttt{\_p}, \texttt{\_i}, \texttt{\_x}, and \texttt{\_w}, and will not be freed upon calling the destructor. Edge weights are specified by \texttt{\_x}, and vertex weights are specified by \texttt{\_w}.
 \end{itemize}
 
 
@@ -384,18 +385,18 @@ Another way to create a \texttt{Mongoose::Graph} is from a pre-existing \texttt{
 
 Using this constructor, a \texttt{CSparse} matrix struct can be passed directly, with shallow copies made of \texttt{cs->p}, \texttt{cs->i}, and \texttt{cs->x}. Note that  this constructor is equivalent to calling the following for a \texttt{CSparse} matrix \texttt{cs *A}:\\
 
-\textbf{\texttt{Graph::Create(const Int A->n, A->p[A->n], A->p, A->i, A->x, NULL);}}
+\textbf{\texttt{Graph::create(const Int A->n, A->p[A->n], A->p, A->i, A->x, NULL);}}
 
 \subsubsection{Creating a Graph from a Matrix Market File}
 
 Perhaps the easiest way to create a \texttt{Graph} instance is from a file. Mongoose provides easy file input helpers to read, sanitize, and format a Matrix Market file. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric by computing $\frac{1}{2}(A+A^T)$. If a diagonal is present, it will be removed.\\
 
-\textbf{\texttt{Graph *readGraph(const std::string \&filename);}}\\
-\textbf{\texttt{Graph *readGraph(const char *filename);}}\\
+\textbf{\texttt{Graph *read\_graph(const std::string \&filename);}}\\
+\textbf{\texttt{Graph *read\_graph(const char *filename);}}\\
 
 For example, to read in the Matrix Market file \texttt{jagmesh7.mtx} located in the Mongoose sample matrix directory, the following code can be used:\\
 
-\textbf{\texttt{Mongoose::readGraph(``../Matrix/jagmesh7.mtx");}}
+\textbf{\texttt{Mongoose::read\_graph(``../Matrix/jagmesh7.mtx");}}
 
 \subsection{C++ API}
 
@@ -407,34 +408,34 @@ The following functions are available in the C++ API. After Mongoose is compiled
 
 \texttt{Mongoose::readGraph} will attempt to read a Matrix Market file with the given filename and convert it to a Mongoose Graph instance. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric by computing $\frac{1}{2}(A+A^T)$. If a diagonal is present, it will be removed.
 
-\texttt{Mongoose::readGraph(const std::string \&filename)} accepts a C++-style std::string, while \texttt{Mongoose::readGraph(const char *filename)} accepts a C-style null-terminated string.
+\texttt{Mongoose::read\_graph(const std::string \&filename)} accepts a C++-style std::string, while \texttt{Mongoose::read\_graph(const char *filename)} accepts a C-style null-terminated string.
 \vspace{6pt}
-\item \textbf{\texttt{int ComputeEdgeSeparator(Graph *);}} \vspace{-6pt}
-\item \textbf{\texttt{int ComputeEdgeSeparator(Graph *, const Options *);}}
+\item \textbf{\texttt{int edge\_cut(Graph *);}} \vspace{-6pt}
+\item \textbf{\texttt{int edge\_cut(Graph *, const Options *);}}
 
-\texttt{Mongoose::ComputeEdgeSeparator} will attempt to compute an edge cut of the provided \texttt{Mongoose::Graph} object. An \texttt{Options} struct can also be supplied to modify how the edge cut is computed -- otherwise, the default options are used (see Section \ref{sec:options}).
+\texttt{Mongoose::edge\_cut} will attempt to compute an edge cut of the provided \texttt{Mongoose::Graph} object. An \texttt{Options} struct can also be supplied to modify how the edge cut is computed -- otherwise, the default options are used (see Section \ref{sec:options}).
 \vspace{6pt}
-\item \textbf{\texttt{static Options *Create();}}
+\item \textbf{\texttt{static Options *create();}}
 
-\texttt{Mongoose::Options::Create} will return an \texttt{Options} struct with default state (see Section \ref{sec:options} for details about option fields and defaults). To run Mongoose with specific options, call \texttt{Options::Create} and modify the struct as needed.
+\texttt{Mongoose::Options::create} will return an \texttt{Options} struct with default state (see Section \ref{sec:options} for details about option fields and defaults). To run Mongoose with specific options, call \texttt{Options::Create} and modify the struct as needed.
 \vspace{6pt}
-\item \textbf{\texttt{static Graph *Create(const Int \_n, \\
+\item \textbf{\texttt{static Graph *create(const Int \_n, \\
 \hspace*{4.2cm} const Int \_nz, \\
 \hspace*{4.2cm} Int *\_p = NULL, \\
 \hspace*{4.2cm} Int *\_i = NULL, \\
 \hspace*{4.2cm} double *\_x = NULL, \\
 \hspace*{4.2cm} double *\_w = NULL);}}
-\item \textbf{\texttt{static Graph *Create(cs *matrix);}}
+\item \textbf{\texttt{static Graph *create(cs *matrix);}}
 
-\texttt{Mongoose::Graph::Create} is the primary constructor for the \texttt{Graph} class. There are two versions: one to manually specify attributes of the \texttt{Graph}, and one to form a \texttt{Graph} from a \texttt{CSparse} struct.
+\texttt{Mongoose::Graph::create} is the primary constructor for the \texttt{Graph} class. There are two versions: one to manually specify attributes of the \texttt{Graph}, and one to form a \texttt{Graph} from a \texttt{CSparse} struct.
 
 Using the manual constructor, the number of vertices (or dimension of the matrix, \texttt{Int \_n}) and the number of edges (or nonzero entries in the matrix, \texttt{Int \_nz}) must both be specified. The column pointer vector \texttt{Int *\_p} and row index vector \texttt{Int *\_i} must either be specified by the user, or, if left \texttt{NULL}, they will be allocated such that \texttt{\_p = (Int *)SuiteSparse\_calloc(n + 1, sizeof(Int));} and \texttt{\_i = (Int *)SuiteSparse\_malloc(nz, sizeof(Int));}. The edge weights \texttt{double *\_x} and the vertex weights \texttt{double *\_w} can either be specified, or, if left \texttt{NULL}, will be assumed to be one for all edges and vertices, respectively.
 
 Note that Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it).
 
 \vspace{6pt}
-\item \textbf{\texttt{$\sim$Options();}} is the destructor for the \texttt{Options} struct. If the user creates an \texttt{Options} struct using \texttt{Options::Create}, the user is also responsible for destructing it.
-\item \textbf{\texttt{$\sim$Graph();}} is the destructor for the \texttt{Graph} class. If the user creates a \texttt{Graph} class instance using \texttt{Graph::Create}, the user is also responsible for destructing it.
+\item \textbf{\texttt{$\sim$Options();}} is the destructor for the \texttt{Options} struct. If the user creates an \texttt{Options} struct using \texttt{Options::create}, the user is also responsible for destructing it.
+\item \textbf{\texttt{$\sim$Graph();}} is the destructor for the \texttt{Graph} class. If the user creates a \texttt{Graph} class instance using \texttt{Graph::create}, the user is also responsible for destructing it.
 
 \end{itemize}
 
@@ -443,8 +444,8 @@ Note that Mongoose will NOT free pointers passed to it, and that all pointers ar
 Mongoose uses two primary data structures to pass information: the \texttt{Graph} class and the \texttt{Options} struct. Both are dynamically allocated and must be destructed.
 
 \begin{itemize}
-\item For each \texttt{Graph::Create}, there should be a matching \texttt{Graph::$\sim$Graph()}.
-\item for each \texttt{Options::Create}, there should be a matching \texttt{Options::$\sim$Options()};
+\item For each \texttt{Graph::create}, there should be a matching \texttt{Graph::$\sim$Graph()}.
+\item for each \texttt{Options::create}, there should be a matching \texttt{Options::$\sim$Options()};
 \end{itemize}
 
 Also note that Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it). Freeing memory referenced by Mongoose prior to Mongoose completing will result in a segmentation fault.
@@ -477,7 +478,7 @@ V(10) = 300;
 
 % Create a set of default options and modify the target balance
 Opts = defaultoptions();
-Opts.targetSplit = 0.3;
+Opts.target\_split = 0.3;
 
 % Run Mongoose to partition the graph with edge and vertex weights.
 partNode = edgecut(A, Opts, V);
@@ -582,32 +583,32 @@ When calling Mongoose, an optional Options struct can be provided to specify how
 \subsection{Coarsening Options}
 
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{coarsenLimit} \\ \hline
+Name & \texttt{coarsen\_limit} \\ \hline
 Type & \texttt{Int} \\ \hline
 Default & \texttt{50} \\ \hline
 \end{tabular}\\
 
-Prior to computing a cut, the input graph is repeatedly coarsened until a sufficiently small number of vertices exist in the graph. This limit is specified by \texttt{coarsenLimit}. Larger values will result in less time being spent on the coarsening process, but may yield poor initial cuts or may require more time in computing such an initial cut. Smaller values may result in more time spent coarsening, as well as a resulting coarsened graph which is a poor structural representation of the input graph.
+Prior to computing a cut, the input graph is repeatedly coarsened until a sufficiently small number of vertices exist in the graph. This limit is specified by \texttt{coarsen\_limit}. Larger values will result in less time being spent on the coarsening process, but may yield poor initial cuts or may require more time in computing such an initial cut. Smaller values may result in more time spent coarsening, as well as a resulting coarsened graph which is a poor structural representation of the input graph.
 
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{matchingStrategy} \\ \hline
+Name & \texttt{matching\_strategy} \\ \hline
 Type & \texttt{MatchingStrategy} (enum) \\ \hline
 Default & \texttt{HEMSR} \\ \hline
 \end{tabular}\\
 
-During coarsening, a matching of vertices is computed using one of several strategies determined by the \texttt{matchingStrategy} option field. The possible values for this field are described below:
+During coarsening, a matching of vertices is computed using one of several strategies determined by the \texttt{matching\_strategy} option field. The possible values for this field are described below:
 
 \begin{itemize}
 \item \texttt{Random}, random matching. Randomly matches unmatched vertices with each other until no more than one unmatched vertex exists.
 \item \texttt{HEM}, heavy edge matching. Matches a given vertex with an unmatched neighbor with the largest weighted edge between them.
 \item \texttt{HEMSR}, heavy edge matching with stall-reducing matching. A pass of heavy edge matching is followed by a brotherly, adoption, and community (if enabled) matching where vertices that have been left unmatched by heavy edge matching are paired with vertices that share a neighbor, but may not be directly connected.
-\item \texttt{HEMSRdeg}, heavy edge matching with stall-reducing matching subject to a degree threshold. Same as \texttt{HEMSR}, but the stall-reducing step is only attempted on unmatched vertices whose degree is above a threshold, described by $\texttt{Options::highDegreeThreshold}*\text{(average degree of graph)}$. \texttt{highDegreeThreshold} is set to $2.0$ by default, meaning only unmatched vertices with degree greater than or equal to two times the average degree of the graph are considered for stall-reducing matching.
+\item \texttt{HEMSRdeg}, heavy edge matching with stall-reducing matching subject to a degree threshold. Same as \texttt{HEMSR}, but the stall-reducing step is only attempted on unmatched vertices whose degree is above a threshold, described by $\texttt{Options::high\_degree\_threshold}*\text{(average degree of graph)}$. \texttt{high\_degree\_threshold} is set to $2.0$ by default, meaning only unmatched vertices with degree greater than or equal to two times the average degree of the graph are considered for stall-reducing matching.
 \end{itemize}
 
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{doCommunityMatching} \\ \hline
+Name & \texttt{do\_community\_matching} \\ \hline
 Type & \texttt{bool} \\ \hline
 Default & \texttt{false} \\ \hline
 \end{tabular}\\
@@ -616,7 +617,7 @@ Community matching is a matching option to aggressively match vertices whose nei
 
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{highDegreeThreshold} \\ \hline
+Name & \texttt{high\_degree\_threshold} \\ \hline
 Type & \texttt{double} \\ \hline
 Default & \texttt{2.0} \\ \hline
 \end{tabular}\\
@@ -624,7 +625,7 @@ Default & \texttt{2.0} \\ \hline
 When using the \texttt{HEMSRdeg} matching strategy, only vertices satisfying the following inequality are considered for brotherly, adoption, and community matching:
 
 \[
-\text{degree}(v) \geq \lfloor(\texttt{highDegreeThreshold}) \cdot \left(\frac{nz}{n}\right)\rfloor
+\text{degree}(v) \geq \lfloor(\texttt{high\_degree\_threshold}) \cdot \left(\frac{nz}{n}\right)\rfloor
 \]
 
 Note that $\frac{nz}{n}$ is the average degree of the vertices in the graph.
@@ -632,34 +633,34 @@ Note that $\frac{nz}{n}$ is the average degree of the vertices in the graph.
 \subsection{Initial Guess/Partitioning Options}
 
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{guessCutType} \\ \hline
-Type & \texttt{GuessCutType} (enum) \\ \hline
-Default & \texttt{GuessQP} \\ \hline
+Name & \texttt{initial\_cut\_type} \\ \hline
+Type & \texttt{InitialEdgeCutType} (enum) \\ \hline
+Default & \texttt{InitialEdgeCut\_QP} \\ \hline
 \end{tabular}\\
 
 After coarsening, an initial partitioning is computed. This initial guess can be computed several ways:
 
 \begin{itemize}
-\item \texttt{GuessQP}. This method uses the quadratic programming solver to compute an initial partitioning.
-\item \texttt{GuessRandom}. This method randomly assigns vertices to a part.
-\item \texttt{GuessNaturalOrder}. This method assigns the first $\lfloor n/2 \rfloor$ vertices listed to one part, and the remainder to the other part.
+\item \texttt{InitialEdgeCut\_QP}. This method uses the quadratic programming solver to compute an initial partitioning.
+\item \texttt{InitialEdgeCut\_Random}. This method randomly assigns vertices to a part.
+\item \texttt{InitialEdgeCut\_NaturalOrder}. This method assigns the first $\lfloor n/2 \rfloor$ vertices listed to one part, and the remainder to the other part.
 \end{itemize}
 
 \subsection{Waterdance Options}
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{numDances} \\ \hline
+Name & \texttt{num\_dances} \\ \hline
 Type & \texttt{Int} \\ \hline
 Default & \texttt{1} \\ \hline
 \end{tabular}\\
                       
-At each level of graph refinement, both the Fiduccia-Mattheyses refinement algorithm and the quadratic programming algorithm are used to refine the graph. This combination of algorithms, run back-to-back, is informally referred to as a waterdance. \texttt{numDances} is used to specify the number of waterdances.\\
+At each level of graph refinement, both the Fiduccia-Mattheyses refinement algorithm and the quadratic programming algorithm are used to refine the graph. This combination of algorithms, run back-to-back, is informally referred to as a waterdance. \texttt{num\_dances} is used to specify the number of waterdances.\\
 \\
-For example, if \texttt{numDances = 2}, at each refinement level, the FM refinement will be done, then QP refinement, then FM and QP again.
+For example, if \texttt{num\_dances = 2}, at each refinement level, the FM refinement will be done, then QP refinement, then FM and QP again.
 
 \subsection{Fiduccia-Mattheyes Options}
 
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{useFM} \\ \hline
+Name & \texttt{use\_FM} \\ \hline
 Type & \texttt{bool} \\ \hline
 Default & \texttt{true} \\ \hline
 \end{tabular}\\
@@ -667,51 +668,51 @@ Default & \texttt{true} \\ \hline
 \texttt{useFM} can be used to enable or disable the use of the Fiduccia-Mattheyses refinement algorithm. If \texttt{useFM} is \texttt{false}, then the FM refinement is skipped.\\
 
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{fmSearchDepth} \\ \hline
+Name & \texttt{FM\_search\_depth} \\ \hline
 Type & \texttt{Int} \\ \hline
 Default & \texttt{50} \\ \hline
 \end{tabular}\\
 
-The Fiduccia-Mattheyses algorithm attempts to make positive gain moves whenever possible. However, to better explore the non-convex search space, the FM algorithm will make unfavorable moves in an attempt to locate another more favorable solution. The \texttt{fmSearchDepth} limits the number of these unfavorable moves before the algorithm stops.
+The Fiduccia-Mattheyses algorithm attempts to make positive gain moves whenever possible. However, to better explore the non-convex search space, the FM algorithm will make unfavorable moves in an attempt to locate another more favorable solution. The \texttt{FM\_search\_depth} limits the number of these unfavorable moves before the algorithm stops.
 
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{fmConsiderCount} \\ \hline
+Name & \texttt{FM\_consider\_count} \\ \hline
 Type & \texttt{Int} \\ \hline
 Default & \texttt{3} \\ \hline
 \end{tabular}\\
 
-During the Fiduccia-Mattheyses algorithm, a heap is maintained of the vertices sorted by their gains. Vertices that have fewer neighbors in the same part relative to neighbors in the opposite part are prioritized higher in the heap (with higher gains), and are generally more likely to yield better quality cuts when swapped to the opposite part. \texttt{fmConsiderCount} defines the number of vertices at the top of the heap to consider swapping to the opposite part before terminating. When a vertex swap being considered does not yield a better cut after moving \texttt{fmSearchDepth} vertices, that iteration terminates, and the next vertex in the heap is considered.
+During the Fiduccia-Mattheyses algorithm, a heap is maintained of the vertices sorted by their gains. Vertices that have fewer neighbors in the same part relative to neighbors in the opposite part are prioritized higher in the heap (with higher gains), and are generally more likely to yield better quality cuts when swapped to the opposite part. \texttt{FM\_consider\_count} defines the number of vertices at the top of the heap to consider swapping to the opposite part before terminating. When a vertex swap being considered does not yield a better cut after moving \texttt{FM\_search\_depth} vertices, that iteration terminates, and the next vertex in the heap is considered.
 
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{fmMaxNumRefinements} \\ \hline
+Name & \texttt{FM\_max\_num\_refinements} \\ \hline
 Type & \texttt{Int} \\ \hline
 Default & \texttt{20} \\ \hline
 \end{tabular}\\
 
-\texttt{fmMaxNumRefinements} specifies the number of passes the Fiduccia-Mattheyses algorithm takes over the graph. During each pass, suboptimal moves may be attempted to escape local optima.
+\texttt{FM\_max\_num\_refinements} specifies the number of passes the Fiduccia-Mattheyses algorithm takes over the graph. During each pass, suboptimal moves may be attempted to escape local optima.
 
 \subsection{Quadratic Programming Options}
 
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{useQPGradProj} \\ \hline
+Name & \texttt{use\_QP\_gradproj} \\ \hline
 Type & \texttt{bool} \\ \hline
 Default & \texttt{true} \\ \hline
 \end{tabular}\\
 
-\texttt{useQPGradProj} can be used to enable or disable the use of the quadratic programming refinement algorithm. If \texttt{useQPGradProj} is \texttt{false}, then the QP refinement is skipped. This may provide faster solutions at the cost of cut quality.\\
+\texttt{use\_QP\_gradproj} can be used to enable or disable the use of the quadratic programming refinement algorithm. If \texttt{use\_QP\_gradproj} is \texttt{false}, then the QP refinement is skipped. This may provide faster solutions at the cost of cut quality.\\
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{gradProjTolerance} \\ \hline
+Name & \texttt{gradproj\_tolerance} \\ \hline
 Type & \texttt{double} \\ \hline
 Default & \texttt{0.001} \\ \hline
 \end{tabular}\\
 
-Convergence tolerance for the projected gradient algorithm in the quadratic programming refinement approach.  Decreasing the tolerance may improve solution quality at the cost of additional computation time. It may also be advisable to increase \texttt{gradprojIterationLimit}, as a decreased tolerance may require additional iterations to converge.\\
+Convergence tolerance for the projected gradient algorithm in the quadratic programming refinement approach.  Decreasing the tolerance may improve solution quality at the cost of additional computation time. It may also be advisable to increase \texttt{gradproj\_iteration\_limit}, as a decreased tolerance may require additional iterations to converge.\\
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{gradprojIterationLimit} \\ \hline
+Name & \texttt{gradproj\_iteration\_limit} \\ \hline
 Type & \texttt{Int} \\ \hline
 Default & \texttt{50} \\ \hline
 \end{tabular}\\
@@ -721,30 +722,30 @@ Maximum number of iterations for the gradient projection algorithm in the quadra
 \subsection{Final Partition Target Options}
 
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{targetSplit} \\ \hline
+Name & \texttt{target\_split} \\ \hline
 Type & \texttt{double} \\ \hline
 Default & \texttt{0.5} \\ \hline
 \end{tabular}\\
 
-\texttt{targetSplit} specifies the desired balance of the edge cut. The default is a balanced cut (0.5). Note that the target split takes into account weighted vertices.\\
+\texttt{target\_split} specifies the desired balance of the edge cut. The default is a balanced cut (0.5). Note that the target split takes into account weighted vertices.\\
 \vskip 1\baselineskip
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{softSplitTolerance} \\ \hline
+Name & \texttt{soft\_split\_tolerance} \\ \hline
 Type & \texttt{double} \\ \hline
 Default & \texttt{0} \\ \hline
 \end{tabular}\\
 
-Cuts within \texttt{targetSplit} $\pm$ \texttt{softSplitTolerance} are treated equally. For example, if any cut within 0.4 and 0.6 balance is acceptable, the user may specify \texttt{targetSplit} = 0.5 and \texttt{softSplitTolerance} = 0.1.\\
+Cuts within \texttt{target\_split} $\pm$ \texttt{soft\_split\_tolerance} are treated equally. For example, if any cut within 0.4 and 0.6 balance is acceptable, the user may specify \texttt{target\_split} = 0.5 and \texttt{soft\_split\_tolerance} = 0.1.\\
 
 \subsection{Other Options}
 
 \begin{tabular}{|l|l|} \hline
-Name & \texttt{randomSeed} \\ \hline
+Name & \texttt{random\_seed} \\ \hline
 Type & \texttt{Int} \\ \hline
 Default & \texttt{0} \\ \hline
 \end{tabular}\\
 
-Random number generation is used primarily in random matching strategies (\texttt{matchingStrategy = Random}) and random initial guesses (\texttt{guessCutType = GuessRandom}). \texttt{randomSeed} can be used to seed the random number generator with a specific value.
+Random number generation is used primarily in random matching strategies (\texttt{matching\_strategy = Random}) and random initial guesses (\texttt{initial\_cut\_type = InitialEdgeCut\_Random}). \texttt{random\_seed} can be used to seed the random number generator with a specific value.
 
 \section{References}
 

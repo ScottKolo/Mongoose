@@ -1,6 +1,6 @@
 #include <string>
 #include "Mongoose_IO.hpp"
-#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_EdgeCut.hpp"
 #include "Mongoose_Test.hpp"
 #include <fstream>
 
@@ -9,11 +9,11 @@ using namespace Mongoose;
 int runReferenceTest(const std::string &inputFile)
 {
     // Given a symmetric matrix
-    Options *options;
+    EdgeCut_Options *options;
     Graph *graph;
     clock_t t;
     
-    options = Options::Create();
+    options = EdgeCut_Options::create();
 
     if (!options)
     {
@@ -22,7 +22,7 @@ int runReferenceTest(const std::string &inputFile)
         return (EXIT_FAILURE);
     }
 
-    graph = readGraph(inputFile);
+    graph = read_graph(inputFile);
 
     if (!graph)
     {
@@ -32,10 +32,10 @@ int runReferenceTest(const std::string &inputFile)
 
     // An edge separator should be computed with default options
     t = clock();
-    int error = ComputeEdgeSeparator(graph, options);
+    EdgeCut *result = edge_cut(graph, options);
     t = clock() - t;
 
-    if (error)
+    if (!result)
     {
         // Error occurred
     }
@@ -44,13 +44,13 @@ int runReferenceTest(const std::string &inputFile)
         std::ofstream ofs ((inputFile + "_result.txt").c_str(), std::ofstream::out);
         ofs << "InputFile: " << inputFile << std::endl;
         ofs << "TotalTime: " << ((double) t)/CLOCKS_PER_SEC << std::endl;
-        ofs << "CutSize: " << graph->cutCost << std::endl;
-        ofs << "Imbalance: " << graph->imbalance << std::endl;
+        ofs << "CutSize: " << result->cut_cost << std::endl;
+        ofs << "Imbalance: " << result->imbalance << std::endl;
 
         for (int i = 0; i < graph->n; i++)
         {
             ofs << i << " ";
-            if (graph->partition[i] == 0)
+            if (result->partition[i] == 0)
             {
                 ofs << "A" << std::endl;
             }
@@ -83,19 +83,20 @@ int runReferenceTest(const std::string &inputFile)
         ifs.ignore(200, ' ');
         ifs >> input;
         double ref_cut_size = strtod(input.c_str(), NULL);
-        std::cout << "Test Cut Size: "      << graph->cutCost    << std::endl;
+        std::cout << "Test Cut Size: "      << result->cut_cost    << std::endl;
         std::cout << "Reference Cut Size: " <<  ref_cut_size << std::endl;
 
         ifs.close();
 
         assert(test_time <= 2*ref_time && 
             "FAIL: Run time significantly exceeds reference run time");
-        assert(fabs(graph->cutCost) <= 1.1*fabs(ref_cut_size) &&
+        assert(fabs(result->cut_cost) <= 1.1*fabs(ref_cut_size) &&
             "FAIL: Cut cost significantly exceeds reference cut size");
     }
 
-    options->~Options();
+    options->~EdgeCut_Options();
     graph->~Graph();
+    result->~EdgeCut();
 
     return EXIT_SUCCESS;
 }

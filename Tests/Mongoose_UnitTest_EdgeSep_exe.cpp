@@ -7,7 +7,7 @@
 #include "Mongoose_Test.hpp"
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_IO.hpp"
-#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_EdgeCut.hpp"
 
 using namespace Mongoose;
 
@@ -23,94 +23,109 @@ int main(int argn, char** argv)
     Logger::setTimingFlag(false);
 
     // Test with NULL graph
-    ComputeEdgeSeparator(NULL);
+    edge_cut(NULL);
 
-    Graph *G = readGraph("../Matrix/bcspwr02.mtx");
+    Graph *G = read_graph("../Matrix/bcspwr02.mtx");
 
     // Test with no options struct
-    ComputeEdgeSeparator(G);
+    EdgeCut *result = edge_cut(G);
+    result->~EdgeCut();
 
     // Test with NULL options struct
-    Options *O = NULL;
-    ComputeEdgeSeparator(G, O);
+    EdgeCut_Options *O = NULL;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
 
 
-    O = Options::Create();
+    O = EdgeCut_Options::create();
 
-    // Test with invalid coarsenLimit
-    O->coarsenLimit = 0;
-    ComputeEdgeSeparator(G, O);
-    O->coarsenLimit = 50;
+    // Test with invalid coarsen_limit
+    O->coarsen_limit = 0;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->coarsen_limit = 50;
 
-    // Test with invalid highDegreeThreshold
-    O->highDegreeThreshold = -1;
-    ComputeEdgeSeparator(G, O);
-    O->highDegreeThreshold = 2.0;
+    // Test with invalid high_degree_threshold
+    O->high_degree_threshold = -1;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->high_degree_threshold = 2.0;
 
-    // Test with invalid numDances
-    O->numDances = -1;
-    ComputeEdgeSeparator(G, O);
-    O->numDances = 1;
+    // Test with invalid num_dances
+    O->num_dances = -1;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->num_dances = 1;
 
-    // Test with invalid fmSearchDepth
-    O->fmSearchDepth = -1;
-    ComputeEdgeSeparator(G, O);
-    O->fmSearchDepth = 50;
+    // Test with invalid FM_search_depth
+    O->FM_search_depth = -1;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->FM_search_depth = 50;
 
-    // Test with invalid fmConsiderCount
-    O->fmConsiderCount = -1;
-    ComputeEdgeSeparator(G, O);
-    O->fmConsiderCount = 3;
+    // Test with invalid FM_consider_count
+    O->FM_consider_count = -1;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->FM_consider_count = 3;
 
-    // Test with invalid fmMaxNumRefinements
-    O->fmMaxNumRefinements = -1;
-    ComputeEdgeSeparator(G, O);
-    O->fmMaxNumRefinements = 20;
+    // Test with invalid FM_max_num_refinements
+    O->FM_max_num_refinements = -1;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->FM_max_num_refinements = 20;
 
-    // Test with invalid gradProjTolerance
-    O->gradProjTolerance = -1;
-    ComputeEdgeSeparator(G, O);
-    O->gradProjTolerance = 0.001;
+    // Test with invalid gradproj_tolerance
+    O->gradproj_tolerance = -1;
+    edge_cut(G, O);
+    O->gradproj_tolerance = 0.001;
 
-    // Test with invalid gradProjIterationLimit
-    O->gradprojIterationLimit = -1;
-    ComputeEdgeSeparator(G, O);
-    O->gradprojIterationLimit = 50;
+    // Test with invalid gradproj_iteration_limit
+    O->gradproj_iteration_limit = -1;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->gradproj_iteration_limit = 50;
 
-    // Test with invalid targetSplit
-    O->targetSplit = 1.2;
-    ComputeEdgeSeparator(G, O);
-    O->targetSplit = 0.4;
+    // Test with invalid target_split
+    O->target_split = 1.2;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->target_split = 0.4;
 
     // Test with invalid tolerance
-    O->softSplitTolerance = -1;
-    ComputeEdgeSeparator(G, O);
-    O->softSplitTolerance = 0.01;
+    O->soft_split_tolerance = -1;
+    result = edge_cut(G, O);
+    result->~EdgeCut();
+    O->soft_split_tolerance = 0.01;
 
     // Test with no QP
-    O->useQPGradProj = false;
-    ComputeEdgeSeparator(G, O);
-    assert(G->partition != NULL);
-    O->useQPGradProj = true;
+    O->use_QP_gradproj = false;
+    result = edge_cut(G, O);
+    assert(result->partition != NULL);
+    result->~EdgeCut();
+    O->use_QP_gradproj = true;
 
     // Test with no FM
-    O->useFM = false;
-    ComputeEdgeSeparator(G, O);
-    assert(G->partition != NULL);
-    O->useFM = true;
+    O->use_FM = false;
+    result = edge_cut(G, O);
+    assert(result->partition != NULL);
+    result->~EdgeCut();
+    O->use_FM = true;
 
     // Test with no coarsening
-    O->coarsenLimit = 1E15;
-    ComputeEdgeSeparator(G,O);
-    assert(G->partition != NULL);
+    O->coarsen_limit = 1E15;
+    result = edge_cut(G, O);
+    assert(result->partition != NULL);
+    result->~EdgeCut();
 
     // Test with x = NULL (assume pattern matrix)
     G->x = NULL;
-    ComputeEdgeSeparator(G,O);
-    assert(G->partition != NULL);
-    O->coarsenLimit = 50;
+    result = edge_cut(G, O);
+    assert(result->partition != NULL);
+    result->~EdgeCut();
+    O->coarsen_limit = 50;
 
-    O->~Options();
+    O->~EdgeCut_Options();
     G->~Graph();
 
     SuiteSparse_finish();

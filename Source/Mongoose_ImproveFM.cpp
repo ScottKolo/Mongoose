@@ -21,16 +21,16 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // Wrapper for Fidducia-Mattheyes cut improvement.
 //-----------------------------------------------------------------------------
-void improveCutUsingFM(Graph *graph, const Options *options)
+void improveCutUsingFM(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     Logger::tic(FMTiming);
 
-    if (!options->useFM)
+    if (!options->use_FM)
         return;
 
     double heuCost = INFINITY;
     for (Int i = 0;
-         i < options->fmMaxNumRefinements && graph->heuCost < heuCost; i++)
+         i < options->FM_max_num_refinements && graph->heuCost < heuCost; i++)
     {
         heuCost = graph->heuCost;
         fmRefine_worker(graph, options);
@@ -43,7 +43,7 @@ void improveCutUsingFM(Graph *graph, const Options *options)
 // Make a number of partition moves while considering the impact on problem
 // balance.
 //-----------------------------------------------------------------------------
-void fmRefine_worker(Graph *graph, const Options *options)
+void fmRefine_worker(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     double *Gw          = graph->w;
     double W            = graph->W;
@@ -57,7 +57,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
     Int *stack = graph->matchmap;
     Int head = 0, tail = 0;
 
-    /* Create & initialize a working cost and a best cost. */
+    /* create & initialize a working cost and a best cost. */
     struct CutCost workingCost, bestCost;
     workingCost.heuCost = bestCost.heuCost = graph->heuCost;
     workingCost.cutCost = bestCost.cutCost = graph->cutCost;
@@ -66,11 +66,11 @@ void fmRefine_worker(Graph *graph, const Options *options)
     workingCost.imbalance = bestCost.imbalance = graph->imbalance;
 
     /* Tolerance and the linear penalty to assess. */
-    double tol = options->softSplitTolerance;
+    double tol = options->soft_split_tolerance;
     double H   = graph->H;
 
-    Int fmSearchDepth   = options->fmSearchDepth;
-    Int fmConsiderCount = options->fmConsiderCount;
+    Int fmSearchDepth   = options->FM_search_depth;
+    Int fmConsiderCount = options->FM_consider_count;
     Int i               = 0;
     bool productive     = true;
     for (; i < fmSearchDepth && productive; i++)
@@ -218,7 +218,7 @@ void fmRefine_worker(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 // This function swaps the partition of a vertex
 //-----------------------------------------------------------------------------
-void fmSwap(Graph *graph, const Options *options, Int vertex, double gain,
+void fmSwap(EdgeCutProblem *graph, const EdgeCut_Options *options, Int vertex, double gain,
             bool oldPartition)
 {
     Int *Gp             = graph->p;
@@ -299,7 +299,7 @@ void fmSwap(Graph *graph, const Options *options, Int vertex, double gain,
 //-----------------------------------------------------------------------------
 // This function computes the gain of a vertex
 //-----------------------------------------------------------------------------
-void calculateGain(Graph *graph, const Options *options, Int vertex,
+void calculateGain(EdgeCutProblem *graph, const EdgeCut_Options *options, Int vertex,
                    double *out_gain, Int *out_externalDegree)
 {
     (void)options; // Unused variable

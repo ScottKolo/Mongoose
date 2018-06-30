@@ -29,10 +29,10 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // top-level matching code that serves as a multiple-dispatch system.
 //-----------------------------------------------------------------------------
-void match(Graph *graph, const Options *options)
+void match(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     Logger::tic(MatchingTiming);
-    switch (options->matchingStrategy)
+    switch (options->matching_strategy)
     {
     case Random:
         matching_Random(graph, options);
@@ -59,7 +59,7 @@ void match(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 // Cleans up a matching by matching remaining unmatched vertices to themselves
 //-----------------------------------------------------------------------------
-void matching_Cleanup(Graph *graph, const Options *options)
+void matching_Cleanup(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     (void)options; // Unused variable
 
@@ -88,7 +88,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
             else
             {
                 // Not a singleton
-                if (options->doCommunityMatching)
+                if (options->do_community_matching)
                 {
                     int i;
                     for (i = 0; i < graph->n; i++)
@@ -110,7 +110,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
     {
         // Leftover singleton
         Int k = graph->singleton;
-        if (options->doCommunityMatching)
+        if (options->do_community_matching)
         {
             int i;
             for (i = 0; i < graph->n; i++)
@@ -130,7 +130,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
     /* Every vertex must be matched in no more than a 3-way matching. */
     for (Int k = 0; k < n; k++)
     {
-        if (options->doCommunityMatching)
+        if (options->do_community_matching)
         {
             if (!graph->isMatched(k))
                 PR(("%ld is unmatched\n", k));
@@ -154,7 +154,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
                 v[2] = -1;
         }
 
-        if (options->doCommunityMatching)
+        if (options->do_community_matching)
         {
             if (v[2] != -1)
             {
@@ -183,7 +183,7 @@ void matching_Cleanup(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 // This is a random matching strategy
 //-----------------------------------------------------------------------------
-void matching_Random(Graph *graph, const Options *options)
+void matching_Random(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     (void)options; // Unused variable
 
@@ -234,7 +234,7 @@ void matching_Random(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 // This is the implementation of stall-reducing matching
 //-----------------------------------------------------------------------------
-void matching_SR(Graph *graph, const Options *options)
+void matching_SR(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     Int n      = graph->n;
     Int *Gp    = graph->p;
@@ -302,7 +302,7 @@ void matching_SR(Graph *graph, const Options *options)
             /* If we had a vertex left over: */
             if (v != -1)
             {
-                if (options->doCommunityMatching)
+                if (options->do_community_matching)
                 {
                     graph->createCommunityMatch(heaviestNeighbor, v,
                                                 MatchType_Community);
@@ -320,7 +320,7 @@ void matching_SR(Graph *graph, const Options *options)
 // This uses the stall-reducing matching where we only try SR matching
 // with vertices with degree above a user-defined threshold.
 //-----------------------------------------------------------------------------
-void matching_SRdeg(Graph *graph, const Options *options)
+void matching_SRdeg(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     Int n   = graph->n;
     Int *Gp = graph->p;
@@ -329,7 +329,7 @@ void matching_SRdeg(Graph *graph, const Options *options)
     /* The brotherly threshold is the minimum degree a "high degree" vertex.
      * It is the options->degreeThreshold times the average degree. */
     double bt
-        = options->highDegreeThreshold * ((double)graph->nz / (double)graph->n);
+        = options->high_degree_threshold * ((double)graph->nz / (double)graph->n);
 
 #ifndef NDEBUG
     /* In order for us to use Passive-Aggressive matching,
@@ -375,7 +375,7 @@ void matching_SRdeg(Graph *graph, const Options *options)
             /* If we had a vertex left over: */
             if (v != -1)
             {
-                if (options->doCommunityMatching)
+                if (options->do_community_matching)
                 {
                     graph->createCommunityMatch(k, v, MatchType_Community);
                 }
@@ -393,7 +393,7 @@ void matching_SRdeg(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 // This is a vanilla implementation of heavy edge matching
 //-----------------------------------------------------------------------------
-void matching_HEM(Graph *graph, const Options *options)
+void matching_HEM(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     (void)options; // Unused variable
 

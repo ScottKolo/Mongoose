@@ -8,7 +8,7 @@ int runIOTest(const std::string &inputFile, bool validGraph)
 {
     LogTest("Running I/O Test on " << inputFile);
 
-    Graph *G = readGraph(inputFile);
+    Graph *G = read_graph(inputFile);
 
     if (validGraph)
     {
@@ -25,7 +25,7 @@ int runIOTest(const std::string &inputFile, bool validGraph)
     }
 
     // Also try with C-style string
-    Graph *G2 = readGraph(inputFile.c_str());
+    Graph *G2 = read_graph(inputFile.c_str());
 
     if (validGraph)
     {

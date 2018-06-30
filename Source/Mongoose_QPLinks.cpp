@@ -16,7 +16,7 @@
 namespace Mongoose
 {
 
-bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
+bool QPLinks(EdgeCutProblem *graph, const EdgeCut_Options *options, QPDelta *QP)
 {
     (void)options; // Unused variable
 
@@ -102,7 +102,7 @@ bool QPLinks(Graph *graph, const Options *options, QPDelta *QP)
     Int ib = QP->ib;
     PR(("QPlinks: target "
         "%g GW %g ib %ld lo %g b %g hi %g b-lo %g hi-b %g\n",
-        options->targetSplit, graph->W, ib, QP->lo, QP->b, QP->hi,
+        options->target_split, graph->W, ib, QP->lo, QP->b, QP->hi,
         (QP->b) - (QP->lo), (QP->hi) - (QP->b)));
     fflush(stdout);
     fflush(stderr);

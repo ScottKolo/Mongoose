@@ -9,48 +9,48 @@
  * Mongoose is also available under other licenses; contact authors for details.
  * -------------------------------------------------------------------------- */
 
-#include "Mongoose_Options.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
 #include "Mongoose_Internal.hpp"
 
 namespace Mongoose
 {
 
 /* Constructor & Destructor */
-Options *Options::Create()
+EdgeCut_Options *EdgeCut_Options::create()
 {
-    Options *ret
-        = static_cast<Options *>(SuiteSparse_malloc(1, sizeof(Options)));
+    EdgeCut_Options *ret
+        = static_cast<EdgeCut_Options *>(SuiteSparse_malloc(1, sizeof(EdgeCut_Options)));
 
     if (ret != NULL)
     {
-        ret->randomSeed = 0;
+        ret->random_seed = 0;
 
-        ret->coarsenLimit        = 64;
-        ret->matchingStrategy    = HEMSR;
-        ret->doCommunityMatching = false;
-        ret->highDegreeThreshold = 2.0;
+        ret->coarsen_limit        = 64;
+        ret->matching_strategy    = HEMSR;
+        ret->do_community_matching = false;
+        ret->high_degree_threshold = 2.0;
 
-        ret->guessCutType = GuessRandom;
+        ret->initial_cut_type = InitialEdgeCut_Random;
 
-        ret->numDances = 1;
+        ret->num_dances = 1;
 
-        ret->useFM               = true;
-        ret->fmSearchDepth       = 50;
-        ret->fmConsiderCount     = 3;
-        ret->fmMaxNumRefinements = 20;
+        ret->use_FM               = true;
+        ret->FM_search_depth       = 50;
+        ret->FM_consider_count     = 3;
+        ret->FM_max_num_refinements = 20;
 
-        ret->useQPGradProj          = true;
-        ret->gradProjTolerance      = 0.001;
-        ret->gradprojIterationLimit = 50;
+        ret->use_QP_gradproj          = true;
+        ret->gradproj_tolerance      = 0.001;
+        ret->gradproj_iteration_limit = 50;
 
-        ret->targetSplit        = 0.5;
-        ret->softSplitTolerance = 0;
+        ret->target_split        = 0.5;
+        ret->soft_split_tolerance = 0;
     }
 
     return ret;
 }
 
-Options::~Options()
+EdgeCut_Options::~EdgeCut_Options()
 {
     SuiteSparse_free(this);
 }

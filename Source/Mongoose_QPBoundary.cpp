@@ -45,7 +45,7 @@
 namespace Mongoose
 {
 
-void QPBoundary(Graph *graph, const Options *options, QPDelta *QP)
+void QPBoundary(EdgeCutProblem *graph, const EdgeCut_Options *options, QPDelta *QP)
 {
     (void)options; // Unused variable
     /* ---------------------------------------------------------------------- */

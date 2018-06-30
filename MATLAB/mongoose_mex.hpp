@@ -2,9 +2,9 @@
 #include "mex.h"
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_CSparse.hpp"
-#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_EdgeCut.hpp"
 #include "Mongoose_Graph.hpp"
-#include "Mongoose_Options.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
 #include "Mongoose_Coarsening.hpp"
 #include "Mongoose_Matching.hpp"
 #include <algorithm>

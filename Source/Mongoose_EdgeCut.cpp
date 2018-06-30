@@ -9,7 +9,8 @@
  * Mongoose is also available under other licenses; contact authors for details.
  * -------------------------------------------------------------------------- */
 
-#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_EdgeCut.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_Coarsening.hpp"
 #include "Mongoose_GuessCut.hpp"
 #include "Mongoose_Internal.hpp"
@@ -23,57 +24,66 @@
 namespace Mongoose
 {
 
-bool optionsAreValid(const Options *options);
-void cleanup(Graph *graph);
+bool optionsAreValid(const EdgeCut_Options *options);
+void cleanup(EdgeCutProblem *graph);
 
-int ComputeEdgeSeparator(Graph *graph)
+EdgeCut::~EdgeCut()
+{
+    SuiteSparse_free(partition);
+    SuiteSparse_free(this);
+}
+
+EdgeCut *edge_cut(const Graph *graph)
 {
     // use default options if not present
-    Options *options = Options::Create();
+    EdgeCut_Options *options = EdgeCut_Options::create();
 
     if (!options)
-        return (EXIT_FAILURE);
+        return NULL;
 
-    int result = ComputeEdgeSeparator(graph, options);
+    EdgeCut *result = edge_cut(graph, options);
 
-    options->~Options();
+    options->~EdgeCut_Options();
 
     return (result);
 }
 
-int ComputeEdgeSeparator(Graph *graph, const Options *options)
+EdgeCut *edge_cut(const Graph *graph, const EdgeCut_Options *options)
 {
     // Check inputs
     if (!optionsAreValid(options))
-        return (EXIT_FAILURE);
+        return NULL;
 
-    setRandomSeed(options->randomSeed);
+    setRandomSeed(options->random_seed);
 
     if (!graph)
-        return EXIT_FAILURE;
+        return NULL;
+
+    // Create an EdgeCutProblem
+    EdgeCutProblem *problem = EdgeCutProblem::create(graph);
 
     /* Finish initialization */
-    graph->initialize(options);
+    problem->initialize(options);
 
     /* Keep track of what the current graph is at any stage */
-    Graph *current = graph;
+    EdgeCutProblem *current = problem;
 
     /* If we need to coarsen the graph, do the coarsening. */
-    while (current->n >= options->coarsenLimit)
+    while (current->n >= options->coarsen_limit)
     {
         match(current, options);
-        Graph *next = coarsen(current, options);
+        EdgeCutProblem *next = coarsen(current, options);
 
         /* If we ran out of memory during coarsening, unwind the stack. */
         if (!next)
         {
-            while (current != graph)
+            while (current != problem)
             {
                 next = current->parent;
-                current->~Graph();
+                current->~EdgeCutProblem();
                 current = next;
             }
-            return EXIT_FAILURE;
+            return NULL;
         }
 
         current = next;
@@ -85,13 +95,13 @@ int ComputeEdgeSeparator(Graph *graph, const Options *options)
      */
     if (!guessCut(current, options))
     {
-        while (current != graph)
+        while (current != problem)
         {
-            Graph *next = current->parent;
-            current->~Graph();
+            EdgeCutProblem *next = current->parent;
+            current->~EdgeCutProblem();
             current = next;
         }
-        return EXIT_FAILURE;
+        return NULL;
     }
 
     /*
@@ -105,10 +115,29 @@ int ComputeEdgeSeparator(Graph *graph, const Options *options)
 
     cleanup(current);
 
-    return EXIT_SUCCESS;
+    EdgeCut *result = (EdgeCut*)SuiteSparse_malloc(1, sizeof(EdgeCut));
+
+    if (!result)
+    {
+        problem->~EdgeCutProblem();
+        return NULL;
+    }
+
+    result->partition = current->partition;
+    current->partition = NULL; // Unlink pointer
+    result->n         = current->n;
+    result->cut_cost  = current->cutCost;
+    result->cut_size  = current->cutSize;
+    result->w0        = current->W0;
+    result->w1        = current->W1;
+    result->imbalance = current->imbalance;
+
+    problem->~EdgeCutProblem();
+
+    return result;
 }
 
-bool optionsAreValid(const Options *options)
+bool optionsAreValid(const EdgeCut_Options *options)
 {
     if (!options)
     {
@@ -116,70 +145,70 @@ bool optionsAreValid(const Options *options)
         return (false);
     }
 
-    if (options->coarsenLimit < 1)
+    if (options->coarsen_limit < 1)
     {
-        LogError("Fatal Error: options->coarsenLimit cannot be less than one.");
+        LogError("Fatal Error: options->coarsen_limit cannot be less than one.");
         return (false);
     }
 
-    if (options->highDegreeThreshold < 0)
+    if (options->high_degree_threshold < 0)
     {
-        LogError("Fatal Error: options->highDegreeThreshold cannot be less "
+        LogError("Fatal Error: options->high_degree_threshold cannot be less "
                  "than zero.");
         return (false);
     }
 
-    if (options->numDances < 0)
+    if (options->num_dances < 0)
     {
-        LogError("Fatal Error: options->numDances cannot be less than zero.");
+        LogError("Fatal Error: options->num_dances cannot be less than zero.");
         return (false);
     }
 
-    if (options->fmSearchDepth < 0)
+    if (options->FM_search_depth < 0)
     {
         LogError(
             "Fatal Error: options->fmSearchDepth cannot be less than zero.");
         return (false);
     }
 
-    if (options->fmConsiderCount < 0)
+    if (options->FM_consider_count < 0)
     {
         LogError(
-            "Fatal Error: options->fmConsiderCount cannot be less than zero.");
+            "Fatal Error: options->FM_consider_count cannot be less than zero.");
         return (false);
     }
 
-    if (options->fmMaxNumRefinements < 0)
+    if (options->FM_max_num_refinements < 0)
     {
-        LogError("Fatal Error: options->fmMaxNumRefinements cannot be less "
+        LogError("Fatal Error: options->FM_max_num_refinements cannot be less "
                  "than zero.");
         return (false);
     }
 
-    if (options->gradProjTolerance < 0)
+    if (options->gradproj_tolerance < 0)
     {
-        LogError("Fatal Error: options->gradProjTolerance cannot be less than "
+        LogError("Fatal Error: options->gradproj_tolerance cannot be less than "
                  "zero.");
         return (false);
     }
 
-    if (options->gradprojIterationLimit < 0)
+    if (options->gradproj_iteration_limit < 0)
     {
         LogError("Fatal Error: options->gradProjIterationLimit cannot be less "
                  "than zero.");
         return (false);
     }
 
-    if (options->targetSplit < 0 || options->targetSplit > 1)
+    if (options->target_split < 0 || options->target_split > 1)
     {
         LogError(
-            "Fatal Error: options->targetSplit must be in the range [0, 1].");
+            "Fatal Error: options->target_split must be in the range [0, 1].");
         return (false);
     }
 
-    if (options->softSplitTolerance < 0)
+    if (options->soft_split_tolerance < 0)
     {
-        LogError("Fatal Error: options->softSplitTolerance cannot be less than "
+        LogError("Fatal Error: options->soft_split_tolerance cannot be less than "
                  "zero.");
         return (false);
     }
@@ -187,7 +216,7 @@ bool optionsAreValid(const Options *options)
     return (true);
 }
 
-void cleanup(Graph *G)
+void cleanup(EdgeCutProblem *G)
 {
     Int cutSize = 0;
     for (Int p = 0; p < 2; p++)

@@ -46,11 +46,11 @@ enum MatchingStrategy
     HEMSRdeg = 3
 };
 
-enum GuessCutType
+enum InitialEdgeCutType
 {
-    GuessQP           = 0,
-    GuessRandom       = 1,
-    GuessNaturalOrder = 2
+    InitialEdgeCut_QP           = 0,
+    InitialEdgeCut_Random       = 1,
+    InitialEdgeCut_NaturalOrder = 2
 };
 
 enum MatchType

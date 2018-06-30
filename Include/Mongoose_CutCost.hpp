@@ -20,7 +20,7 @@ struct CutCost
     double heuCost;   /* Sum of cutCost and balance penalty       */
     double cutCost;   /* Sum of edge weights in the cut set.      */
     double W[2];      /* Sum of vertex weights in each partition. */
-    double imbalance; /* targetSplit - (W[0] / W)                 */
+    double imbalance; /* target_split - (W[0] / W)                 */
 };
 
 } // end namespace Mongoose

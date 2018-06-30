@@ -21,11 +21,11 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // This function takes a graph with options and computes the initial guess cut
 //-----------------------------------------------------------------------------
-bool guessCut(Graph *graph, const Options *options)
+bool guessCut(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
-    switch (options->guessCutType)
+    switch (options->initial_cut_type)
     {
-    case GuessQP:
+    case InitialEdgeCut_QP:
         for (Int k = 0; k < graph->n; k++)
         {
             graph->partition[k] = false;
@@ -39,7 +39,7 @@ bool guessCut(Graph *graph, const Options *options)
             // Error - QP Failure
         }
         break;
-    case GuessRandom:
+    case InitialEdgeCut_Random:
         for (Int k = 0; k < graph->n; k++)
         {
             graph->partition[k] = (random() % 2 == 0);
@@ -47,7 +47,7 @@ bool guessCut(Graph *graph, const Options *options)
 
         bhLoad(graph, options);
         break;
-    case GuessNaturalOrder:
+    case InitialEdgeCut_NaturalOrder:
         for (Int k = 0; k < graph->n; k++)
         {
             graph->partition[k] = (k < graph->n / 2);

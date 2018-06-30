@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "Mongoose_Graph.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_Matching.hpp"
-#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {
 
-Graph *coarsen(Graph *, const Options *);
+EdgeCutProblem *coarsen(EdgeCutProblem *, const EdgeCut_Options *);
 
 } // end namespace Mongoose

@@ -92,8 +92,8 @@ void QPcheckCom(Graph *G, const Options *O, QPDelta *QP, bool check_b,
     double hi    = QP->hi;
     double *D    = QP->D;        /* diagonal of quadratic */
     double *grad = QP->gradient; /* gradient at current x */
-    double tol   = std::max(log10(O->gradProjTolerance * G->worstCaseRatio),
-                          O->gradProjTolerance);
+    double tol   = std::max(log10(O->gradproj_tolerance * G->worstCaseRatio),
+                          O->gradproj_tolerance);
 
     // get workspace
     Int *w0       = (Int *)calloc(n + 1, sizeof(Int));          // [

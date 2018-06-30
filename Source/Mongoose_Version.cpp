@@ -15,26 +15,26 @@
 namespace Mongoose
 {
 
-int majorVersion()
+int major_version()
 {
     return Mongoose_VERSION_MAJOR;
 }
 
-int minorVersion()
+int minor_version()
 {
     return Mongoose_VERSION_MINOR;
 }
 
-int patchVersion()
+int patch_version()
 {
     return Mongoose_VERSION_PATCH;
 }
 
-std::string mongooseVersion()
+std::string mongoose_version()
 {
     std::ostringstream stringStream;
-    stringStream << majorVersion() << "." << minorVersion() << "."
-                 << patchVersion() << " " << Mongoose_DATE;
+    stringStream << major_version() << "." << minor_version() << "."
+                 << patch_version() << " " << Mongoose_DATE;
     return stringStream.str();
 }
 

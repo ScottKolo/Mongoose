@@ -12,9 +12,9 @@
 #pragma once
 
 #include "Mongoose_CutCost.hpp"
-#include "Mongoose_Graph.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {
@@ -42,12 +42,12 @@ struct SwapCandidate
     }
 };
 
-void improveCutUsingFM(Graph *, const Options *);
+void improveCutUsingFM(EdgeCutProblem *, const EdgeCut_Options *);
 
-void fmSwap(Graph *, const Options *, Int vertex, double gain,
+void fmSwap(EdgeCutProblem *, const EdgeCut_Options *, Int vertex, double gain,
             bool oldPartition);
-void fmRefine_worker(Graph *graph, const Options *options);
-void calculateGain(Graph *, const Options *, Int vertex, double *out_gain,
+void fmRefine_worker(EdgeCutProblem *graph, const EdgeCut_Options *options);
+void calculateGain(EdgeCutProblem *, const EdgeCut_Options *, Int vertex, double *out_gain,
                    Int *out_externalDegree);
 
 } // end namespace Mongoose

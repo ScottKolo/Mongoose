@@ -11,24 +11,24 @@
 
 #pragma once
 
-#include "Mongoose_Graph.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 #include "Mongoose_Internal.hpp"
-#include "Mongoose_Options.hpp"
 
 namespace Mongoose
 {
 
-void bhLoad(Graph *, const Options *);
-void bhClear(Graph *);
-void bhInsert(Graph *, Int vertex);
+void bhLoad(EdgeCutProblem *, const EdgeCut_Options *);
+void bhClear(EdgeCutProblem *);
+void bhInsert(EdgeCutProblem *, Int vertex);
 
-void bhRemove(Graph *, const Options *, Int vertex, double gain, bool partition,
+void bhRemove(EdgeCutProblem *, const EdgeCut_Options *, Int vertex, double gain, bool partition,
               Int bhPosition);
 
-void heapifyUp(Graph *, Int *bhHeap, double *gains, Int vertex, Int position,
+void heapifyUp(EdgeCutProblem *, Int *bhHeap, double *gains, Int vertex, Int position,
                double gain);
 
-void heapifyDown(Graph *, Int *bhHeap, Int size, double *gains, Int vertex,
+void heapifyDown(EdgeCutProblem *, Int *bhHeap, Int size, double *gains, Int vertex,
                  Int position, double gain);
 
 } // end namespace Mongoose

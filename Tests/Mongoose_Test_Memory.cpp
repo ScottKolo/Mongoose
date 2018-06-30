@@ -1,14 +1,14 @@
 
-#include "Mongoose_EdgeSeparator.hpp"
+#include "Mongoose_EdgeCut.hpp"
 #include "Mongoose_IO.hpp"
 #include <iostream>
 #include "Mongoose_Test.hpp"
 
 using namespace Mongoose;
 
-int RunAllTests(const std::string &inputFile, Options*);
+int RunAllTests(const std::string &inputFile, EdgeCut_Options*);
 
-int RunTest(const std::string &inputFile, const Options*, int allowedMallocs);
+int RunTest(const std::string &inputFile, const EdgeCut_Options*, int allowedMallocs);
 
 /* Custom memory management functions allow for memory testing. */
 int AllowedMallocs;
@@ -41,7 +41,7 @@ void myFree(void *ptr)
 
 int runMemoryTest(const std::string &inputFile)
 {
-    Options *options = Options::Create();
+    EdgeCut_Options *options = EdgeCut_Options::create();
 
     if(!options)
     {
@@ -57,12 +57,12 @@ int runMemoryTest(const std::string &inputFile)
 
     int status = RunAllTests(inputFile, options);
 
-    options->~Options();
+    options->~EdgeCut_Options();
 
     return status;
 }
 
-int RunAllTests (const std::string &inputFile, Options *options)
+int RunAllTests (const std::string &inputFile, EdgeCut_Options *options)
 {
     LogTest("Running Memory Test on " << inputFile);
 
@@ -70,23 +70,23 @@ int RunAllTests (const std::string &inputFile, Options *options)
     int remainingMallocs;
 
     MatchingStrategy matchingStrategies[4] = {Random, HEM, HEMSR, HEMSRdeg};
-    GuessCutType guessCutStrategies[3] = {GuessQP, GuessRandom, GuessNaturalOrder};
+    InitialEdgeCutType guessCutStrategies[3] = {InitialEdgeCut_QP, InitialEdgeCut_Random, InitialEdgeCut_NaturalOrder};
     Int coarsenLimit[3] = {64, 256, 1024};
 
     for(int c = 0; c < 2; c++)
     {
-        options->doCommunityMatching = static_cast<bool>(c);
+        options->do_community_matching = static_cast<bool>(c);
 
         for(int i = 0; i < 4; i++)
         {
-            options->matchingStrategy = matchingStrategies[i];
+            options->matching_strategy = matchingStrategies[i];
 
             for(int j = 0; j < 3; j++)
             {
-                options->guessCutType = guessCutStrategies[j];
+                options->initial_cut_type = guessCutStrategies[j];
                 for(int k = 0; k < 3; k++)
                 {
-                    options->coarsenLimit = coarsenLimit[k];
+                    options->coarsen_limit = coarsenLimit[k];
                     m = 0;
                     do {
                         remainingMallocs = RunTest(inputFile, options, m);
@@ -120,25 +120,28 @@ int RunAllTests (const std::string &inputFile, Options *options)
     return EXIT_SUCCESS;
 }
 
-int RunTest (const std::string &inputFile, const Options *O, int allowedMallocs)
+int RunTest (const std::string &inputFile, const EdgeCut_Options *O, int allowedMallocs)
 {
     /* Set the # of mallocs that we're allowed. */
     AllowedMallocs = allowedMallocs;
 
     /* Read and condition the matrix from the MM file. */
-    Graph *U = readGraph(inputFile);
+    Graph *U = read_graph(inputFile);
     if (!U) return AllowedMallocs;
+
+    EdgeCut *result;
 
     if (O)
     {
-        ComputeEdgeSeparator(U, O);
+        result = edge_cut(U, O);
     }
     else
     {
-        ComputeEdgeSeparator(U);
+        result = edge_cut(U);
     }
 
     U->~Graph();
+    result->~EdgeCut();
 
     return AllowedMallocs;
 }

@@ -17,9 +17,9 @@
 namespace Mongoose
 {
 
-void waterdance(Graph *graph, const Options *options)
+void waterdance(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
-    Int numDances = options->numDances;
+    Int numDances = options->num_dances;
     for (Int i = 0; i < numDances; i++)
     {
         improveCutUsingFM(graph, options);

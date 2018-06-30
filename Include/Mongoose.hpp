@@ -40,58 +40,50 @@ enum MatchingStrategy
     HEMSRdeg
 };
 
-enum GuessCutType
+enum InitialEdgeCutType
 {
-    GuessQP,
-    GuessRandom,
-    GuessNaturalOrder
+    InitialEdgeCut_QP,
+    InitialEdgeCut_Random,
+    InitialEdgeCut_NaturalOrder
 };
 
-enum MatchType
+struct EdgeCut_Options
 {
-    MatchType_Orphan    = 0,
-    MatchType_Standard  = 1,
-    MatchType_Brotherly = 2,
-    MatchType_Community = 3
-};
-
-struct Options
-{
-    Int randomSeed;
+    Int random_seed;
 
     /** Coarsening Options ***************************************************/
-    Int coarsenLimit;
-    MatchingStrategy matchingStrategy;
-    bool doCommunityMatching;
-    double highDegreeThreshold;
+    Int coarsen_limit;
+    MatchingStrategy matching_strategy;
+    bool do_community_matching;
+    double high_degree_threshold;
 
     /** Guess Partitioning Options *******************************************/
-    GuessCutType guessCutType; /* The guess cut type to use */
+    InitialEdgeCutType initial_cut_type; /* The guess cut type to use */
 
     /** Waterdance Options ***************************************************/
-    Int numDances; /* The number of interplays between FM and QP
+    Int num_dances; /* The number of interplays between FM and QP
                       at any one coarsening level. */
 
     /**** Fidducia-Mattheyes Options *****************************************/
-    bool useFM;              /* Flag governing the use of FM             */
-    Int fmSearchDepth;       /* The # of non-positive gain move to make  */
-    Int fmConsiderCount;     /* The # of heap entries to consider        */
-    Int fmMaxNumRefinements; /* Max # of times to run FidduciaMattheyes  */
+    bool use_FM;              /* Flag governing the use of FM             */
+    Int FM_search_depth;       /* The # of non-positive gain move to make  */
+    Int FM_consider_count;     /* The # of heap entries to consider        */
+    Int FM_max_num_refinements; /* Max # of times to run FidduciaMattheyes  */
 
     /**** Quadratic Programming Options **************************************/
-    bool useQPGradProj;         /* Flag governing the use of gradproj       */
-    double gradProjTolerance;   /* Convergence tol for projected gradient   */
-    Int gradprojIterationLimit; /* Max # of iterations for gradproj         */
+    bool use_QP_gradproj;         /* Flag governing the use of gradproj       */
+    double gradproj_tolerance;   /* Convergence tol for projected gradient   */
+    Int gradproj_iteration_limit; /* Max # of iterations for gradproj         */
 
     /** Final Partition Target Metrics ***************************************/
-    double targetSplit;        /* The desired split ratio (default 50/50)  */
-    double softSplitTolerance; /* The allowable soft split tolerance.      */
+    double target_split;        /* The desired split ratio (default 50/50)  */
+    double soft_split_tolerance; /* The allowable soft split tolerance.      */
     /* Cuts within this tolerance are treated   */
     /* equally.                                 */
 
     /* Constructor & Destructor */
-    static Options *Create();
-    ~Options();
+    static EdgeCut_Options *create();
+    ~EdgeCut_Options();
 };
 
 class Graph
@@ -104,51 +96,21 @@ public:
     Int *i;    /** Row indices                     */
     double *x; /** Edge weight                     */
     double *w; /** Node weight                     */
-    double X;  /** Sum of edge weights             */
-    double W;  /** Sum of vertex weights           */
 
-    double H; /** Heuristic max penalty to assess */
-    double worstCaseRatio;
-
-    /** Partition Data *******************************************************/
-    bool *partition;     /** T/F denoting partition side     */
-    double *vertexGains; /** Gains for each vertex           */
-    Int *externalDegree; /** # edges lying across the cut    */
-    Int *bhIndex;        /** Index+1 of a vertex in the heap */
-    Int *bhHeap[2];      /** Heap data structure organized by
-                            boundaryGains descending         */
-    Int bhSize[2];       /** Size of the boundary heap       */
-
-    /** Cut Cost Metrics *****************************************************/
-    double heuCost;   /** cutCost + balance penalty         */
-    double cutCost;   /** Sum of edge weights in cut set    */
-    Int cutSize;      /** Number of edges in cut set        */
-    double W0;        /** Sum of partition 0 vertex weights */
-    double W1;        /** Sum of partition 1 vertex weights */
-    double imbalance; /** Degree to which the partitioning
-                          is imbalanced, and this is
-                          computed as (0.5 - W0/W).         */
-
-    /** Matching Data ********************************************************/
-    Graph *parent;    /** Link to the parent graph        */
-    Int clevel;       /** Coarsening level for this graph */
-    Int cn;           /** # vertices in coarse graph      */
-    Int *matching;    /** Linked List of matched vertices */
-    Int *matchmap;    /** Map from fine to coarse vertices */
-    Int *invmatchmap; /** Map from coarse to fine vertices */
-    Int *matchtype;   /** Vertex's match classification
-                           0: Orphan
-                           1: Standard (random, hem, shem)
-                           2: Brotherly
-                           3: Community                   */
-    Int singleton;
-
-    /* Constructor & Destructor */
-    static Graph *Create(const Int _n, const Int _nz, Int *_p = NULL,
+    /* Constructors & Destructor */
+    static Graph *create(const Int _n, const Int _nz, Int *_p = NULL,
                          Int *_i = NULL, double *_x = NULL, double *_w = NULL);
-    static Graph *Create(cs *matrix);
+    static Graph *create(cs *matrix);
     ~Graph();
-    bool initialize(const Options *options);
+
+private:
+    Graph();
+
+    /** Memory Management Flags ***********************************************/
+    bool shallow_p;
+    bool shallow_i;
+    bool shallow_x;
+    bool shallow_w;
 };
 
 /**
@@ -162,7 +124,7 @@ public:
  *
  * @param filename the filename or path to the Matrix Market File.
  */
-Graph *readGraph(const std::string &filename);
+Graph *read_graph(const std::string &filename);
 
 /**
  * Generate a Graph from a Matrix Market file.
@@ -175,15 +137,33 @@ Graph *readGraph(const std::string &filename);
  *
  * @param filename the filename or path to the Matrix Market File.
  */
-Graph *readGraph(const char *filename);
+Graph *read_graph(const char *filename);
 
-int ComputeEdgeSeparator(Graph *);
-int ComputeEdgeSeparator(Graph *, const Options *);
+struct EdgeCut
+{
+    bool *partition;     /** T/F denoting partition side     */
+    Int n;               /** # vertices                      */
+
+    /** Cut Cost Metrics *****************************************************/
+    double cut_cost;    /** Sum of edge weights in cut set    */
+    Int cut_size;       /** Number of edges in cut set        */
+    double w0;          /** Sum of partition 0 vertex weights */
+    double w1;          /** Sum of partition 1 vertex weights */
+    double imbalance;   /** Degree to which the partitioning
+                            is imbalanced, and this is
+                            computed as (0.5 - W0/W).         */
+
+    // desctructor (no constructor)
+    ~EdgeCut();
+};
+
+EdgeCut *edge_cut(const Graph *);
+EdgeCut *edge_cut(const Graph *, const EdgeCut_Options *);
 
 /* Version information */
-int majorVersion();
-int minorVersion();
-int patchVersion();
-std::string mongooseVersion();
+int major_version();
+int minor_version();
+int patch_version();
+std::string mongoose_version();
 
 } // end namespace Mongoose

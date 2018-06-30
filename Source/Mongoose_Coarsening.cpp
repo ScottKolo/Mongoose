@@ -48,7 +48,7 @@ namespace Mongoose
  * @return A coarsened version of G
  * @note Allocates memory for the coarsened graph, but frees on error.
  */
-Graph *coarsen(Graph *graph, const Options *options)
+EdgeCutProblem *coarsen(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     (void)options; // Unused variable
 
@@ -64,7 +64,7 @@ Graph *coarsen(Graph *graph, const Options *options)
     Int *invmatchmap = graph->invmatchmap;
 
     /* Build the coarse graph */
-    Graph *coarseGraph = Graph::Create(graph);
+    EdgeCutProblem *coarseGraph = EdgeCutProblem::create(graph);
     if (!coarseGraph)
         return NULL;
 
@@ -85,7 +85,7 @@ Graph *coarsen(Graph *graph, const Options *options)
         = (Int *)SuiteSparse_malloc(static_cast<size_t>(cn), sizeof(Int));
     if (!htable)
     {
-        coarseGraph->~Graph();
+        coarseGraph->~EdgeCutProblem();
         return NULL;
     }
     for (Int i = 0; i < cn; i++)

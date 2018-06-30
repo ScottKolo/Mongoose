@@ -7,6 +7,7 @@
 #include "Mongoose_Test.hpp"
 #include "Mongoose_Internal.hpp"
 #include "Mongoose_IO.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 
 using namespace Mongoose;
 
@@ -51,24 +52,24 @@ int main(int argn, char** argv)
     Logger::setTimingFlag(false);
 
     // Test Graph(n, nz) static constructor
-    Graph *G2 = Graph::Create(10, 20);
+    Graph *G2 = Graph::create(10, 20);
+    EdgeCutProblem *prob = EdgeCutProblem::create(G2);
 
-    G2->clearMarkArray(LONG_MAX);
-    Int markValue = G2->getMarkValue();
+    prob->clearMarkArray(LONG_MAX);
+    Int markValue = prob->getMarkValue();
     assert(markValue == 1);
 
-    G2->clearMarkArray(LONG_MAX-1);
-    G2->clearMarkArray();
-    markValue = G2->getMarkValue();
+    prob->clearMarkArray(LONG_MAX-1);
+    prob->clearMarkArray();
+    markValue = prob->getMarkValue();
     assert(markValue >= 1);
-    G2->~Graph();
+    prob->~EdgeCutProblem();
 
     MM_typecode matcode;
-    cs *M4 = readMatrix("../Matrix/bcspwr01.mtx", matcode);
+    cs *M4 = read_matrix("../Matrix/bcspwr01.mtx", matcode);
     M4->x = NULL;
-    Graph *G7 = Graph::Create(M4);
+    Graph *G7 = Graph::create(M4);
     assert(G7 != NULL);
-    G7->~Graph();
 
     // Tests to increase coverage
     /* Override SuiteSparse memory management with custom testers. */
@@ -79,20 +80,22 @@ int main(int argn, char** argv)
 
     // Simulate failure to allocate return arrays
     AllowedMallocs = 0;
-    Graph *G3 = Graph::Create(10, 20);
+    EdgeCutProblem *G3 = EdgeCutProblem::create(G7);
     assert(G3 == NULL);
 
     AllowedMallocs = 1;
-    Graph *G4 = Graph::Create(10, 20);
+    EdgeCutProblem *G4 = EdgeCutProblem::create(G7);
     assert(G4 == NULL);
 
     AllowedMallocs = 5;
-    Graph *G5 = Graph::Create(10, 20);
+    EdgeCutProblem *G5 = EdgeCutProblem::create(G7);
     assert(G5 == NULL);
 
     AllowedMallocs = 10;
-    Graph *G6 = Graph::Create(10, 20);
+    EdgeCutProblem *G6 = EdgeCutProblem::create(G7);
     assert(G6 == NULL);
+
+    G7->~Graph();
 
     SuiteSparse_finish();
 

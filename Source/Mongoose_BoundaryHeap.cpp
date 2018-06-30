@@ -21,7 +21,7 @@ namespace Mongoose
 //-----------------------------------------------------------------------------
 // This function inserts the specified vertex into the graph
 //-----------------------------------------------------------------------------
-void bhLoad(Graph *graph, const Options *options)
+void bhLoad(EdgeCutProblem *graph, const EdgeCut_Options *options)
 {
     /* Load the boundary heaps. */
     Int n               = graph->n;
@@ -71,13 +71,13 @@ void bhLoad(Graph *graph, const Options *options)
     graph->W0      = cost.W[0];
     graph->W1      = cost.W[1];
 
-    double targetSplit = options->targetSplit;
+    double targetSplit = options->target_split;
     ASSERT(targetSplit > 0);
     ASSERT(targetSplit <= 0.5);
 
     graph->imbalance = targetSplit - std::min(graph->W0, graph->W1) / graph->W;
     graph->heuCost   = (graph->cutCost
-                      + (fabs(graph->imbalance) > options->softSplitTolerance
+                      + (fabs(graph->imbalance) > options->soft_split_tolerance
                              ? fabs(graph->imbalance) * graph->H
                              : 0.0));
 }
@@ -85,7 +85,7 @@ void bhLoad(Graph *graph, const Options *options)
 //-----------------------------------------------------------------------------
 // This function inserts the specified vertex into the graph's boundary heap
 //-----------------------------------------------------------------------------
-void bhInsert(Graph *graph, Int vertex)
+void bhInsert(EdgeCutProblem *graph, Int vertex)
 {
     /* Unpack structures */
     Int vp        = graph->partition[vertex];
@@ -107,7 +107,7 @@ void bhInsert(Graph *graph, Int vertex)
 // To do this, we swap the last element in the heap with the element we
 // want to remove. Then we heapify up and heapify down.
 //-----------------------------------------------------------------------------
-void bhRemove(Graph *graph, const Options *options, Int vertex, double gain,
+void bhRemove(EdgeCutProblem *graph, const EdgeCut_Options *options, Int vertex, double gain,
               bool partition, Int bhPosition)
 {
     (void)options; // Unused variable
@@ -142,7 +142,7 @@ void bhRemove(Graph *graph, const Options *options, Int vertex, double gain,
 //-----------------------------------------------------------------------------
 // Starting at a position, this function will heapify from a vertex upwards
 //-----------------------------------------------------------------------------
-void heapifyUp(Graph *graph, Int *bhHeap, double *gains, Int vertex,
+void heapifyUp(EdgeCutProblem *graph, Int *bhHeap, double *gains, Int vertex,
                Int position, double gain)
 {
     if (position == 0)
@@ -166,7 +166,7 @@ void heapifyUp(Graph *graph, Int *bhHeap, double *gains, Int vertex,
 //-----------------------------------------------------------------------------
 // Starting at a position, this function will heapify from a vertex downwards
 //-----------------------------------------------------------------------------
-void heapifyDown(Graph *graph, Int *bhHeap, Int size, double *gains, Int vertex,
+void heapifyDown(EdgeCutProblem *graph, Int *bhHeap, Int size, double *gains, Int vertex,
                  Int position, double gain)
 {
     if (position >= size)
