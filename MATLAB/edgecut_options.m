@@ -1,11 +1,11 @@
-function options = defaultoptions()
-%DEFAULTOPTIONS create a struct of default options.
+function options = edgecut_options()
+%EDGECUT_OPTIONS create a struct of default options for edge cuts.
 %   options = defaultoptions() returns an options struct with defaults set.
 %   If modifications to the default options are needed to modify how EDGECUT
-%   functions, call DEFAULTOPTIONS and modify the struct as needed.
+%   functions, call EDGECUT_OPTIONS and modify the struct as needed.
 %
 %   Example:
-%       options = defaultoptions();
+%       options = edgecut_options();
 %       options.targetSplit = 0.3;
 %       options.matchingStrategy = 0;   % Random matching
 %       Prob = ssget('DNVS/troll'); A = Prob.A;
@@ -14,4 +14,4 @@ function options = defaultoptions()
 %
 %   See also EDGECUT.
 
-error ('defaultoptions mexFunction not found') ;
+error ('edgecut_options mexFunction not found') ;

@@ -13,6 +13,7 @@
 
 #include "Mongoose_Graph.hpp"
 #include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
 
 namespace Mongoose
 {
@@ -37,5 +38,6 @@ struct EdgeCut
 
 EdgeCut *edge_cut(const Graph *);
 EdgeCut *edge_cut(const Graph *, const EdgeCut_Options *);
+EdgeCut *edge_cut(EdgeCutProblem *problem, const EdgeCut_Options *options);
 
 } // end namespace Mongoose

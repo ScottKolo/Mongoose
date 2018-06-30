@@ -18,8 +18,8 @@ V = ones(1,m);
 V(10) = 300;
 
 % Create a set of default options and modify the target balance
-O = defaultoptions();
-O.targetSplit = 0.3;
+O = edgecut_options();
+O.target_split = 0.3;
 
 % Run Mongoose to partition the graph with edge and vertex weights.
 partVert = edgecut(A, O, V);

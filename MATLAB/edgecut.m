@@ -23,6 +23,6 @@ function partition = edgecut(G, (O, A))
 %       A_perm = A(perm, perm); % Permute the matrix
 %       spy(A_perm);
 %
-%   See also DEFAULTOPTIONS, SAFE_EDGECUT.
+%   See also EDGECUT_OPTIONS, SAFE_EDGECUT.
 
 error ('edgecut mexFunction not found') ;

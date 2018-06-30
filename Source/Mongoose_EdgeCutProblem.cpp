@@ -196,7 +196,7 @@ void EdgeCutProblem::initialize(const EdgeCut_Options *options)
     {
         // Graph has been previously initialized. We need to clear some extra
         // data structures to be able to reuse it.
-        
+
         X = 0.0;
         W = 0.0;
         H = 0.0;

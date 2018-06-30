@@ -183,7 +183,7 @@ After compilation, the Mongoose demo can be run using \texttt{./bin/demo}:\\
 \begin{lstlisting}[numbers=none,xleftmargin=.09\textwidth, xrightmargin=.09\textwidth,keywordstyle=\color{black}]
 ./bin/demo
 ********************************************************************************
-Mongoose Graph Partitioning Library, Version 1.0.0
+Mongoose Graph Partitioning Library, Version 2.0.0 June 30, 2018
 Copyright (C) 2017-2018
 Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
 Mongoose is licensed under Version 3 of the GNU General Public License.
@@ -193,23 +193,79 @@ Computing an edge cut for bcspwr01.mtx...
 Partitioning Complete!
 Cut Cost:       3
 Cut Imbalance:  1.3%
-Trial Time:     0.58ms
+Trial Time:     0.61ms
 ********************************************************************************
-
-...
-
+Computing an edge cut for bcspwr02.mtx...
+Partitioning Complete!
+Cut Cost:       5
+Cut Imbalance:  1%
+Trial Time:     0.37ms
+********************************************************************************
+Computing an edge cut for bcspwr03.mtx...
+Partitioning Complete!
+Cut Cost:       11
+Cut Imbalance:  0%
+Trial Time:     0.55ms
+********************************************************************************
+Computing an edge cut for bcspwr04.mtx...
+Partitioning Complete!
+Cut Cost:       25
+Cut Imbalance:  2.6e-16%
+Trial Time:     1.5ms
+********************************************************************************
+Computing an edge cut for bcspwr05.mtx...
+Partitioning Complete!
+Cut Cost:       12
+Cut Imbalance:  0.11%
+Trial Time:     1.1ms
+********************************************************************************
+Computing an edge cut for bcspwr06.mtx...
+Partitioning Complete!
+Cut Cost:       7
+Cut Imbalance:  1.5e-15%
+Trial Time:     2.8ms
+********************************************************************************
+Computing an edge cut for bcspwr07.mtx...
+Partitioning Complete!
+Cut Cost:       7
+Cut Imbalance:  0%
+Trial Time:     2.7ms
+********************************************************************************
+Computing an edge cut for bcspwr08.mtx...
+Partitioning Complete!
+Cut Cost:       25
+Cut Imbalance:  3.3e-16%
+Trial Time:     2.5ms
+********************************************************************************
+Computing an edge cut for bcspwr09.mtx...
+Partitioning Complete!
+Cut Cost:       11
+Cut Imbalance:  0.029%
+Trial Time:     2.7ms
+********************************************************************************
+Computing an edge cut for bcspwr10.mtx...
+Partitioning Complete!
+Cut Cost:       25
+Cut Imbalance:  1.1e-15%
+Trial Time:     8.9ms
+********************************************************************************
+Computing an edge cut for jagmesh7.mtx...
+Partitioning Complete!
+Cut Cost:       27
+Cut Imbalance:  0%
+Trial Time:     2.2ms
 ********************************************************************************
 Computing an edge cut for troll.mtx...
 Partitioning Complete!
 Cut Cost:       3.7e+04
 Cut Imbalance:  0.00023%
-Trial Time:     3.4e+03ms
+Trial Time:     2.5e+03ms
 ********************************************************************************
-Total Demo Time:  3.4s
+Total Demo Time:  2.5s
 
-               **************************************************               
-               ***************** Demo Complete! *****************               
-               **************************************************  
+               **************************************************
+               ***************** Demo Complete! *****************
+               **************************************************
 \end{lstlisting}
 
 To run the complete test suite, the command \texttt{make test} can be used. Note that Python 2.7+ must be installed. Additionally, this user guide can be generated from source with the command \texttt{make userguide}. XeLaTeX (commonly included in LaTeX distributions) must be installed.
@@ -224,36 +280,41 @@ The \texttt{mongoose} executable generates a text file with two blocks: a JSON-f
 
 For example, the following can be used to partition \texttt{troll.mtx}:
 
-\begin{lstlisting}[numbers=none,xleftmargin=.2\textwidth, xrightmargin=.2\textwidth,keywordstyle=\color{black}]
+\begin{lstlisting}[numbers=none,xleftmargin=.09\textwidth, xrightmargin=.09\textwidth,keywordstyle=\color{black}]
 ./bin/mongoose ../Matrix/troll.mtx troll_out.mtx
-Total Edge Separator Time: 1.00848s
- Matching:   0.08622s
- Coarsening: 0.2118s
- Refinement: 0.05528s
- FM:         0.003129s
- QP:         0.5684s
- IO:         2.522s
+********************************************************************************
+Mongoose Graph Partitioning Library, Version 2.0.0 June 30, 2018
+Copyright (C) 2017-2018
+Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
+Mongoose is licensed under Version 3 of the GNU General Public License.
+Mongoose is also available under other licenses; contact authors for details.
+********************************************************************************
+Total Edge Separator Time: 0.403932s
+ Matching:   0.03894s
+ Coarsening: 0.1145s
+ Refinement: 0.04114s
+ FM:         0.00397s
+ QP:         0.1837s
+ IO:         2.039s
 Cut Properties:
- Cut Size:       50837
- Cut Cost:       5.084e+04
- Normalized Cut: 0.01727
+ Cut Size:       40517
+ Cut Cost:       4.052e+04
  Imbalance:      2.342e-06
 
-cat jagmesh7_out.txt 
+cat troll_out.txt
 {
   "InputFile": "../Matrix/troll.mtx",
   "Timing": {
-    "Total": 1.00848,
-    "Matching": 0.086223,
-    "Coarsening": 0.211779,
-    "Refinement": 0.055275,
-    "FM": 0.003129,
-    "QP": 0.568422,
-    "IO": 2.52204
+    "Total": 0.403932,
+    "Matching": 0.03894,
+    "Coarsening": 0.114478,
+    "Refinement": 0.041145,
+    "FM": 0.00397,
+    "QP": 0.183679,
+    "IO": 2.03914
   },
-  "CutSize": 50837,
-  "CutCost": 50837,
-  "NormCut": 0.0172744,
+  "CutSize": 40517,
+  "CutCost": 40517,
   "Imbalance": 2.34244e-06
 }
 
@@ -290,13 +351,14 @@ Mongoose is licensed under the GNU Public License version 3 (GPLv3). Full text o
 #include "Mongoose.hpp"
 #include <iostream>
 #include <iomanip>
+#include <math.h>
 
 using namespace Mongoose;
 using namespace std;
 
 int main(int argn, const char **argv)
 {
-    Options *options = Options::create();
+    EdgeCut_Options *options = EdgeCut_Options::create();
     if (!options) return EXIT_FAILURE; // Return an error if we failed.
 
     options->matching_strategy = HEMSRdeg;
@@ -305,18 +367,18 @@ int main(int argn, const char **argv)
     Graph *graph = read_graph(argv[1]);
     if (!graph)
     {
-    	options->~Options();
-    	return EXIT_FAILURE;
+        options->~EdgeCut_Options();
+        return EXIT_FAILURE;
     }
-	
+
     // Call Mongoose to compute an edge separator
     EdgeCut *result = edge_cut(graph, options);
 
     cout << "Partitioning Complete!" << endl;
     cout << "Cut Cost:      " << setprecision(2) << result->cut_cost << endl;
     cout << "Cut Imbalance: " << setprecision(2) << fabs(100*result->imbalance) << "%" << endl;
-	
-    options->~Options();
+
+    options->~EdgeCut_Options();
     graph->~Graph();
     result->~EdgeCut();
 
@@ -403,21 +465,21 @@ For example, to read in the Matrix Market file \texttt{jagmesh7.mtx} located in 
 The following functions are available in the C++ API. After Mongoose is compiled, a static library version of Mongoose is built at \texttt{Mongoose/\_build/lib/libmongoose.a}. Include the \texttt{Mongoose.hpp} header file located in \texttt{Mongoose/Include} and link with the static library to enable the following API functions.
 
 \begin{itemize}
-\item \textbf{\texttt{Graph *readGraph(const std::string \&filename);}} \vspace{-6pt}
-\item \textbf{\texttt{Graph *readGraph(const char *filename);}}
+\item \textbf{\texttt{Graph *read\_graph(const std::string \&filename);}} \vspace{-6pt}
+\item \textbf{\texttt{Graph *read\_graph(const char *filename);}}
 
-\texttt{Mongoose::readGraph} will attempt to read a Matrix Market file with the given filename and convert it to a Mongoose Graph instance. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric by computing $\frac{1}{2}(A+A^T)$. If a diagonal is present, it will be removed.
+\texttt{Mongoose::read\_graph} will attempt to read a Matrix Market file with the given filename and convert it to a Mongoose Graph instance. The matrix contained in the file must be sparse, real, and square. If the matrix is not symmetric, it will be made symmetric by computing $\frac{1}{2}(A+A^T)$. If a diagonal is present, it will be removed.
 
 \texttt{Mongoose::read\_graph(const std::string \&filename)} accepts a C++-style std::string, while \texttt{Mongoose::read\_graph(const char *filename)} accepts a C-style null-terminated string.
 \vspace{6pt}
-\item \textbf{\texttt{int edge\_cut(Graph *);}} \vspace{-6pt}
-\item \textbf{\texttt{int edge\_cut(Graph *, const Options *);}}
+\item \textbf{\texttt{int edge\_cut(const Graph *);}} \vspace{-6pt}
+\item \textbf{\texttt{int edge\_cut(const Graph *, const EdgeCut\_Options *);}}
 
-\texttt{Mongoose::edge\_cut} will attempt to compute an edge cut of the provided \texttt{Mongoose::Graph} object. An \texttt{Options} struct can also be supplied to modify how the edge cut is computed -- otherwise, the default options are used (see Section \ref{sec:options}).
+\texttt{Mongoose::edge\_cut} will attempt to compute an edge cut of the provided \texttt{Mongoose::Graph} object. An \texttt{EdgeCut\_Options} struct can also be supplied to modify how the edge cut is computed -- otherwise, the default options are used (see Section \ref{sec:options}).
 \vspace{6pt}
-\item \textbf{\texttt{static Options *create();}}
+\item \textbf{\texttt{static EdgeCut\_Options *create();}}
 
-\texttt{Mongoose::Options::create} will return an \texttt{Options} struct with default state (see Section \ref{sec:options} for details about option fields and defaults). To run Mongoose with specific options, call \texttt{Options::Create} and modify the struct as needed.
+\texttt{Mongoose::EdgeCut\_Options::create} will return an \texttt{EdgeCut\_Options} struct with default state (see Section \ref{sec:options} for details about option fields and defaults). To run Mongoose with specific options, call \texttt{EdgeCut\_Options::create} and modify the struct as needed.
 \vspace{6pt}
 \item \textbf{\texttt{static Graph *create(const Int \_n, \\
 \hspace*{4.2cm} const Int \_nz, \\
@@ -434,21 +496,23 @@ Using the manual constructor, the number of vertices (or dimension of the matrix
 Note that Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it).
 
 \vspace{6pt}
-\item \textbf{\texttt{$\sim$Options();}} is the destructor for the \texttt{Options} struct. If the user creates an \texttt{Options} struct using \texttt{Options::create}, the user is also responsible for destructing it.
+\item \textbf{\texttt{$\sim$EdgeCut\_Options();}} is the destructor for the \texttt{EdgeCut\_Options} struct. If the user creates an \texttt{EdgeCut\_Options} struct using \texttt{EdgeCut\_Options::create}, the user is also responsible for destructing it.
 \item \textbf{\texttt{$\sim$Graph();}} is the destructor for the \texttt{Graph} class. If the user creates a \texttt{Graph} class instance using \texttt{Graph::create}, the user is also responsible for destructing it.
 
 \end{itemize}
 
 \subsection{A Note on Memory Management}
 
-Mongoose uses two primary data structures to pass information: the \texttt{Graph} class and the \texttt{Options} struct. Both are dynamically allocated and must be destructed.
+Mongoose uses two primary data structures to pass information: the \texttt{Graph} class and the \texttt{EdgeCut\_Options} struct. Both are dynamically allocated and must be destructed.
 
 \begin{itemize}
 \item For each \texttt{Graph::create}, there should be a matching \texttt{Graph::$\sim$Graph()}.
-\item for each \texttt{Options::create}, there should be a matching \texttt{Options::$\sim$Options()};
+\item For each \texttt{EdgeCut\_Options::create}, there should be a matching \texttt{EdgeCut\_Options::$\sim$EdgeCut\_Options()};
 \end{itemize}
 
-Also note that Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it). Freeing memory referenced by Mongoose prior to Mongoose completing will result in a segmentation fault.
+Also note that \texttt{edge\_cut()} returns an \texttt{EdgeCut} struct that is dynamically allocated. After use, it should be freed with \texttt{EdgeCut::$\sim$EdgeCut()}.\\
+
+Lastly, Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it). Freeing memory referenced by Mongoose prior to Mongoose completing will result in a segmentation fault.
 
 \section{Using Mongoose in MATLAB}
 
@@ -477,23 +541,24 @@ V = ones(1,m);
 V(10) = 300;
 
 % Create a set of default options and modify the target balance
-Opts = defaultoptions();
-Opts.target\_split = 0.3;
+O = edgecut_options();
+O.target_split = 0.3;
 
 % Run Mongoose to partition the graph with edge and vertex weights.
-partNode = edgecut(A, Opts, V);
+partVert = edgecut(A, O, V);
 
 fprintf('\n\nPartitioning graph with edge and vertex weights\n\n');
 fprintf('=== Cut Info ===\n');
-fprintf('Cut Size:   %d\n', full(sum(partNode .* sum(sign(A)))));
-fprintf('Cut Weight: %d\n\n', full(sum(partNode .* sum(A))));
+fprintf('Cut Size:   %d\n', full(sum(partVert .* sum(sign(A)))));
+fprintf('Cut Weight: %d\n\n', full(sum(partVert .* sum(A))));
 fprintf('=== Balance Info ===\n');
 fprintf('Target Split:     0.3\n');
-fprintf('Actual Split:     %1.4f\n', sum(partNode .* V) / sum(V));
-fprintf('Unweighted Split: %1.4f\n', sum(partNode) / m);
+fprintf('Actual Split:     %1.4f\n', sum(partVert .* V) / sum(V));
+fprintf('Unweighted Split: %1.4f\n', sum(partVert) / m);
 
 % Run Mongoose to partition the graph with no vertex weights.
-partEdge = edgecut(A, Opts);
+
+partEdge = edgecut(A, O);
 
 fprintf('\n\nPartitioning graph with only edge weights\n\n');
 fprintf('=== Cut Info ===\n');
@@ -543,13 +608,13 @@ end
 
 \begin{itemize}
 \item \textbf{\texttt{function [G\_coarse, A\_coarse, map] = coarsen (G, \textit{Opts}, \textit{A})}}\\
-\texttt{coarsen} is used to coarsen an adjacency matrix (\texttt{G}) one level (one round of matching). An optional options struct (\texttt{Opts}) can be specified, as well as vertex weights (\texttt{A}).
+\texttt{coarsen} is used to coarsen an adjacency matrix (\texttt{G}) one level (one round of matching). An optional edgecut\_options struct (\texttt{Opts}) can be specified, as well as vertex weights (\texttt{A}).
 \\
-\item \textbf{\texttt{function options = defaultoptions()}}\\
-\texttt{defaultoptions()} returns an options struct with defaults set. If modifications to the default options are needed, call \texttt{defaultoptions()} and modify the struct as needed. See section \ref{sec:options} for details on available option fields.
+\item \textbf{\texttt{function options = edgecut\_options()}}\\
+\texttt{edgecut\_options()} returns an options struct with defaults set. If modifications to the default options are needed, call \texttt{edgecut\_options()} and modify the struct as needed. See section \ref{sec:options} for details on available option fields.
 \\
 \item \textbf{\texttt{function partition = edgecut (G, \textit{Opts}, \textit{A})}}\\
-\texttt{edgecut} computes an edge cut of the graph \texttt{G} with options \texttt{Opts} and vertex weights \texttt{A}, such that \texttt{A(i)} = $\text{weight}(v_i)$. The returned array, \texttt{partition}, is a $1 \times n$ binary array such that
+\texttt{edgecut} computes an edge cut of the graph \texttt{G} with edgecut\_options \texttt{Opts} and vertex weights \texttt{A}, such that \texttt{A(i)} = $\text{weight}(v_i)$. The returned array, \texttt{partition}, is a $1 \times n$ binary array such that
 \[
 \texttt{partition(i)} = 
   \begin{cases} 
@@ -558,10 +623,10 @@ end
   \end{cases}
 \]
 \item \textbf{\texttt{function [G\_coarse, A\_coarse, map] = safe\_coarsen (G, \textit{Opts}, \textit{A})}}\\
-\texttt{safe\_coarsen} attempts to coarsen a graph \texttt{G} with options \texttt{Opts} and vertex weights \texttt{A}. Prior to coarsening, \texttt{safe\_coarsen} first calls \texttt{sanitize(G)} to ensure that the graph is able to be coarsened.
+\texttt{safe\_coarsen} attempts to coarsen a graph \texttt{G} with edgecut\_options \texttt{Opts} and vertex weights \texttt{A}. Prior to coarsening, \texttt{safe\_coarsen} first calls \texttt{sanitize(G)} to ensure that the graph is able to be coarsened.
 \\
 \item \textbf{\texttt{function partition = safe\_edgecut(G, \textit{Opts}, \textit{A})}}\\
-\texttt{safe\_edgecut} attempts to compute and edge cut for a graph \texttt{G} with options \texttt{Opts} and vertex weights \texttt{A}. Note that both \texttt{Opts} and \texttt{A} are optional arguments. \texttt{safe\_edgecut} first calls \texttt{sanitize(G)} to ensure that the graph is formatted correctly.
+\texttt{safe\_edgecut} attempts to compute and edge cut for a graph \texttt{G} with edgecut\_options \texttt{Opts} and vertex weights \texttt{A}. Note that both \texttt{Opts} and \texttt{A} are optional arguments. \texttt{safe\_edgecut} first calls \texttt{sanitize(G)} to ensure that the graph is formatted correctly.
 \\ 
 \item \textbf{\texttt{function A\_safe = sanitize (A, \textit{make\_binary})}}\\
 \texttt{sanitize} attempts to take an adjacency matrix \texttt{A} and convert it to one that Mongoose can read and convert to an undirected graph. Note that \texttt{make\_binary} is optional, with the default being \texttt{false}. \texttt{sanitize} does the following as needed:
@@ -578,7 +643,7 @@ end
 \section{Options}
 \label{sec:options}
 
-When calling Mongoose, an optional Options struct can be provided to specify how Mongoose should behave.
+When calling Mongoose, an optional EdgeCut\_Options struct can be provided to specify how Mongoose should behave.
 
 \subsection{Coarsening Options}
 
@@ -603,7 +668,7 @@ During coarsening, a matching of vertices is computed using one of several strat
 \item \texttt{Random}, random matching. Randomly matches unmatched vertices with each other until no more than one unmatched vertex exists.
 \item \texttt{HEM}, heavy edge matching. Matches a given vertex with an unmatched neighbor with the largest weighted edge between them.
 \item \texttt{HEMSR}, heavy edge matching with stall-reducing matching. A pass of heavy edge matching is followed by a brotherly, adoption, and community (if enabled) matching where vertices that have been left unmatched by heavy edge matching are paired with vertices that share a neighbor, but may not be directly connected.
-\item \texttt{HEMSRdeg}, heavy edge matching with stall-reducing matching subject to a degree threshold. Same as \texttt{HEMSR}, but the stall-reducing step is only attempted on unmatched vertices whose degree is above a threshold, described by $\texttt{Options::high\_degree\_threshold}*\text{(average degree of graph)}$. \texttt{high\_degree\_threshold} is set to $2.0$ by default, meaning only unmatched vertices with degree greater than or equal to two times the average degree of the graph are considered for stall-reducing matching.
+\item \texttt{HEMSRdeg}, heavy edge matching with stall-reducing matching subject to a degree threshold. Same as \texttt{HEMSR}, but the stall-reducing step is only attempted on unmatched vertices whose degree is above a threshold, described by $\texttt{EdgeCut\_Options::high\_degree\_threshold}*\text{(average degree of graph)}$. \texttt{high\_degree\_threshold} is set to $2.0$ by default, meaning only unmatched vertices with degree greater than or equal to two times the average degree of the graph are considered for stall-reducing matching.
 \end{itemize}
 
 \vskip 1\baselineskip

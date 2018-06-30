@@ -19,24 +19,24 @@ void mexFunction
     const mxArray *matNodeWeights = (nargin == 3 ? pargin[2] : NULL);
 
     /* Get the options from the MATLAB inputs. */
-    Options *O = mex_get_options(matOptions);
+    EdgeCut_Options *O = mex_get_options(matOptions);
     if(!O)
     {
         mexErrMsgTxt("Unable to get Options struct");
     }
 
     /* Get the graph from the MATLAB inputs. */
-    Graph *G = mex_get_graph(matGraph, matNodeWeights);
+    EdgeCutProblem *G = mex_get_graph(matGraph, matNodeWeights);
     
     if(!G)
     {
-        O->~Options();
+        O->~EdgeCut_Options();
         mexErrMsgTxt("Unable to get Graph struct");
     }
 
     G->initialize(O);
     match(G, O);
-    Graph *G_coarse = coarsen(G, O);
+    EdgeCutProblem *G_coarse = coarsen(G, O);
 
     cs *G_matrix = cs_spalloc(G_coarse->n, G_coarse->n, G_coarse->nz, 0, 0);
     G_matrix->i = G_coarse->i;
@@ -49,12 +49,12 @@ void mexFunction
     pargout[2] = gp_mex_put_int(G->matchmap, G->n, 1, 0);
 
     /* Cleanup */
-    G->~Graph();
+    G->~EdgeCutProblem();
     G_coarse->i = NULL;
     G_coarse->p = NULL;
     G_coarse->x = NULL;
     G_coarse->w = NULL;
     G_coarse->matchmap = NULL;
-    G_coarse->~Graph();
-    O->~Options();
+    G_coarse->~EdgeCutProblem();
+    O->~EdgeCut_Options();
 }

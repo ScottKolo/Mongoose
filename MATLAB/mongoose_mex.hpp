@@ -1,11 +1,13 @@
 
 #include "mex.h"
-#include "Mongoose_Internal.hpp"
+
+#include "Mongoose_Coarsening.hpp"
 #include "Mongoose_CSparse.hpp"
 #include "Mongoose_EdgeCut.hpp"
-#include "Mongoose_Graph.hpp"
 #include "Mongoose_EdgeCutOptions.hpp"
-#include "Mongoose_Coarsening.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
+#include "Mongoose_Graph.hpp"
+#include "Mongoose_Internal.hpp"
 #include "Mongoose_Matching.hpp"
 #include <algorithm>
 
@@ -34,8 +36,8 @@ double readField
     const char* fieldname
 );
 
-Options *mex_get_options(const mxArray *Omatlab = NULL);
-mxArray *mex_put_options(const Options *O);
+EdgeCut_Options *mex_get_options(const mxArray *Omatlab = NULL);
+mxArray *mex_put_options(const EdgeCut_Options *O);
 
 /* check MATLAB input argument */
 void cs_mex_check (csi nel, csi m, csi n, csi square, csi sparse, csi values,
@@ -45,7 +47,7 @@ cs *cs_mex_get_sparse (cs *A, csi square, csi values, const mxArray *Amatlab);
 /* return a sparse matrix to MATLAB */
 mxArray *cs_mex_put_sparse (cs **Ahandle);
 
-Graph *mex_get_graph
+EdgeCutProblem *mex_get_graph
 (
     const mxArray *Gmatlab,        /* The sparse matrix              */
     const mxArray *Amatlab = NULL  /* The real-valued vertex weights */

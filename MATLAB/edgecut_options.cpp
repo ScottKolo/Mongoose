@@ -11,13 +11,13 @@ void mexFunction
     const mxArray *pargin [ ]
 )
 {
-    const char* usage = "Usage: O = defaultoptions()";
+    const char* usage = "Usage: O = edgecut_options()";
     if(nargout != 1 || nargin != 0) mexErrMsgTxt(usage);
 
-    Options *ret = Options::Create();
+    EdgeCut_Options *ret = EdgeCut_Options::create();
     if(ret == NULL)
-        mexErrMsgTxt("Out of memory encountered while creating default Options");
+        mexErrMsgTxt("Out of memory encountered while creating edgecut_options");
 
     pargout[0] = mex_put_options(ret);
-    ret->~Options();
+    ret->~EdgeCut_Options();
 }

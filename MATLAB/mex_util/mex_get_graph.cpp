@@ -3,7 +3,7 @@
 namespace Mongoose
 {
 
-Graph *mex_get_graph
+EdgeCutProblem *mex_get_graph
 (
     const mxArray *Gmatlab, /* The sparse matrix            */
     const mxArray *Amatlab  /* The real-valued vertex weights */
@@ -19,7 +19,7 @@ Graph *mex_get_graph
     double *Gw = (Amatlab) ? (double*) mxGetPr(Amatlab) : NULL;
     Int nz = Gp[n];
     
-    Graph *returner = Graph::Create(n, nz, Gp, Gi, Gx, Gw);
+    EdgeCutProblem *returner = EdgeCutProblem::create(n, nz, Gp, Gi, Gx, Gw);
 
     if (!returner)
     {

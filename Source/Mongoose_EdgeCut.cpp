@@ -65,6 +65,24 @@ EdgeCut *edge_cut(const Graph *graph, const EdgeCut_Options *options)
     if (!problem)
         return NULL;
 
+    EdgeCut *result = edge_cut(problem, options);
+
+    problem->~EdgeCutProblem();
+
+    return result;
+}
+
+EdgeCut *edge_cut(EdgeCutProblem *problem, const EdgeCut_Options *options)
+{
+    // Check inputs
+    if (!optionsAreValid(options))
+        return NULL;
+
+    setRandomSeed(options->random_seed);
+
+    if (!problem)
+        return NULL;
+
     /* Finish initialization */
     problem->initialize(options);
 
@@ -122,7 +140,6 @@ EdgeCut *edge_cut(const Graph *graph, const EdgeCut_Options *options)
 
     if (!result)
     {
-        problem->~EdgeCutProblem();
         return NULL;
     }
 
@@ -134,8 +151,6 @@ EdgeCut *edge_cut(const Graph *graph, const EdgeCut_Options *options)
     result->w0        = current->W0;
     result->w1        = current->W1;
     result->imbalance = current->imbalance;
-
-    problem->~EdgeCutProblem();
 
     return result;
 }

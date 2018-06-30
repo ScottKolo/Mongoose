@@ -8,44 +8,44 @@ namespace Mongoose
 #define MEX_STRUCT_READBOOL(F)   returner->F = static_cast<bool>((readField(matOptions, #F) != 0.0));
 #define MEX_STRUCT_READENUM(F,T) returner->F = (T) (readField(matOptions, #F));
     
-Options *mex_get_options
+EdgeCut_Options *mex_get_options
 (
     const mxArray *matOptions
 )
 {
-    Options *returner = Options::Create();
+    EdgeCut_Options *returner = EdgeCut_Options::create();
 
     if(!returner)
         return NULL;
     if(matOptions == NULL)
         return returner;
 
-    MEX_STRUCT_READINT(randomSeed);
-    MEX_STRUCT_READINT(coarsenLimit);
-    MEX_STRUCT_READENUM(matchingStrategy, MatchingStrategy);
-    MEX_STRUCT_READBOOL(doCommunityMatching);
-    MEX_STRUCT_READDOUBLE(highDegreeThreshold);
+    MEX_STRUCT_READINT(random_seed);
+    MEX_STRUCT_READINT(coarsen_limit);
+    MEX_STRUCT_READENUM(matching_strategy, MatchingStrategy);
+    MEX_STRUCT_READBOOL(do_community_matching);
+    MEX_STRUCT_READDOUBLE(high_degree_threshold);
     
     /** Guess Partitioning Options *******************************************/
-    MEX_STRUCT_READENUM(guessCutType, GuessCutType);
+    MEX_STRUCT_READENUM(initial_cut_type, InitialEdgeCutType);
 
     /** Waterdance Options ***************************************************/
-    MEX_STRUCT_READINT(numDances);
+    MEX_STRUCT_READINT(num_dances);
 
     /**** Fidducia-Mattheyes Options *****************************************/
-    MEX_STRUCT_READBOOL(useFM);
-    MEX_STRUCT_READINT(fmSearchDepth);
-    MEX_STRUCT_READINT(fmConsiderCount);
-    MEX_STRUCT_READINT(fmMaxNumRefinements);
+    MEX_STRUCT_READBOOL(use_FM);
+    MEX_STRUCT_READINT(FM_search_depth);
+    MEX_STRUCT_READINT(FM_consider_count);
+    MEX_STRUCT_READINT(FM_max_num_refinements);
 
     /**** Quadratic Programming Options **************************************/
-    MEX_STRUCT_READBOOL(useQPGradProj);
-    MEX_STRUCT_READDOUBLE(gradProjTolerance);
-    MEX_STRUCT_READINT(gradprojIterationLimit);
+    MEX_STRUCT_READBOOL(use_QP_gradproj);
+    MEX_STRUCT_READDOUBLE(gradproj_tolerance);
+    MEX_STRUCT_READINT(gradproj_iteration_limit);
 
     /** Final Partition Target Metrics ***************************************/
-    MEX_STRUCT_READDOUBLE(targetSplit);
-    MEX_STRUCT_READDOUBLE(softSplitTolerance);
+    MEX_STRUCT_READDOUBLE(target_split);
+    MEX_STRUCT_READDOUBLE(soft_split_tolerance);
 
     return returner;
 }

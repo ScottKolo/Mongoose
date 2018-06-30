@@ -21,7 +21,7 @@ function partition = safe_edgecut(G,O,A)
 %       A_perm = A(perm, perm); % Permute the matrix
 %       spy(A_perm);
 %
-%   See also EDGECUT, DEFAULTOPTIONS.
+%   See also EDGECUT, EDGECUT_OPTIONS.
 
 G_safe = sanitize(G);
 

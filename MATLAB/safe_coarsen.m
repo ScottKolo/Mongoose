@@ -25,7 +25,7 @@ function [G_coarse, A_coarse, map] = safe_coarsen(G, O, A)
 %       G_coarse = safe_coarsen(G);
 %       spy(G_coarse);
 %
-%   See also COARSEN, DEFAULTOPTIONS.
+%   See also COARSEN, EDGECUT_OPTIONS.
 
 G_safe = sanitize(G);
 

@@ -27,8 +27,8 @@ function [G_coarse, A_coarse, map] = coarsen (G, (O, A))
 %       Prob = ssget('DNVS/troll'); A = Prob.A;
 %       G = sanitize(A);
 %       G_coarse = coarsen(G);
-%       spy(G_coarse);
+%       subplot(1,2,1); spy(G); subplot(1,2,2); spy(G_coarse);
 %
-%   See also SAFE_COARSEN, DEFAULTOPTIONS.
+%   See also SAFE_COARSEN, EDGECUT_OPTIONS.
 
 error ('coarsen mexFunction not found') ;

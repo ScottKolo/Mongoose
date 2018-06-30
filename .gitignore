@@ -6,6 +6,7 @@ Matrix/*.csv
 .DS_Store
 MATLAB/plots/*
 MATLAB/*.png
+MATLAB/*.o*
 .idea/*
 cmake-build-debug*
 Doc/Figures/BrotherlyMatching-eps-converted-to.pdf
