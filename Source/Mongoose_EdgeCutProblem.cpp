@@ -54,116 +54,114 @@ EdgeCutProblem::EdgeCutProblem()
     markValue = 1;
 }
 
-EdgeCutProblem *EdgeCutProblem::create(const Graph *graph)
+EdgeCutProblem *EdgeCutProblem::create(const Int _n, const Int _nz, Int *_p,
+                                       Int *_i, double *_x, double *_w)
 {
-    if (!graph)
-        return NULL;
-
     void *memoryLocation = SuiteSparse_malloc(1, sizeof(EdgeCutProblem));
     if (!memoryLocation)
         return NULL;
 
     // Placement new
-    EdgeCutProblem *problem = new (memoryLocation) EdgeCutProblem();
+    EdgeCutProblem *graph = new (memoryLocation) EdgeCutProblem();
 
-    problem->shallow_p = (graph->p != NULL);
-    problem->shallow_i = (graph->i != NULL);
-    problem->shallow_x = (graph->x != NULL);
-    problem->shallow_w = (graph->w != NULL);
+    graph->shallow_p = (_p != NULL);
+    graph->shallow_i = (_i != NULL);
+    graph->shallow_x = (_x != NULL);
+    graph->shallow_w = (_w != NULL);
 
-    size_t n = static_cast<size_t>(graph->n);
-    problem->n = graph->n;
+    size_t n = static_cast<size_t>(_n);
+    graph->n = _n;
 
-    size_t nz = static_cast<size_t>(graph->nz);
-    problem->nz = graph->nz;
+    size_t nz = static_cast<size_t>(_nz);
+    graph->nz = _nz;
 
-    problem->p = (problem->shallow_p)
-                   ? graph->p
-                   : (Int *)SuiteSparse_calloc(n + 1, sizeof(Int));
-    problem->i
-        = (problem->shallow_i) ? graph->i : (Int *)SuiteSparse_malloc(nz, sizeof(Int));
-    problem->x = graph->x;
-    problem->w = graph->w;
-    problem->X = 0.0;
-    problem->W = 0.0;
-    problem->H = 0.0;
-    if (!problem->p || !problem->i)
+    graph->p = (graph->shallow_p)
+               ? _p
+               : (Int *)SuiteSparse_calloc(n + 1, sizeof(Int));
+    graph->i
+        = (graph->shallow_i) ? _i : (Int *)SuiteSparse_malloc(nz, sizeof(Int));
+    graph->x = _x;
+    graph->w = _w;
+    graph->X = 0.0;
+    graph->W = 0.0;
+    graph->H = 0.0;
+    if (!graph->p || !graph->i)
     {
-        problem->~EdgeCutProblem();
+        graph->~EdgeCutProblem();
         return NULL;
     }
 
-    problem->partition      = (bool *)SuiteSparse_malloc(n, sizeof(bool));
-    problem->vertexGains    = (double *)SuiteSparse_malloc(n, sizeof(double));
-    problem->externalDegree = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    problem->bhIndex        = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    problem->bhHeap[0]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    problem->bhHeap[1]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    problem->bhSize[0] = problem->bhSize[1] = 0;
-    if (!problem->partition || !problem->vertexGains || !problem->externalDegree
-        || !problem->bhIndex || !problem->bhHeap[0] || !problem->bhHeap[1])
+    graph->partition      = (bool *)SuiteSparse_malloc(n, sizeof(bool));
+    graph->vertexGains    = (double *)SuiteSparse_malloc(n, sizeof(double));
+    graph->externalDegree = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->bhIndex        = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->bhHeap[0]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->bhHeap[1]      = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->bhSize[0] = graph->bhSize[1] = 0;
+    if (!graph->partition || !graph->vertexGains || !graph->externalDegree
+        || !graph->bhIndex || !graph->bhHeap[0] || !graph->bhHeap[1])
     {
-        problem->~EdgeCutProblem();
+        graph->~EdgeCutProblem();
         return NULL;
     }
 
-    problem->heuCost   = 0.0;
-    problem->cutCost   = 0.0;
-    problem->W0        = 0.0;
-    problem->W1        = 0.0;
-    problem->imbalance = 0.0;
+    graph->heuCost   = 0.0;
+    graph->cutCost   = 0.0;
+    graph->W0        = 0.0;
+    graph->W1        = 0.0;
+    graph->imbalance = 0.0;
 
-    problem->parent      = NULL;
-    problem->clevel      = 0;
-    problem->cn          = 0;
-    problem->matching    = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    problem->matchmap    = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    problem->invmatchmap = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    problem->matchtype   = (Int *)SuiteSparse_malloc(n, sizeof(Int));
-    problem->markArray   = (Int *)SuiteSparse_calloc(n, sizeof(Int));
-    problem->markValue   = 1;
-    problem->singleton   = -1;
-    if (!problem->matching || !problem->matchmap || !problem->invmatchmap
-        || !problem->markArray || !problem->matchtype)
+    graph->parent      = NULL;
+    graph->clevel      = 0;
+    graph->cn          = 0;
+    graph->matching    = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->matchmap    = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->invmatchmap = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->matchtype   = (Int *)SuiteSparse_malloc(n, sizeof(Int));
+    graph->markArray   = (Int *)SuiteSparse_calloc(n, sizeof(Int));
+    graph->markValue   = 1;
+    graph->singleton   = -1;
+    if (!graph->matching || !graph->matchmap || !graph->invmatchmap
+        || !graph->markArray || !graph->matchtype)
     {
-        problem->~EdgeCutProblem();
+        graph->~EdgeCutProblem();
         return NULL;
     }
 
-    problem->initialized = false;
+    graph->initialized = false;
 
-    return problem;
+    return graph;
+}
+
+EdgeCutProblem *EdgeCutProblem::create(const Graph *_graph)
+{
+    EdgeCutProblem *graph = create(_graph->n, _graph->nz, _graph->p, _graph->i,
+                                   _graph->x, _graph->w);
+
+    return graph;
 }
 
 EdgeCutProblem *EdgeCutProblem::create(EdgeCutProblem *_parent)
 {
-    if (!_parent)
+    EdgeCutProblem *graph = create(_parent->cn, _parent->nz);
+
+    if (!graph)
         return NULL;
 
-    void *memoryLocation = SuiteSparse_malloc(1, sizeof(EdgeCutProblem));
-    if (!memoryLocation)
-        return NULL;
+    graph->x = (double *)SuiteSparse_malloc(_parent->nz, sizeof(double));
+    graph->w = (double *)SuiteSparse_malloc(_parent->cn, sizeof(double));
 
-    // Placement new
-    EdgeCutProblem *problem = new (memoryLocation) EdgeCutProblem();
-
-    problem->n  = _parent->cn;
-    problem->nz = _parent->nz;
-
-    problem->x = (double *)SuiteSparse_malloc(_parent->nz, sizeof(double));
-    problem->w = (double *)SuiteSparse_malloc(_parent->cn, sizeof(double));
-
-    if (!problem->x || !problem->w)
+    if (!graph->x || !graph->w)
     {
-        problem->~EdgeCutProblem();
+        graph->~EdgeCutProblem();
         return NULL;
     }
 
-    problem->W      = _parent->W;
-    problem->parent = _parent;
-    problem->clevel = problem->parent->clevel + 1;
+    graph->W      = _parent->W;
+    graph->parent = _parent;
+    graph->clevel = graph->parent->clevel + 1;
 
-    return problem;
+    return graph;
 }
 
 EdgeCutProblem::~EdgeCutProblem()
@@ -198,7 +196,7 @@ void EdgeCutProblem::initialize(const EdgeCut_Options *options)
     {
         // Graph has been previously initialized. We need to clear some extra
         // data structures to be able to reuse it.
-
+        
         X = 0.0;
         W = 0.0;
         H = 0.0;

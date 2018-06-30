@@ -62,6 +62,9 @@ EdgeCut *edge_cut(const Graph *graph, const EdgeCut_Options *options)
     // Create an EdgeCutProblem
     EdgeCutProblem *problem = EdgeCutProblem::create(graph);
 
+    if (!problem)
+        return NULL;
+
     /* Finish initialization */
     problem->initialize(options);
 

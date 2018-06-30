@@ -76,7 +76,9 @@ public:
     Int singleton;
 
     /* Constructor & Destructor */
-    static EdgeCutProblem *create(const Graph *graph);
+    static EdgeCutProblem *create(const Int _n, const Int _nz, Int *_p = NULL,
+                                  Int *_i = NULL, double *_x = NULL, double *_w = NULL);
+    static EdgeCutProblem *create(const Graph *_graph);
     static EdgeCutProblem *create(EdgeCutProblem *_parent);
     ~EdgeCutProblem();
     void initialize(const EdgeCut_Options *options);

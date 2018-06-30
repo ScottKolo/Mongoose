@@ -141,7 +141,9 @@ int RunTest (const std::string &inputFile, const EdgeCut_Options *O, int allowed
     }
 
     U->~Graph();
-    result->~EdgeCut();
+
+    if (result != NULL)
+        result->~EdgeCut();
 
     return AllowedMallocs;
 }

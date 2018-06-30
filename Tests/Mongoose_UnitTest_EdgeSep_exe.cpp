@@ -23,56 +23,56 @@ int main(int argn, char** argv)
     Logger::setTimingFlag(false);
 
     // Test with NULL graph
-    edge_cut(NULL);
+    EdgeCut *result = edge_cut(NULL);
+    assert(result == NULL);
 
     Graph *G = read_graph("../Matrix/bcspwr02.mtx");
 
     // Test with no options struct
-    EdgeCut *result = edge_cut(G);
+    result = edge_cut(G);
     result->~EdgeCut();
 
     // Test with NULL options struct
     EdgeCut_Options *O = NULL;
     result = edge_cut(G, O);
-    result->~EdgeCut();
-
+    assert(result == NULL);
 
     O = EdgeCut_Options::create();
 
     // Test with invalid coarsen_limit
     O->coarsen_limit = 0;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->coarsen_limit = 50;
 
     // Test with invalid high_degree_threshold
     O->high_degree_threshold = -1;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->high_degree_threshold = 2.0;
 
     // Test with invalid num_dances
     O->num_dances = -1;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->num_dances = 1;
 
     // Test with invalid FM_search_depth
     O->FM_search_depth = -1;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->FM_search_depth = 50;
 
     // Test with invalid FM_consider_count
     O->FM_consider_count = -1;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->FM_consider_count = 3;
 
     // Test with invalid FM_max_num_refinements
     O->FM_max_num_refinements = -1;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->FM_max_num_refinements = 20;
 
     // Test with invalid gradproj_tolerance
@@ -83,19 +83,19 @@ int main(int argn, char** argv)
     // Test with invalid gradproj_iteration_limit
     O->gradproj_iteration_limit = -1;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->gradproj_iteration_limit = 50;
 
     // Test with invalid target_split
     O->target_split = 1.2;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->target_split = 0.4;
 
     // Test with invalid tolerance
     O->soft_split_tolerance = -1;
     result = edge_cut(G, O);
-    result->~EdgeCut();
+    assert(result == NULL);
     O->soft_split_tolerance = 0.01;
 
     // Test with no QP
