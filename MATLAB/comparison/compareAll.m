@@ -91,7 +91,7 @@ function comparisonData = compareAll(trials)
                                 
                                 for k = 1:trials
                                     % Set up options struct for this run
-                                    O = defaultoptions();
+                                    O = edgecut_options();
                                     O.randomSeed = 123456789;
                                     O.guessCutType = guessCutType;
                                     O.doCommunityMatching = doCommunityMatching;

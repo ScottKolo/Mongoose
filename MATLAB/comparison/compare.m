@@ -70,7 +70,7 @@ function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_we
             comparisonData(j).problem_n = n_cols;
             
             % Run Mongoose with default options to partition the graph.
-            O = defaultoptions();
+            O = edgecut_options();
             O.randomSeed = 123456789;
             for k = 1:trials
                 tic;
