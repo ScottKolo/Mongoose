@@ -360,8 +360,6 @@ set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1) # Necessary for gcov - prevents file.c
 
 # Copy over runTest.py to build folder for ease of use
 file(COPY Tests/runTests DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY Tests/runCompare DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY Tests/runStats DESTINATION ${CMAKE_BINARY_DIR})
 
 add_custom_command(TARGET mongoose_lib
                    POST_BUILD
