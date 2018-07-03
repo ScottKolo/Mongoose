@@ -5,10 +5,10 @@ if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
 endif (POLICY CMP0048)
 
-set(Mongoose_DATE "July 1, 2018")
+set(Mongoose_DATE "July 2, 2018")
 set(Mongoose_VERSION_MAJOR 2)
 set(Mongoose_VERSION_MINOR 0)
-set(Mongoose_VERSION_PATCH 0)
+set(Mongoose_VERSION_PATCH 1)
 
 if(CMAKE_MAJOR_VERSION GREATER 2)
 project(Mongoose
@@ -200,6 +200,23 @@ if (UNIX AND NOT APPLE)
     target_link_libraries(mongoose_lib rt)
 endif ()
 
+# Build the Mongoose library for dynamic linking
+set(CMAKE_MACOSX_RPATH 1)
+add_library(mongoose_dylib SHARED ${MONGOOSE_LIB_FILES})
+set_property(TARGET mongoose_dylib PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_target_properties(mongoose_dylib
+        PROPERTIES OUTPUT_NAME mongoose)
+if (EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
+    target_link_libraries(mongoose_dylib ${SUITESPARSE_CONFIG_LIBRARY})
+endif ()
+set_target_properties(mongoose_dylib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(mongoose_dylib PROPERTIES PUBLIC_HEADER include/Mongoose.hpp)
+target_include_directories(mongoose_dylib PRIVATE .)
+
+if (UNIX AND NOT APPLE)
+    target_link_libraries(mongoose_dylib rt)
+endif ()
+
 # Build the Mongoose library and all tests with coverage flags
 add_library(mongoose_lib_dbg ${MONGOOSE_LIB_FILES})
 set_target_properties(mongoose_lib_dbg
@@ -349,7 +366,13 @@ file(COPY Tests/runStats DESTINATION ${CMAKE_BINARY_DIR})
 add_custom_command(TARGET mongoose_lib
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mongoose_lib> ${PROJECT_SOURCE_DIR}/Lib
-                   COMMENT "Copying libmongoose to root Lib directory"
+                   COMMENT "Copying libmongoose (static) to root Lib directory"
+        )
+
+add_custom_command(TARGET mongoose_dylib
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mongoose_dylib> ${PROJECT_SOURCE_DIR}/Lib
+        COMMENT "Copying libmongoose (dynamic) to root Lib directory"
         )
 
 add_custom_target(purge
