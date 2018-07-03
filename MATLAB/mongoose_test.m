@@ -29,23 +29,20 @@ if (viz)
     subplot(1, 2+viz, 1);
     img = imread([plotname '.png']);
     imshow(img)
-    title('Graphviz Visualization')
+    title('HB/494\_bus Graphviz Visualization')
 end
 
 % Plot the original matrix before permutation
 subplot(1, 2+viz, 1+viz);
 spy(A)
-title('Before Partitioning')
+title('HB/494\_bus Before Partitioning')
 
 % Plot the matrix after the permutation
 subplot(1, 2+viz, 2+viz);
 perm = [find(part) find(1-part)];
 A_perm = A(perm, perm); % Permute the matrix
 spy(A_perm)
-title('After Partitioning')
-
-% Set overall title
-suptitle('HB/494\_bus')
+title('HB/494\_bus After Partitioning')
 
 end
 
