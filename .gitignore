@@ -1,4 +1,5 @@
 _build/*
+Lib/*
 *.mexmaci64
 Matrix/*.s
 Matrix/*.tar.gz
