@@ -472,10 +472,33 @@ The following functions are available in the C++ API. After Mongoose is compiled
 
 \texttt{Mongoose::read\_graph(const std::string \&filename)} accepts a C++-style std::string, while \texttt{Mongoose::read\_graph(const char *filename)} accepts a C-style null-terminated string.
 \vspace{6pt}
-\item \textbf{\texttt{int edge\_cut(const Graph *);}} \vspace{-6pt}
-\item \textbf{\texttt{int edge\_cut(const Graph *, const EdgeCut\_Options *);}}
+\item \textbf{\texttt{EdgeCut edge\_cut(const Graph *);}} \vspace{-6pt}
+\item \textbf{\texttt{EdgeCut edge\_cut(const Graph *, const EdgeCut\_Options *);}}
 
-\texttt{Mongoose::edge\_cut} will attempt to compute an edge cut of the provided \texttt{Mongoose::Graph} object. An \texttt{EdgeCut\_Options} struct can also be supplied to modify how the edge cut is computed -- otherwise, the default options are used (see Section \ref{sec:options}).
+\texttt{Mongoose::edge\_cut} will attempt to compute an edge cut of the provided \texttt{Mongoose::Graph} object. An \texttt{EdgeCut\_Options} struct can also be supplied to modify how the edge cut is computed -- otherwise, the default options are used (see Section \ref{sec:options}). The resulting partitioning information is returned as an \texttt{EdgeCut} struct.
+
+The \texttt{EdgeCut} struct is shown below.
+
+\begin{lstlisting}
+struct EdgeCut
+{
+    bool *partition;     /** T/F denoting partition side     */
+    Int n;               /** # vertices                      */
+
+    /** Cut Cost Metrics *****************************************************/
+    double cut_cost;    /** Sum of edge weights in cut set    */
+    Int cut_size;       /** Number of edges in cut set        */
+    double w0;          /** Sum of partition 0 vertex weights */
+    double w1;          /** Sum of partition 1 vertex weights */
+    double imbalance;   /** Degree to which the partitioning
+                            is imbalanced, and this is
+                            computed as (0.5 - w0/W).         */
+
+    // Destructor
+    ~EdgeCut();
+};
+\end{lstlisting}
+
 \vspace{6pt}
 \item \textbf{\texttt{static EdgeCut\_Options *create();}}
 
@@ -498,19 +521,18 @@ Note that Mongoose will NOT free pointers passed to it, and that all pointers ar
 \vspace{6pt}
 \item \textbf{\texttt{$\sim$EdgeCut\_Options();}} is the destructor for the \texttt{EdgeCut\_Options} struct. If the user creates an \texttt{EdgeCut\_Options} struct using \texttt{EdgeCut\_Options::create}, the user is also responsible for destructing it.
 \item \textbf{\texttt{$\sim$Graph();}} is the destructor for the \texttt{Graph} class. If the user creates a \texttt{Graph} class instance using \texttt{Graph::create}, the user is also responsible for destructing it.
-
+\item \textbf{\texttt{$\sim$EdgeCut();}} is the destructor for the \texttt{EdgeCut} struct. After calling \texttt{edge\_cut()}, the returned struct must be destructed when the user is finished reading data from it.
 \end{itemize}
 
 \subsection{A Note on Memory Management}
 
-Mongoose uses two primary data structures to pass information: the \texttt{Graph} class and the \texttt{EdgeCut\_Options} struct. Both are dynamically allocated and must be destructed.
+Mongoose uses three primary data structures to pass information: the \texttt{Graph} class, the \texttt{EdgeCut} struct, and the \texttt{EdgeCut\_Options} struct. They are all dynamically allocated and must be destructed.
 
 \begin{itemize}
 \item For each \texttt{Graph::create}, there should be a matching \texttt{Graph::$\sim$Graph()}.
 \item For each \texttt{EdgeCut\_Options::create}, there should be a matching \texttt{EdgeCut\_Options::$\sim$EdgeCut\_Options()};
+\item For each call to \texttt{edge\_cut}, there should be a matching \texttt{EdgeCut::$\sim$EdgeCut()};
 \end{itemize}
-
-Also note that \texttt{edge\_cut()} returns an \texttt{EdgeCut} struct that is dynamically allocated. After use, it should be freed with \texttt{EdgeCut::$\sim$EdgeCut()}.\\
 
 Lastly, Mongoose will NOT free pointers passed to it, and that all pointers are shallow copies (i.e. Mongoose does not make a copy of any data passed into it). Freeing memory referenced by Mongoose prior to Mongoose completing will result in a segmentation fault.
 
