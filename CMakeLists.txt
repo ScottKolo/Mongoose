@@ -209,7 +209,7 @@ set_target_properties(mongoose_dylib
 if (EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
     target_link_libraries(mongoose_dylib ${SUITESPARSE_CONFIG_LIBRARY})
 endif ()
-set_target_properties(mongoose_dylib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(mongoose_dylib PROPERTIES VERSION "${Mongoose_VERSION_MAJOR}.${Mongoose_VERSION_MINOR}.${Mongoose_VERSION_PATCH}")
 set_target_properties(mongoose_dylib PROPERTIES PUBLIC_HEADER include/Mongoose.hpp)
 target_include_directories(mongoose_dylib PRIVATE .)
 
