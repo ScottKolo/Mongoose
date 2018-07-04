@@ -172,100 +172,114 @@ Once downloaded, Mongoose can be compiled using the following commands:\\
 
 \begin{lstlisting}[language=bash,numbers=none,xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 cd Mongoose
-mkdir _build # Create a build directory
-cd _build 
-cmake ..     # Use CMake to create the Makefiles
-make         # Build Mongoose
+make
 \end{lstlisting}
+
+% mkdir build # Create a build directory
+% cd build 
+% cmake ..     # Use CMake to create the Makefiles
+% make         # Build Mongoose
 
 After compilation, the Mongoose demo can be run using \texttt{./bin/demo}:\\
 
 \begin{lstlisting}[numbers=none,xleftmargin=.09\textwidth, xrightmargin=.09\textwidth,keywordstyle=\color{black}]
 ./bin/demo
+
 ********************************************************************************
-Mongoose Graph Partitioning Library, Version 2.0.0 June 30, 2018
+Mongoose Graph Partitioning Library, Version 2.0.2 July 4, 2018
 Copyright (C) 2017-2018
 Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
 Mongoose is licensed under Version 3 of the GNU General Public License.
 Mongoose is also available under other licenses; contact authors for details.
 ********************************************************************************
+Computing an edge cut for Erdos971.mtx...
+Cut Cost:       1.1e+02
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     1.9ms
+********************************************************************************
+Computing an edge cut for G51.mtx...
+Cut Cost:       1.5e+03
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     8.4ms
+********************************************************************************
+Computing an edge cut for GD97_b.mtx...
+Cut Cost:       2.6e+03
+Cut Imbalance:  1.1%
+Trial Time:     0.19ms
+********************************************************************************
+Computing an edge cut for Pd.mtx...
+Cut Cost:       1
+Cut Imbalance:  0.0062%
+Trial Time:     12ms
+********************************************************************************
 Computing an edge cut for bcspwr01.mtx...
-Partitioning Complete!
 Cut Cost:       3
 Cut Imbalance:  1.3%
-Trial Time:     0.61ms
+Trial Time:     0.18ms
 ********************************************************************************
 Computing an edge cut for bcspwr02.mtx...
-Partitioning Complete!
 Cut Cost:       5
 Cut Imbalance:  1%
-Trial Time:     0.37ms
+Trial Time:     0.17ms
 ********************************************************************************
 Computing an edge cut for bcspwr03.mtx...
-Partitioning Complete!
 Cut Cost:       11
-Cut Imbalance:  0%
-Trial Time:     0.55ms
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     0.34ms
 ********************************************************************************
 Computing an edge cut for bcspwr04.mtx...
-Partitioning Complete!
 Cut Cost:       25
-Cut Imbalance:  2.6e-16%
-Trial Time:     1.5ms
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     0.75ms
 ********************************************************************************
 Computing an edge cut for bcspwr05.mtx...
-Partitioning Complete!
 Cut Cost:       12
 Cut Imbalance:  0.11%
-Trial Time:     1.1ms
+Trial Time:     0.91ms
 ********************************************************************************
 Computing an edge cut for bcspwr06.mtx...
-Partitioning Complete!
 Cut Cost:       7
-Cut Imbalance:  1.5e-15%
-Trial Time:     2.8ms
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     2.4ms
 ********************************************************************************
 Computing an edge cut for bcspwr07.mtx...
-Partitioning Complete!
 Cut Cost:       7
-Cut Imbalance:  0%
-Trial Time:     2.7ms
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     2.6ms
 ********************************************************************************
 Computing an edge cut for bcspwr08.mtx...
-Partitioning Complete!
 Cut Cost:       25
-Cut Imbalance:  3.3e-16%
-Trial Time:     2.5ms
-********************************************************************************
-Computing an edge cut for bcspwr09.mtx...
-Partitioning Complete!
-Cut Cost:       11
-Cut Imbalance:  0.029%
-Trial Time:     2.7ms
-********************************************************************************
-Computing an edge cut for bcspwr10.mtx...
-Partitioning Complete!
-Cut Cost:       25
-Cut Imbalance:  1.1e-15%
-Trial Time:     8.9ms
-********************************************************************************
-Computing an edge cut for jagmesh7.mtx...
-Partitioning Complete!
-Cut Cost:       27
-Cut Imbalance:  0%
+Cut Imbalance:  zero (a perfect balance)
 Trial Time:     2.2ms
 ********************************************************************************
-Computing an edge cut for troll.mtx...
-Partitioning Complete!
-Cut Cost:       3.7e+04
-Cut Imbalance:  0.00023%
-Trial Time:     2.5e+03ms
+Computing an edge cut for bcspwr09.mtx...
+Cut Cost:       11
+Cut Imbalance:  0.029%
+Trial Time:     5.4ms
 ********************************************************************************
-Total Demo Time:  2.5s
+Computing an edge cut for bcspwr10.mtx...
+Cut Cost:       25
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     8.6ms
+********************************************************************************
+Computing an edge cut for dwt_992.mtx...
+Cut Cost:       1.9e+02
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     4.7ms
+********************************************************************************
+Computing an edge cut for jagmesh7.mtx...
+Cut Cost:       27
+Cut Imbalance:  zero (a perfect balance)
+Trial Time:     2.8ms
+********************************************************************************
+Computing an edge cut for NotreDame_www.mtx...
+Cut Cost:       1.9e+02
+Cut Imbalance:  0.00015%
+Trial Time:     6.2e+02ms
+********************************************************************************
+Total Demo Time:  0.67s
 
-               **************************************************
-               ***************** Demo Complete! *****************
-               **************************************************
+Demo complete; all tests passed
 \end{lstlisting}
 
 To run the complete test suite, the command \texttt{make test} can be used. Note that Python 2.7+ must be installed. Additionally, this user guide can be generated from source with the command \texttt{make userguide}. XeLaTeX (commonly included in LaTeX distributions) must be installed.
@@ -278,65 +292,70 @@ In addition to the demo executable, the \texttt{mongoose} executable is built at
 
 The \texttt{mongoose} executable generates a text file with two blocks: a JSON-formatted information block with timing and cut quality metrics, and the partitioning information itself. The partitioning information is listed with one vertex per line, with the vertex number followed by the part (0 for part A, 1 for part B).\\
 
-For example, the following can be used to partition \texttt{troll.mtx}:
+For example, the following can be used to partition the \texttt{NotreDame\_www.mtx} matrix:
 
 \begin{lstlisting}[numbers=none,xleftmargin=.09\textwidth, xrightmargin=.09\textwidth,keywordstyle=\color{black}]
-./bin/mongoose ../Matrix/troll.mtx troll_out.mtx
+cd build
+./bin/mongoose ../Matrix/NotreDame_www.mtx NotreDame_www_out.mtx
+
 ********************************************************************************
-Mongoose Graph Partitioning Library, Version 2.0.0 June 30, 2018
+Mongoose Graph Partitioning Library, Version 2.0.2 July 4, 2018
 Copyright (C) 2017-2018
 Scott P. Kolodziej, Nuri S. Yeralan, Timothy A. Davis, William W. Hager
 Mongoose is licensed under Version 3 of the GNU General Public License.
 Mongoose is also available under other licenses; contact authors for details.
 ********************************************************************************
-Total Edge Separator Time: 0.403932s
- Matching:   0.03894s
- Coarsening: 0.1145s
- Refinement: 0.04114s
- FM:         0.00397s
- QP:         0.1837s
- IO:         2.039s
+Total Edge Separator Time: 0.256587s
+ Matching:   0.03576s
+ Coarsening: 0.05597s
+ Refinement: 0.01149s
+ FM:         0.002221s
+ QP:         0.1448s
+ IO:         0.3147s
 Cut Properties:
- Cut Size:       40517
- Cut Cost:       4.052e+04
- Imbalance:      2.342e-06
+ Cut Size:       320
+ Cut Cost:       165
+ Imbalance:      1.535e-06
+\end{lstlisting}
 
-cat troll_out.txt
+The output file name is optional. If omitted, the default is \texttt{mongoose\_out.txt}.
+For this matrix, the output file looks like the following:
+
+\begin{lstlisting}[numbers=none,xleftmargin=.09\textwidth, xrightmargin=.09\textwidth,keywordstyle=\color{black}]
 {
-  "InputFile": "../Matrix/troll.mtx",
+  "InputFile": "../Matrix/NotreDame_www.mtx",
   "Timing": {
-    "Total": 0.403932,
-    "Matching": 0.03894,
-    "Coarsening": 0.114478,
-    "Refinement": 0.041145,
-    "FM": 0.00397,
-    "QP": 0.183679,
-    "IO": 2.03914
+    "Total": 0.256587,
+    "Matching": 0.035762,
+    "Coarsening": 0.055973,
+    "Refinement": 0.011487,
+    "FM": 0.002221,
+    "QP": 0.144759,
+    "IO": 0.314704
   },
-  "CutSize": 40517,
-  "CutCost": 40517,
-  "Imbalance": 2.34244e-06
+  "CutSize": 320,
+  "CutCost": 165,
+  "Imbalance": 1.53502e-06
 }
 
 0 0
 1 0
 2 0
-
+3 0
 ...
-
-204829 1
-204830 1
-204831 0
-204832 0
-
+218 1
+219 0
 ...
+325660 1
+325661 1
+325662 1
+325664 0
+325665 0
+...
+325727 0
+325728 0
 
-213450 0
-213451 0
-213452 0
 \end{lstlisting}
-
-The output file name is optional. If omitted, the default is \texttt{mongoose\_out.txt}.
 
 \subsection{License}
 
@@ -462,7 +481,10 @@ For example, to read in the Matrix Market file \texttt{jagmesh7.mtx} located in 
 
 \subsection{C++ API}
 
-The following functions are available in the C++ API. After Mongoose is compiled, a static library version of Mongoose is built at \texttt{Mongoose/\_build/lib/libmongoose.a}. Include the \texttt{Mongoose.hpp} header file located in \texttt{Mongoose/Include} and link with the static library to enable the following API functions.
+The following functions are available in the C++ API. After Mongoose is compiled, a static library version of Mongoose is built at \texttt{Mongoose/build/Lib/libmongoose.a}. Include the \texttt{Mongoose.hpp} header file located in \texttt{Mongoose/Include} and link with the static library to enable the following API functions.
+Both the static and dynamic libraries, and the include file can then be
+installed for system-wide use with \texttt{sudo make install} in the top-level
+\texttt{Mongoose} directory.
 
 \begin{itemize}
 \item \textbf{\texttt{Graph *read\_graph(const std::string \&filename);}} \vspace{-6pt}
