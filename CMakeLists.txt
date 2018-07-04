@@ -1,3 +1,25 @@
+# CMakeLists.txt: instructions for building Mongoose with cmake
+#
+# Mongoose, Copyright (c) 2018, All Rights Reserved.
+#   Nuri Yeralan, Microsoft Research
+#   Scott Kolodziej, Texas A&M University
+#   Tim Davis, Texas A&M University
+#   William Hager, University of Florida.
+#
+# http://suitesparse.com   See Mongoose/Doc/License.txt for license.
+#
+# To compile the Mongoose library and demo programs just do "make"
+# in this directory.  The Mongoose/Makefile will then run cmake
+# in the build directory.
+#
+# To install Mongoose in /usr/local/lib and /usr/local/include:
+#
+#   sudo make install
+#
+# To remove all compiled files and libraries (except installed ones):
+#
+#   make distclean
+
 cmake_minimum_required(VERSION 2.8)
 include(CMake/cmake_colors.cmake)
 
@@ -5,10 +27,10 @@ if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
 endif (POLICY CMP0048)
 
-set(Mongoose_DATE "July 2, 2018")
+set(Mongoose_DATE "July 4, 2018")
 set(Mongoose_VERSION_MAJOR 2)
 set(Mongoose_VERSION_MINOR 0)
-set(Mongoose_VERSION_PATCH 1)
+set(Mongoose_VERSION_PATCH 2)
 
 if(CMAKE_MAJOR_VERSION GREATER 2)
 project(Mongoose
@@ -183,6 +205,7 @@ else ()
             )
 endif ()
 
+# set the output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -209,13 +232,31 @@ set_target_properties(mongoose_dylib
 if (EXISTS ${SUITESPARSE_CONFIG_LIBRARY})
     target_link_libraries(mongoose_dylib ${SUITESPARSE_CONFIG_LIBRARY})
 endif ()
-set_target_properties(mongoose_dylib PROPERTIES VERSION "${Mongoose_VERSION_MAJOR}.${Mongoose_VERSION_MINOR}.${Mongoose_VERSION_PATCH}")
-set_target_properties(mongoose_dylib PROPERTIES PUBLIC_HEADER include/Mongoose.hpp)
+
+# if(CMAKE_MAJOR_VERSION GREATER 2)
+#     set_target_properties(mongoose_dylib PROPERTIES VERSION ${PROJECT_VERSION})
+#     set_target_properties(mongoose_dylib PROPERTIES SOVERSION ${Mongoose_VERSION_MAJOR})
+# else()
+    set_target_properties(mongoose_dylib PROPERTIES VERSION 
+        ${Mongoose_VERSION_MAJOR}.${Mongoose_VERSION_MINOR}.${Mongoose_VERSION_PATCH})
+    set_target_properties(mongoose_dylib PROPERTIES SOVERSION
+        ${Mongoose_VERSION_MAJOR})
+# endif()
+
+
+set_target_properties(mongoose_dylib PROPERTIES PUBLIC_HEADER Include/Mongoose.hpp)
 target_include_directories(mongoose_dylib PRIVATE .)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(mongoose_dylib rt)
 endif ()
+
+# Mongoose installation location
+include ( GNUInstallDirs )
+install ( TARGETS mongoose_dylib mongoose_lib 
+    LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
 # Build the Mongoose library and all tests with coverage flags
 add_library(mongoose_lib_dbg ${MONGOOSE_LIB_FILES})
@@ -378,14 +419,13 @@ add_custom_target(purge
         COMMAND rm -f ${PROJECT_SOURCE_DIR}/Lib/libmongoose.*
         COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/title-info.tex
         COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/title-info.tex.aux
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.pdf
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.idx
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.log
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.out
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.aux
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.toc
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.bbl
-        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/UserGuide.blg
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/Mongoose_UserGuide.idx
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/Mongoose_UserGuide.log
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/Mongoose_UserGuide.out
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/Mongoose_UserGuide.aux
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/Mongoose_UserGuide.toc
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/Mongoose_UserGuide.bbl
+        COMMAND rm -f ${PROJECT_SOURCE_DIR}/Doc/Mongoose_UserGuide.blg
         COMMAND rm -f ${PROJECT_SOURCE_DIR}/Matrix/*.tar.gz
         COMMAND rm -f ${PROJECT_SOURCE_DIR}/Matrix/*.csv
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -395,3 +435,4 @@ add_custom_target(userguide
         COMMAND make
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/Doc
         )
+

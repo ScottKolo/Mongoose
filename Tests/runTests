@@ -250,7 +250,7 @@ def checkLocation():
             "\n\033[91mERROR!\033[0m Looks like you might not be running this from "
             "your build directory.\n\n"
             "Make sure that... \n\n"
-            "  * You are in your build directory (e.g. Mongoose/_build) and\n"
+            "  * You are in your build directory (e.g. Mongoose/build) and\n"
             "  * You have built Mongoose ('cmake ..' followed by 'make')\n")
         sys.exit()
 
@@ -260,7 +260,7 @@ def checkLocation():
             "\n\033[91mERROR!\033[0m Looks like you might not have built Mongoose "
             "yet.\n\n"
             "Make sure that... \n\n"
-            "  * You are in your build directory (e.g. Mongoose/_build) and\n"
+            "  * You are in your build directory (e.g. Mongoose/build) and\n"
             "  * You have built Mongoose ('cmake ..' followed by 'make')\n")
         sys.exit()
 

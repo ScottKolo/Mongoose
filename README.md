@@ -17,19 +17,22 @@ Mongoose uses CMake. To build Mongoose, follow the commands below:
 ```shell
 git clone https://github.com/ScottKolo/Mongoose
 cd Mongoose
-mkdir _build # Create a build directory
-cd _build 
-cmake ..     # Use CMake to create the Makefiles
-make         # Build Mongoose
+make         # Builds Mongoose (uses CMake) and runs the demo
 ```
 
-After compilation, the Mongoose demo can be run from the `_build` directory using `./bin/demo`.
+Then to install, do
+
+```shell
+sudo make install 
+```
+
+After compilation, the Mongoose demo can be run from the `build` directory using `./bin/demo`.
 
 ## Usage
 
 You can use Mongoose in one of three ways:
 
-1. **The `mongoose` executable.** Once built, the `mongoose` executable will be located in `_build/bin/mongoose`. This executable can read a Matrix Market file containing an adjacency matrix and output timing and partitioning information to a plain-text file. Simply call it with the following syntax: `mongoose <MM-input-file.mtx> [output-file]`
+1. **The `mongoose` executable.** Once built, the `mongoose` executable will be located in `build/bin/mongoose`. This executable can read a Matrix Market file containing an adjacency matrix and output timing and partitioning information to a plain-text file. Simply call it with the following syntax: `mongoose <MM-input-file.mtx> [output-file]`
 2. **The C++ API.** A static library is built at `Lib/libmongoose.a`. Include the header file `Include/Mongoose.hpp` and link to this library to access the C++ API.
 3. **The MATLAB API.** From MATLAB, navigate to the `Mongoose/MATLAB/` directory and build the Mongoose MEX functions by calling `mongoose_make`. This will build Mongoose, run a demo, and allows access to the MATLAB API.
 
