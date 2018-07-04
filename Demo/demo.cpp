@@ -28,8 +28,7 @@ int main(int argn, const char **argv)
         "bcspwr08.mtx",
         "bcspwr09.mtx",
         "bcspwr10.mtx",
-        "jagmesh7.mtx",
-        "troll.mtx"
+        "jagmesh7.mtx"
     };
 
     cout << "********************************************************************************" << endl;
