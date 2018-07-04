@@ -1,6 +1,36 @@
-function mongoose_plot (G, x_vec, y_vec, plot_name, colorstyles, bgcolor, grad)
+function mongoose_plot (G, x_vec, y_vec, plot_name, colorstyles, bgcolor, grad) %#ok
+%MONGOOSE_PLOT use graphvis to create a plot of a graph.
+%   mongoose_plot (A, left, right) draws the graph A (a sparse matrix) via
+%   graphvis. If A is rectangular, [0 A ; A' 0] is drawn.  left and right
+%   are vectors of size n where the matrix A or [0  A ;A' 0] is n-by-n.
+%   
+%   left(i)=1 if node i is on the left.
+%   right(i)=1 if node i is on the right.
+%   If both left(i) and right(i) are 0, then node is is in the node separator
 %
-% use graphvis to create a plot of a graph
+% Example:
+%
+%   A = sparse (gallery ('gcdmat', 20) > 2) ;
+%   mongoose_plot (A) ;                 % no colors on the nodes
+%   subplot (1,2,1) ;
+%   imshow (imread ('separator_plot.png')) ;
+%   subplot (1,2,2) ;
+%   n = size (A,1) ;
+%   k = floor (n / 2) ;
+%   left  = [ones(1,k) zeros(1,n-k)] ;
+%   right = 1-left ;
+%   mongoose_plot (A, left, right) ;    % color the partitions
+%   imshow (imread ('separator_plot.png')) ;
+%
+% The plot is placed in the file 'separator_plot.png'.
+% A fourth input argument specifies an alternate filename
+%
+% See also spy, mongoose_test.
+
+%   Copyright (c) 2018, N. Yeralan, S. Kolodziej, T. Davis, W. Hager
+
+fprintf ('Using graphvis by Yifan Hu to draw the graph\n') ;
+fprintf ('(ignore any error message about "remove_overlap")\n') ;
 
 DEBUG = 0;
 do_png = 1 ;
@@ -20,28 +50,32 @@ if (nargin < 6 || isempty (bgcolor))
 end
 
 minsizes = 0 ;
-trim1 = 0 ;
+% trim1 = 0 ;
 do_svg = 0 ;
 do_smooth = 0 ;
 resolution = 300 ;
 margin = 0 ;
-nodekind = 0 ;
+% nodekind = 0 ;
 edgesfirst = 0 ;
 
-[m n] = size (G) ;
+[m, n] = size (G) ;
 if (m ~= n)
     % error ('graph must be square') ;
     G = [sparse(m,m) G ; G' sparse(n,n)] ;
 end
-[m n] = size (G) ;
+
+if (nargin < 3)
+    x_vec = zeros (1,n) ;
+    y_vec = zeros (1,n) ;
+end
 
 gname = plot_name ;
 slash = find (gname == '/') ;
 if (~isempty (slash))
     gname = gname ((slash(end)+1):end) ;
 end
-if (DEBUG)
-    fprintf ('Gplot %s\n', gname) ;
+if (DEBUG) 
+    fprintf ('Gplot %s\n', gname) ; %#ok
 end
 
 if (nnz (G-G') > 0)
@@ -49,10 +83,10 @@ if (nnz (G-G') > 0)
     G = (G + G') / 2 ;
 end
 
-norig = n ;
-[m n] = size (G) ;
+% norig = n ;
+[~, n] = size (G) ;
 if (DEBUG)
-    fprintf ('n: %d\n', n) ;
+    fprintf ('n: %d\n', n) ; %#ok
 end
 
 if (penwidth == 0)
@@ -75,13 +109,8 @@ elseif (penwidth == -1)
     end
 end
 
-if (nargin < 13 || isempty (nodesize))
-    % only used for nodekind=1
-    nodesize = fix (100 * (penwidth / 72)) / 100 ;
-end
-
 if (DEBUG)
-    fprintf ('penwidth: %d\n', penwidth) ;
+    fprintf ('penwidth: %d\n', penwidth) ; %#ok
 end
 
 % rsize = sort (rsize, 'descend') ;
@@ -98,11 +127,11 @@ end
 %     fprintf ('\n') ;
 % end
 
-[i j x] = find (tril (G, -1)) ;
+[i, j, x] = find (tril (G, -1)) ;
 
 % change any non-recognized edge into 89
 efix = find (x < 1 | x > 88 | x ~= fix (x)) ;
-x (efix) = 89 ;
+x (efix) = 89 ; %#ok
 
 % gvdir = 'gv/'
 gvdir = '/tmp/' ;
@@ -156,13 +185,13 @@ delete (posfile) ;
 
 if (DEBUG)
     fprintf ('pos x: %g to %g, y: %g to %g\n', ...
-        min (pos (:,1)), max (pos (:,1)), min (pos (:,2)), max (pos (:,2))) ;
+        min (pos (:,1)), max (pos (:,1)), min (pos (:,2)), max (pos (:,2))) ; %#ok
 end
 
 
 for minsize = minsizes
     if (DEBUG)
-        fprintf ('minsize: %d\n', minsize) ;
+        fprintf ('minsize: %d\n', minsize) ; %#ok
     end
     if (minsize > 0)
         % make sure the smaller dimension is scaled up to minsize
@@ -171,7 +200,7 @@ for minsize = minsizes
         minhw = min (xmax, ymax) ;
         pos = ( pos / minhw ) * minsize ;
         if (DEBUG)
-            fprintf ('original x %g y %g\n', xmax, ymax) ;
+            fprintf ('original x %g y %g\n', xmax, ymax) ; %#ok
             fprintf ('minsize %g: new pos x: %g to %g, y: %g to %g\n', minsize, ...
             min (pos (:,1)), max (pos (:,1)), min (pos (:,2)), max (pos (:,2))) ;
         end
@@ -210,7 +239,6 @@ for minsize = minsizes
 
         elseif (colorstyle == 1)
 
-            % color based on the keys
             keys = (1:88)-4 ;
             hue  = mod (keys, 12) / 12 ;
             alf  = min (1, linspace (1.6, 0.3, 88)) ;
@@ -222,7 +250,6 @@ for minsize = minsizes
 
         elseif (colorstyle == 2)
 
-            % color based on the frequency (reverse jet)
             c = jet (88) ;
             c = c (end:-1:1, :) ;
             alf = min (1, linspace (1.0, 0.1, 88)) ;
@@ -230,9 +257,6 @@ for minsize = minsizes
 
         elseif (colorstyle == 3 || colorstyle == 4)
 
-            % colorstyle 3 or 4 is my favorite of 0:5
-
-            % color based on the frequency (jet: blue low notes, red high notes)
             c = jet (88) ;
             %%% c = c (end:-1:1, :) ;
             alf = min (1, linspace (1.0, 0.1, 88)) ;
@@ -240,8 +264,6 @@ for minsize = minsizes
 
         elseif (colorstyle == 5)
 
-            % color based on the frequency (jet: blue low notes, red high notes)
-            % last octave almost transparent
             c = jet (88) ;
             alf = min (1, linspace (1.0, 0.1, 88)) ;
             c = round (255 * [c alf']) ;
@@ -256,35 +278,34 @@ for minsize = minsizes
             a = [ 1 1 1 linspace(1,1,28) linspace(1,1,28) linspace(1,1,28) 1] ;
             c = [ r' g' b' a'] ;
 
-            if (0)
-                figure (4)
-                colormap (c (:,1:3)) ;
-                image (1:88)
-                figure (5)
-                plot ( 1:88, c (:,1), 'ro', 1:88, c (:,2), 'go', ...
-                    1:88, c (:,3), 'bo') ;
-                pause
-            end
+%           if (0)
+%               figure (4) 
+%               colormap (c (:,1:3)) ;
+%               image (1:88)
+%               figure (5)
+%               plot ( 1:88, c (:,1), 'ro', 1:88, c (:,2), 'go', ...
+%                   1:88, c (:,3), 'bo') ;
+%               pause
+%           end
 
             c = round (255 * c) ;
 
         elseif (colorstyle == 7)
 
-            % hsv for frequencies
             c = hsv (88) ;
             c = c (end:-1:1,:) ;
             % no alpha
             c (:,4) = 1 ;
 
-            if (0)
-                figure (4)
-                colormap (c (:,1:3)) ;
-                image (1:88)
-                figure (5)
-                plot ( 1:88, c (:,1), 'ro', 1:88, c (:,2), 'go', ...
-                    1:88, c (:,3), 'bo') ;
-                pause
-            end
+%           if (0)
+%               figure (4)
+%               colormap (c (:,1:3)) ;
+%               image (1:88)
+%               figure (5)
+%               plot ( 1:88, c (:,1), 'ro', 1:88, c (:,2), 'go', ...
+%                   1:88, c (:,3), 'bo') ;
+%               pause
+%           end
 
             c = round (255 * c) ;
 
@@ -316,7 +337,7 @@ for minsize = minsizes
             fprintf (f, 'pad="%g"\n', margin) ;
         end
         if (edgesfirst)
-            fprintf (f, 'outputorder=edgesfirst\n') ;
+            fprintf (f, 'outputorder=edgesfirst\n') ;   %#ok
         else
             fprintf (f, 'outputorder=nodesfirst\n') ;
         end
@@ -325,7 +346,7 @@ for minsize = minsizes
 
         fprintf (f, 'edge [') ;
         if (do_smooth)
-            fprintf (f, 'headclip=false, tailclip=false, ') ;
+            fprintf (f, 'headclip=false, tailclip=false, ') ;   %#ok
         end
         if (penwidth > 0)
             fprintf (f, 'penwidth=%g', penwidth) ;
@@ -360,9 +381,9 @@ for minsize = minsizes
             % original
             for k = 1:nz
                 if (x (k) == 89)
-                    cedge = c (89, :) ;
+                    cedge = c (89, :) ; %#ok
                 else
-                    cedge = c (edgelen (k), :) ;
+                    cedge = c (edgelen (k), :) ;    %#ok
                 end
                 %fprintf('k = %d: (%d, %d)\n', k, i(k), j(k));
                 fprintf (f, '%d--%d [color="#%02x%02x%02x%02x"];\n', ...
@@ -372,7 +393,6 @@ for minsize = minsizes
             end
 
         elseif (colorkind == 1)
-            % colorkinds 1: alpha based on frequency
             for k = 1:nz
                 cedge = c (x (k), :) ;
                 % cedge (4) = alf256 (edgelen (k)) ;
@@ -382,7 +402,6 @@ for minsize = minsizes
 
         elseif (colorkind == 2 || colorkind == 3 || ...
             colorkind == 6 || colorkind == 7)
-            % color based on frequency, alpha based on length of edge
             for k = 1:nz
                 cedge = c (x (k), :) ;
                 if (x (k) ~= 89)
@@ -393,7 +412,6 @@ for minsize = minsizes
             end
 
         elseif (colorkind == 4 || colorkind == -1)
-            % color based on frequency, no alpha
             for k = 1:nz
                 cedge = c (x (k), :) ;
                 if (x (k) ~= 89)
@@ -404,7 +422,6 @@ for minsize = minsizes
             end
 
         elseif (colorkind == 5)
-            % color and alpha based on frequency
             for k = 1:nz
                 cedge = c (x (k), :) ;
                 fprintf (f, '%d--%d [color="#%02x%02x%02x%02x"];\n', ...
@@ -418,32 +435,32 @@ for minsize = minsizes
 
         % remove nodes
         if (ismac)
-            filter = './svgfilter_mac' ;
+            filter = './svgfilter_mac' ;    %#ok
         else
-            filter = './svgfilter_linux' ;
+            filter = './svgfilter_linux' ;  %#ok
         end
         
         if (DEBUG)
-            fprintf ('plot: %s\n', plot_name) ;
+            fprintf ('plot: %s\n', plot_name) ; %#ok
         end
         
         cmd = 'neato -n' ;
 
         if (do_png)
             % create png
-            if (DEBUG)
-                fprintf ('creating %s.png\n', plot_name) ;
+            if (DEBUG) 
+                fprintf ('creating %s.png\n', plot_name) ; %#ok
             end
             tempout = [tempname '.png'] ;
-            if (DEBUG)
-                fprintf ('%s%s %s -Tpng > %s', where, cmd, gv3file, tempout) ;
+            if (DEBUG) 
+                fprintf ('%s%s %s -Tpng > %s', where, cmd, gv3file, tempout) ; %#ok
             end
             system (sprintf ('%s%s %s -Tpng > %s', where, cmd, gv3file, tempout)) ;
             movefile (tempout, [plot_name '.png'], 'f') ;
         end
         if (do_svg)
             % create svg
-            if (DEBUG)
+            if (DEBUG) %#ok
                 fprintf ('creating %s.svg\n', plot_name) ;
             end
             tempout = [tempname '.svg'] ;

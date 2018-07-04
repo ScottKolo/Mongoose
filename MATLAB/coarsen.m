@@ -1,18 +1,17 @@
-function [G_coarse, A_coarse, map] = coarsen (G, (O, A))
+function [G_coarse, A_coarse, map] = coarsen (G, O, A)      %#ok
 %COARSEN coarsen a graph unsafely but quickly.
-%   coarsen(G) computes a matching of vertices in the graph G
-%   and then coarsens the graph by combining all matched vertices into
-%   supervertices. It assumes that the matrix G provided has an all zero
-%   diagonal, is symmetric, and has all positive edge weights. With no 
-%   option struct specified, the coarsening is done using a combination of
-%   heavy-edge matching and other more aggressive techniques to avoid 
-%   stalling. An optional vertex weight vector A can also be specified. 
-%   Note that mongoose_coarsen_mex does NOT check to see if the supplied 
-%   matrix is of the correct form, and may provide erroneous results if 
-%   used incorrectly.
+%   coarsen(G) computes a matching of vertices in the graph G and then coarsens
+%   the graph by combining all matched vertices into supervertices. It assumes
+%   that the matrix G provided has an all zero diagonal, is symmetric, and has
+%   all positive edge weights. With no option struct specified, the coarsening
+%   is done using a combination of heavy-edge matching and other more
+%   aggressive techniques to avoid stalling. An optional vertex weight vector A
+%   can also be specified.  Note that mongoose_coarsen_mex does NOT check to
+%   see if the supplied matrix is of the correct form, and may provide
+%   erroneous results if used incorrectly.
 %
-%   [G_coarse, A_coarse, map] = coarsen(G) coarsens a graph represented with 
-%   sparse adjacency matrix G. G_coarse is the coarsened adjacency matrix, 
+%   [G_coarse, A_coarse, map] = coarsen(G) coarsens a graph represented with
+%   sparse adjacency matrix G. G_coarse is the coarsened adjacency matrix,
 %   A_coarse is the coarsened array of vertex weights, and map is a mapping of
 %   original vertices to coarsened vertices.
 %
@@ -30,5 +29,7 @@ function [G_coarse, A_coarse, map] = coarsen (G, (O, A))
 %       subplot(1,2,1); spy(G); subplot(1,2,2); spy(G_coarse);
 %
 %   See also SAFE_COARSEN, EDGECUT_OPTIONS.
+
+%   Copyright (c) 2018, N. Yeralan, S. Kolodziej, T. Davis, W. Hager
 
 error ('coarsen mexFunction not found') ;

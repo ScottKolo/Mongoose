@@ -16,9 +16,9 @@ function [G_coarse, A_coarse, map] = safe_coarsen(G, O, A)
 %   [G_coarse, A_coarse, map] = safe_coarsen(G, O) uses the option struct O to
 %   specify coarsening options (e.g. matching strategies).
 %
-%   [G_coarse, A_coarse, map] = safe_coarsen(G, O, A) uses the array A as vertex
-%   weights, such that A(i) is the vertex weight of vertex i. If A is not
-%   specified, A is assumed to be an array of all ones (all weights are one).
+%   [G_coarse, A_coarse, map] = safe_coarsen(G, O, A) uses the array A as
+%   vertex weights, such that A(i) is the vertex weight of vertex i. If A is
+%   not specified, A is assumed to be an array of all ones (all weights are 1).
 %
 %   Example:
 %       Prob = ssget('DNVS/troll'); G = Prob.A;
@@ -26,6 +26,8 @@ function [G_coarse, A_coarse, map] = safe_coarsen(G, O, A)
 %       spy(G_coarse);
 %
 %   See also COARSEN, EDGECUT_OPTIONS.
+
+%   Copyright (c) 2018, N. Yeralan, S. Kolodziej, T. Davis, W. Hager
 
 G_safe = sanitize(G);
 

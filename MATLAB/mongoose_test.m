@@ -1,6 +1,15 @@
+function mongoose_test
+%MONGOOSE_TEST a simple test of Mongoose.
+%
+% Example:
+%   mongoose_test
+%
+% See also mongoose_demo.
+
+%   Copyright (c) 2018, N. Yeralan, S. Kolodziej, T. Davis, W. Hager
+
 % A simple demo to demonstrate and test Mongoose. Reads in a matrix, 
 % sanitizes it, partitions it, and displays the results.
-function mongoose_test
 
 % Obtain the matrix
 matfile_data = matfile('494_bus.mat');
@@ -21,7 +30,9 @@ else
     viz = 0;
 end
 
-figure('Position', [100, 100, 1000, 400]);
+f = gcf ;
+clf ;
+f.Position = [100, 100, 1000, 400] ;
 
 if (viz)
     plotname = sanitize_plotname(Prob.name);
@@ -42,6 +53,12 @@ subplot(1, 2+viz, 2+viz);
 perm = [find(part) find(1-part)];
 A_perm = A(perm, perm); % Permute the matrix
 spy(A_perm)
+hold on
+m = size (A,1) ;
+nleft = length (find (part)) ;
+plot ([1 m], [nleft nleft], 'g') ;
+plot ([nleft nleft], [1 m], 'g') ;
+hold off
 title('HB/494\_bus After Partitioning')
 
 end
@@ -63,3 +80,4 @@ function bool = has_graphviz
     [status, ~] = system(sprintf('%s%s', where, command));
     bool = (status == 0);
 end
+

@@ -1,4 +1,4 @@
-function partition = edgecut(G, (O, A))
+function partition = edgecut(G, O, A)   %#ok
 %EDGECUT find an edge separator in a graph.
 %   partition = edgecut(G) uses a multilevel hybrid combinatoric and quadratic
 %   programming algorithm to compute a partitioning of the graph G. With no
@@ -24,5 +24,7 @@ function partition = edgecut(G, (O, A))
 %       spy(A_perm);
 %
 %   See also EDGECUT_OPTIONS, SAFE_EDGECUT.
+
+%   Copyright (c) 2018, N. Yeralan, S. Kolodziej, T. Davis, W. Hager
 
 error ('edgecut mexFunction not found') ;

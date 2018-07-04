@@ -12,11 +12,10 @@ void mexFunction
 )
 {
     const char* usage = "Usage: O = edgecut_options()";
-    if(nargout != 1 || nargin != 0) mexErrMsgTxt(usage);
+    if(nargout > 1 || nargin != 0) mexErrMsgTxt(usage);
 
     EdgeCut_Options *ret = EdgeCut_Options::create();
-    if(ret == NULL)
-        mexErrMsgTxt("Out of memory encountered while creating edgecut_options");
+    if(ret == NULL) mexErrMsgTxt("Out of memory");
 
     pargout[0] = mex_put_options(ret);
     ret->~EdgeCut_Options();

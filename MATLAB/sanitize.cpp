@@ -13,7 +13,7 @@ void mexFunction
 )
 {
     const char* usage = "Usage: A_safe = sanitize(A, [makeBinary=false])";
-    if (nargin < 1 || nargin > 2 || nargout != 1)
+    if (nargin < 1 || nargin > 2 || nargout > 1)
     {
         mexErrMsgTxt(usage);
     }

@@ -5,11 +5,12 @@ function partition = safe_edgecut(G,O,A)
 %   sanitization, an edge cut of the graph is computed and returned as a binary
 %   array.
 %
-%   partition = SAFE_EDGECUT(G) assumes default options and no vertex weights (i.e.
-%   all vertex weights are 1). The partition is returned as a binary array.
+%   partition = SAFE_EDGECUT(G) assumes default options and no vertex weights
+%   (i.e. all vertex weights are 1). The partition is returned as a binary
+%   array.
 %
-%   partition = SAFE_EDGECUT(G, O) uses the options struct to define how the edge
-%   cut algorithms are run.
+%   partition = SAFE_EDGECUT(G, O) uses the options struct to define how the
+%   edge cut algorithms are run.
 %
 %   partition = SAFE_EDGECUT(G, O, A) initializes the graph with vertex weights
 %   provided in the array A such that A(i) is the vertex weight of vertex i.
@@ -22,6 +23,8 @@ function partition = safe_edgecut(G,O,A)
 %       spy(A_perm);
 %
 %   See also EDGECUT, EDGECUT_OPTIONS.
+
+%   Copyright (c) 2018, N. Yeralan, S. Kolodziej, T. Davis, W. Hager
 
 G_safe = sanitize(G);
 

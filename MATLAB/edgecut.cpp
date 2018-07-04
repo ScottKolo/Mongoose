@@ -15,7 +15,7 @@ void mexFunction
     int i, gtype, values;
     
     const char* usage = "Usage: partition = edgecut(G, (O, A))";
-    if(nargout != 1 || nargin < 1 || nargin > 3) mexErrMsgTxt(usage);
+    if(nargout > 1 || nargin < 1 || nargin > 3) mexErrMsgTxt(usage);
     
     const mxArray *matGraph = pargin[0];
     const mxArray *matOptions = (nargin >= 2 ? pargin[1] : NULL);
