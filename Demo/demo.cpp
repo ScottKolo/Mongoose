@@ -17,7 +17,12 @@ using namespace std;
 
 int main(int argn, const char **argv)
 {
-    const std::string demo_files[12] = {
+    #define NMAT 17
+    const std::string demo_files[NMAT] = {
+        "Erdos971.mtx",
+        "G51.mtx",
+        "GD97_b.mtx",
+        "Pd.mtx",
         "bcspwr01.mtx",
         "bcspwr02.mtx",
         "bcspwr03.mtx",
@@ -28,7 +33,9 @@ int main(int argn, const char **argv)
         "bcspwr08.mtx",
         "bcspwr09.mtx",
         "bcspwr10.mtx",
-        "jagmesh7.mtx"
+        "dwt_992.mtx",
+        "jagmesh7.mtx",
+        "NotreDame_www.mtx"
     };
 
     cout << "********************************************************************************" << endl;
@@ -41,7 +48,7 @@ int main(int argn, const char **argv)
     clock_t start = clock();
     double duration;
 
-    for (int k = 0; k < 12; k++)
+    for (int k = 0; k < NMAT; k++)
     {
         cout << "********************************************************************************" << endl;
         cout << "Computing an edge cut for " << demo_files[k] << "..." << endl;
@@ -61,9 +68,16 @@ int main(int argn, const char **argv)
 
         EdgeCut *result = edge_cut(graph, options);
 
-        cout << "Partitioning Complete!" << endl;
         cout << "Cut Cost:       " << setprecision(2) << result->cut_cost << endl;
-        cout << "Cut Imbalance:  " << setprecision(2) << 100*(result->imbalance) << "%" << endl;
+        if (result->imbalance < 1e-12)
+        {
+            // imbalance is zero; this is just a roundoff epsilon in the statistic
+            cout << "Cut Imbalance:  zero (a perfect balance)" << endl;
+        }
+        else
+        {
+            cout << "Cut Imbalance:  " << setprecision(2) << 100*(result->imbalance) << "%" << endl;
+        }
 
         double trial_duration = (std::clock() - trial_start) / (double) CLOCKS_PER_SEC;
         cout << "Trial Time:     " << trial_duration*1000 << "ms" << endl;
@@ -79,10 +93,7 @@ int main(int argn, const char **argv)
     cout << "Total Demo Time:  " << setprecision(2) << duration << "s" << endl;
 
     cout << endl;
-    cout << "               **************************************************               " << endl;
-    cout << "               ***************** Demo Complete! *****************               " << endl;
-    cout << "               **************************************************               " << endl;
-    cout << endl;
+    cout << "Demo complete; all tests passed" << endl ;
 
     /* Return success */
     return EXIT_SUCCESS;
