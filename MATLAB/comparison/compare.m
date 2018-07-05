@@ -12,7 +12,7 @@ function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_we
         use_weights = 0;
     end
     
-    index = UFget;
+    index = ssget;
     j = 1;
     
     comparisonData = struct('avg_mongoose_times', [], ...
@@ -39,7 +39,7 @@ function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_we
             % end
             % use_weights = 1;
             
-            Prob = UFget(i);
+            Prob = ssget(i);
             A = Prob.A;
             
             % If matrix is unsymmetric, form the augmented system
@@ -290,8 +290,8 @@ function comparisonData = compare(trials, percent_to_keep, plot_outliers, use_we
 end
 
 function plotGraphs(prob_id)
-    index = UFget;
-    Prob = UFget(prob_id);
+    index = ssget;
+    Prob = ssget(prob_id);
     A = Prob.A;
     if (index.numerical_symmetry(prob_id) < 1)
         [m_rows, n_cols] = size(A);
@@ -325,8 +325,8 @@ function plotGraphs(prob_id)
 end
 
 function plotMatrix(prob_id)
-    index = UFget;
-    Prob = UFget(prob_id);
+    index = ssget;
+    Prob = ssget(prob_id);
     A = Prob.A;
     if (index.numerical_symmetry(prob_id) < 1)
         [m_rows, n_cols] = size(A);

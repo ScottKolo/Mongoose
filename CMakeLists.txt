@@ -43,7 +43,7 @@ endif()
 # Configure a header file to pass CMake information
 configure_file (
         "Include/Mongoose_Version.hpp.in"
-        "${PROJECT_BINARY_DIR}/Mongoose_Version.hpp"
+        "${PROJECT_SOURCE_DIR}/Include/Mongoose_Version.hpp"
 )
 configure_file (
         "Doc/title-info.tex.in"

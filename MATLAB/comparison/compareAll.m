@@ -25,7 +25,7 @@ function comparisonData = compareAll(trials)
 
         found = ID_present(comparisonData,i);
         if (index.isReal(i) && ~found)
-            Prob = UFget(i);
+            Prob = ssget(i);
             A = Prob.A;
             
             fprintf('Computing separator for %d: %s\n', i, Prob.name);
