@@ -28,6 +28,7 @@ if (POLICY CMP0048)
 endif (POLICY CMP0048)
 
 set(Mongoose_DATE "July 5, 2018")
+set(Mongoose_NUMERIC_DATE "2018-07-05")
 set(Mongoose_VERSION_MAJOR 2)
 set(Mongoose_VERSION_MINOR 0)
 set(Mongoose_VERSION_PATCH 2)
@@ -40,14 +41,18 @@ else()
 project(Mongoose CXX C)
 endif()
 
-# Configure a header file to pass CMake information
+# Configure files to pass CMake information
 configure_file (
-        "Include/Mongoose_Version.hpp.in"
+        "Version/Mongoose_Version.hpp.in"
         "${PROJECT_SOURCE_DIR}/Include/Mongoose_Version.hpp"
 )
 configure_file (
-        "Doc/title-info.tex.in"
+        "Version/title-info.tex.in"
         "${PROJECT_SOURCE_DIR}/Doc/title-info.tex"
+)
+configure_file (
+        "Version/codemeta.json.in"
+        "${PROJECT_SOURCE_DIR}/codemeta.json"
 )
 
 include_directories("${PROJECT_BINARY_DIR}")
