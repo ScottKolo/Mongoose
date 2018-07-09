@@ -281,6 +281,9 @@ set_target_properties(mongoose_exe
         PROPERTIES OUTPUT_NAME mongoose)
 target_link_libraries(mongoose_exe mongoose_lib)
 
+install(TARGETS mongoose_exe
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 # Build the Demo executable
 add_executable(demo_exe ${DEMO_FILES})
 set_target_properties(demo_exe
