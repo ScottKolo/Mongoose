@@ -38,6 +38,7 @@ public:
     static Graph *create(const Int _n, const Int _nz, Int *_p = NULL,
                          Int *_i = NULL, double *_x = NULL, double *_w = NULL);
     static Graph *create(cs *matrix);
+    static Graph *create(cs *matrix, bool free_when_done);
     ~Graph();
 
 private:
