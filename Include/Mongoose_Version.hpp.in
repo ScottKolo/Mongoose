@@ -1,5 +1,5 @@
 /* ========================================================================== */
-/* === Include/Mongoose_GuessCut.hpp ======================================== */
+/* === Include/Mongoose_Version.hpp ========================================= */
 /* ========================================================================== */
 
 /* -----------------------------------------------------------------------------
@@ -10,19 +10,24 @@
  * -------------------------------------------------------------------------- */
 
 // #pragma once
-#ifndef MONGOOSE_GUESSCUT_HPP
-#define MONGOOSE_GUESSCUT_HPP
+#ifndef MONGOOSE_VERSION_HPP
+#define MONGOOSE_VERSION_HPP
 
-#include "Mongoose_BoundaryHeap.hpp"
-#include "Mongoose_CutCost.hpp"
-#include "Mongoose_Graph.hpp"
-#include "Mongoose_Internal.hpp"
-#include "Mongoose_EdgeCutOptions.hpp"
+#include <string>
+
+// Configuration information from CMake
+#define Mongoose_VERSION_MAJOR @Mongoose_VERSION_MAJOR@
+#define Mongoose_VERSION_MINOR @Mongoose_VERSION_MINOR@
+#define Mongoose_VERSION_PATCH @Mongoose_VERSION_PATCH@
+#define Mongoose_DATE "@Mongoose_DATE@"
 
 namespace Mongoose
 {
 
-bool guessCut(EdgeCutProblem *, const EdgeCut_Options *);
+int major_version();
+int minor_version();
+int patch_version();
+std::string mongoose_version();
 
 } // end namespace Mongoose
 

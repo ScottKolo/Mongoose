@@ -15,7 +15,9 @@
  * Stores graph adjacency and weight information.
  */
 
-#pragma once
+// #pragma once
+#ifndef MONGOOSE_GRAPH_HPP
+#define MONGOOSE_GRAPH_HPP
 
 #include "Mongoose_CSparse.hpp"
 #include "Mongoose_Internal.hpp"
@@ -52,3 +54,5 @@ private:
 };
 
 } // end namespace Mongoose
+
+#endif

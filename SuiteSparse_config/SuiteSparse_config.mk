@@ -7,7 +7,7 @@
 # and GraphBLAS.  The configuration settings for GraphBLAS are determined by
 # GraphBLAS/CMakeLists.txt
 
-SUITESPARSE_VERSION = 5.3.0
+SUITESPARSE_VERSION = 5.4.0
 
 #===============================================================================
 # Options you can change without editing this file:
@@ -119,7 +119,7 @@ SUITESPARSE_VERSION = 5.3.0
             CC = icc -D_GNU_SOURCE
             CXX = $(CC)
             CFOPENMP = -qopenmp -I$(MKLROOT)/include
-	    LDFLAGS += -openmp
+	    LDFLAGS += -qopenmp
             LDLIBS += -lm -lirc
         endif
         ifneq ($(shell which ifort 2>/dev/null),)
@@ -228,8 +228,8 @@ SUITESPARSE_VERSION = 5.3.0
         CUBLAS_LIB    = $(CUDA_PATH)/lib64/libcublas.so
         CUDA_INC_PATH = $(CUDA_PATH)/include/
         CUDA_INC      = -I$(CUDA_INC_PATH)
-		MAGMA_INC     = -I/opt/magma-2.2.0/include/
-		MAGMA_LIB     = -L/opt/magma-2.2.0/lib/ -lmagma
+		MAGMA_INC     = -I/opt/magma-2.4.0/include/
+		MAGMA_LIB     = -L/opt/magma-2.4.0/lib/ -lmagma
         NVCC          = $(CUDA_PATH)/bin/nvcc
         NVCCFLAGS     = -Xcompiler -fPIC -O3 \
                             -gencode=arch=compute_30,code=sm_30 \
