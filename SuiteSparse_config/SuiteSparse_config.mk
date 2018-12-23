@@ -62,6 +62,13 @@ SUITESPARSE_VERSION = 5.4.0
     CMAKE_OPTIONS ?= -DCMAKE_INSTALL_PREFIX=$(INSTALL)
 
     #---------------------------------------------------------------------------
+    # parallel make
+    #---------------------------------------------------------------------------
+
+    # sequential make's by default
+    JOBS ?= 1
+
+    #---------------------------------------------------------------------------
     # optimization level
     #---------------------------------------------------------------------------
 
@@ -82,18 +89,10 @@ SUITESPARSE_VERSION = 5.4.0
         CXX = g++
         BLAS = -lrefblas -lgfortran -lstdc++
         LAPACK = -llapack
-	CFLAGS += --coverage
-	OPTIMIZATION = -g
-	LDFLAGS += --coverage
+        CFLAGS += --coverage
+        OPTIMIZATION = -g
+        LDFLAGS += --coverage
     endif
-
-    #---------------------------------------------------------------------------
-    # CFLAGS for the C/C++ compiler
-    #---------------------------------------------------------------------------
-
-    # The CF macro is used by SuiteSparse Makefiles as a combination of
-    # CFLAGS, CPPFLAGS, TARGET_ARCH, and system-dependent settings.
-    CF ?= $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) $(OPTIMIZATION) -fexceptions -fPIC
 
     #---------------------------------------------------------------------------
     # OpenMP is used in CHOLMOD
@@ -116,10 +115,11 @@ SUITESPARSE_VERSION = 5.4.0
     ifneq ($(AUTOCC),no)
         ifneq ($(shell which icc 2>/dev/null),)
             # use the Intel icc compiler for C codes, and -qopenmp for OpenMP
-            CC = icc -D_GNU_SOURCE
-            CXX = $(CC)
+            CC = icc
+            CFLAGS += -D_GNU_SOURCE
+            CXX = icpc
             CFOPENMP = -qopenmp -I$(MKLROOT)/include
-	    LDFLAGS += -qopenmp
+            LDFLAGS += -qopenmp
             LDLIBS += -lm -lirc
         endif
         ifneq ($(shell which ifort 2>/dev/null),)
@@ -127,6 +127,16 @@ SUITESPARSE_VERSION = 5.4.0
             F77 = ifort
         endif
     endif
+
+    CMAKE_OPTIONS += -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC)
+
+    #---------------------------------------------------------------------------
+    # CFLAGS for the C/C++ compiler
+    #---------------------------------------------------------------------------
+
+    # The CF macro is used by SuiteSparse Makefiles as a combination of
+    # CFLAGS, CPPFLAGS, TARGET_ARCH, and system-dependent settings.
+    CF ?= $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) $(OPTIMIZATION) -fexceptions -fPIC
 
     #---------------------------------------------------------------------------
     # code formatting (for Tcov on Linux only)
@@ -228,8 +238,8 @@ SUITESPARSE_VERSION = 5.4.0
         CUBLAS_LIB    = $(CUDA_PATH)/lib64/libcublas.so
         CUDA_INC_PATH = $(CUDA_PATH)/include/
         CUDA_INC      = -I$(CUDA_INC_PATH)
-		MAGMA_INC     = -I/opt/magma-2.4.0/include/
-		MAGMA_LIB     = -L/opt/magma-2.4.0/lib/ -lmagma
+                MAGMA_INC     = -I/opt/magma-2.4.0/include/
+                MAGMA_LIB     = -L/opt/magma-2.4.0/lib/ -lmagma
         NVCC          = $(CUDA_PATH)/bin/nvcc
         NVCCFLAGS     = -Xcompiler -fPIC -O3 \
                             -gencode=arch=compute_30,code=sm_30 \
@@ -564,6 +574,7 @@ config:
 	@echo 'Install include files in: INSTALL_INCLUDE=' '$(INSTALL_INCLUDE)'
 	@echo 'Install documentation in: INSTALL_DOC=    ' '$(INSTALL_DOC)'
 	@echo 'Optimization level:       OPTIMIZATION=   ' '$(OPTIMIZATION)'
+	@echo 'parallel make jobs:       JOBS=           ' '$(JOBS)'
 	@echo 'BLAS library:             BLAS=           ' '$(BLAS)'
 	@echo 'LAPACK library:           LAPACK=         ' '$(LAPACK)'
 	@echo 'Intel TBB library:        TBB=            ' '$(TBB)'
