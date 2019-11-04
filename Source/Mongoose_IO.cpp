@@ -102,7 +102,7 @@ cs *read_matrix(const char *filename, MM_typecode &matcode)
         return NULL;
     }
 
-    Int M, N, nz;
+    long M, N, nz;
     if ((mm_read_mtx_crd_size(file, &M, &N, &nz)) != 0)
     {
         LogError("Error: Could not parse matrix dimension and size.\n");
@@ -132,7 +132,7 @@ cs *read_matrix(const char *filename, MM_typecode &matcode)
         return NULL;
     }
 
-    mm_read_mtx_crd_data(file, M, N, nz, I, J, val, matcode);
+    mm_read_mtx_crd_data(file, M, N, nz, (long*)I, (long*)J, val, matcode);
     fclose(file); // Close the file
 
     for (Int k = 0; k < nz; k++)
