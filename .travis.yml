@@ -1,9 +1,8 @@
-sudo: required
 dist: trusty
 
 language: cpp
 
-matrix:
+jobs:
   include:
     # Codecov.io build
     - os: linux
