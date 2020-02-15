@@ -9,8 +9,9 @@
  * Mongoose is also available under other licenses; contact authors for details.
  * -------------------------------------------------------------------------- */
 
-#include "Mongoose_QPDelta.hpp"
 #include "Mongoose_Internal.hpp"
+#include "Mongoose_Debug.hpp"
+#include "Mongoose_QPDelta.hpp"
 
 namespace Mongoose
 {

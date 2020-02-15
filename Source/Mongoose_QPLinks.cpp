@@ -9,8 +9,8 @@
  * Mongoose is also available under other licenses; contact authors for details.
  * -------------------------------------------------------------------------- */
 
-#include "Mongoose_QPLinks.hpp"
 #include "Mongoose_Debug.hpp"
+#include "Mongoose_QPLinks.hpp"
 #include "Mongoose_Internal.hpp"
 
 namespace Mongoose

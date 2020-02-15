@@ -13,11 +13,6 @@
 #ifndef MONGOOSE_DEBUG_HPP
 #define MONGOOSE_DEBUG_HPP
 
-#include "Mongoose_CSparse.hpp"
-#include "Mongoose_EdgeCutOptions.hpp"
-#include "Mongoose_EdgeCutProblem.hpp"
-#include "Mongoose_QPDelta.hpp"
-
 #include <cassert>
 #include <cstdio>
 
@@ -81,6 +76,11 @@
 #ifndef NDEBUG
 #include <algorithm>
 #endif
+
+#include "Mongoose_CSparse.hpp"
+#include "Mongoose_EdgeCutOptions.hpp"
+#include "Mongoose_EdgeCutProblem.hpp"
+#include "Mongoose_QPDelta.hpp"
 
 namespace Mongoose
 {
