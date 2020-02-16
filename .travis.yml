@@ -29,7 +29,7 @@ jobs:
         - export CXX=g++-4.8
         - export CC=gcc-4.8
       after_success:
-        - lcov --directory ./CMakeFiles/mongoose_dbg.dir/Source --capture --output-file coverage.info # capture coverage info
+        - lcov --directory ./CMakeFiles/mongoose_lib_dbg.dir/Source --capture --output-file coverage.info # capture coverage info
         - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
         - lcov --list coverage.info #debug info
         - bash <(curl -s https://codecov.io/bash) -t 6bf41c84-78ee-406d-95b8-7f86895b532c
