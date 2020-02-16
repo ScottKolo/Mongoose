@@ -322,7 +322,10 @@ target_link_libraries(mongoose_unit_test_edgesep mongoose_lib_dbg)
 set_target_properties(mongoose_unit_test_edgesep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH})
 add_test(Unit_Test_EdgeSep ./tests/mongoose_unit_test_edgesep)
 
-option(ENABLE_COVERAGE "Enable coverage flags" ON)
+option(ENABLE_COVERAGE "Enable coverage flags" $ENV{COVERAGE})
+if (ENABLE_COVERAGE)
+    message(STATUS ${BoldRed} "Coverage testing enabled" ${ColourReset})
+endif()
 message(STATUS "CMAKE_CXX_COMPILER: " ${BoldBlue} ${CMAKE_CXX_COMPILER_ID} ${ColourReset})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # using Clang

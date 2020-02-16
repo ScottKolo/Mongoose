@@ -11,6 +11,7 @@ jobs:
         - CXX=g++-4.8
         - CC=gcc-4.8
         - SPECIAL=codecov
+        - COVERAGE=TRUE
       addons:
         apt:
           sources:
